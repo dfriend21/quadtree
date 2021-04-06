@@ -1,0 +1,4 @@
+
+other_files/output/*
+*.DS_store
+*.Rhistory
