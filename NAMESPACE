@@ -1,3 +1,3 @@
-useDynLib(quadtreeNew, .registration=TRUE)
+useDynLib(quadtree, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
 exportPattern("^[[:alpha:]]+")

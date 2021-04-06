@@ -1,6 +1,6 @@
-\name{quadtreeNew-package}
-\alias{quadtreeNew-package}
-\alias{quadtreeNew}
+\name{quadtree-package}
+\alias{quadtree-package}
+\alias{quadtree}
 \docType{package}
 \title{
   A short title line describing what the package does

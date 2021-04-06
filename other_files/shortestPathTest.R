@@ -1,37 +1,37 @@
 library(raster)
 library(rgdal)
-library(quadtreeNew)
+library(quadtree)
 l = raster("/Users/dfriend/Documents/clark_county_project/data/CC Habitat model 250m/EnsembleModelccBuffered.img")
 
 #==================
 #TEST 1
-#qt1 = createQuadtree(1-l_iv, .2, adj_type="expand")
+#qt_1 = createQuadtree(1-l_iv, .2, adj_type="expand")
 qt_1 = createQuadtree(1-l, .2, adj_type="expand")
-#qtplot(qt1, crop=TRUE)
+#qtplot(qt_1, crop=TRUE)
 #pt1 = c(640000,3970000)
 #pt2 = c(645000,3910000)
 #pt1 = c(575000,4000000)
 pt1 = c(710000,3830000)
 pt2 = c(775000,4100000)
 pt3 = c(575000,4000000)
-qtplot(qt1, border_col="transparent", crop=TRUE)
+qtplot(qt_1, border_col="transparent", crop=TRUE)
 points(rbind(pt1,pt2,pt3), col=c("red", "blue", "purple"), pch=16)
 
 
 #time it 
-t1 = system.time(qt1$getShortestPathFinder(pt1, qt1$extent()[1:2],qt1$extent()[3:4] ))
-spf = qt1$getShortestPathFinder(pt1, qt1$extent()[1:2],qt1$extent()[3:4] )
+t1 = system.time(qt_1$getShortestPathFinder(pt1, qt_1$extent()[1:2],qt_1$extent()[3:4] ))
+spf = qt_1$getShortestPathFinder(pt1, qt_1$extent()[1:2],qt_1$extent()[3:4] )
 t2 = system.time(spf$getShortestPath(pt2))
 t3 = system.time(spf$getShortestPath(pt3))
 t1+t2
 #vals = spf$getVals()
 
 #now get the actual paths
-spf = qt1$getShortestPathFinder(pt1, qt1$extent()[1:2],qt1$extent()[3:4] )
+spf = qt_1$getShortestPathFinder(pt1, qt_1$extent()[1:2],qt_1$extent()[3:4] )
 path1 = spf$getShortestPath(pt2)
 path2 = spf$getShortestPath(pt3)
 
-#qtplot(qt1, border_col="gray60", crop=TRUE)
+#qtplot(qt_1, border_col="gray60", crop=TRUE)
 
 library(geosphere)
 library(gdistance)
@@ -44,7 +44,7 @@ shortest <- shortestPath(tr.sc, pt1, pt2, output = 'SpatialLines')
 et = Sys.time()
 et-st
 
-qtplot(qt1, border_col="transparent", crop=TRUE)
+qtplot(qt_1, border_col="transparent", crop=TRUE)
 points(rbind(pt1,pt2), col="red", pch=16)
 lines(path1)
 plot(shortest, add=TRUE, col="red")
@@ -88,7 +88,7 @@ path1_2 = spf_2$getShortestPath(pt2_2)
 path2_2 = spf_2$getShortestPath(pt3_2)
 lines(path1_2)
 #lines(path2_2, col="red")
-#qtplot(qt1, border_col="gray60", crop=TRUE)
+#qtplot(qt_1, border_col="gray60", crop=TRUE)
 
 #library(geosphere)
 #library(gdistance)
