@@ -48,7 +48,7 @@ class QuadtreeWrapper{
     Rcpp::NumericVector originalDim();
     Rcpp::NumericVector originalRes();
     std::string projection();
-    
+    //std::vector<double> getValues(const std::vector<double> &x, const std::vector<double> &y) const
     //NumericVector getValues(const NumericVector &x, const NumericVector &y);
     std::vector<double> getValues(const std::vector<double> &x, const std::vector<double> &y) const;
     //Rcpp::NumericVector getValues(const Rcpp::NumericVector &x, const Rcpp::NumericVector &y) const;
@@ -69,8 +69,6 @@ class QuadtreeWrapper{
     
     void writeQuadtree(std::string filePath);
     static QuadtreeWrapper readQuadtree(std::string filePath);
-    
-    //static Rcpp::NumericVector extract(QuadtreeWrapper &qw, Rcpp::NumericMatrix &mat) const;
     //static 
 };
 
