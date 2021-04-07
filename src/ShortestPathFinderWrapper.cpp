@@ -31,14 +31,18 @@ Rcpp::NumericMatrix ShortestPathFinderWrapper::getShortestPath(Rcpp::NumericVect
   return mat;
 }
 
-Rcpp::NumericVector ShortestPathFinderWrapper::getVals(){
-  Rcpp::NumericVector vec(7);
+Rcpp::NumericVector ShortestPathFinderWrapper::getStartPoint(){
+  Rcpp::NumericVector vec(2);
   vec[0] = startPoint[0];
   vec[1] = startPoint[1];
-  vec[2] = spf.xMin;
-  vec[3] = spf.xMax;
-  vec[4] = spf.yMin;
-  vec[5] = spf.yMax;
-  vec[6] = spf.startNode->id;
+  return vec;
+}
+
+Rcpp::NumericVector ShortestPathFinderWrapper::getSearchLimits(){
+  Rcpp::NumericVector vec(4);
+  vec[0] = spf.xMin;
+  vec[1] = spf.xMax;
+  vec[2] = spf.yMin;
+  vec[3] = spf.yMax;
   return vec;
 }

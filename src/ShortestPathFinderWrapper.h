@@ -17,7 +17,8 @@ public:
   
   void makeShortestPathNetwork();
   Rcpp::NumericMatrix getShortestPath(Rcpp::NumericVector endPoint);
-  Rcpp::NumericVector getVals();
+  Rcpp::NumericVector getStartPoint();
+  Rcpp::NumericVector getSearchLimits();
 };
 
 
