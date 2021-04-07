@@ -119,8 +119,10 @@ plot(small_ext, add=TRUE)
 l_small = crop(l, small_ext)
 
 plot(1-l_small)
-pt1_3 = c(652250, 3960000)
-pt2_3 = c(656000, 3960000)
+# pt1_3 = c(652250, 3960000)
+# pt2_3 = c(656000, 3960000)
+pt1_3 = c(652250, 3961500)
+pt2_3 = c(656000, 3957000)
 
 
 st_3 = Sys.time()
@@ -160,3 +162,15 @@ points(path1_3, col="blue", pch=16, cex=.5)
 lines(path1_3, col="blue")
 legend(x="bottomright", legend = c("start point", "end point", "raster LCP", "quadtree LCP"), lwd=c(NA,NA,1,1), pch=c(16,16,16,16), pt.cex=c(1.3,1.3,.5,.5), col=c("blue", "red", "black", "blue"))
 
+
+
+
+
+
+#make a picture for the ABM package
+png("/Users/dfriend/Documents/r_packages/quadtree/other_files/output/gitlab_abm_pic.png", width = 100, height = 100)
+par(mar = c(0,0,0,0))
+qtplot(qt_2, xlim=c(small_ext[1]-200,small_ext[2]), ylim = c(small_ext[3], small_ext[4]+200), border_col="gray70", main = paste0("quadtree representation (range_lim = ", qt_2$rangeLim(), ") (LCP time: ", round(dif_3_2,4), " sec)"))
+points(path1_3, col="black", pch=16, cex=.5)
+lines(path1_3, col="black")
+dev.off()
