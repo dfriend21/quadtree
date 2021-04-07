@@ -153,7 +153,7 @@ int ShortestPathFinder::doNextIteration(){
 std::vector<std::shared_ptr<Node>> ShortestPathFinder::findShortestPath(int endNodeID){
     std::shared_ptr<NodeEdge> currentNodeEdge = nodeEdges.at(dict[endNodeID]); //get the pointer to the nodeEdge that corresponds with the ID provided by the user
     if(currentNodeEdge->parent){ //if this NodeEdge doesn't have a parent then that means it's unreachable
-        std::vector<std::shared_ptr<Node>> nodePath(currentNodeEdge->nNodesFromOrigin+1); //initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
+        std::vector<std::shared_ptr<Node>> nodePath(currentNodeEdge->nNodesFromOrigin); //initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
         //starting with the end node, trace our way back to the start node
         for(size_t i = 1; i <= nodePath.size(); ++i){
             //nodePath.at(i) = currentNodeEdge->node;
