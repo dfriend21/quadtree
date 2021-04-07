@@ -1,14 +1,19 @@
 Package: quadtree
 Type: Package
-Title: What the Package Does in One 'Title Case'
-     Line
-Version: 1.0
+Title: Quadtree Representation of Rasters
+Version: 0.0.0.9000
 Date: 2021-01-26
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: One paragraph description of what
-     the package does as one or more full
-     sentences.
+Authors@R: person("Derek", "Friend", email = "fake@fake.com", role=c("aut","cre"))
+Description: Provides a C++ implementation of a quadtree data 
+    structure. Functions are provided for creating a quadtree 
+    from a raster, with the level of "coarseness" of the
+    quadtree being determined by a user-supplied parameter. In
+    addition, functions are provided to extract values of the 
+    quadtree at point locations. Functions for calculating
+    least-cost paths between two points are also provided.
 License: GPL (>= 2)
-Imports: Rcpp (>= 1.0.5)
+Imports: 
+    Rcpp (>= 1.0.5),
+    raster
 LinkingTo: Rcpp
+RoxygenNote: 7.1.1
