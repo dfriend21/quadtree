@@ -65,7 +65,8 @@ RCPP_MODULE(qt) {
       //.constructor<QuadtreeWrapper, Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::NumericVector>()
       //.method("makeShortestPathNetwork", &ShortestPathFinderWrapper::makeShortestPathNetwork)
       .method("getShortestPath", &ShortestPathFinderWrapper::getShortestPath)
-      .method("getVals", &ShortestPathFinderWrapper::getVals);
+      .method("getStartPoint", &ShortestPathFinderWrapper::getStartPoint)
+      .method("getSearchLimits", &ShortestPathFinderWrapper::getSearchLimits);
     
     function("readQuadtree", &QuadtreeWrapper::readQuadtree);
     //.
