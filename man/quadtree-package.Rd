@@ -26,11 +26,11 @@
 
   Function summary:
   
-  \code{\link{qt_create}}: creates a quadtree from a raster
+  \code{\link{qt_create}}: create a quadtree from a raster
   
-  \code{\link{qt_extent}}, \code{\link{qt_extent_orig}}: gets the extent of a quadtree
+  \code{\link{qt_extent}}, \code{\link{qt_extent_orig}}: get the extent of a quadtree
   
-  \code{\link{qt_extract}}: extracts values from the quadtree at point locations
+  \code{\link{qt_extract}}: extract values from the quadtree at point locations
   
   \code{\link{qt_lcp_finder}}, \code{\link{qt_find_lcp}}: find the LCP between two points using the quadtree as a cost surface
   
