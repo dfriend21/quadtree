@@ -140,3 +140,15 @@ qt_plot(qt1, crop=TRUE, border_col="transparent")
 lines(path1)
 lines(path2, col="red")
 lines(path3, col="blue")
+
+#=============================================
+#qt_extent example
+#=============================================
+#create raster of random values
+nrow = 57
+ncol = 75
+rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
+qt = qt_create(rast, .9, adj_type="expand")
+
+qt_extent(qt)
+qt_extent_orig(qt)
