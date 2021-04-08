@@ -1,4 +1,5 @@
-
+src/*.o
+src/*.so
 other_files/output/*
 *.DS_store
 *.Rhistory
