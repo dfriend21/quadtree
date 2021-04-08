@@ -14,6 +14,7 @@ Description: Provides a C++ implementation of a quadtree data
 License: GPL (>= 2)
 Imports: 
     Rcpp (>= 1.0.5),
-    raster
+    raster,
+    dplyr
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
