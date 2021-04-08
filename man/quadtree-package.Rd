@@ -3,32 +3,45 @@
 \alias{quadtree}
 \docType{package}
 \title{
-  A short title line describing what the package does
+  Quadtree Representation of Rasters
 }
 \description{
-  A more detailed description of what the package does. A length
-  of about one to five lines is recommended.
+  Provides a C++ implementation of a quadtree data 
+  structure. Functions are provided for creating a quadtree 
+  from a raster, with the level of "coarseness" of the
+  quadtree being determined by a user-supplied parameter. In
+  addition, functions are provided to extract values of the 
+  quadtree at point locations. Functions for calculating
+  least-cost paths between two points are also provided.
 }
 \details{
-  This section should provide a more detailed overview of how to use the
-  package, including the most important functions.
+
+  To get an understanding of the most important aspects of the package, read the following:
+  \enumerate{
+    \item For details on how a quadtree is constructed, see \code{\link{qt_create}}.
+    \item  For details on the least-cost path functionality, see \code{\link{qt_lcp_finder}}.
+  
+  }
+  
+
+  Function summary:
+  
+  \code{\link{qt_create}}: creates a quadtree from a raster
+  
+  \code{\link{qt_extent}}, \code{\link{qt_extent_orig}}: gets the extent of a quadtree
+  
+  \code{\link{qt_extract}}: extracts values from the quadtree at point locations
+  
+  \code{\link{qt_lcp_finder}}, \code{\link{qt_find_lcp}}: find the LCP between two points using the quadtree as a cost surface
+  
+  \code{\link{qt_plot}}: plot a quadtree
+  
+  \code{\link{qt_proj4string}}: get the proj4string of a quadtree
+  
+  \code{\link{qt_read}}, \code{\link{qt_write}}: read and write a quadtree object to a file
+  
 }
 \author{
-Your Name, email optional.
-
-Maintainer: Your Name <your@email.com>
-}
-\references{
-  This optional section can contain literature or other references for
-  background information.
+  Derek Friend
 }
 \keyword{ package }
-\seealso{
-  Optional links to other man pages
-}
-\examples{
-  \dontrun{
-     ## Optional simple examples of the most important functions
-     ## These can be in \dontrun{} and \donttest{} blocks.   
-  }
-}

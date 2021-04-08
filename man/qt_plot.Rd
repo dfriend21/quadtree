@@ -39,43 +39,44 @@ qt_plot(
 Plot a quadtree object
 }
 \examples{
-#create raster of random values
+# create raster of random values
 nrow = 57
 ncol = 75
 rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
 
-#create quadtree
-qt1 = qt_create(rast, range_limit = .9, adj_type="expand") #automatically adds NA cells to bring the dimensions to 128 x 128 before creating the quadtree
+# create quadtree
+qt1 = qt_create(rast, range_limit = .9, adj_type="expand")
 
-#-----------
-#DEFAULT
-#-----------
+# -----------
+# DEFAULT
+# -----------
 qt_plot(qt1) #default - no additional parameters provided
 
-#-----------
-#CHANGE PLOT EXTENT
-#-----------
-#note that additional parameters like 'main', 'xlab', 'ylab', etc. will be passed to the default 'plot()' function
+# -----------
+# CHANGE PLOT EXTENT
+# -----------
+# note that additional parameters like 'main', 'xlab', 'ylab', etc. will be
+# passed to the default 'plot()' function
 qt_plot(qt1, crop=TRUE, main="cropped") #crop extent to the original extent of the raster
 qt_plot(qt1, xlim = c(30,50), ylim = c(10,20), main="zoomed in") 
 
-#-----------
-#COLORS
-#-----------
-#change border color
+# -----------
+# COLORS
+# -----------
+# change border color
 qt_plot(qt1, border_col="transparent") #no borders
 qt_plot(qt1, border_col="gray60")
 
-#change color palette
+# change color palette
 qt_plot(qt1, colors=c("blue", "yellow", "red"))
 qt_plot(qt1, colors=hcl.colors(100))
 qt_plot(qt1, colors=c("black", "white"))
 
-#change color of NA cells
+# change color of NA cells
 qt_plot(qt1, na_col="pink")
 
-#-----------
-#SHOW NEIGHBOR CONNECTIONS
-#-----------
+# -----------
+# SHOW NEIGHBOR CONNECTIONS
+# -----------
 qt_plot(qt1, nb=TRUE, border_col="gray60")
 }

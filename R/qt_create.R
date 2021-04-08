@@ -54,16 +54,16 @@
 #' ncol = 75
 #' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
 #' 
-#' #create quadtree using the 'expand' method
-#' qt1 = qt_create(rast, range_limit = .9, adj_type="expand") #automatically adds NA cells to bring the dimensions to 128 x 128 before creating the quadtree
+#' #create quadtree using the 'expand' method - automatically adds NA cells to
+#' bring the dimensions to 128 x 128 before creating the quadtree
+#' qt1 = qt_create(rast, range_limit = .9, adj_type="expand") 
 #' qt_plot(qt1) #plot the quadtree
 #' qt_plot(qt1, crop=TRUE) #we can use 'crop=TRUE' if we don't want to see the padded NA's
 #' 
-#' #create quadtree using the 'resample' method
-#' qt2 = qt_create(rast, range_limit = .9, adj_type="resample", resample_n_side = 128) #resample to 128 since it's a power of 2
+#' #create quadtree using the 'resample' method - we'll resample to 128 since it's a power of 2
+#' qt2 = qt_create(rast, range_limit = .9, adj_type="resample", resample_n_side = 128)
 #' qt_plot(qt2)
 #' qt_plot(qt2, crop=TRUE)
-#createQuadtree <- function(rast, range_limit, adj_type="expand", resample_n_side=NA){
 qt_create <- function(rast, range_limit, adj_type="expand", resample_n_side=NA){
   ext = raster::extent(rast)
   dim = c(ncol(rast), nrow(rast))

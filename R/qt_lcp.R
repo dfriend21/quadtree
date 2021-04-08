@@ -43,25 +43,28 @@
 #' rectangle defined by \code{xlims} and \code{ylims}. This speeds up the
 #' computation of the LCP by limiting the number of cells considered.
 #' @examples 
-#' #create raster of random values
+#' # create raster of random values
 #' nrow = 57
 #' ncol = 75
 #' set.seed(4)
 #' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
 #' 
-#' #create quadtree
-#' qt1 = qt_create(rast, range_limit = .9, adj_type="expand") #automatically adds NA cells to bring the dimensions to 128 x 128 before creating the quadtree
+#' # create quadtree
+#' qt1 = qt_create(rast, range_limit = .9, adj_type="expand")
 #' qt_plot(qt1,crop=TRUE)
 #' start_pt = c(.231,.14)
 #' end_pt = c(74.89,56.11)
-#' #create the LCP finder object
+#' # create the LCP finder object
 #' spf = qt_lcp_finder(qt1, start_pt)
 #' 
-#' #use the LCP finder object to find the LCP to a certain point
-#' path1 = qt_find_lcp(spf, end_pt) #this path will have the cell centroids as the start and end points
-#' path2 = qt_find_lcp(spf, end_pt, use_original_end_points = TRUE) #this path will be identical to path1 except that the start and end points will be the user-provided start and end points rather than the cell centroids
+#' # use the LCP finder object to find the LCP to a certain point
+#' # this path will have the cell centroids as the start and end points
+#' path1 = qt_find_lcp(spf, end_pt) 
+#' # this path will be identical to path1 except that the start and end points
+#' # will be the user-provided start and end points rather than the cell centroids
+#' path2 = qt_find_lcp(spf, end_pt, use_original_end_points = TRUE) 
 #' 
-#' #plot the result
+#' # plot the result
 #' qt_plot(qt1, crop=TRUE, border_col="gray60")
 #' points(rbind(start_pt, end_pt), pch=16, col="red")
 #' lines(path1, col="black", lwd=2.5)
@@ -75,18 +78,22 @@
 #' ncol = 750
 #' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
 #' 
-#' qt1 = qt_create(rast, range_limit = .9, adj_type="expand") #automatically adds NA cells to bring the dimensions to 128 x 128 before creating the quadtree
+#' qt1 = qt_create(rast, range_limit = .9, adj_type="expand") 
 #' spf = qt_lcp_finder(qt1, c(1,1))
 #' 
-#' #the LCP finder saves state. So finding the path the first time requires computation, and takes longer, but running it again is nearly instantaneous
+#' # the LCP finder saves state. So finding the path the first time requires
+#' # computation, and takes longer, but running it again is nearly instantaneous
 #' system.time(qt_find_lcp(spf, c(740,560))) #takes longer
 #' system.time(qt_find_lcp(spf, c(740,560))) #runs MUCH faster
 #' 
-#' #in addition, because of how Dijkstra's algorithm works, the LCP finder also found many other LCPs in the course of finding the first LCP, meaning that subsequent LCP queries for different destination points will be much faster (since the LCP finder saves state)
+#' # in addition, because of how Dijkstra's algorithm works, the LCP finder also
+#' # found many other LCPs in the course of finding the first LCP, meaning that
+#' # subsequent LCP queries for different destination points will be much faster
+#' # (since the LCP finder saves state)
 #' system.time(qt_find_lcp(spf, c(740,1)))
 #' system.time(qt_find_lcp(spf, c(1,560)))
 #' 
-#' #now save the paths so we can plot them
+#' # now save the paths so we can plot them
 #' path1 = qt_find_lcp(spf, c(740,560))
 #' path2 = qt_find_lcp(spf, c(740,1))
 #' path3 = qt_find_lcp(spf, c(1,560))
