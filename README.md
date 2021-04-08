@@ -1,17 +1,5 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-```
 
 # quadtree
 
@@ -25,11 +13,12 @@ devtools::install_gitlab("dafriend/quadtree")
 
 ## Example
 
-A quadtree object is created from a 'raster' object:
+A quadtree object is created from a ‘raster’ object:
 
-```{r example}
+``` r
 library(quadtree)
 library(raster)
+#> Loading required package: sp
 #create raster of random values
 nrow = 32
 ncol = 32
@@ -41,15 +30,18 @@ qt = qt_create(rast, range_limit = .9)
 qt_plot(qt) #plot the quadtree
 ```
 
+<img src="man/figures/README-example-1.png" width="100%" />
+
 Cell values can be extracted:
 
-```{r}
+``` r
 qt_extract(qt,cbind(c(1,10,30),c(15,3,17)))
+#> [1] 0.7836425 0.5221430 0.3244501
 ```
 
 Least cost paths can be calculated:
 
-```{r}
+``` r
 start_point = c(1,1)
 end_point = c(31,31)
 lcp_finder = qt_lcp_finder(qt, start_point)
@@ -59,3 +51,5 @@ lines(lcp)
 points(lcp, pch=16, cex=.5)
 points(rbind(start_point, end_point), col="red", pch=16)
 ```
+
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
