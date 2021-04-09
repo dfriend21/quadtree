@@ -94,7 +94,7 @@ As mentioned before, these files are completely independent of R and can be buil
 
 ### Rcpp C++ code
 
-These files are called 'wrappers' - essentially they each contain an instance of relevant object, and provide additional Rcpp-related functions that can be accessed from R.
+These files are called 'wrappers' - essentially they each contain an instance of relevant object, and provide additional Rcpp-related functions that can be accessed from R. These essentially provide the "bridge" that allows the functionality in the core C++ files to be accessed from R.
 
 * QuadtreeWrapper.h - wrapper class for 'Quadtree'
 * NodeWrapper.h - wrapper class for 'Node'
@@ -104,12 +104,12 @@ In addition, 'R_interface.h' defines a namespace that currently contains only a 
 
 ### R code
 
-This category consists of the files in the 'R' folder. These functions are actually unnecessary, as all of the relevant functionality can be accessed from R via the 'Wrapper' classes. However, because of the object-based representation of these objects, the syntax for accessing accessing this functionality differs from typical R syntax. Thus, the R functions provided here are syntactic sugar designed to make the functionality available in a format that conforms to traditional R code syntax.
+This category consists of the files in the 'R' folder. Many of these functions are actually unnecessary, as all of the relevant functionality can be accessed from R via the 'Wrapper' classes. However, because of the object-based representation of these objects, the syntax for accessing this functionality differs from typical R syntax. Thus, most of the R functions provided here are syntactic sugar designed to make the functionality available in a format that conforms to traditional R code syntax. The two exceptions are `qt_create.R` and `qt_plot.R` which are more complex and are not simple wrappers for C++ functions.
 
 ## Notes on package structure
 
 The 3-tiered structure described here may be needlessly complicated. I designed it this way because I am using the functionality implemented in the C++ files for a pure-C++ implementation of an agent-based model. Thus, to avoid having to unnecessarily include R interface code in those files, I wanted a way to be able to use the original files for both projects (this package and the C++ ABM) without needing to have slightly different implementations to fit their respective purposes. Thus, I settled on using the 'wrapper class' approach as a way to augment the original classes with the necessary Rcpp functionality without having to make any changes to the underlying C++ code. 
 
-I added the R code later because I wanted a way to access the functions in a way that more closely resembles typical R syntax - this will hopefully make it more intuitive for R users to work with.
+I added most of the R code later because I wanted a way to access the functions in a way that more closely resembles typical R syntax - this will hopefully make it more intuitive for R users to work with.
 
 Overall, the structure works fairly well, but I wonder if it's overly complicated. I'm worried my desire to keep the C++ code independent of the R code results in a cumbersome project organization. Regardless, it works, and has allowed me to easily make edits to the underlying C++ structure and then use those exact files for both projects I'm working on rather than needing slightly different versions for each. There definitely might be more sophisticated ways of achieving the same purpose, but what I'm doing works.

@@ -1,3 +1,5 @@
+#https://stackoverflow.com/questions/15932585/multiple-functions-in-one-rd-file
+
 #' @name qt_lcp_finder
 #' @rdname qt_lcp_finder
 #' 

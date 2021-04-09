@@ -106,7 +106,9 @@ be built and run independently of R.
 
 These files are called ‘wrappers’ - essentially they each contain an
 instance of relevant object, and provide additional Rcpp-related
-functions that can be accessed from R.
+functions that can be accessed from R. These essentially provide the
+“bridge” that allows the functionality in the core C++ files to be
+accessed from R.
 
   - QuadtreeWrapper.h - wrapper class for ‘Quadtree’
   - NodeWrapper.h - wrapper class for ‘Node’
@@ -120,14 +122,15 @@ the wrapper classes.
 
 ### R code
 
-This category consists of the files in the ‘R’ folder. These functions
-are actually unnecessary, as all of the relevant functionality can be
-accessed from R via the ‘Wrapper’ classes. However, because of the
-object-based representation of these objects, the syntax for accessing
-accessing this functionality differs from typical R syntax. Thus, the R
-functions provided here are syntactic sugar designed to make the
-functionality available in a format that conforms to traditional R code
-syntax.
+This category consists of the files in the ‘R’ folder. Many of these
+functions are actually unnecessary, as all of the relevant functionality
+can be accessed from R via the ‘Wrapper’ classes. However, because of
+the object-based representation of these objects, the syntax for
+accessing this functionality differs from typical R syntax. Thus, most
+of the R functions provided here are syntactic sugar designed to make
+the functionality available in a format that conforms to traditional R
+code syntax. The two exceptions are `qt_create.R` and `qt_plot.R` which
+are more complex and are not simple wrappers for C++ functions.
 
 ## Notes on package structure
 
@@ -142,9 +145,9 @@ settled on using the ‘wrapper class’ approach as a way to augment the
 original classes with the necessary Rcpp functionality without having to
 make any changes to the underlying C++ code.
 
-I added the R code later because I wanted a way to access the functions
-in a way that more closely resembles typical R syntax - this will
-hopefully make it more intuitive for R users to work with.
+I added most of the R code later because I wanted a way to access the
+functions in a way that more closely resembles typical R syntax - this
+will hopefully make it more intuitive for R users to work with.
 
 Overall, the structure works fairly well, but I wonder if it’s overly
 complicated. I’m worried my desire to keep the C++ code independent of
