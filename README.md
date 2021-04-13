@@ -36,7 +36,7 @@ qt = qt_create(rast, range_limit = .9)
 qt_plot(qt) #plot the quadtree
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example_create-1.png" width="100%" />
 
 Cell values can be extracted:
 
@@ -53,12 +53,12 @@ end_point = c(31,31)
 lcp_finder = qt_lcp_finder(qt, start_point)
 lcp = qt_find_lcp(lcp_finder, end_point, use_original_end_points = TRUE)
 qt_plot(qt, border_col="gray60")
-lines(lcp)
-points(lcp, pch=16, cex=.5)
+lines(lcp[,1:2])
+points(lcp[,1:2], pch=16, cex=.5)
 points(rbind(start_point, end_point), col="red", pch=16)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-example_lcp-1.png" width="100%" />
 
 ## File structure
 

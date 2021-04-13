@@ -31,7 +31,7 @@ For documentation of all the functions, see the PDF file stored at the root dire
 
 A quadtree object is created from a 'raster' object:
 
-```{r example}
+```{r example_create}
 library(quadtree)
 library(raster)
 #create raster of random values
@@ -47,20 +47,20 @@ qt_plot(qt) #plot the quadtree
 
 Cell values can be extracted:
 
-```{r}
+```{r example_extract}
 qt_extract(qt,cbind(c(1,10,30),c(15,3,17)))
 ```
 
 Least cost paths can be calculated:
 
-```{r}
+```{r example_lcp}
 start_point = c(1,1)
 end_point = c(31,31)
 lcp_finder = qt_lcp_finder(qt, start_point)
 lcp = qt_find_lcp(lcp_finder, end_point, use_original_end_points = TRUE)
 qt_plot(qt, border_col="gray60")
-lines(lcp)
-points(lcp, pch=16, cex=.5)
+lines(lcp[,1:2])
+points(lcp[,1:2], pch=16, cex=.5)
 points(rbind(start_point, end_point), col="red", pch=16)
 ```
 
