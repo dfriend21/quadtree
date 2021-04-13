@@ -50,7 +50,7 @@ void ShortestPathFinder::init(int startNodeID){
 
     int counter{0};
     for(auto &iNode : nodes){
-        NodeEdge *ne = new NodeEdge{counter, iNode, nullptr,0,0};
+        NodeEdge *ne = new NodeEdge{counter, iNode, nullptr,0,0,0};
         nodeEdges.at(counter) = std::shared_ptr<NodeEdge>(ne);
         //nodeEdges.emplace_back(makeNodeEdge(iNode, nullptr));
         counter++;
@@ -71,8 +71,8 @@ void ShortestPathFinder::init(int startNodeID){
     // std::set<std::tuple<int,int,double>> possibleEdges; //order of tuple is nodeEdge ID 1, nodeEdge ID 2, dist between the nodes
     //https://stackoverflow.com/questions/2620862/using-custom-stdset-comparator
     //auto cmp = [](std::tuple<int,int,double> a, std::tuple<int,int,double> b) { return std::get<2>(a) < std::get<2>(b); };
-    possibleEdges = std::multiset<std::tuple<int,int,double>, cmp>();
-    possibleEdges.insert(std::make_tuple(dict[startNode->id],dict[startNode->id], 0)); //initialize our set with the start node
+    possibleEdges = std::multiset<std::tuple<int,int,double,double>, cmp>();
+    possibleEdges.insert(std::make_tuple(dict[startNode->id],dict[startNode->id], 0, 0)); //initialize our set with the start node
 }
 //performs one iteration of the shortest path algorithm
 //returns the ID of the most recently added Node (note that it returns the ID of the Node, NOT the NodeEdge)
@@ -85,7 +85,8 @@ int ShortestPathFinder::doNextIteration(){
         return -1;
     } else { //if the destination node already has a pointer for parent, it's already been included, so we'll skip this one - otherwise we'll set the 'parent' property of the destination node and then add the additional edge possibilities that result    
         nodeEdge->parent = nodeEdges.at(std::get<0>(*beginItr)); //set the parent of the destination node to be the source node
-        nodeEdge->cost = std::get<2>(*beginItr); //assign the distance to the NodeEdge
+        nodeEdge->cost = std::get<2>(*beginItr); //assign the cost-distance to the NodeEdge
+        nodeEdge->dist = std::get<3>(*beginItr); //assign the distance to the NodeEdge
         nodeEdge->nNodesFromOrigin = nodeEdge->parent->nNodesFromOrigin + 1; //add 1 to the number of nodes from the origin of the parent
         possibleEdges.erase(beginItr); //remove this edge from the list of possibilities
 
@@ -136,9 +137,10 @@ int ShortestPathFinder::doNextIteration(){
                     double dist2 = dist - dist1;
 
                     //use those distances to get the cost, weighted by the length of the segment in each cell. Add this to the cost to get to 'nodeEdge' to get the total cost from the origin
-                    double cost = dist1*(nodeEdge->node->value) + dist2*(nodeEdgeNb->node->value) + nodeEdge->cost; 
-                    
-                    possibleEdges.insert(std::make_tuple(nodeEdge->id, nodeEdgeNb->id, cost));
+                    double tot_cost = dist1*(nodeEdge->node->value) + dist2*(nodeEdgeNb->node->value) + nodeEdge->cost; 
+                    double tot_dist = dist + nodeEdge->dist;
+
+                    possibleEdges.insert(std::make_tuple(nodeEdge->id, nodeEdgeNb->id,tot_cost,tot_dist));
                 }
             }
         }
@@ -150,20 +152,26 @@ int ShortestPathFinder::doNextIteration(){
 //after the network as been fully or partially constructed using 'makeShortestPathNetwork()' or 'getShortestPath()', 
 //finds the path from start node to the end node
 //returns the result as a vector Node pointers. 
-std::vector<std::shared_ptr<Node>> ShortestPathFinder::findShortestPath(int endNodeID){
+//std::vector<std::shared_ptr<Node>> ShortestPathFinder::findShortestPath(int endNodeID){
+//std::vector<NodeEdge> ShortestPathFinder::findShortestPath(int endNodeID){
+std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::findShortestPath(int endNodeID){
     std::shared_ptr<NodeEdge> currentNodeEdge = nodeEdges.at(dict[endNodeID]); //get the pointer to the nodeEdge that corresponds with the ID provided by the user
     if(currentNodeEdge->parent){ //if this NodeEdge doesn't have a parent then that means it's unreachable
-        std::vector<std::shared_ptr<Node>> nodePath(currentNodeEdge->nNodesFromOrigin); //initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
+        //std::vector<std::shared_ptr<Node>> nodePath(currentNodeEdge->nNodesFromOrigin); //initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
+        std::vector<std::tuple<std::shared_ptr<Node>,double,double>> nodePath(currentNodeEdge->nNodesFromOrigin);//initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
         //starting with the end node, trace our way back to the start node
         for(size_t i = 1; i <= nodePath.size(); ++i){
             //nodePath.at(i) = currentNodeEdge->node;
-            nodePath.at(nodePath.size()-i) = currentNodeEdge->node; //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
+            //nodePath.at(nodePath.size()-i) = currentNodeEdge->node; //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
+            nodePath.at(nodePath.size()-i) = std::make_tuple(currentNodeEdge->node, currentNodeEdge->cost, currentNodeEdge->dist); //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
             currentNodeEdge = currentNodeEdge->parent; //set 'currentNodeEdge' to be this node's parent - this is how we'll move up the tree
         }
         return nodePath; //return the vector containing the nodes in the path
     }
 
-    return std::vector<std::shared_ptr<Node>>(); //return an empty vector if it's not reachable
+    //return std::vector<std::shared_ptr<Node>>(); //return an empty vector if it's not reachable
+    //return std::vector<NodeEdge>(); //return an empty vector if it's not reachable
+    return std::vector<std::tuple<std::shared_ptr<Node>,double,double>>(); //return an empty vector if it's not reachable
 }
 
 
@@ -184,13 +192,8 @@ void ShortestPathFinder::makeShortestPathNetwork(){
 //has already been calculated, then this function doesn't do any further calculation - it simply calls 
 //'findShortestPath()' to get the shortest path. If the full path hasn't been calculated, however, then it 
 //runs the algorithm until it finds the desired shortest path.
-
-//One thing to note is that there is a bit of awkwardness in the way I have this implemented: say you've already
-//used the function to get the path to node D. Along the way you very well may have found the path to node C.
-//However, if you run this function again, it will end up calculating the whole network - it only stops when
-//it hits the specified node, and because the specified node was already added in the previous run, it won't be
-//added in this run, so it'll run until it's found the entire network.
-std::vector<std::shared_ptr<Node>> ShortestPathFinder::getShortestPath(int endNodeID){
+//std::vector<std::shared_ptr<Node>> ShortestPathFinder::getShortestPath(int endNodeID){
+std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::getShortestPath(int endNodeID){
     if(!nodeEdges.at(dict[endNodeID])->parent){ // check if we've already found the path to this node
         while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
             int currentID = doNextIteration();
@@ -202,7 +205,8 @@ std::vector<std::shared_ptr<Node>> ShortestPathFinder::getShortestPath(int endNo
     return findShortestPath(endNodeID);
 }
 
-std::vector<std::shared_ptr<Node>> ShortestPathFinder::getShortestPath(Point endPoint){
+//std::vector<std::shared_ptr<Node>> ShortestPathFinder::getShortestPath(Point endPoint){
+std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::getShortestPath(Point endPoint){
     std::shared_ptr<Node> node = quadtree->getNode(endPoint.x, endPoint.y);
     return getShortestPath(node->id);
 }

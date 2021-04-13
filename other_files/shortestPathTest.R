@@ -5,16 +5,16 @@ l = raster("/Users/dfriend/Documents/clark_county_project/data/CC Habitat model 
 
 #==================
 #TEST 1
-#qt_1 = createQuadtree(1-l_iv, .2, adj_type="expand")
-qt_1 = createQuadtree(1-l, .2, adj_type="expand")
-#qtplot(qt_1, crop=TRUE)
+#qt_1 = qt_create(1-l_iv, .2, adj_type="expand")
+qt_1 = qt_create(1-l, .2, adj_type="expand")
+#qt_plot(qt_1, crop=TRUE)
 #pt1 = c(640000,3970000)
 #pt2 = c(645000,3910000)
 #pt1 = c(575000,4000000)
 pt1 = c(710000,3830000)
 pt2 = c(775000,4100000)
 pt3 = c(575000,4000000)
-qtplot(qt_1, border_col="transparent", crop=TRUE)
+qt_plot(qt_1, border_col="transparent", crop=TRUE)
 points(rbind(pt1,pt2,pt3), col=c("red", "blue", "purple"), pch=16)
 
 
@@ -31,7 +31,7 @@ spf = qt_1$getShortestPathFinder(pt1, qt_1$extent()[1:2],qt_1$extent()[3:4] )
 path1 = spf$getShortestPath(pt2)
 path2 = spf$getShortestPath(pt3)
 
-#qtplot(qt_1, border_col="gray60", crop=TRUE)
+#qt_plot(qt_1, border_col="gray60", crop=TRUE)
 
 library(geosphere)
 library(gdistance)
@@ -44,7 +44,7 @@ shortest <- shortestPath(tr.sc, pt1, pt2, output = 'SpatialLines')
 et = Sys.time()
 et-st
 
-qtplot(qt_1, border_col="transparent", crop=TRUE)
+qt_plot(qt_1, border_col="transparent", crop=TRUE)
 points(rbind(pt1,pt2), col="red", pch=16)
 lines(path1)
 plot(shortest, add=TRUE, col="red")
@@ -57,12 +57,12 @@ iv = readOGR("/Users/dfriend/Documents/cpp/abm/input/IvanpahValleyWatershed/Ivan
 iv = spTransform(iv, crs(l))
 l_iv = mask(crop(l,iv),iv)
 
-qt_2 = createQuadtree(1-l_iv, .1, adj_type="expand")
-qtplot(qt_2, crop=TRUE)
+qt_2 = qt_create(1-l_iv, .1, adj_type="expand")
+qt_plot(qt_2, crop=TRUE)
 pt1_2 = c(640000,3970000)
 pt2_2 = c(645000,3910000)
 pt3_2 = c(665000,3970000)
-qtplot(qt_2, border_col="transparent", crop=TRUE)
+qt_plot(qt_2, border_col="transparent", crop=TRUE)
 points(rbind(pt1_2,pt2_2,pt3_2), col=c("red", "blue", "purple"), pch=16)
 
 
@@ -88,7 +88,7 @@ path1_2 = spf_2$getShortestPath(pt2_2)
 path2_2 = spf_2$getShortestPath(pt3_2)
 lines(path1_2)
 #lines(path2_2, col="red")
-#qtplot(qt_1, border_col="gray60", crop=TRUE)
+#qt_plot(qt_1, border_col="gray60", crop=TRUE)
 
 #library(geosphere)
 #library(gdistance)
@@ -101,7 +101,7 @@ shortest_2 <- shortestPath(tr.sc_2, pt1_2, pt2_2, output = 'SpatialLines')
 et_2 = Sys.time()
 et_2-st_2
 
-qtplot(qt_2, border_col="gray60", crop=TRUE)
+qt_plot(qt_2, border_col="gray60", crop=TRUE)
 points(rbind(pt1_2,pt2_2), col="red", pch=16)
 lines(path1_2)
 plot(shortest_2, add=TRUE, col="red")
@@ -153,7 +153,7 @@ lines(path1_3, col="blue")
 points(path1_3, col="blue", pch=16, cex=.5)
 legend(x="bottomright", legend = c("start point", "end point", "raster LCP", "quadtree LCP"), lwd=c(NA,NA,1,1), pch=c(16,16,16,16), pt.cex=c(1.3,1.3,.5,.5), col=c("blue", "red", "black", "blue"))
 
-qtplot(qt_2, xlim=small_ext[1:2], ylim = small_ext[3:4], border_col="gray70", main = paste0("quadtree representation (range_lim = ", qt_2$rangeLim(), ") (LCP time: ", round(dif_3_2,4), " sec)"))
+qt_plot(qt_2, xlim=small_ext[1:2], ylim = small_ext[3:4], border_col="gray70", main = paste0("quadtree representation (range_lim = ", qt_2$rangeLim(), ") (LCP time: ", round(dif_3_2,4), " sec)"))
 points(rbind(pt1_3, pt2_3), col=c("blue", "red"), pch=16, cex=1.3)
 plot(small_ext,add=TRUE, col="black", lwd=3)
 plot(shortest_3, add=TRUE)
@@ -170,7 +170,7 @@ legend(x="bottomright", legend = c("start point", "end point", "raster LCP", "qu
 #make a picture for the ABM package
 png("/Users/dfriend/Documents/r_packages/quadtree/other_files/output/gitlab_abm_pic.png", width = 100, height = 100)
 par(mar = c(0,0,0,0))
-qtplot(qt_2, xlim=c(small_ext[1]-200,small_ext[2]), ylim = c(small_ext[3], small_ext[4]+200), border_col="gray70", main = paste0("quadtree representation (range_lim = ", qt_2$rangeLim(), ") (LCP time: ", round(dif_3_2,4), " sec)"))
+qt_plot(qt_2, xlim=c(small_ext[1]-200,small_ext[2]), ylim = c(small_ext[3], small_ext[4]+200), border_col="gray70", main = paste0("quadtree representation (range_lim = ", qt_2$rangeLim(), ") (LCP time: ", round(dif_3_2,4), " sec)"))
 points(path1_3, col="black", pch=16, cex=.5)
 lines(path1_3, col="black")
 dev.off()

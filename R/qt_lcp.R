@@ -66,11 +66,14 @@
 #' # will be the user-provided start and end points rather than the cell centroids
 #' path2 = qt_find_lcp(spf, end_pt, use_original_end_points = TRUE) 
 #' 
+#' head(path1)
+#' head(path2)
+#' 
 #' # plot the result
 #' qt_plot(qt1, crop=TRUE, border_col="gray60")
 #' points(rbind(start_pt, end_pt), pch=16, col="red")
-#' lines(path1, col="black", lwd=2.5)
-#' lines(path2, col="red", lwd=1)
+#' lines(path1[,1:2], col="black", lwd=2.5)
+#' lines(path2[,1:2], col="red", lwd=1)
 #' points(path1, cex=.7, pch=16)
 #' 
 #' #-------------------
@@ -101,9 +104,9 @@
 #' path3 = qt_find_lcp(spf, c(1,560))
 #' 
 #' qt_plot(qt1, crop=TRUE, border_col="transparent")
-#' lines(path1)
-#' lines(path2, col="red")
-#' lines(path3, col="blue")
+#' lines(path1[,1:2])
+#' lines(path2[,1:2], col="red")
+#' lines(path3[,1:2], col="blue")
 NULL
 
 #' @rdname qt_lcp_finder
@@ -125,14 +128,24 @@ qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
 #' @param end_point numeric vector with two elements - the x and y coordinates of the the destination point
 #' @param use_original_end_points boolean; by default the start and end points of the returned path are not the points given by the user but instead the centroids of the cells that those points fall in. If this parameter is set to \code{TRUE} the start and end points (representing the cell centroids) are replaced with the actual points specified by the user. Note that this is done after the calculation and has no effect on the path found by the algorithm.
 #' @return
-#' \code{qt_find_lcp} returns a two column matrix representing the coordinates of the LCP to the
-#' destination point
+#' \code{qt_find_lcp} returns a four column matrix representing the least cost path. It has the following columns:
+#' \itemize{
+#'  \item{\code{x}: }{x coordinate of this point}
+#'  \item{\code{y}: }{y coordinate of this point}
+#'  \item{\code{cost_tot}: }{the cumulative cost up to this point}
+#'  \item{\code{dist_tot}: }{the cumulative distance up to this point - note that this is not straight-line distance, but instead the distance along the path}
+#' }
+#' 
+#' IMPORTANT NOTE: the \code{use_original_end_points} options ONLY changes the x and y coordinates of the first
+#' and last points - it doesn't change the \code{cost_tot} or \code{dist_tot} columns. This means that even 
+#' though the start and end points have changed, the \code{cost_tot} and \code{dist_tot} columns still represent
+#' the cost and distance using the cell centroids of the start and end cells.
 #' @export
 qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
   mat = lcp_finder$getShortestPath(end_point)
   if(use_original_end_points){
-    mat[1,] = lcp_finder$getStartPoint()
-    mat[nrow(mat),] = end_point
+    mat[1,1:2] = lcp_finder$getStartPoint()
+    mat[nrow(mat),1:2] = end_point
   }
   return(mat)
 }
