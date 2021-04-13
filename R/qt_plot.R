@@ -51,6 +51,11 @@
 #' # -----------
 #' qt_plot(qt1, nb=TRUE, border_col="gray60")
 qt_plot = function(qt, colors = NULL, nb=FALSE, border_col="black", xlim=NULL, ylim=NULL, crop=FALSE, na_col="white", ...) {
+  args = list(...)
+  #if the user hasn't provided custom axis labels, assign values for the labels
+  if(is.null(args[["xlab"]])) args[["xlab"]] = "x"
+  if(is.null(args[["ylab"]])) args[["ylab"]] = "y"
+  
   nodes = dplyr::bind_rows(qt$asList())
   if(is.null(colors)){
     colors = terrain.colors(100,rev=TRUE)
@@ -75,7 +80,9 @@ qt_plot = function(qt, colors = NULL, nb=FALSE, border_col="black", xlim=NULL, y
     xlim = orig_ext[1:2]
     ylim = orig_ext[3:4]
   }
-  plot(1, xlim=xlim, ylim=ylim, type="n", asp=1,...)
+  
+  #all_args = c(list(x=1,y=1, xlim=xlim, ylim=ylim, type="n", asp=1),args)
+  do.call(plot,c(list(x=1,y=1, xlim=xlim, ylim=ylim, type="n", asp=1),args))
   rect(nodes$xMin, nodes$yMin, nodes$xMax, nodes$yMax, col=nodes$col, border=border_col)
   
   if(nb){
