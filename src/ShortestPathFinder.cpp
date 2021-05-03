@@ -126,10 +126,10 @@ int ShortestPathFinder::doNextIteration(){
                     //now get the ratio between: {the difference between the known (x or y) mid-coordinate and the (x or y) coordinate of the starting point} and {the difference in the (x or y) coordinates of the two centroids}
                     if(isX){
                         double deltaX = nodePoint.x - nbPoint.x; //get the difference of the x coords
-                        ratio = (mid-nodePoint.x)/deltaX;
+                        ratio = (nodePoint.x-mid)/deltaX;
                     } else {
                         double deltaY = nodePoint.y - nbPoint.y; //get the difference of the y coords
-                        ratio = (mid-nodePoint.y)/deltaY;
+                        ratio = (nodePoint.y-mid)/deltaY;
                     }
 
                     //use the ratio we just calculated to get the length of the segment in each cell
