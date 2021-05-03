@@ -18,8 +18,8 @@ Rcpp::NumericMatrix ShortestPathFinderWrapper::getShortestPath(Rcpp::NumericVect
   //_endPoint = endPoint;
   //std::vector<std::shared_ptr<Node>> path = spf.getShortestPath(Point(endPoint[0], endPoint[1]));
   std::vector<std::tuple<std::shared_ptr<Node>,double,double>> path = spf.getShortestPath(Point(endPoint[0], endPoint[1]));
-  Rcpp::NumericMatrix mat(path.size(),4);
-  colnames(mat) = Rcpp::CharacterVector({"x","y","cost_tot","dist_tot"}); //name the columns
+  Rcpp::NumericMatrix mat(path.size(),5);
+  colnames(mat) = Rcpp::CharacterVector({"x","y","cost_tot","dist_tot", "cost_cell"}); //name the columns
   // Rcpp::Rcout << "endPoint[0]: " << endPoint[0] << "\n";
   // Rcpp::Rcout << "endPoint[1]: " << endPoint[1] << "\n";
   // Rcpp::Rcout << "path.size(): " << path.size() << "\n";
@@ -31,9 +31,13 @@ Rcpp::NumericMatrix ShortestPathFinderWrapper::getShortestPath(Rcpp::NumericVect
     mat(i,1) = (std::get<0>(path.at(i))->yMin + std::get<0>(path.at(i))->yMax)/2;
     mat(i,2) = std::get<1>(path.at(i));
     mat(i,3) = std::get<2>(path.at(i));
+    mat(i,4) = std::get<0>(path.at(i))->value;
   }
   return mat;
 }
+
+
+
 
 Rcpp::NumericVector ShortestPathFinderWrapper::getStartPoint(){
   Rcpp::NumericVector vec(2);
