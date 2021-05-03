@@ -134,6 +134,7 @@ qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
 #'  \item{\code{y}: }{y coordinate of this point}
 #'  \item{\code{cost_tot}: }{the cumulative cost up to this point}
 #'  \item{\code{dist_tot}: }{the cumulative distance up to this point - note that this is not straight-line distance, but instead the distance along the path}
+#'  \item{\code{cost_cell}: }{the cost of the cell that contains this point}
 #' }
 #' 
 #' IMPORTANT NOTE: the \code{use_original_end_points} options ONLY changes the x and y coordinates of the first
@@ -143,7 +144,7 @@ qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
 #' @export
 qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
   mat = lcp_finder$getShortestPath(end_point)
-  if(use_original_end_points){
+  if(use_original_end_points && nrow(mat) > 0){
     mat[1,1:2] = lcp_finder$getStartPoint()
     mat[nrow(mat),1:2] = end_point
   }

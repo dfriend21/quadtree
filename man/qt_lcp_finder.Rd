@@ -33,6 +33,7 @@ qt_find_lcp(lcp_finder, end_point, use_original_end_points = FALSE)
  \item{\code{y}: }{y coordinate of this point}
  \item{\code{cost_tot}: }{the cumulative cost up to this point}
  \item{\code{dist_tot}: }{the cumulative distance up to this point - note that this is not straight-line distance, but instead the distance along the path}
+ \item{\code{cost_cell}: }{the cost of the cell that contains this point}
 }
 
 IMPORTANT NOTE: the \code{use_original_end_points} options ONLY changes the x and y coordinates of the first
