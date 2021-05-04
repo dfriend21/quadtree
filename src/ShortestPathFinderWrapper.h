@@ -19,6 +19,7 @@ public:
   Rcpp::NumericMatrix getShortestPath(Rcpp::NumericVector endPoint);
   Rcpp::NumericVector getStartPoint();
   Rcpp::NumericVector getSearchLimits();
+  bool isValid();
 };
 
 

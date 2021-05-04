@@ -54,3 +54,7 @@ Rcpp::NumericVector ShortestPathFinderWrapper::getSearchLimits(){
   vec[3] = spf.yMax;
   return vec;
 }
+
+bool ShortestPathFinderWrapper::isValid(){
+  return spf.isValid;
+}
