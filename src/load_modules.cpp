@@ -66,7 +66,8 @@ RCPP_MODULE(qt) {
       //.method("makeShortestPathNetwork", &ShortestPathFinderWrapper::makeShortestPathNetwork)
       .method("getShortestPath", &ShortestPathFinderWrapper::getShortestPath)
       .method("getStartPoint", &ShortestPathFinderWrapper::getStartPoint)
-      .method("getSearchLimits", &ShortestPathFinderWrapper::getSearchLimits);
+      .method("getSearchLimits", &ShortestPathFinderWrapper::getSearchLimits)
+      .method("isValid", &ShortestPathFinderWrapper::isValid);
     
     function("readQuadtree", &QuadtreeWrapper::readQuadtree);
     //.
