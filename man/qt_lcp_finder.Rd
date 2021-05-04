@@ -27,7 +27,7 @@ qt_find_lcp(lcp_finder, end_point, use_original_end_points = FALSE)
 \value{
 \code{qt_lcp_finder} returns an LCP finder object
 
-\code{qt_find_lcp} returns a four column matrix representing the least cost path. It has the following columns:
+\code{qt_find_lcp} returns a five column matrix representing the least cost path. It has the following columns:
 \itemize{
  \item{\code{x}: }{x coordinate of this point}
  \item{\code{y}: }{y coordinate of this point}
