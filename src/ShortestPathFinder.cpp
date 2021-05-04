@@ -3,7 +3,7 @@
 
 
 ShortestPathFinder::ShortestPathFinder()
-    : quadtree{nullptr}, startNode{nullptr} {}//, startPoint{-1,-1}{}
+    : quadtree{nullptr}, startNode{nullptr}, isValid{false} {}//, startPoint{-1,-1}{}
 
 ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID)
     : quadtree{_quadtree} {
@@ -21,7 +21,9 @@ ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Poin
     yMin = quadtree->root->yMin;
     yMax = quadtree->root->yMax;
     std::shared_ptr<Node> startNode = quadtree->getNode(_startPoint.x, _startPoint.y);
-    init(startNode->id);
+    if(startNode){
+        init(startNode->id);
+    }
 }
 
 
@@ -37,10 +39,13 @@ ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Poin
     : quadtree{_quadtree}, xMin{_xMin}, xMax{_xMax}, yMin{_yMin}, yMax{_yMax} {
 
     std::shared_ptr<Node> startNode = quadtree->getNode(_startPoint.x, _startPoint.y);
-    init(startNode->id);
+    if(startNode){ //only continue if the point falls in the quadtree
+        init(startNode->id);
+    }
 }
 
 void ShortestPathFinder::init(int startNodeID){
+    isValid = true; //since we've reached 'init()' we're going to assume that the starting point/node was valid
         //std::shared_ptr<Node> endNode = qt.getNode(endPoint.x, endPoint.y);
     std::list<std::shared_ptr<Node>> nodes = quadtree->getNodesInBox(xMin, xMax, yMin, yMax);
     // std::vector<std::shared_ptr<NodeEdge>> nodeEdges(nodes.size());
@@ -208,5 +213,9 @@ std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder:
 //std::vector<std::shared_ptr<Node>> ShortestPathFinder::getShortestPath(Point endPoint){
 std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::getShortestPath(Point endPoint){
     std::shared_ptr<Node> node = quadtree->getNode(endPoint.x, endPoint.y);
-    return getShortestPath(node->id);
+    if(node && !std::isnan(node->value)){ //only try to find the shortest path if the point falls in the quadtree and the value of the node isn't NA
+        return getShortestPath(node->id);
+    } else {
+        return std::vector<std::tuple<std::shared_ptr<Node>,double,double>>();
+    }
 }
