@@ -12,41 +12,61 @@ qt_find_lcp(lcp_finder, end_point, use_original_end_points = FALSE)
 \arguments{
 \item{quadtree}{a quadtree object to be used as a resistance surface}
 
-\item{start_point}{numeric vector with 2 elements - the x and y coordinates of the starting point of the path(s)}
+\item{start_point}{numeric vector with 2 elements - the x and y coordinates
+of the starting point of the path(s)}
 
-\item{xlims}{numeric vector with 2 elements - paths will be constrained so that all points fall within the min and max x coordinates specified in \code{xlims}. If \code{NULL} the x limits of \code{quadtree} are used}
+\item{xlims}{numeric vector with 2 elements - paths will be constrained so
+that all points fall within the min and max x coordinates specified in
+\code{xlims}. If \code{NULL} the x limits of \code{quadtree} are used}
 
 \item{ylims}{same as \code{xlims}, but for y}
 
 \item{lcp_finder}{the LCP finder object returned from \code{qt_lcp_finder}}
 
-\item{end_point}{numeric vector with two elements - the x and y coordinates of the the destination point}
+\item{end_point}{numeric vector with two elements - the x and y coordinates
+of the the destination point}
 
-\item{use_original_end_points}{boolean; by default the start and end points of the returned path are not the points given by the user but instead the centroids of the cells that those points fall in. If this parameter is set to \code{TRUE} the start and end points (representing the cell centroids) are replaced with the actual points specified by the user. Note that this is done after the calculation and has no effect on the path found by the algorithm.}
+\item{use_original_end_points}{boolean; by default the start and end points
+of the returned path are not the points given by the user but instead the
+centroids of the cells that those points fall in. If this parameter is set
+to \code{TRUE} the start and end points (representing the cell centroids)
+are replaced with the actual points specified by the user. Note that this
+is done after the calculation and has no effect on the path found by the
+algorithm.}
 }
 \value{
-\code{qt_lcp_finder} returns an LCP finder object
+\code{qt_lcp_finder} returns an LCP finder object. If
+  \code{start_point} falls outside of the quadtree extent, \code{NULL} is
+  returned.
 
-\code{qt_find_lcp} returns a five column matrix representing the least cost path. It has the following columns:
-\itemize{
- \item{\code{x}: }{x coordinate of this point}
- \item{\code{y}: }{y coordinate of this point}
- \item{\code{cost_tot}: }{the cumulative cost up to this point}
- \item{\code{dist_tot}: }{the cumulative distance up to this point - note that this is not straight-line distance, but instead the distance along the path}
- \item{\code{cost_cell}: }{the cost of the cell that contains this point}
-}
+\code{qt_find_lcp} returns a five column matrix representing the
+least cost path. It has the following columns: \itemize{ \item{\code{x}: }{x
+coordinate of this point} \item{\code{y}: }{y coordinate of this point}
+\item{\code{cost_tot}: }{the cumulative cost up to this point}
+\item{\code{dist_tot}: }{the cumulative distance up to this point - note that
+this is not straight-line distance, but instead the distance along the path}
+\item{\code{cost_cell}: }{the cost of the cell that contains this point} }
 
-IMPORTANT NOTE: the \code{use_original_end_points} options ONLY changes the x and y coordinates of the first
-and last points - it doesn't change the \code{cost_tot} or \code{dist_tot} columns. This means that even 
-though the start and end points have changed, the \code{cost_tot} and \code{dist_tot} columns still represent
-the cost and distance using the cell centroids of the start and end cells.
+If no path is possible between the two points, a 0-row matrix with the
+previously described columns is returned. Also, note that when creating the
+LCP finder object using \code{qt_lcp_finder}, \code{NULL} will be returned if
+\code{start_point} falls outside of the quadtree. If \code{NULL} is passed to
+the \code{lcp_finder} parameter, a 0-row matrix is returned.
+
+IMPORTANT NOTE: the \code{use_original_end_points} options ONLY changes the x
+and y coordinates of the first and last points - it doesn't change the
+\code{cost_tot} or \code{dist_tot} columns. This means that even though the
+start and end points have changed, the \code{cost_tot} and \code{dist_tot}
+columns still represent the cost and distance using the cell centroids of the
+start and end cells.
 }
 \description{
-Finds the least cost path (LCP) between two points, using a quadtree as a resistance surface
+Finds the least cost path (LCP) between two points, using a
+  quadtree as a resistance surface
 }
 \details{
-These two functions are intended to be used in conjunction with one another.
-\code{qt_lcp_finder} creates the object used to find the LCP(s), and
+These two functions are intended to be used in conjunction with one
+another. \code{qt_lcp_finder} creates the object used to find the LCP(s), and
 \code{qt_find_lcp} uses this object to find the LCP to a given point. See
 'Examples' for examples of its usage.
 
@@ -79,10 +99,10 @@ won't reflect the 'true' least cost path. This is because treating the
 centroids of the cells as the nodes introduces some distortion, especially
 with large cells.
 
-Note that the \code{xlims} and \code{ylims} arguments in
-\code{qt_lcp_finder} can be used to restrict the search space to the
-rectangle defined by \code{xlims} and \code{ylims}. This speeds up the
-computation of the LCP by limiting the number of cells considered.
+Note that the \code{xlims} and \code{ylims} arguments in \code{qt_lcp_finder}
+can be used to restrict the search space to the rectangle defined by
+\code{xlims} and \code{ylims}. This speeds up the computation of the LCP by
+limiting the number of cells considered.
 }
 \examples{
 # create raster of random values
@@ -101,10 +121,10 @@ spf = qt_lcp_finder(qt1, start_pt)
 
 # use the LCP finder object to find the LCP to a certain point
 # this path will have the cell centroids as the start and end points
-path1 = qt_find_lcp(spf, end_pt) 
+path1 = qt_find_lcp(spf, end_pt)
 # this path will be identical to path1 except that the start and end points
 # will be the user-provided start and end points rather than the cell centroids
-path2 = qt_find_lcp(spf, end_pt, use_original_end_points = TRUE) 
+path2 = qt_find_lcp(spf, end_pt, use_original_end_points = TRUE)
 
 head(path1)
 head(path2)
@@ -123,7 +143,7 @@ nrow = 570
 ncol = 750
 rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
 
-qt1 = qt_create(rast, range_limit = .9, adj_type="expand") 
+qt1 = qt_create(rast, range_limit = .9, adj_type="expand")
 spf = qt_lcp_finder(qt1, c(1,1))
 
 # the LCP finder saves state. So finding the path the first time requires
