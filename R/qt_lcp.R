@@ -120,7 +120,13 @@ NULL
 qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
   if(is.null(xlims)) xlims = quadtree$extent()[1:2]
   if(is.null(ylims)) ylims = quadtree$extent()[3:4]
-  return(quadtree$getShortestPathFinder(start_point, xlims, ylims))
+  spf = quadtree$getShortestPathFinder(start_point, xlims, ylims)
+  if(spf$isValid()){
+    return(spf)
+  } else {
+    warning(paste0("warning in qt_lcp_finder(): starting point (",start_point[1], ",", start_point[2], ") not valid (falls outside the quadtree). Returning NULL."))
+    return(NULL)
+  }
 }
 
 #' @rdname qt_lcp_finder
@@ -128,7 +134,7 @@ qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
 #' @param end_point numeric vector with two elements - the x and y coordinates of the the destination point
 #' @param use_original_end_points boolean; by default the start and end points of the returned path are not the points given by the user but instead the centroids of the cells that those points fall in. If this parameter is set to \code{TRUE} the start and end points (representing the cell centroids) are replaced with the actual points specified by the user. Note that this is done after the calculation and has no effect on the path found by the algorithm.
 #' @return
-#' \code{qt_find_lcp} returns a four column matrix representing the least cost path. It has the following columns:
+#' \code{qt_find_lcp} returns a five column matrix representing the least cost path. It has the following columns:
 #' \itemize{
 #'  \item{\code{x}: }{x coordinate of this point}
 #'  \item{\code{y}: }{y coordinate of this point}
@@ -143,10 +149,17 @@ qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
 #' the cost and distance using the cell centroids of the start and end cells.
 #' @export
 qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
-  mat = lcp_finder$getShortestPath(end_point)
-  if(use_original_end_points && nrow(mat) > 0){
-    mat[1,1:2] = lcp_finder$getStartPoint()
-    mat[nrow(mat),1:2] = end_point
+  if(!is.null(lcp_finder)){
+    mat = lcp_finder$getShortestPath(end_point)
+    if(use_original_end_points && nrow(mat) > 0){
+      mat[1,1:2] = lcp_finder$getStartPoint()
+      mat[nrow(mat),1:2] = end_point
+    }
+    return(mat)
+  } else {
+    warning("warning in qt_find_lcp(): NULL passed to the 'lcp_finder' parameter. Returning an empty matrix.")
+    mat = matrix(nrow=0,ncol=5, dimnames=list(NULL,c("x","y","cost_tot","dist_tot","cost_cell")))
+    return(mat)
   }
-  return(mat)
+  
 }
