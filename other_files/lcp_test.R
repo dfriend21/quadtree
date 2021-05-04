@@ -15,19 +15,21 @@ qt = qt_create(1-l_iv, .9, adj_type="expand")
 qt = qt_create(1-l_iv, .8, adj_type="expand")
 qt_plot(qt, crop=TRUE)
 pt1 = c(640000,3970000)
+pt1 = c(0,0)
 #pt1 = c(640000,3975000)
 #pt1 = c(663000,3936000)
 
 pt2 = c(645000,3910000)
 pt3 = c(665000,3970000)
 pt3 = c(665000,3980000)
+pt3 = c(0,0)
 qt_plot(qt, border_col="transparent", crop=TRUE)
 qt_plot(qt, crop=TRUE)
 points(rbind(pt1,pt2,pt3), col=c("red", "blue", "purple"), pch=16)
 
 
-spf = qt$getShortestPathFinder(pt1, qt$extent()[1:2],qt$extent()[3:4] )
-
+#spf = qt$getShortestPathFinder(pt1, qt$extent()[1:2],qt$extent()[3:4] )
+spf = qt_lcp_finder(qt, pt1, xlims = qt$extent()[1:2], ylims = qt$extent()[3:4])
 lcp1 = qt_find_lcp(spf, pt2)
 lcp2 = qt_find_lcp(spf, pt3, use_original_end_points = TRUE)
 lcp1
