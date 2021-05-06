@@ -4,21 +4,35 @@
 \alias{qt_extract}
 \title{Extract the values of a quadtree at the given locations}
 \usage{
-qt_extract(quadtree, pts)
+qt_extract(quadtree, pts, extents = FALSE)
 }
 \arguments{
 \item{quadtree}{A \code{quadtree} object}
 
-\item{pts}{A two-column matrix representing point coordinates. First column contains the x-coordinates, second column contains the y-coordinates}
+\item{pts}{A two-column matrix representing point coordinates. First column
+contains the x-coordinates, second column contains the y-coordinates}
+
+\item{extents}{boolean; if \code{FALSE}, a vector containing cell values is
+returned. If \code{TRUE}, a matrix is returned providing each cell's extent
+in addition to its value}
 }
 \value{
-a numeric vector corresponding to the values at the points represented by
-\code{pts}. If a point falls within the quadtree extent and the corresponding
-cell is \code{NA}, \code{NA} is returned. If the point falls outside of the
-quadtree extent, \code{NaN} is returned.
+The return type depends on the value of \code{extents}. 
+
+If \code{extents = FALSE}, the function returns a numeric vector
+corresponding to the values at the points represented by \code{pts}. If a
+point falls within the quadtree extent and the corresponding cell is
+\code{NA}, \code{NA} is returned. If the point falls outside of the quadtree
+extent, \code{NaN} is returned.
+
+If \code{extents = TRUE}, the function returns a 5-column numeric matrix providing 
+the extent of each cell along with the cell's value. The 5 columns are, in this order:
+\code{xmin}, \code{xmax}, \code{ymin}, \code{ymax}, \code{value}. If a point falls in
+a \code{NA} cell, the cell extent is still returned but \code{value} will be \code{NA}.
+If a point falls outside of the quadtree, all values will be \code{NaN}.
 }
 \description{
-Extract the values of a quadtree at the given locations
+Extract the cell values and optionally the cell extents
 }
 \examples{
 # create raster of random values
@@ -36,6 +50,9 @@ pts = cbind(-5:15, 45:65)
 qt_plot(qt1, border_col="gray60")
 points(pts, pch=16,cex=.6)
 
-# extract values
+# extract values only
 qt_extract(qt1,pts)
+
+# extract the cell extents in addition to the values
+qt_extract(qt1,pts,extents=TRUE)
 }
