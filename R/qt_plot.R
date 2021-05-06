@@ -4,8 +4,8 @@
 #' @param colors character vector; the colors that will be used to create the color ramp used in the plot. If no argument is provided, \code{terrain.colors(100,rev=TRUE)} is used.
 #' @param nb boolean; whether or not to include lines connecting neighboring cells
 #' @param border_col character; the color to use for the cell borders. Use 'transparent' if you don't want borders to be shown
-#' @param xlim two element numeric vector; defines the minimum and maximum values of the x axis
-#' @param ylim two element numeric vector; defines the minimum and maximum values of the y axis
+#' @param xlim two element numeric vector; defines the minimum and maximum values of the x axis. Ignored if \code{crop} is \code{TRUE}.
+#' @param ylim two element numeric vector; defines the minimum and maximum values of the y axis. Ignored if \code{crop} is \code{TRUE}.
 #' @param crop boolean; if \code{TRUE}, only displays the extent of the original raster, thus ignoring any of the NA cells that were added to pad the raster before making the quadtree. If \code{TRUE}, \code{xlim} and \code{ylim} are ignored
 #' @param na_col character; the color to use for NA cells
 #' @param ... arguments passed to the default \code{plot} function

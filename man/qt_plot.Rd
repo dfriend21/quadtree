@@ -25,9 +25,9 @@ qt_plot(
 
 \item{border_col}{character; the color to use for the cell borders. Use 'transparent' if you don't want borders to be shown}
 
-\item{xlim}{two element numeric vector; defines the minimum and maximum values of the x axis}
+\item{xlim}{two element numeric vector; defines the minimum and maximum values of the x axis. Ignored if \code{crop} is \code{TRUE}.}
 
-\item{ylim}{two element numeric vector; defines the minimum and maximum values of the y axis}
+\item{ylim}{two element numeric vector; defines the minimum and maximum values of the y axis. Ignored if \code{crop} is \code{TRUE}.}
 
 \item{crop}{boolean; if \code{TRUE}, only displays the extent of the original raster, thus ignoring any of the NA cells that were added to pad the raster before making the quadtree. If \code{TRUE}, \code{xlim} and \code{ylim} are ignored}
 
