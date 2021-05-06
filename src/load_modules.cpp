@@ -42,6 +42,7 @@ RCPP_MODULE(qt) {
       .method("getValues", &QuadtreeWrapper::getValues)
       .method("getCell", &QuadtreeWrapper::getCell)
       .method("getCells", &QuadtreeWrapper::getCells)
+      .method("getCellDetails", &QuadtreeWrapper::getCellDetails)
       .method("asList", &QuadtreeWrapper::asList)
       .method("print", &QuadtreeWrapper::print)
       .method("getNbList", &QuadtreeWrapper::getNbList)

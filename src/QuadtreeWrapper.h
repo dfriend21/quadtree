@@ -55,6 +55,7 @@ class QuadtreeWrapper{
     //Rcpp::NumericVector getValues(const Rcpp::NumericMatrix &mat) const;
     NodeWrapper getCell(double x, double y) const;
     Rcpp::List getCells(Rcpp::NumericVector x, Rcpp::NumericVector y) const;
+    Rcpp::NumericMatrix getCellDetails(Rcpp::NumericVector x, Rcpp::NumericVector y) const;
 
     
     void createTree(Rcpp::NumericMatrix &mat);
