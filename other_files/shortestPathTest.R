@@ -24,6 +24,7 @@ spf = qt_1$getShortestPathFinder(pt1, qt_1$extent()[1:2],qt_1$extent()[3:4] )
 t2 = system.time(spf$getShortestPath(pt2))
 t3 = system.time(spf$getShortestPath(pt3))
 t1+t2
+t3
 #vals = spf$getVals()
 
 #now get the actual paths
@@ -87,7 +88,7 @@ spf_2 = qt_2$getShortestPathFinder(pt1_2, qt_2$extent()[1:2],qt_2$extent()[3:4] 
 path1_2 = spf_2$getShortestPath(pt2_2)
 path2_2 = spf_2$getShortestPath(pt3_2)
 lines(path1_2)
-#lines(path2_2, col="red")
+lines(path2_2, col="red")
 #qt_plot(qt_1, border_col="gray60", crop=TRUE)
 
 #library(geosphere)
@@ -100,6 +101,9 @@ tr.sc_2 <- geoCorrection(tr.s_2, type="r", scl=T)
 shortest_2 <- shortestPath(tr.sc_2, pt1_2, pt2_2, output = 'SpatialLines')
 et_2 = Sys.time()
 et_2-st_2
+ac = accCost(tr.s_2, pt1_2)
+plot(ac)
+
 
 qt_plot(qt_2, border_col="gray60", crop=TRUE)
 points(rbind(pt1_2,pt2_2), col="red", pch=16)
