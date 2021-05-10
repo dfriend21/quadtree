@@ -28,20 +28,26 @@ Quadtree::Quadtree()
     //root = Node::makeNode(0,0,0,0,0,0,0)->ptr;
 }
 
-Quadtree::Quadtree(double _rangeLim) 
-    : Quadtree{0,0,0,0,_rangeLim,0,0,0,0,0,0, ""}{
+Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
+    : Quadtree{0,0,0,0,_rangeLim,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
     //: rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(0,0,0,0,0,0,0)->ptr;
 }
 
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim) 
-    : Quadtree {xMin, xMax, yMin, yMax, _rangeLim, xMin, xMax, yMin, yMax, 0, 0, ""}{
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
+    : Quadtree {xMin, xMax, yMin, yMax, _rangeLim, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
     // : rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
 }
 
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string)
-    : rangeLim{_rangeLim}, nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, proj4string{_proj4string} {
+
+//maxXLength -> the maximum cell size in the x-dimension. This means that any cell
+//      that's bigger than this will be divided no matter what (unless ALL of the
+//      values in the cell are NaN)
+//maxYLength -> same as 'maxXLength', but for y
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
+    : rangeLim{_rangeLim}, nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, proj4string{_proj4string} {
+    
     root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
 }
 
@@ -56,6 +62,9 @@ Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _r
 void Quadtree::makeTree(const Matrix &mat){
     originalNX = mat.nCol();
     originalNY = mat.nRow();
+    // if the value for max length is less than 0 (default is -1) then set the max length for both dimensions to be the user-defined dimensions. This essentially sets no restriction on the cell size
+    if(maxXCellLength < 0) maxXCellLength = root->xMax - root->xMin; 
+    if(maxYCellLength < 0) maxYCellLength = root->yMax - root->yMin;
     nNodes = makeTree(mat, root, 0, 0) + 1; //the ID that is returned from 'makeTree' also corresponds to the number of nodes created. Add 1 to get the count (since the ID starts at 0)
     assignNeighbors(); //assign neighbors for the cells    
 }
@@ -82,8 +91,17 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
     int newid{id};// ? - not sure if this is necessary - can I just use 'id'?
     //decide whether or not to split on two conditions - whether the cell can be divided evenly into four children, and whether the difference between the min and max exceeds the user-specified threshold
     //if(mat.nRow()%2 == 0 && mat.nCol()%2 == 0 && dif >= rangeLim){ 
+    double x_length = node->xMax - node->xMin;
+    double y_length = node->yMax - node->yMin;
     int nNans = mat.countNans();
-    if((mat.nRow()%2 == 0 && mat.nCol()%2 == 0) && nNans != mat.size() && (dif >= rangeLim || nNans > 0)){ //To split the following conditions must be met: 1. the # of cells in both dimensions must be divisible by two; 2. There is at least one non-Nan value in the matrix; 3. the difference between the max and min values exceeds the user-defined threshold OR there is at least one NA
+
+    //to split the cell, the following conditions must be met:
+    if((mat.nRow()%2 == 0 && mat.nCol()%2 == 0) // the # of cells in both dimensions must be divisible by two AND
+        && nNans != mat.size() // there is at least one non-Nan value in the matrix AND at least one of the following four conditions is true:
+        && (dif >= rangeLim // { the difference between the max and min values exceeds the user-defined threshold OR
+            || x_length > maxXCellLength // the x side length is greater than the user-defined maximum length OR
+            || y_length > maxYCellLength //the y side length is greater than the user-defined maximum length OR
+            || nNans > 0 )){ // there is at least one Nan }
         node->hasChildren = true;
         double cell_x_len = (node->xMax - node->xMin)/2;//get the side length of the cells
         double cell_y_len = (node->yMax - node->yMin)/2;

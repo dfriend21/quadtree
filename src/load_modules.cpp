@@ -33,7 +33,7 @@ RCPP_MODULE(qt) {
   class_<QuadtreeWrapper>("quadtree") 
     //.constructor()
     //.constructor<double, double, double, double, double>()
-      .constructor<Rcpp::NumericMatrix, Rcpp::NumericVector, Rcpp::NumericVector, double>()
+      .constructor<Rcpp::NumericMatrix, Rcpp::NumericVector, Rcpp::NumericVector, double, double, double>()
     //.constructor<Rcpp::NumericVector, Rcpp::NumericVector, double>()
       .method("rangeLim", &QuadtreeWrapper::rangeLim)
       .method("nNodes", &QuadtreeWrapper::nNodes)
@@ -54,6 +54,7 @@ RCPP_MODULE(qt) {
       .method("originalExtent", &QuadtreeWrapper::originalExtent)
       .method("originalDim", &QuadtreeWrapper::originalDim)
       .method("originalRes", &QuadtreeWrapper::originalRes)
+      .method("maxCellDims", &QuadtreeWrapper::maxCellDims)
       .method("projection", &QuadtreeWrapper::projection);
     
     // ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, std::vector<double> startPoint);
