@@ -64,7 +64,7 @@ qt_plot = function(qt, colors = NULL, nb=FALSE, border_col="black", xlim=NULL, y
   if(min(nodes$value, na.rm=TRUE) != max(nodes$value, na.rm=TRUE)){
     nodes$val_adj = (nodes$value-min(nodes$value, na.rm=TRUE))/(max(nodes$value,na.rm=TRUE)-min(nodes$value,na.rm=TRUE))
   } else {
-    nodes$val_adj = .5
+    nodes$val_adj = ifelse(is.na(nodes$value), NA, .5)
   }
   col_nums = colRamp(nodes$val_adj)
   nodes$col = apply(col_nums, MARGIN=1, function(row_i){
