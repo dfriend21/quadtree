@@ -22,9 +22,11 @@ QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector 
   //Matrix matNew(rMatToCppMat(mat));
   std::vector<double> xlimsNew(Rcpp::as<std::vector<double>>(xlims));
   std::vector<double> ylimsNew(Rcpp::as<std::vector<double>>(ylims));
-  quadtree = std::shared_ptr<Quadtree>(new Quadtree(rangelim, xMaxCellLength, yMaxCellLength));
+  //quadtree = std::shared_ptr<Quadtree>(new Quadtree(rangelim, xMaxCellLength, yMaxCellLength));
+  quadtree = std::make_shared<Quadtree>(rangelim, xMaxCellLength, yMaxCellLength);
   // quadtree = Quadtree(rangelim);
-  quadtree->root = Node::makeNode(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0)->ptr;
+  //quadtree->root = Node::makeNode(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0)->ptr;
+  quadtree->root = std::make_shared<Node>(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0);
   nodeList = Rcpp::List::create(); 
   //nodeVec = std::vector<Rcpp::NumericVector>(0);
 }
@@ -41,7 +43,8 @@ QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericMatrix mat, Rcpp::NumericVector xl
   std::vector<double> ylimsNew(Rcpp::as<std::vector<double>>(ylims));
   quadtree = std::shared_ptr<Quadtree>(new Quadtree(rangelim, xMaxCellLength, yMaxCellLength));
   // quadtree = Quadtree(rangelim);
-  quadtree->root = Node::makeNode(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0)->ptr;
+  // quadtree->root = Node::makeNode(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0)->ptr;
+  quadtree->root = std::make_shared<Node>(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0);
   //list = Rcpp::List(0);
   nodeList = Rcpp::List::create();
   //nodeVec = std::vector<Rcpp::NumericVector>(0);
