@@ -1,5 +1,10 @@
 #include "PointUtilities.h"
 #include <math.h>
+#include <list>
+#include <memory>
+#include <vector>
+#include <complex>
+#include <string>
 
 double PointUtilities::sqDistBtwPoints(const Point& point1, const Point& point2){
     double dist = pow(point1.getX() - point2.getX(),2) + pow(point1.getY() - point2.getY(),2);
@@ -69,3 +74,17 @@ Point PointUtilities::getRandomPointOnCircle(const Point& center, double radius,
     //std::cout << "point: " << point.getX() << "," << point.getY() << std::endl;
     return point;
 }
+
+// Point PointUtilities::getPointBtwPointsPct(const Point &point1, const Point& point2, double percent){
+//     double dist = PointUtilities::distBtwPoints(*iAgent,destPt);
+//     double cost = dist + dist*quadtree->getValue(iAgent->x, iAgent->y);
+//     if(cost > dist){ //probably don't need this check. cost will always be greater than dist unless the cost of the cell is 0
+//         double pct = dist/cost; //get the ratio of dist and cost
+
+//         //now find the point along the line between these two points where we hit the maximum cost
+//         double x = iAgent->x + (destPt.x - iAgent->x)*pct;
+//         double y = iAgent->y + (destPt.y - iAgent->y)*pct;
+        
+//         iAgent->setCoords(x, y); //set the coordinates of the agent to the new point // 2/19/2021 d
+//     }
+// }
