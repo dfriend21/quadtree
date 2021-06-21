@@ -17,7 +17,8 @@ Matrix::Matrix(double val, int _nrow, int _ncol) : nrow{_nrow}, ncol{_ncol}
 Matrix::Matrix(std::vector<double> _vec, int _nrow, int _ncol) 
     : vec(_vec), nrow{_nrow}, ncol{_ncol} 
 {
-    assert(vec.size() == nrow*ncol);
+    assert(_nrow >= 0 && _ncol >= 0);
+    assert(vec.size() == (size_t)(nrow*ncol));
 }
 
 int Matrix::getIndex(const int row, const int col) const{
@@ -80,7 +81,7 @@ Matrix Matrix::flipRows() const{
 
 Matrix Matrix::getTranspose() const {
     std::vector<double> newVec(vec.size());
-    for(int i = 0; i < vec.size(); i++){
+    for(size_t i = 0; i < vec.size(); i++){
         int newIndex = (i%ncol)*nrow + i/ncol;
         newVec.at(newIndex) = vec.at(i);
     }
@@ -175,7 +176,7 @@ void Matrix::setValueByIndex(const double value, const int index){
 
 double Matrix::mean() const{
     double sum = 0;
-    for(int i = 0; i < vec.size(); i++){
+    for(size_t i = 0; i < vec.size(); i++){
         sum += vec[i];
     }
     return sum/vec.size();
@@ -183,7 +184,7 @@ double Matrix::mean() const{
 
 double Matrix::min() const{
     double min = vec[0];
-    for(int i = 1; i < vec.size(); i++){
+    for(size_t i = 1; i < vec.size(); i++){
         if(vec[i] < min){
             min = vec[i];
         }
@@ -193,7 +194,7 @@ double Matrix::min() const{
 
 double Matrix::max() const{
     double max = vec[0];
-    for(int i = 1; i < vec.size(); i++){
+    for(size_t i = 1; i < vec.size(); i++){
         if(vec[i] > max){
             max = vec[i];
         }
@@ -265,7 +266,7 @@ Matrix operator+(const Matrix &lhs, const Matrix &rhs){
 
 Matrix operator+(const Matrix &mat, const int scalar){
     std::vector<double> sum(mat.asVector().size());
-    for(int i=0; i < mat.asVector().size(); i++){
+    for(size_t i=0; i < mat.asVector().size(); i++){
         sum[i] = mat.getValueByIndex(i) + scalar;
     }
     return Matrix(sum, mat.nRow(), mat.nCol());
@@ -277,7 +278,7 @@ Matrix operator+(const int scalar, const Matrix &mat){
 
 Matrix operator+(const Matrix &mat, const double scalar){
     std::vector<double> sum(mat.asVector().size());
-    for(int i=0; i < mat.asVector().size(); i++){
+    for(size_t i=0; i < mat.asVector().size(); i++){
         sum[i] = mat.getValueByIndex(i) + scalar;
     }
     return Matrix(sum, mat.nRow(), mat.nCol());
@@ -299,7 +300,7 @@ Matrix operator*(const Matrix &lhs, const Matrix &rhs){
         for(int j = 0; j < nColNew; j++){
             const std::vector<double> &col_r{rhs.getCol(j).asVector()};
             double sum{0};
-            for(int k = 0; k < row_l.size(); k++){ //row_l and col_r should have the same length
+            for(size_t k = 0; k < row_l.size(); k++){ //row_l and col_r should have the same length
                 sum += row_l.at(k)*col_r.at(k);
             }
             //std::cout << j << " | " << i*nColNew+j << std::endl;
@@ -313,7 +314,7 @@ Matrix operator*(const Matrix &lhs, const Matrix &rhs){
 
 Matrix operator*(const Matrix &mat, const int scalar){
     std::vector<double> prod(mat.asVector().size());
-    for(int i=0; i < mat.asVector().size(); i++){
+    for(size_t i=0; i < mat.asVector().size(); i++){
         prod[i] = mat.getValueByIndex(i) * scalar;
     }
     return Matrix(prod, mat.nRow(), mat.nCol());
@@ -325,7 +326,7 @@ Matrix operator*(const int scalar, const Matrix &mat){
 
 Matrix operator*(const Matrix &mat, const double scalar){
     std::vector<double> prod(mat.asVector().size());
-    for(int i=0; i < mat.asVector().size(); i++){
+    for(size_t i=0; i < mat.asVector().size(); i++){
         prod[i] = mat.getValueByIndex(i) * scalar;
     }
     return Matrix(prod, mat.nRow(), mat.nCol());
