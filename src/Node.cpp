@@ -24,16 +24,36 @@
   // std::vector<std::shared_ptr<Node>> neighbors;
 
 Node::Node()
-  : xMin{0}, xMax{0}, yMin{0}, yMax{0}, value{0}, id{0}, level{0}, smallestChildSideLength{0}, hasChildren{false}{
-    ptr = std::shared_ptr<Node>(nullptr);
-    children = std::vector<std::shared_ptr<Node>>(0);
-    neighbors = std::vector<std::shared_ptr<Node>>(0);
+  : Node{0,0,0,0,0,0,0} {
+  // std::cout << "Node::Node()\n";
+//  : xMin{0}, xMax{0}, yMin{0}, yMax{0}, value{0}, id{0}, level{0}, smallestChildSideLength{0}, hasChildren{false}{
+    //ptr = std::shared_ptr<Node>(nullptr);
+    // children = std::vector<std::shared_ptr<Node>>(0);
+    // neighbors = std::vector<std::shared_ptr<Node>>(0);
   }
+
+Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level)
+  : Node{_xMin, _xMax, _yMin ,_yMax, _value, _id, _level, 0, false} {
+  // std::cout << "Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level)\n";
+  // std::cout << "---- node check 0\n";
+}
+
+Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level, double _smallestChildSideLength, bool _hasChildren)
+  : xMin{_xMin}, xMax{_xMax}, yMin{_yMin}, yMax{_yMax}, value{_value}, id{_id}, level{_level}, smallestChildSideLength{_smallestChildSideLength}, hasChildren{_hasChildren}{
+  // std::cout << "Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level, double _smallestChildSideLength, bool _hasChildren)\n";
+  smallestChildSideLength = xMax-xMin;
+  children = std::vector<std::shared_ptr<Node>>(4);
+  // std::cout << "---- node check 1\n";
+  // neighbors = std::vector<std::shared_ptr<Node>>();
+  neighbors = std::vector<std::weak_ptr<Node>>();
+  // std::cout << "---- node check 2\n";
+}
 
 //given an x and a y coordinate, returns the index of the child that contains
 //the point. Based on the assumption that the first element is lower left corner. 
 //Indexing then proceeds by row
 int Node::getChildIndex(double x, double y) const {
+  // std::cout << "Node::getChildIndex(double x, double y)\n";
   if( (x < xMin) | (x > xMax) | (y < yMin) | (y > yMax) ){ //check to make sure the point falls within our extent
     //return -999; //if not, return NULL
     return std::numeric_limits<double>::quiet_NaN(); 
@@ -45,13 +65,22 @@ int Node::getChildIndex(double x, double y) const {
 }
 
 double Node::getNearestNeighborDistance() const{
+  // std::cout << "Node::getNearestNeighborDistance()\n";
   //std::vector<double> vals(ptr->neighbors.size());
   double min{0};
-  double xMean{(ptr->xMin + ptr->xMax)/2};
-  double yMean{(ptr->yMin + ptr->yMax)/2};
-  for(size_t i = 0; i < ptr->neighbors.size(); ++i){
-    double xMeanNb{(ptr->neighbors[i]->xMin + ptr->neighbors[i]->xMax)/2};
-    double yMeanNb{(ptr->neighbors[i]->yMin + ptr->neighbors[i]->yMax)/2};
+  // double xMean{(ptr->xMin + ptr->xMax)/2};
+  // double yMean{(ptr->yMin + ptr->yMax)/2};
+  double xMean{(xMin + xMax)/2};
+  double yMean{(yMin + yMax)/2};
+  //for(size_t i = 0; i < ptr->neighbors.size(); ++i){
+  for(size_t i = 0; i < neighbors.size(); ++i){
+    auto nb_i = neighbors[i].lock();
+    // double xMeanNb{(ptr->neighbors[i]->xMin + ptr->neighbors[i]->xMax)/2};
+    // double yMeanNb{(ptr->neighbors[i]->yMin + ptr->neighbors[i]->yMax)/2};
+    // double xMeanNb{(neighbors[i]->xMin + neighbors[i]->xMax)/2};
+    // double yMeanNb{(neighbors[i]->yMin + neighbors[i]->yMax)/2};
+    double xMeanNb{(nb_i->xMin + nb_i->xMax)/2};
+    double yMeanNb{(nb_i->yMin + nb_i->yMax)/2};
     double dist = std::pow(xMean - xMeanNb,2) + std::pow(yMean - yMeanNb,2);
     if( (dist < min) | (i == 0)){
       min = dist;
@@ -62,13 +91,17 @@ double Node::getNearestNeighborDistance() const{
 
 //find the minimum distance from a point to the centroids of the neighbors of this node
 double Node::getNearestNeighborDistance(const Point& point) const{
+  // std::cout << "Node::getNearestNeighborDistance(const Point& point)\n";
   //std::vector<double> vals(node->neighbors.size());
   double min{0};
   //double xMean{(node->xMin + node->xMax)/2};
   //double yMean{(node->yMin + node->yMax)/2};
   for(size_t i = 0; i < neighbors.size(); ++i){
-    double xMeanNb{(neighbors[i]->xMin + neighbors[i]->xMax)/2};
-    double yMeanNb{(neighbors[i]->yMin + neighbors[i]->yMax)/2};
+    auto nb_i = neighbors[i].lock();
+    // double xMeanNb{(neighbors[i]->xMin + neighbors[i]->xMax)/2};
+    // double yMeanNb{(neighbors[i]->yMin + neighbors[i]->yMax)/2};
+    double xMeanNb{(nb_i->xMin + nb_i->xMax)/2};
+    double yMeanNb{(nb_i->yMin + nb_i->yMax)/2};
     double dist = pow(point.getX() - xMeanNb,2) + pow(point.getY() - yMeanNb,2);
     if( (dist < min) | (i == 0) ){
       min = dist;
@@ -78,6 +111,7 @@ double Node::getNearestNeighborDistance(const Point& point) const{
 }
 
 std::string Node::toString() const{
+  // std::cout << "Node::toString()\n";
   std::string str = "x: [" + std::to_string(xMin) + ", " + std::to_string(xMax) + "] | y: [" + std::to_string(yMin) + ", " + std::to_string(yMax) + "]";
   str = str + " | value: " + std::to_string(value) + " | hasChildren: " + std::to_string(hasChildren) + " | smallestChildSideLength: " +
     std::to_string(smallestChildSideLength)+ " | size(children): " + std::to_string(children.size()) + " | size(neighbors): " + std::to_string(neighbors.size()) +
@@ -104,20 +138,22 @@ std::string Node::toString() const{
 //     archive(xMin); 
 //   }
 
-std::shared_ptr<Node> Node::makeNode(double xMin, double xMax, double yMin, double yMax, double value, int id, int level){
-  //Node node(xMin, xMax, yMin, yMax, value);
-  assert(xMax-xMin == yMax-yMin);
-  Node* node = new Node();
-  node->xMin = xMin;
-  node->xMax = xMax;
-  node->yMin = yMin;
-  node->yMax = yMax;
-  node->value = value;
-  node->id = id;
-  node->level = level;
-  node->smallestChildSideLength = xMax-xMin;
-  node->ptr = std::shared_ptr<Node>(node);
-  node->children = std::vector<std::shared_ptr<Node>>(4);
-  node->neighbors = std::vector<std::shared_ptr<Node>>();
-  return node->ptr;
-}
+// std::shared_ptr<Node> Node::makeNode(double xMin, double xMax, double yMin, double yMax, double value, int id, int level){
+//   //Node node(xMin, xMax, yMin, yMax, value);
+//   assert(xMax-xMin == yMax-yMin);
+//   //Node* node = new Node();
+//   std::shared_ptr<Node> node = std::make_shared<Node>();
+//   node->xMin = xMin;
+//   node->xMax = xMax;
+//   node->yMin = yMin;
+//   node->yMax = yMax;
+//   node->value = value;
+//   node->id = id;
+//   node->level = level;
+//   node->smallestChildSideLength = xMax-xMin;
+//   //node->ptr = std::shared_ptr<Node>(node);
+//   node->ptr = node;
+//   node->children = std::vector<std::shared_ptr<Node>>(4);
+//   node->neighbors = std::vector<std::shared_ptr<Node>>();
+//   return node->ptr;
+// }
