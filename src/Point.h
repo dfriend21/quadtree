@@ -27,7 +27,8 @@ public: //TEMPORARY!!!!!!!!!!!!!!!!!!!!!!
   //void Point::setY(double _y);
   void setCoords(double _x, double _y);
 
-  virtual std::string toString() const;
+  // virtual std::string toString() const;
+  std::string toString() const;
 };
 
 //std::shared_ptr<Point> makePoint(double x, double y, int id);
