@@ -24,18 +24,21 @@
 
 Quadtree::Quadtree() 
     : Quadtree{0,0,0,0,0,0,0,0,0,0,0,""}{
+    // std::cout << "Quadtree::Quadtree()\n";
     //: rangeLim{0}, nNodes{0}{
     //root = Node::makeNode(0,0,0,0,0,0,0)->ptr;
 }
 
 Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
     : Quadtree{0,0,0,0,_rangeLim,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
+    // std::cout << "Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength)\n";
     //: rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(0,0,0,0,0,0,0)->ptr;
 }
 
 Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
     : Quadtree {xMin, xMax, yMin, yMax, _rangeLim, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
+    // std::cout << "Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength)\n";
     // : rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
 }
@@ -47,8 +50,9 @@ Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _r
 //maxYLength -> same as 'maxXLength', but for y
 Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
     : rangeLim{_rangeLim}, nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, proj4string{_proj4string} {
-    
-    root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
+    // std::cout << "Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)\n";
+    root = std::make_shared<Node>(xMin,xMax,yMin,yMax,0,0,0);
+    //root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
 }
 
 //wrapper for makeTree(Matrix, std::shared_ptr<Node>, int, int)
@@ -60,6 +64,7 @@ Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _r
 //      a matrix with dimensions not divisible by 2 is provided, the result
 //      will be a quadtree with one node.
 void Quadtree::makeTree(const Matrix &mat){
+    // std::cout << "Quadtree::makeTree(const Matrix &mat)\n";
     originalNX = mat.nCol();
     originalNY = mat.nRow();
     // if the value for max length is less than 0 (default is -1) then set the max length for both dimensions to be the user-defined dimensions. This essentially sets no restriction on the cell size
@@ -76,6 +81,8 @@ void Quadtree::makeTree(const Matrix &mat){
 //id -> current ID
 //level -> the 'level' of this node
 int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int id, int level){
+    // std::cout << "Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int id, int level)\n";
+    // std::cout << "---- CHECK 0 ----\n";
     //Matrix mat = mat.flipRows();
     //mat.flipRows();
     //assign values to our node
@@ -94,7 +101,7 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
     double x_length = node->xMax - node->xMin;
     double y_length = node->yMax - node->yMin;
     int nNans = mat.countNans();
-
+    // std::cout << "---- CHECK 1 ----\n";
     //to split the cell, the following conditions must be met:
     if((mat.nRow()%2 == 0 && mat.nCol()%2 == 0) // the # of cells in both dimensions must be divisible by two AND
         && nNans != mat.size() // there is at least one non-Nan value in the matrix AND at least one of the following four conditions is true:
@@ -105,11 +112,11 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
         node->hasChildren = true;
         double cell_x_len = (node->xMax - node->xMin)/2;//get the side length of the cells
         double cell_y_len = (node->yMax - node->yMin)/2;
-        
+        // std::cout << "---- CHECK 2 ----\n";
         //loop over each child and create a node for each one - and, if the conditions are met, split the children
         for(int r = 0; r < 2; ++r){
             for(int c = 0; c < 2; ++c){
-                
+                // std::cout << "---- CHECK 3 ----\n";
                 //retrieve the indices of the matrix that correspond to this node
                 int c_beg = (mat.nCol()/2)*c;
                 int c_end = (c_beg + mat.nCol()/2)-1;
@@ -122,21 +129,34 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
                 double y_min = node->yMin + (1-r)*cell_y_len; //using (1-r) instead of r is because in a matrix the top left corner is y=0. But in space the lower left corner is y=0.
                 double y_max = y_min + cell_y_len;
                 
+                // std::cout << "---- CHECK 4 ----\n";
                 int child_index = (1-r)*2 + c; //get the index (from 0 to 3) of this child in the parent's 'children' vector
                 Matrix sub = mat.subset(r_beg,r_end,c_beg,c_end); //get the matrix of values that this cell contains
                 
-                node->children[child_index] = Node::makeNode(x_min, x_max, y_min, y_max, mat.mean(), id, level); //create the node
+                // std::cout << "---- CHECK 5 ----\n";
+                // std::cout << child_index << "\n";
+                // std::cout << node->children.size() << "\n";
+                //node->children[child_index] = Node::makeNode(x_min, x_max, y_min, y_max, mat.mean(), id, level); //create the node
+                node->children.at(child_index) = std::make_shared<Node>(x_min, x_max, y_min, y_max, mat.mean(), id, level); //create the node
+                // std::cout << "---- CHECK 6 ----\n";
                 newid = makeTree(sub, node->children[child_index], newid+1, level+1); //recursively call 'makeTree' on this node, making sure to increment the 'id' and the 'level'
-                
+                // std::cout << "---- CHECK 7 ----\n";
             }
+            // std::cout << "---- CHECK 8 ----\n";
         }
+        // std::cout << "---- CHECK 9 ----\n";
         //check its children to get the smallest child side length
         for(size_t i = 0; i < node->children.size(); ++i){
             if(node->children[i]->smallestChildSideLength < node->smallestChildSideLength){
+                // std::cout << "---- CHECK 10 ----\n";
                 node->smallestChildSideLength = node->children[i]->smallestChildSideLength;
+                // std::cout << "---- CHECK 11 ----\n";
             }
+            // std::cout << "---- CHECK 12 ----\n";
         }
+        // std::cout << "---- CHECK 13 ----\n";
     }
+    // std::cout << "---- CHECK 14 ----\n";
     return newid;
 }
 
@@ -149,6 +169,7 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
 //y -> y coordinate
 //node-> pointer 
 double Quadtree::getValue(double x, double y, const std::shared_ptr<Node> node) const{
+    // std::cout << "Quadtree::getValue(double x, double y, const std::shared_ptr<Node> node)\n";
     if( (x < node->xMin) | (x > node->xMax) | (y < node->yMin) | (y > node->yMax) ){ //check to make sure the point falls within our extent
         //return -999; //if not, return NULL
         return std::numeric_limits<double>::quiet_NaN(); //if the point doesn't fall within the quadtree, return NaN
@@ -163,6 +184,7 @@ double Quadtree::getValue(double x, double y, const std::shared_ptr<Node> node) 
 //user-friendly wrapper for quadtree so that 'node' doesn't need to be specified
 //(automatically uses the root)
 double Quadtree::getValue(double x, double y) const{
+    // std::cout << "Quadtree::getValue(double x, double y)\n";
     return getValue(x,y,root);
 }
 
@@ -170,6 +192,7 @@ double Quadtree::getValue(double x, double y) const{
 //works exactly the same as 'getValue' except returns a pointer to the node
 //instead of the value of the node
 std::shared_ptr<Node> Quadtree::getNode(double x, double y, const std::shared_ptr<Node> node) const{
+    // std::cout << "Quadtree::getNode(double x, double y, const std::shared_ptr<Node> node)\n";
     if( (x < node->xMin) | (x > node->xMax) | (y < node->yMin) | (y > node->yMax) ){ //check to make sure the point falls within our extent
         return nullptr; //if not, return NULL
     }
@@ -177,22 +200,26 @@ std::shared_ptr<Node> Quadtree::getNode(double x, double y, const std::shared_pt
         int childIndex {node->getChildIndex(x,y)};
         return getNode(x,y,node->children[childIndex]);
     }
-    return node->ptr; //if it doesn't have children, then we're at the bottom "level", so return the value of this Quadtree
+    // return node->ptr; //if it doesn't have children, then we're at the bottom "level", so return the value of this Quadtree
+    return node; //if it doesn't have children, then we're at the bottom "level", so return the value of this Quadtree
 }
 
 std::shared_ptr<Node> Quadtree::getNode(double x, double y) const{
+    // std::cout << "Quadtree::getNode(double x, double y)\n";
     return getNode(x,y,root);
 }
 
 
 
 std::list<std::shared_ptr<Node>> Quadtree::getNodesInBox(double xMin, double xMax, double yMin, double yMax){
+    // std::cout << "Quadtree::getNodesInBox(double xMin, double xMax, double yMin, double yMax)\n";
     std::list<std::shared_ptr<Node>> returnNodes;
     getNodesInBox(root, returnNodes, xMin, xMax, yMin, yMax);
     return returnNodes;
 }
 
 void Quadtree::getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_ptr<Node>> &returnNodes, double xMin, double xMax, double yMin, double yMax){
+    // std::cout << "Quadtree::getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_ptr<Node>> &returnNodes, double xMin, double xMax, double yMin, double yMax)\n";
     //if(node->children.size() > 0){
         for(size_t i = 0; i < node->children.size(); ++i){
             std::shared_ptr<Node> child = node->children.at(i);
@@ -223,28 +250,52 @@ void Quadtree::getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_p
 //searchSideLength -> the distance between the points that we'll use to check
 //  for neighbors
 //returns a vector of pointers to the neighboring nodes
+//std::vector<std::weak_ptr<Node>> Quadtree::findNeighbors(const std::shared_ptr<Node> node, double searchSideLength) const{
 std::vector<std::shared_ptr<Node>> Quadtree::findNeighbors(const std::shared_ptr<Node> node, double searchSideLength) const{
+    // std::cout << "Quadtree::findNeighbors(const std::shared_ptr<Node> node, double searchSideLength)\n";
+    // std::cout << "++++ CHECK 0 ++++\n";
     //std::cout << node->toString() << std::endl;
     int nCheckPerSide = (node->xMax - node->xMin)/searchSideLength + 2; //based on our knowledge of the side length of the smallest child, figure out how many points on each side we need to chekc - plus two so that we get the "diagonal" neighbors as well
     //std::cout << nCheckPerSide << std::endl;
-    std::vector<std::shared_ptr<Node>> nb(4*(nCheckPerSide-1)); //create a vector to store the nodes we get
+    // std::cout << "++++ CHECK 1 ++++\n";
+    // std::cout << "node->xMax: " << node->xMax << " | node->xMin: " << node->xMin << " | searchSideLength: " << searchSideLength << "\n";
+    // std::cout << nCheckPerSide << "\n";
+    std::vector<std::shared_ptr<Node>> nb(4*(nCheckPerSide-1),nullptr); //create a vector to store the nodes we get
+    //std::vector<std::weak_ptr<Node>> nb(4*(nCheckPerSide-1)); //create a vector to store the nodes we get
+    //std::vector<std::shared_ptr<Node>> nb; //create a vector to store the nodes we get
+    // std::cout << "++++ CHECK 2 ++++\n";
     int counter{0}; //keeps track of how many nodes we've added to the list so far - used to index the list
     //essentially what we're doing here is checking a grid of points based on the number of points we're checking. Most of the points in this grid will fall inside the cell - so we'll only check the points that border the cell
     for(int x = -1; x < nCheckPerSide-1; ++x){
+        // std::cout << "++++ CHECK 3 ++++\n";
         for(int y = -1; y < nCheckPerSide-1; ++y){
+            // std::cout << "++++ CHECK 4 ++++\n";
             if( (x == -1) | (x == nCheckPerSide-2) | (y == -1) | (y == nCheckPerSide-2)){ //we only want to check the cells that fall outside this cell - this means ignoring the "interior points" - the ones that fall inside this cell.
                 //get the x and y coordinates to check
+                // std::cout << "++++ CHECK 5 ++++\n";
                 double x_temp{node->xMin + x*searchSideLength + searchSideLength/2};
                 double y_temp{node->yMin + y*searchSideLength + searchSideLength/2};
                 //std::cout << "(" << x_temp << "," << y_temp << ")" << std::endl;
+                // std::cout << "++++ CHECK 6 ++++\n";
                 nb.at(counter) = getNode(x_temp, y_temp, root); //add the pointer of the node we retrieved to our vector
+                //nb.emplace_back(getNode(x_temp, y_temp, root));
+                // std::cout << "++++ CHECK 7 ++++\n";
                 ++counter; //since we added a node to our vector, increment the counter
+                // std::cout << "++++ CHECK 8 ++++\n";
             }
+            // std::cout << "++++ CHECK 9 ++++\n";
         }
+        // std::cout << "++++ CHECK 10 ++++\n";
     }
+    // std::cout << "++++ CHECK 11 ++++\n";
+
+    // !!!!!!!!!! MEMORY LEAK !!!!!!!!!!! I'm pretty sure one of the next three lines is causing a memory leak. - UPDATE - I'm actually not so sure about this anymore
     nb.erase(std::remove(std::begin(nb), std::end(nb), nullptr),std::end(nb)); //delete null pointers - this will happen if the cell is on the edge of the quadtree, as it'll end up checking points that fall outside of the quadtree.
+    // std::cout << "++++ CHECK 12 ++++\n";
     std::sort( nb.begin(), nb.end() ); //this line and the next remove duplicates - https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector
+    // std::cout << "++++ CHECK 13 ++++\n";
     nb.erase( unique( nb.begin(), nb.end() ), nb.end() );
+    // std::cout << "++++ CHECK 14 ++++\n";
     return nb;
 }
 
@@ -252,17 +303,25 @@ std::vector<std::shared_ptr<Node>> Quadtree::findNeighbors(const std::shared_ptr
 //and uses 'findNeighbors' on each node to find its neighbors. Populates the 
 //'neighbors' vector of each Node
 void Quadtree::assignNeighbors(const std::shared_ptr<Node> node){
+    // std::cout << "Quadtree::assignNeighbors(const std::shared_ptr<Node> node)\n";
     if(node->hasChildren){
         for(size_t i = 0; i < node->children.size(); i++){
             assignNeighbors(node->children[i]);
         }
     }
-    node->neighbors = findNeighbors(node, root->smallestChildSideLength);
+    auto neighbors = findNeighbors(node, root->smallestChildSideLength);
+    node->neighbors = std::vector<std::weak_ptr<Node>>(neighbors.size());
+    for(size_t i = 0; i < neighbors.size(); i++){
+        node->neighbors[i] = std::weak_ptr<Node>(neighbors[i]);
+    }
+
+    //node->neighbors = findNeighbors(node, root->smallestChildSideLength);
 }
 
 //user-friendly wrapper function for 'assignNeighbors' where no arguments are 
 //needed - automatically uses 'assignNeighbors' on the root
 void Quadtree::assignNeighbors(){
+    // std::cout << "Quadtree::assignNeighbors\n";
     assignNeighbors(root);
 }
 
@@ -346,6 +405,7 @@ void Quadtree::assignNeighbors(){
 //node -> the node we want to make a string for
 //prefix -> characters that will precede the node information
 std::string Quadtree::toString(const std::shared_ptr<Node> node, const std::string prefix) const{
+    // std::cout << "Quadtree::toString(const std::shared_ptr<Node> node, const std::string prefix)\n";
     std::string str = prefix + "--" + node->toString() + "\n";
     if(node->hasChildren){
         std::string newPrefix = prefix + "   |"; //add an indent to the prefix so that the children are indented under the parent
@@ -359,6 +419,7 @@ std::string Quadtree::toString(const std::shared_ptr<Node> node, const std::stri
 //user-friendly wrapper function for 'toString()' where no arguments are needed
 // - automatically calls 'toString()' on 'root'
 std::string Quadtree::toString() const{
+    // std::cout << "Quadtree::toString()\n";
     std::string str("");
     str = str + 
         "rangeLim: " + std::to_string(rangeLim) + "\n" +
@@ -374,6 +435,7 @@ std::string Quadtree::toString() const{
 // }
 
 void Quadtree::writeQuadtree(std::shared_ptr<Quadtree> quadtree, std::string filePath){
+    // std::cout << "Quadtree::writeQuadtree(std::shared_ptr<Quadtree> quadtree, std::string filePath)\n";
     std::ofstream os(filePath, std::ios::binary);
     cereal::PortableBinaryOutputArchive oarchive(os);
     oarchive(quadtree);
@@ -388,6 +450,7 @@ void Quadtree::writeQuadtree(std::shared_ptr<Quadtree> quadtree, std::string fil
 // }
 
 std::shared_ptr<Quadtree> Quadtree::readQuadtree(std::string filePath){
+    // std::cout << "Quadtree::readQuadtree(std::string filePath)\n";
     std::ifstream is(filePath, std::ios::binary);
     cereal::PortableBinaryInputArchive iarchive(is);
     Quadtree *quadtree = new Quadtree();

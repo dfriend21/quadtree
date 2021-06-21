@@ -7,6 +7,7 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <iostream> //TEMPORARY (for debugging)
 //#include <Rcpp.h>
 
 class Matrix;
@@ -67,6 +68,7 @@ public:
   
   template<class Archive>
   void serialize(Archive & archive){ //couldn't get serialization to work unless I defined 'serialize' in the header rather than in 'Quadtree.cpp'. WHY???????????????????????????
+    // std::cout << "Quadtree::serialize(Archive & archive)\n";
     archive(rangeLim,nNodes,originalXMin,originalXMax,originalYMin,originalYMax,originalNX,originalNY,proj4string,root);
   }
 
