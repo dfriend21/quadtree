@@ -12,8 +12,8 @@ class ShortestPathFinder{
 
         struct NodeEdge{
             int id;
-            std::shared_ptr<Node> node;
-            std::shared_ptr<NodeEdge> parent;
+            std::weak_ptr<Node> node;
+            std::weak_ptr<NodeEdge> parent;
             //std::shared_ptr<NodeEdge> self;
             double dist;
             double cost;

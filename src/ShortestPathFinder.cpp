@@ -54,9 +54,11 @@ void ShortestPathFinder::init(int startNodeID){
     //for(size_t i = 0; i < nodes.size(); ++i){
 
     int counter{0};
-    for(auto &iNode : nodes){
-        NodeEdge *ne = new NodeEdge{counter, iNode, nullptr,0,0,0};
+    for(auto iNode : nodes){
+        // NodeEdge *ne = new NodeEdge{counter, iNode, nullptr,0,0,0};
+        NodeEdge *ne = new NodeEdge{counter, std::weak_ptr<Node>(iNode), std::weak_ptr<NodeEdge>(),0,0,0};
         nodeEdges.at(counter) = std::shared_ptr<NodeEdge>(ne);
+        // nodeEdges.at(counter) = std::make_shared<NodeEdge>(counter, std::weak_ptr<Node>(iNode), std::weak_ptr<NodeEdge>(),0,0,0);
         //nodeEdges.emplace_back(makeNodeEdge(iNode, nullptr));
         counter++;
     }
@@ -66,17 +68,18 @@ void ShortestPathFinder::init(int startNodeID){
     dict = std::map<int, int>(); //dictionary with Node ID's as the key and the index of the corresponding 'NodeEdge' in 'nodeEdges'
     for(size_t i = 0; i < nodeEdges.size(); ++i){
         //if(!std::isnan(nodeEdges.at(i)->node->value)){
-            dict[nodeEdges.at(i)->node->id] = i; 
+            dict[nodeEdges.at(i)->node.lock()->id] = i; 
         //}
     }
 
     //std::shared_ptr<Node> startNode = quadtree.getNode(startPoint.x, startPoint.y);
-    startNode = nodeEdges[dict[startNodeID]]->node;
+    startNode = nodeEdges[dict[startNodeID]]->node.lock();
     //startPoint = Point((startNode->xMin + startNode->xMax)/2, (startNode->yMin + startNode->yMax)/2);
     // std::set<std::tuple<int,int,double>> possibleEdges; //order of tuple is nodeEdge ID 1, nodeEdge ID 2, dist between the nodes
     //https://stackoverflow.com/questions/2620862/using-custom-stdset-comparator
     //auto cmp = [](std::tuple<int,int,double> a, std::tuple<int,int,double> b) { return std::get<2>(a) < std::get<2>(b); };
     possibleEdges = std::multiset<std::tuple<int,int,double,double>, cmp>();
+    //auto startNodeShared = startNode.lock();
     possibleEdges.insert(std::make_tuple(dict[startNode->id],dict[startNode->id], 0, 0)); //initialize our set with the start node
 }
 //performs one iteration of the shortest path algorithm
@@ -85,43 +88,48 @@ void ShortestPathFinder::init(int startNodeID){
 int ShortestPathFinder::doNextIteration(){
     auto beginItr = possibleEdges.begin();
     std::shared_ptr<NodeEdge> nodeEdge = nodeEdges.at(std::get<1>(*beginItr)); //get the edge that's at the front of the set
-    if(nodeEdge->parent){
+    auto parent = nodeEdge->parent.lock();
+    if(parent){
         possibleEdges.erase(beginItr); 
         return -1;
     } else { //if the destination node already has a pointer for parent, it's already been included, so we'll skip this one - otherwise we'll set the 'parent' property of the destination node and then add the additional edge possibilities that result    
-        nodeEdge->parent = nodeEdges.at(std::get<0>(*beginItr)); //set the parent of the destination node to be the source node
+        nodeEdge->parent = std::weak_ptr<NodeEdge>(nodeEdges.at(std::get<0>(*beginItr))); //set the parent of the destination node to be the source node
+        // nodeEdge->nNodesFromOrigin = nodeEdge->parent->nNodesFromOrigin + 1; //add 1 to the number of nodes from the origin of the parent
+        nodeEdge->nNodesFromOrigin = nodeEdges.at(std::get<0>(*beginItr))->nNodesFromOrigin + 1;
         nodeEdge->cost = std::get<2>(*beginItr); //assign the cost-distance to the NodeEdge
         nodeEdge->dist = std::get<3>(*beginItr); //assign the distance to the NodeEdge
-        nodeEdge->nNodesFromOrigin = nodeEdge->parent->nNodesFromOrigin + 1; //add 1 to the number of nodes from the origin of the parent
+        
         possibleEdges.erase(beginItr); //remove this edge from the list of possibilities
 
         // if(nodeEdge->node->id == endNode->id){ //if the NodeEdge we just modified is the endNode, then we're done, and we can stop
         //     break;
         // }
         //now we'll add the edges corresponding to this nodes neighbors
-        Point nodePoint = Point((nodeEdge->node->xMin + nodeEdge->node->xMax)/2, (nodeEdge->node->yMin + nodeEdge->node->yMax)/2); //make the point for the node by getting its centroid
-        for(size_t i = 0; i < nodeEdge->node->neighbors.size(); ++i){ //loop over each of its neighbors
+        auto node = nodeEdge->node.lock();
+        Point nodePoint = Point((node->xMin + node->xMax)/2, (node->yMin + node->yMax)/2); //make the point for the node by getting its centroid
+        for(size_t i = 0; i < node->neighbors.size(); ++i){ //loop over each of its neighbors
             //if(nodeEdge)
-            std::map<int,int>::iterator itr = dict.find(nodeEdge->node->neighbors.at(i)->id); //see if this neighbor is included in our dictionary - if not, then it must fall outside the extent
+            std::map<int,int>::iterator itr = dict.find(node->neighbors.at(i).lock()->id); //see if this neighbor is included in our dictionary - if not, then it must fall outside the extent
             if(itr != dict.end()){
                 //int nodeEdgeIndex = itr->second;
                 std::shared_ptr<NodeEdge> nodeEdgeNb = nodeEdges.at(itr->second);
-                if(!(nodeEdgeNb->parent) && !std::isnan(nodeEdge->node->value)){ //check if this node already has a parent assigned i.e. has already been included in the network, or if this node is NAN
-                    Point nbPoint = Point((nodeEdgeNb->node->xMin + nodeEdgeNb->node->xMax)/2, (nodeEdgeNb->node->yMin + nodeEdgeNb->node->yMax)/2);
+                auto nodeNb = nodeEdgeNb->node.lock();
+                if(!(nodeEdgeNb->parent.lock()) && !std::isnan(node->value)){ //check if this node already has a parent assigned i.e. has already been included in the network, or if this node is NAN
+                    Point nbPoint = Point((nodeNb->xMin + nodeNb->xMax)/2, (nodeNb->yMin + nodeNb->yMax)/2);
                     //get cost for path - to do that we need to know the length of the segment in each cell
 
                     //first, figure out which side the two cells are adjacent on - this'll give us one coordinate for the intersection point (whether we know the x or y depends on which side they're adjacent on)
                     double mid{0};
                     bool isX = true; //tells us whether mid coordinate is an x-coordinate or a y-coordinate
-                    if(nodeEdge->node->xMin == nodeEdgeNb->node->xMax){ //left side
-                        mid = nodeEdge->node->xMin;
-                    } else if(nodeEdge->node->xMax == nodeEdgeNb->node->xMin) { //right side
-                        mid = nodeEdge->node->xMax;
-                    } else if(nodeEdge->node->yMin == nodeEdgeNb->node->yMax) { //bottom
-                        mid = nodeEdge->node->yMin;
+                    if(node->xMin == nodeNb->xMax){ //left side
+                        mid = node->xMin;
+                    } else if(node->xMax == nodeNb->xMin) { //right side
+                        mid = node->xMax;
+                    } else if(node->yMin == nodeNb->yMax) { //bottom
+                        mid = node->yMin;
                         isX = false;
-                    } else if(nodeEdge->node->yMax == nodeEdgeNb->node->yMin) { //top
-                        mid = nodeEdge->node->yMax;
+                    } else if(node->yMax == nodeNb->yMin) { //top
+                        mid = node->yMax;
                         isX = false;
                     }
 
@@ -138,38 +146,41 @@ int ShortestPathFinder::doNextIteration(){
                     }
 
                     //use the ratio we just calculated to get the length of the segment in each cell
-                    double dist1 = dist*ratio;
+                    double dist1 = dist * ratio;
                     double dist2 = dist - dist1;
 
                     //use those distances to get the cost, weighted by the length of the segment in each cell. Add this to the cost to get to 'nodeEdge' to get the total cost from the origin
-                    double tot_cost = dist1*(nodeEdge->node->value) + dist2*(nodeEdgeNb->node->value) + nodeEdge->cost; 
+                    double tot_cost = dist1*(node->value) + dist2*(nodeNb->value) + nodeEdge->cost; 
                     double tot_dist = dist + nodeEdge->dist;
 
                     possibleEdges.insert(std::make_tuple(nodeEdge->id, nodeEdgeNb->id,tot_cost,tot_dist));
                 }
             }
         }
-        return nodeEdge->node->id;
+        return node->id;
     }
 }
 
 
 //after the network as been fully or partially constructed using 'makeShortestPathNetwork()' or 'getShortestPath()', 
 //finds the path from start node to the end node
-//returns the result as a vector Node pointers. 
-//std::vector<std::shared_ptr<Node>> ShortestPathFinder::findShortestPath(int endNodeID){
-//std::vector<NodeEdge> ShortestPathFinder::findShortestPath(int endNodeID){
+//The return value is a vector of tuples representing the steps of the 
+//shortest path. Each tuple has three elements, in this order:
+//      0 - pointer to the node  
+//      1 - cumulative cost to reach this node
+//      2 - 
 std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::findShortestPath(int endNodeID){
     std::shared_ptr<NodeEdge> currentNodeEdge = nodeEdges.at(dict[endNodeID]); //get the pointer to the nodeEdge that corresponds with the ID provided by the user
-    if(currentNodeEdge->parent){ //if this NodeEdge doesn't have a parent then that means it's unreachable
+    auto parent = currentNodeEdge->parent.lock();
+    if(parent){ //if this NodeEdge doesn't have a parent then that means it's unreachable
         //std::vector<std::shared_ptr<Node>> nodePath(currentNodeEdge->nNodesFromOrigin); //initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
         std::vector<std::tuple<std::shared_ptr<Node>,double,double>> nodePath(currentNodeEdge->nNodesFromOrigin);//initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
         //starting with the end node, trace our way back to the start node
         for(size_t i = 1; i <= nodePath.size(); ++i){
             //nodePath.at(i) = currentNodeEdge->node;
             //nodePath.at(nodePath.size()-i) = currentNodeEdge->node; //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
-            nodePath.at(nodePath.size()-i) = std::make_tuple(currentNodeEdge->node, currentNodeEdge->cost, currentNodeEdge->dist); //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
-            currentNodeEdge = currentNodeEdge->parent; //set 'currentNodeEdge' to be this node's parent - this is how we'll move up the tree
+            nodePath.at(nodePath.size()-i) = std::make_tuple(currentNodeEdge->node.lock(), currentNodeEdge->cost, currentNodeEdge->dist); //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
+            currentNodeEdge = parent; //set 'currentNodeEdge' to be this node's parent - this is how we'll move up the tree
         }
         return nodePath; //return the vector containing the nodes in the path
     }
@@ -199,7 +210,7 @@ void ShortestPathFinder::makeShortestPathNetwork(){
 //runs the algorithm until it finds the desired shortest path.
 //std::vector<std::shared_ptr<Node>> ShortestPathFinder::getShortestPath(int endNodeID){
 std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::getShortestPath(int endNodeID){
-    if(!nodeEdges.at(dict[endNodeID])->parent){ // check if we've already found the path to this node
+    if(!nodeEdges.at(dict[endNodeID])->parent.lock()){ // check if we've already found the path to this node
         while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
             int currentID = doNextIteration();
             if(currentID == endNodeID){
