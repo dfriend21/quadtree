@@ -99,7 +99,7 @@ Rcpp::NumericMatrix NodeWrapper::getNeighborInfo() const{
     mat(i,6) = (node->neighbors[i]->yMin + node->neighbors[i]->yMax)/2;
     mat(i,7) = node->neighbors[i]->value;
     mat(i,8) = node->neighbors[i]->hasChildren ? 1 : 0;
-    Rcpp::NumericVector overlapVals = getOverlapInfo(node->ptr, node->neighbors[i]);
+    Rcpp::NumericVector overlapVals = getOverlapInfo(node, node->neighbors[i]);
     mat(i,9) = overlapVals[0];
     mat(i,10) = overlapVals[1];
     mat(i,11) = overlapVals[0] + overlapVals[1]; //one of these will always be 0 so this should be the same as taking the maximum of the two values
@@ -126,7 +126,7 @@ Rcpp::NumericVector NodeWrapper::getNeighborVals() const{
 
 Rcpp::NumericVector NodeWrapper::asVector() const{
   double hasChildrenInt = node->hasChildren ? 1 : 0;
-  Rcpp::NumericVector vec = {node->id, hasChildrenInt, node->level, node->xMin, node->xMax, node->yMin, node->yMax, node->value, node->smallestChildSideLength};
+  Rcpp::NumericVector vec = {(double)node->id, hasChildrenInt, (double)node->level, node->xMin, node->xMax, node->yMin, node->yMax, node->value, node->smallestChildSideLength};
   vec.names() = Rcpp::CharacterVector({"id","hasChdn","level","xMin","xMax", "yMin", "yMax", "value", "smSide"});
   return vec;
 }
