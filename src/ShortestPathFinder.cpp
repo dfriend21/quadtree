@@ -171,8 +171,9 @@ int ShortestPathFinder::doNextIteration(){
 //      2 - 
 std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::findShortestPath(int endNodeID){
     std::shared_ptr<NodeEdge> currentNodeEdge = nodeEdges.at(dict[endNodeID]); //get the pointer to the nodeEdge that corresponds with the ID provided by the user
-    auto parent = currentNodeEdge->parent.lock();
-    if(parent){ //if this NodeEdge doesn't have a parent then that means it's unreachable
+    //auto parent = currentNodeEdge->parent.lock();
+    if(currentNodeEdge->parent.lock()){ //if this NodeEdge doesn't have a parent then that means it's unreachable
+    //if(parent){ //if this NodeEdge doesn't have a parent then that means it's unreachable
         //std::vector<std::shared_ptr<Node>> nodePath(currentNodeEdge->nNodesFromOrigin); //initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
         std::vector<std::tuple<std::shared_ptr<Node>,double,double>> nodePath(currentNodeEdge->nNodesFromOrigin);//initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
         //starting with the end node, trace our way back to the start node
@@ -180,7 +181,7 @@ std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder:
             //nodePath.at(i) = currentNodeEdge->node;
             //nodePath.at(nodePath.size()-i) = currentNodeEdge->node; //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
             nodePath.at(nodePath.size()-i) = std::make_tuple(currentNodeEdge->node.lock(), currentNodeEdge->cost, currentNodeEdge->dist); //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
-            currentNodeEdge = parent; //set 'currentNodeEdge' to be this node's parent - this is how we'll move up the tree
+            currentNodeEdge = currentNodeEdge->parent.lock(); //set 'currentNodeEdge' to be this node's parent - this is how we'll move up the tree
         }
         return nodePath; //return the vector containing the nodes in the path
     }
