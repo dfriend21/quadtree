@@ -109,7 +109,7 @@ ncol = 75
 rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
 
 #create quadtree using the 'expand' method - automatically adds NA cells to
-bring the dimensions to 128 x 128 before creating the quadtree
+#bring the dimensions to 128 x 128 before creating the quadtree
 qt1 = qt_create(rast, range_limit = .9, adj_type="expand")
 qt_plot(qt1) #plot the quadtree
 qt_plot(qt1, crop=TRUE) #we can use 'crop=TRUE' if we don't want to see the padded NA's
