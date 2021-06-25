@@ -2,24 +2,29 @@
 % Please edit documentation in R/qt_create.R
 \name{qt_create}
 \alias{qt_create}
-\title{Create a quadtree from a raster}
+\title{Create a quadtree from gridded data}
 \usage{
 qt_create(
-  rast,
+  x,
   range_limit,
-  max_cell_length = NA,
+  max_cell_length = NULL,
   adj_type = "expand",
-  resample_n_side = NA
+  resample_n_side = NULL,
+  extent = NULL,
+  proj4string = NULL
 )
 }
 \arguments{
-\item{rast}{a \code{raster} object}
+\item{x}{a \code{raster} or a \code{matrix}. If \code{x} is a \code{matrix},
+the \code{extent} and \code{proj4string} parameters can be used to set the
+extent and projection of the quadtree. If \code{x} is a \code{raster}, the
+extent and projection are derived from the raster.}
 
 \item{range_limit}{numeric; if the cell values within a quadrant have a range
 larger than this value, the quadrant is split. See 'Details' for more}
 
 \item{max_cell_length}{double; the maximum size allowed for a quadtree cell.
-If \code{NA} no restrictions are placed on the quadtree cell size. See
+If \code{NULL} no restrictions are placed on the quadtree cell size. See
 'Details' for more}
 
 \item{adj_type}{character; either \code{'expand'} or \code{'resample'}. See
@@ -27,25 +32,38 @@ If \code{NA} no restrictions are placed on the quadtree cell size. See
 
 \item{resample_n_side}{integer; if \code{adj_type} is \code{'expand'}, this
 number is used to determine the dimensions to resample the raster to}
+
+\item{extent}{\code{Extent} object or else a four-element numeric vector
+describing the extent of the data (in this order: xmin, xmax, ymin, ymax).
+Only used when \code{x} is a matrix - this parameter is ignored if \code{x}
+is a raster. If no value is provided and \code{x} is a matrix, the extent
+is assumed to be \code{c(0,ncol(x),0,nrow(x))}.}
+
+\item{proj4string}{character; proj4string describing the projection of the
+data. Only used when \code{x} is a matrix - this parameter is ignored if
+\code{x} is a raster. If no value is provided and \code{x} is a matrix, the
+'proj4string' of the quadtree is set to \code{NA}.}
 }
 \description{
-Create a quadtree from a raster
+Create a quadtree from gridded data
 }
 \details{
 A quadtree is created from a raster by successively dividing the
-  raster into smaller and smaller cells, with the decision on whether to
-  divide a cell determined by \code{range_limit}. Initially, all of the cells
-  in the raster are considered. If the difference between the maximum and
-  minimum cell values exceeds \code{range_limit}, the raster is divided into
-  four quadrants - otherwise, the raster is not divided further and the mean
-  of all values in the raster is taken as the value for the resulting cell.
-  Then, the process is repeated for each of those 'child' cells, and then for
-  their children, and so on and so forth, until either \code{range_limit} is
-  not exceeded or the smallest possible cell size has been reached.
+  raster/matrix into smaller and smaller cells, with the decision on whether
+  to divide a cell determined by \code{range_limit}. Initially, all of the
+  cells in the raster are considered. If the difference between the maximum
+  and minimum cell values exceeds \code{range_limit}, the raster is divided
+  into four quadrants - otherwise, the raster is not divided further and the
+  mean of all values in the raster is taken as the value for the resulting
+  cell. Then, the process is repeated for each of those 'child' cells, and
+  then for their children, and so on and so forth, until either
+  \code{range_limit} is not exceeded or the smallest possible cell size has
+  been reached.
 
   If a quadrant contains both NA cells and non-NA cells, that quadrant is
   automatically divided. However, if a quadrant consists entirely of NA
-  cells, that cell is not divided further.
+  cells, that cell is not divided further (even if the cell is larger than
+  \code{max_cell_length}).
 
   If a given quadrant has dimensions that are not divisible by 2 (for
   example, 5x5), then the process stops. Because of this, only rasters that

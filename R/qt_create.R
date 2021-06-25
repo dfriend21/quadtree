@@ -1,29 +1,43 @@
-#' Create a quadtree from a raster
+#' Create a quadtree from gridded data
 #'
-#' @param rast a \code{raster} object
+#' @param x a \code{raster} or a \code{matrix}. If \code{x} is a \code{matrix},
+#'   the \code{extent} and \code{proj4string} parameters can be used to set the
+#'   extent and projection of the quadtree. If \code{x} is a \code{raster}, the
+#'   extent and projection are derived from the raster.
 #' @param range_limit numeric; if the cell values within a quadrant have a range
 #'   larger than this value, the quadrant is split. See 'Details' for more
 #' @param max_cell_length double; the maximum size allowed for a quadtree cell.
-#'   If \code{NA} no restrictions are placed on the quadtree cell size. See
+#'   If \code{NULL} no restrictions are placed on the quadtree cell size. See
 #'   'Details' for more
 #' @param adj_type character; either \code{'expand'} or \code{'resample'}. See
 #'   'Details' for more.
 #' @param resample_n_side integer; if \code{adj_type} is \code{'expand'}, this
 #'   number is used to determine the dimensions to resample the raster to
+#' @param extent \code{Extent} object or else a four-element numeric vector
+#'   describing the extent of the data (in this order: xmin, xmax, ymin, ymax).
+#'   Only used when \code{x} is a matrix - this parameter is ignored if \code{x}
+#'   is a raster. If no value is provided and \code{x} is a matrix, the extent
+#'   is assumed to be \code{c(0,ncol(x),0,nrow(x))}.
+#' @param proj4string character; proj4string describing the projection of the
+#'   data. Only used when \code{x} is a matrix - this parameter is ignored if
+#'   \code{x} is a raster. If no value is provided and \code{x} is a matrix, the
+#'   'proj4string' of the quadtree is set to \code{NA}.
 #' @details A quadtree is created from a raster by successively dividing the
-#'   raster into smaller and smaller cells, with the decision on whether to
-#'   divide a cell determined by \code{range_limit}. Initially, all of the cells
-#'   in the raster are considered. If the difference between the maximum and
-#'   minimum cell values exceeds \code{range_limit}, the raster is divided into
-#'   four quadrants - otherwise, the raster is not divided further and the mean
-#'   of all values in the raster is taken as the value for the resulting cell.
-#'   Then, the process is repeated for each of those 'child' cells, and then for
-#'   their children, and so on and so forth, until either \code{range_limit} is
-#'   not exceeded or the smallest possible cell size has been reached.
+#'   raster/matrix into smaller and smaller cells, with the decision on whether
+#'   to divide a cell determined by \code{range_limit}. Initially, all of the
+#'   cells in the raster are considered. If the difference between the maximum
+#'   and minimum cell values exceeds \code{range_limit}, the raster is divided
+#'   into four quadrants - otherwise, the raster is not divided further and the
+#'   mean of all values in the raster is taken as the value for the resulting
+#'   cell. Then, the process is repeated for each of those 'child' cells, and
+#'   then for their children, and so on and so forth, until either
+#'   \code{range_limit} is not exceeded or the smallest possible cell size has
+#'   been reached.
 #'
 #'   If a quadrant contains both NA cells and non-NA cells, that quadrant is
 #'   automatically divided. However, if a quadrant consists entirely of NA
-#'   cells, that cell is not divided further.
+#'   cells, that cell is not divided further (even if the cell is larger than
+#'   \code{max_cell_length}).
 #'
 #'   If a given quadrant has dimensions that are not divisible by 2 (for
 #'   example, 5x5), then the process stops. Because of this, only rasters that
@@ -84,41 +98,48 @@
 #' par(mfrow=c(1,2))
 #' qt_plot(qt1,crop=TRUE, main="no max cell length")
 #' qt_plot(qt3,crop=TRUE, main="max cell length = 2")
-qt_create <- function(rast, range_limit, max_cell_length = NA, adj_type="expand", resample_n_side=NA){
-  if(is.na(max_cell_length)) max_cell_length = -1
+qt_create <- function(x, range_limit, max_cell_length=NULL, adj_type="expand", resample_n_side=NULL, extent=NULL, proj4string=NULL){
+  if(is.null(max_cell_length)) max_cell_length = -1 #if `max_cell_length` is not provided, set it to -1, which indicates no limit
   
-  ext = raster::extent(rast)
-  dim = c(ncol(rast), nrow(rast))
+  if("matrix" %in% class(x)){ #if x is a matrix, convert it to a raster
+    if(is.null(extent)){
+      extent = raster::extent(0,ncol(x),0,nrow(x))
+    }
+    x = raster::raster(x, extent[1], extent[2], extent[3], extent[4], crs=proj4string)
+  }
+  
+  ext = raster::extent(x)
+  dim = c(ncol(x), nrow(x))
   
   if(adj_type == "expand"){
-    nXLog2 = log2(raster::ncol(rast))
-    nYLog2 = log2(raster::nrow(rast))
-    if(((nXLog2 %% 1) != 0) || (nYLog2 %% 1 != 0) || (raster::nrow(rast) != raster::ncol(rast))){  #check if the dimensions are a power of 2 or if the dimensions aren't the same (i.e. it's not square)
+    nXLog2 = log2(raster::ncol(x))
+    nYLog2 = log2(raster::nrow(x))
+    if(((nXLog2 %% 1) != 0) || (nYLog2 %% 1 != 0) || (raster::nrow(x) != raster::ncol(x))){  #check if the dimensions are a power of 2 or if the dimensions aren't the same (i.e. it's not square)
       newN = max(c(2^ceiling(nXLog2), 2^ceiling(nYLog2)))
-      newExt = raster::extent(rast)
-      newExt[2] = newExt[1] + raster::res(rast)[1] * newN
-      newExt[4] = newExt[3] + raster::res(rast)[2] * newN
+      newExt = raster::extent(x)
+      newExt[2] = newExt[1] + raster::res(x)[1] * newN
+      newExt[4] = newExt[3] + raster::res(x)[2] * newN
       
-      rast = raster::extend(rast,newExt)
+      x = raster::extend(x,newExt)
     }
   } else if(adj_type == "resample"){
-    if(is.na(resample_n_side)) { stop("adj_type is 'resample', but 'resample_n_side' is not specified. Please provide a value for 'resample_n_side'.")}
+    if(is.null(resample_n_side)) { stop("adj_type is 'resample', but 'resample_n_side' is not specified. Please provide a value for 'resample_n_side'.")}
     if(log2(resample_n_side) %% 1 != 0) { warning(paste0("resample_n_side was given as ", resample_n_side, ", which is not a power of 2. Are you sure these are the dimensions you want? This could result in the smallest possible resoltion of the quadtree being much larger than the resolution of the raster"))}
     
     #first we need to make it square
-    newN = max(c(raster::nrow(rast), raster::ncol(rast)))
-    newExt = raster::extent(rast)
-    newExt[2] = newExt[1] + raster::res(rast)[1] * newN
-    newExt[4] = newExt[3] + raster::res(rast)[2] * newN
-    rast = raster::extend(rast,newExt)
+    newN = max(c(raster::nrow(x), raster::ncol(x)))
+    newExt = raster::extent(x)
+    newExt[2] = newExt[1] + raster::res(x)[1] * newN
+    newExt[4] = newExt[3] + raster::res(x)[2] * newN
+    x = raster::extend(x,newExt)
     
     #now we can resample
-    rastTemplate = raster::raster(newExt, nrow=resample_n_side, ncol=resample_n_side, crs=raster::crs(rast))
-    rast = raster::resample(rast, rastTemplate, method = "ngb")
+    rastTemplate = raster::raster(newExt, nrow=resample_n_side, ncol=resample_n_side, crs=raster::crs(x))
+    x = raster::resample(x, rastTemplate, method = "ngb")
   }
   
-  qt <- new(quadtree, raster::as.matrix(rast), raster::extent(rast)[1:2], raster::extent(rast)[3:4], range_limit, max_cell_length, max_cell_length)
+  qt = new(quadtree, raster::as.matrix(x), raster::extent(x)[1:2], raster::extent(x)[3:4], range_limit, max_cell_length, max_cell_length)
   qt$setOriginalValues(ext[1], ext[2], ext[3], ext[4], dim[1], dim[2])
-  qt$setProjection(projection(rast))
+  qt$setProjection(projection(x))
   return(qt)
 }
