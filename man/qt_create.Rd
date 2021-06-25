@@ -98,7 +98,9 @@ A quadtree is created from a raster by successively dividing the
   a user-specified dimension (determined by the \code{resample_n_side}
   parameter). For example, the user could set \code{resample_n_side} to be
   1024, which will resample the 978 x 978 raster to 1024 x 1024. This raster
-  can then be used to create a quadtree.
+  can then be used to create a quadtree. The dimensions should be a power of 
+  2 (see above for an explanation), although other numbers will be accepted 
+  (but will trigger a warning).
 }
 \examples{
 #create raster of random values
