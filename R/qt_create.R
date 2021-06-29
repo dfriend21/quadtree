@@ -142,6 +142,6 @@ qt_create <- function(x, range_limit, max_cell_length=NULL, adj_type="expand", r
   
   qt = new(quadtree, raster::as.matrix(x), raster::extent(x)[1:2], raster::extent(x)[3:4], range_limit, max_cell_length, max_cell_length)
   qt$setOriginalValues(ext[1], ext[2], ext[3], ext[4], dim[1], dim[2])
-  qt$setProjection(projection(x))
+  qt$setProjection(raster::projection(x))
   return(qt)
 }
