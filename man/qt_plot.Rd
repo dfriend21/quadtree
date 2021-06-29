@@ -7,31 +7,61 @@
 qt_plot(
   qt,
   colors = NULL,
-  nb = FALSE,
+  nb_line_col = NULL,
   border_col = "black",
   xlim = NULL,
   ylim = NULL,
   crop = FALSE,
   na_col = "white",
+  adj_mar_auto = 6,
+  legend = TRUE,
+  legend_args = list(),
   ...
 )
 }
 \arguments{
 \item{qt}{a \code{quadtree} object}
 
-\item{colors}{character vector; the colors that will be used to create the color ramp used in the plot. If no argument is provided, \code{terrain.colors(100,rev=TRUE)} is used.}
+\item{colors}{character vector; the colors that will be used to create the
+color ramp used in the plot. If no argument is provided,
+\code{terrain.colors(100,rev=TRUE)} is used.}
 
-\item{nb}{boolean; whether or not to include lines connecting neighboring cells}
+\item{nb_line_col}{character; the color of the lines drawn between
+neighboring cells. If \code{NULL} (the default), these lines are not
+plotted}
 
-\item{border_col}{character; the color to use for the cell borders. Use 'transparent' if you don't want borders to be shown}
+\item{border_col}{character; the color to use for the cell borders. Use
+'transparent' if you don't want borders to be shown}
 
-\item{xlim}{two element numeric vector; defines the minimum and maximum values of the x axis. Ignored if \code{crop} is \code{TRUE}.}
+\item{xlim}{two element numeric vector; defines the minimum and maximum
+values of the x axis.}
 
-\item{ylim}{two element numeric vector; defines the minimum and maximum values of the y axis. Ignored if \code{crop} is \code{TRUE}.}
+\item{ylim}{two element numeric vector; defines the minimum and maximum
+values of the y axis.}
 
-\item{crop}{boolean; if \code{TRUE}, only displays the extent of the original raster, thus ignoring any of the NA cells that were added to pad the raster before making the quadtree. If \code{TRUE}, \code{xlim} and \code{ylim} are ignored}
+\item{crop}{boolean; if \code{TRUE}, only displays the extent of the original
+raster, thus ignoring any of the NA cells that were added to pad the raster
+before making the quadtree. Ignored if either \code{xlim} or \code{ylim}
+are non-\code{NULL}}
 
-\item{na_col}{character; the color to use for NA cells}
+\item{na_col}{character; the color to use for NA cells. If \code{NULL}, NA
+cells are not plotted}
+
+\item{adj_mar_auto}{numeric; if not \code{NULL}, it checks the size of the
+right margin (\code{par("mar")[4]}) - if it is less than the provided value
+and \code{legend} is \code{TRUE}, then it sets it to be the provided value
+in order to make room for the legend (after plotting, it resets it to its
+original value). Default is 6.}
+
+\item{legend}{boolean; if \code{TRUE} (the default) a legend is plotted in
+the right margin}
+
+\item{legend_args}{named list; contains arguments that are sent to the
+\code{\link{add_legend}} function. See the help page for \code{add_legend}
+for the parameters. Note that the two required parameters to
+\code{add_legend}, \code{zlim} and \code{cols}, are supplied automatically,
+so if the list contains elements named \code{zlim} or \code{cols}, they
+will be ignored.}
 
 \item{...}{arguments passed to the default \code{plot} function}
 }
@@ -42,6 +72,7 @@ Plot a quadtree object
 # create raster of random values
 nrow = 57
 ncol = 75
+set.seed(2)
 rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
 
 # create quadtree
@@ -50,19 +81,27 @@ qt1 = qt_create(rast, range_limit = .9, adj_type="expand")
 # -----------
 # DEFAULT
 # -----------
-qt_plot(qt1) #default - no additional parameters provided
+
+# default - no additional parameters provided
+qt_plot(qt1)
 
 # -----------
 # CHANGE PLOT EXTENT
 # -----------
+
 # note that additional parameters like 'main', 'xlab', 'ylab', etc. will be
 # passed to the default 'plot()' function
-qt_plot(qt1, crop=TRUE, main="cropped") #crop extent to the original extent of the raster
-qt_plot(qt1, xlim = c(30,50), ylim = c(10,20), main="zoomed in") 
+
+# crop extent to the original extent of the raster
+qt_plot(qt1, crop=TRUE, main="cropped")
+
+# use 'xlim' and 'ylim' to zoom in on an area
+qt_plot(qt1, xlim = c(30,50), ylim = c(10,20), main="zoomed in")
 
 # -----------
 # COLORS
 # -----------
+
 # change border color
 qt_plot(qt1, border_col="transparent") #no borders
 qt_plot(qt1, border_col="gray60")
@@ -75,8 +114,29 @@ qt_plot(qt1, colors=c("black", "white"))
 # change color of NA cells
 qt_plot(qt1, na_col="pink")
 
+# don't plot NA cells
+qt_plot(qt1, na_col=NULL)
+
 # -----------
 # SHOW NEIGHBOR CONNECTIONS
 # -----------
-qt_plot(qt1, nb=TRUE, border_col="gray60")
+
+# plot all neighbor connections
+qt_plot(qt1, nb_line_col="black", border_col="gray60")
+
+# don't plot connections to NA cells
+qt_plot(qt1, crop=TRUE, nb_line_col="black", border_col="gray60", na_col=NULL)
+
+# -----------
+# LEGEND
+# -----------
+
+# no legend
+qt_plot(qt1, legend=FALSE)
+
+# increase right margin size
+qt_plot(qt1, adj_mar_auto=10)
+
+# use 'legend_args' to customize the legend
+qt_plot(qt1, adj_mar_auto=10, legend_args=list(lgd_ht_pct=.8, bar_wd_pct=.4))
 }

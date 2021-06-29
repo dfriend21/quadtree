@@ -200,30 +200,34 @@ Rcpp::List QuadtreeWrapper::asList(){
 
 //not directly callable from R - called by 'getNbList()'
 //recursively creates a matrix of that represents all the neighbors of a node
-//returns a matrix with 7 columns, in this order:
+//returns a matrix with 9 columns, in this order:
 //id of this node
 //x coordinate of centroid of this node
 //y coordinate of centroid of this node
+//value of this node
 //id of the neighbor
 //x coordinate of centroid of the neighbor
 //y coordinate of centroid of the neighbor
+//value of the neighbor
 //0 if either of the nodes has children, 1 otherwise (think of this column as 'are both of these cells at the bottom of the tree?')
 void QuadtreeWrapper::makeNbList(std::shared_ptr<Node> node, Rcpp::List &list) const{
   //list.insert(node->id,node->asVector());
   //Rcpp::NumericVector nbVec(node->neighbors.size());
   std::vector<std::shared_ptr<Node>> neighbors = quadtree->findNeighbors(node, quadtree->root->smallestChildSideLength);
-  Rcpp::NumericMatrix nbMat(neighbors.size(), 7); //initialize a matrix
-  colnames(nbMat) = Rcpp::CharacterVector({"id0", "x0", "y0", "id1", "x1", "y1", "isLowest"}); //name the columns
+  Rcpp::NumericMatrix nbMat(neighbors.size(), 9); //initialize a matrix
+  colnames(nbMat) = Rcpp::CharacterVector({"id0", "x0", "y0", "val0", "id1", "x1", "y1", "val1", "isLowest"}); //name the columns
   
   //loop through the neighbors and create an entry in the matrix for each neighbor
   for(int i = 0; i < neighbors.size(); ++i){
     nbMat(i,0) = node->id;
     nbMat(i,1) = (node->xMin+node->xMax)/2;
     nbMat(i,2) = (node->yMin+node->yMax)/2;
-    nbMat(i,3) = neighbors[i]->id;
-    nbMat(i,4) = (neighbors[i]->xMin + neighbors[i]->xMax)/2;
-    nbMat(i,5) = (neighbors[i]->yMin + neighbors[i]->yMax)/2;
-    nbMat(i,6) = (node->hasChildren | neighbors[i]->hasChildren) ? 0 : 1;
+    nbMat(i,3) = node->value;
+    nbMat(i,4) = neighbors[i]->id;
+    nbMat(i,5) = (neighbors[i]->xMin + neighbors[i]->xMax)/2;
+    nbMat(i,6) = (neighbors[i]->yMin + neighbors[i]->yMax)/2;
+    nbMat(i,7) = neighbors[i]->value;
+    nbMat(i,8) = (node->hasChildren | neighbors[i]->hasChildren) ? 0 : 1;
     // nbMat(i,0) = node->id;
     // nbMat(i,1) = (node->xMin+node->xMax)/2;
     // nbMat(i,2) = (node->yMin+node->yMax)/2;
