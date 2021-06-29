@@ -61,7 +61,6 @@ get_coords(p$usr, p$plt) # both dimensions at once
 get_coords(par("usr"), par("plt")) #this also works
 }
 \seealso{
-See \code{\link{get_coords}}, which does both dimensions at once.
-  Also, run \code{?par} for more details on the \code{usr} and \code{plt}
+Run \code{?par} for more details on the \code{usr} and \code{plt}
   parameters
 }
