@@ -10,16 +10,17 @@ get_coords_axis(usr, plt)
 get_coords(usr, plt)
 }
 \arguments{
-\item{usr}{two-element (\code{get_coords_axis()}) or four-element
+\item{usr}{two-element (\code{get_coords_axis}) or four-element
 (\code{get_coords}) numeric vector; specifies the user coordinates of the
-plot region in either the x or y dimension. Can be retrieved using
-\code{par("usr")[1:2]} for the x-axis and \code{par("usr")[3:4]} for the
-y-axis}
+plot region. Can be retrieved using \code{par("usr")}, and subscripts can
+be used to get only one dimension (for \code{get_coords_axis} - i.e
+\code{par("usr")[1:2]})}
 
-\item{plt}{two-element numeric vector; specifies the coordinates of the plot
-region in either the x or y dimension as fractions of the figure region.
-Can be retrieved using \code{par("plt")[1:2]} for the x-axis and
-\code{par("plt")[3:4]} for the y-axis}
+\item{plt}{two-element (\code{get_coords_axis}) or four-element
+(\code{get_coords}) numeric vector; specifies the coordinates of the plot
+region as fractions of the figure region. Can be retrieved using
+\code{par("plt")}, and subscripts can be used to get only one dimension
+(for \code{get_coords_axis} - i.e \code{par("plt")[1:2]})}
 }
 \description{
 Given the coordinate range of a single dimension in user units
@@ -29,25 +30,27 @@ Given the coordinate range of a single dimension in user units
 }
 \details{
 \code{get_coords_axis()} is used to find the user coordinates of a
-single dimension of the figure area. In this case, \code{usr} and \code{plt}
-should both be two-element vectors corresponding to the same dimension (see
-examples). Both vectors need to be in the format \code{c(max,min)}.
+  single dimension of the figure area. In this case, \code{usr} and
+  \code{plt} should both be two-element vectors corresponding to the same
+  dimension (see examples). Both vectors need to be in the format
+  \code{c(max,min)}.
 
-\code{get_coords()} is simply a wrapper for \code{get_coords()} that does
-both dimensions at once. In this case the output of \code{par("usr")} and 
-\code{par("plt")} can be directly supplied to the \code{usr} and \code{plt}
-parameters, respectively. Note that for both parameters the vectors must have
-length 4 and be in this order: \code{c(xmin,xmax,ymin,ymax)}.
+  \code{get_coords()} is simply a wrapper for \code{get_coords} that does
+  both dimensions at once. In this case the output of \code{par("usr")} and
+  \code{par("plt")} can be directly supplied to the \code{usr} and \code{plt}
+  parameters, respectively. Note that for both parameters the vectors must
+  have length 4 and be in this order: \code{c(xmin,xmax,ymin,ymax)}.
 
-These functions were written for use in \code{\link{add_legend}}. In order to
-properly place the legend, I needed to know the extent of the entire figure
-region in user coordinates. However, there's nothing about this function that
-is specific to that one application, and could be used in other situations as
-well.
+  These functions were written for use in \code{\link{add_legend}}. In order
+  to properly place the legend, I needed to know the extent of the entire
+  figure region in user coordinates. However, there's nothing about this
+  function that is specific to that one application, and could be used in
+  other situations as well.
 
-Understanding what these functions do (and why they're necessary) requires an
-understanding of the graphical parameters, and in particular what \code{usr}
-and \code{plt} represent. See \code{?par} for more on these parameters.
+  Understanding what these functions do (and why they're necessary) requires
+  an understanding of the graphical parameters, and in particular what
+  \code{usr} and \code{plt} represent. See \code{?par} for more on these
+  parameters.
 }
 \examples{
 p = par() # retrieve the graphical parameters as a list
