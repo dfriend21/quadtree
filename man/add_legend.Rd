@@ -94,5 +94,8 @@ I took an HTML/CSS-like approach to determining the positioning -
 set.seed(23)
 mat = matrix(runif(64,0,1), nrow=8)
 qt = qt_create(mat, .75)
-qt_plot(qt)
+
+par(mar=c(5,4,4,5))
+qt_plot(qt,legend=FALSE)
+add_legend(range(mat), rev(terrain.colors(100)))
 }

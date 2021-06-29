@@ -299,7 +299,10 @@ get_coords = function(usr, plt){
 #' set.seed(23)
 #' mat = matrix(runif(64,0,1), nrow=8)
 #' qt = qt_create(mat, .75)
-#' qt_plot(qt)
+#' 
+#' par(mar=c(5,4,4,5))
+#' qt_plot(qt,legend=FALSE)
+#' add_legend(range(mat), rev(terrain.colors(100)))
 add_legend = function(zlim, col, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_pct=.5, 
                       lgd_wd_pct=.5, lgd_ht_pct=.5, bar_box_col="black",
                       bar_wd_pct=.2, bar_ht_pct=1, ticks=NULL, ticks_n=5, ticks_x_pct=1){
