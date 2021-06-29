@@ -21,11 +21,10 @@ add_legend(
 )
 }
 \arguments{
-\item{zlim}{two-element numeric vector; required; the min and max value of
-z}
+\item{zlim}{two-element numeric vector; required; the min and max value of z}
 
-\item{col}{character vector; required; the colors that will be used to
-create the color ramp used in the plot.}
+\item{col}{character vector; required; the colors that will be used to create
+the color ramp used in the plot.}
 
 \item{lgd_box_col}{character; color of the box to draw around the entire
 legend. If \code{NULL} (the default), no box is drawn}
@@ -74,18 +73,22 @@ Adds a gradient legent to a plot
 }
 \details{
 I took an HTML/CSS-like approach to determining the positioning -
-that is, each space is treated as <div>-like space, and the position of
-objects within that space happens \emph{relative to that space} rather then
-the entire space. The parameters prefixed by \code{lgd} are all relative to
-the right margin space and correspond to the box that contains the entire
-legend. The parameters prefixed \code{bar} and \code{ticks} are relative to
-the space within the legend box.
+  that is, each space is treated as <div>-like space, and the position of
+  objects within that space happens \emph{relative to that space} rather then
+  the entire space. The parameters prefixed by \code{lgd} are all relative to
+  the right margin space and correspond to the box that contains the entire
+  legend. The parameters prefixed \code{bar} and \code{ticks} are relative to
+  the space within the legend box.
 
-I obviously wrote this for plotting the quadtree, but there's nothing
-quadtree-specific about this particular function.
+  I obviously wrote this for plotting the quadtree, but there's nothing
+  quadtree-specific about this particular function.
 
-This function is used within \code{\link{qt_plot}} and so shouldn't need to
-be called by the user unless you have a burning desire to call it yourself.
+  This function is used within \code{\link{qt_plot}}, so the user shouldn't
+  call this function to manually create the legend. Customizations to the
+  legend can be done via the \code{legend_args} parameter of
+  \code{qt_plot()}. Using this function to plot the legend after using
+  \code{qt_plot()} raises the possibility of the legend not corresponding
+  correctly with the plot, and thus should be avoided.
 }
 \examples{
 set.seed(23)
