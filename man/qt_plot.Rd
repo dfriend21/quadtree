@@ -68,6 +68,10 @@ will be ignored.}
 \description{
 Plot a quadtree object
 }
+\details{
+See 'Examples' for demonstrations of how the various options can be
+used.
+}
 \examples{
 # create raster of random values
 nrow = 57

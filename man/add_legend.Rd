@@ -98,4 +98,8 @@ qt = qt_create(mat, .75)
 par(mar=c(5,4,4,5))
 qt_plot(qt,legend=FALSE)
 add_legend(range(mat), rev(terrain.colors(100)))
+# this example simply illustrates how it COULD be used, but as stated in the
+# 'Details' section, it shouldn't be called separately from 'qt_plot()' - if
+# customizations to the legend are desired, use the 'legend_args' parameter
+# of 'qt_plot()'. 
 }

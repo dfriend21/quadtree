@@ -58,7 +58,7 @@ get_coords_axis(p$usr[1:2], p$plt[1:2]) # x-axis
 get_coords_axis(p$usr[3:4], p$plt[3:4]) # y-axis
 
 get_coords(p$usr, p$plt) # both dimensions at once
-get_coords(par("usr"), par("plt")) #this also works
+get_coords(par("usr"), par("plt")) # this also works
 }
 \seealso{
 Run \code{?par} for more details on the \code{usr} and \code{plt}

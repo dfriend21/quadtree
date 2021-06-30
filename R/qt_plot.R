@@ -33,6 +33,8 @@
 #'   so if the list contains elements named \code{zlim} or \code{cols}, they
 #'   will be ignored.
 #' @param ... arguments passed to the default \code{plot} function
+#' @details See 'Examples' for demonstrations of how the various options can be
+#' used. 
 #' @examples
 #' # create raster of random values
 #' nrow = 57
@@ -219,7 +221,7 @@ qt_plot = function(qt, colors = NULL, nb_line_col=NULL, border_col="black", xlim
 #' get_coords_axis(p$usr[3:4], p$plt[3:4]) # y-axis
 #'
 #' get_coords(p$usr, p$plt) # both dimensions at once
-#' get_coords(par("usr"), par("plt")) #this also works
+#' get_coords(par("usr"), par("plt")) # this also works
 #' @seealso Run \code{?par} for more details on the \code{usr} and \code{plt}
 #'   parameters
 NULL
@@ -302,6 +304,10 @@ get_coords = function(usr, plt){
 #' par(mar=c(5,4,4,5))
 #' qt_plot(qt,legend=FALSE)
 #' add_legend(range(mat), rev(terrain.colors(100)))
+#' # this example simply illustrates how it COULD be used, but as stated in the
+#' # 'Details' section, it shouldn't be called separately from 'qt_plot()' - if
+#' # customizations to the legend are desired, use the 'legend_args' parameter
+#' # of 'qt_plot()'. 
 add_legend = function(zlim, col, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_pct=.5, 
                       lgd_wd_pct=.5, lgd_ht_pct=.5, bar_box_col="black",
                       bar_wd_pct=.2, bar_ht_pct=1, ticks=NULL, ticks_n=5, ticks_x_pct=1){
