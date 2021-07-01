@@ -24,7 +24,15 @@ class ShortestPathFinder{
         //comparator function for the multiset
         struct cmp {
             bool operator() (std::tuple<int,int,double,double> a, std::tuple<int,int,double,double> b) const {
-                return std::get<2>(a) < std::get<2>(b);
+                return std::get<2>(a) < std::get<2>(b); //ORIGINAL
+
+                // if(std::get<2>(a) == std::get<2>(b)){
+                //     if(std::get<1>(a) == std::get<1>(b)){
+                //         return std::get<0>(a) < std::get<0>(b);
+                //     }
+                //     return std::get<1>(a) < std::get<1>(b);
+                // }
+                // return std::get<2>(a) < std::get<2>(b);
             }
         };
 
@@ -60,7 +68,6 @@ class ShortestPathFinder{
 
             
             void makeNetworkAll();
-            void makeNetworkDist(double constraint);
             void makeNetworkCost(double constraint);
             void makeNetworkCostDist(double constraint);
             //void makeShortestPathNetwork(double maxResistance);
