@@ -49,10 +49,9 @@
 #'   as that node has been added to the tree, the algorithm stops and the LCP is
 #'   returned. \code{\link{qt_find_lcps}} doesn't use a destination point -
 #'   instead, the tree continues to be built until the paths exceed a given
-#'   value of either cost, distance, or cost-distance, depending on which one
-#'   the user selects. In addition, this constraint can be ignored in order to
-#'   find all LCPs within the given set of nodes. See the documentation for
-#'   those two functions for more details.
+#'   cost-distance, depending on which one the user selects. In addition, this
+#'   constraint can be ignored in order to find all LCPs within the given set of
+#'   nodes. See the documentation for those two functions for more details.
 #'
 #'   An important note is that because of the heterogeneous nature of a
 #'   quadtree, the paths found likely won't reflect the 'true' least cost path.
@@ -64,21 +63,21 @@
 #'   rectangle defined by xlims and ylims. This speeds up the computation of the
 #'   LCP by limiting the number of cells considered.
 #'
-#'   Another final note is that an LCP finder object is specific to a given
+#'   Another note is that an LCP finder object is specific to a given
 #'   starting point. If a new starting point is used, a new LCP finder is
 #'   needed.
 #' @return \code{qt_lcp_finder} returns an LCP finder object. If
 #'   \code{start_point} falls outside of the quadtree extent, \code{NULL} is
 #'   returned.
-#' @seealso See \code{\link{qt_find_lcp()}} for finding an LCP between two
-#'   points. See \code{\link{qt_lcp_find_paths()}} for finding all LCPs whose
-#'   cost, distance, or cost-distance is less than some value.
-#'   \code{\link{qt_lcp_summary}} outputs a summary matrix of all LCPs that have
-#'   been calculated so far.
+#' @seealso \code{\link{qt_find_lcp()}} finds a LCP between two points.
+#'   \code{\link{qt_lcp_find_paths()}} finds all LCPs whose cost-distance is
+#'   less than some value. \code{\link{qt_lcp_summary}} outputs a summary matrix
+#'   of all LCPs that have been calculated so far.
 #' @examples
 #' #----------------------------------------------------
 #' # basic usage
 #' #----------------------------------------------------
+#' library(raster)
 #' 
 #' # ----- create a quadtree
 #' # create raster of random values
@@ -86,7 +85,7 @@
 #' ncol = 75
 #' set.seed(4)
 #' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-#'
+#' 
 #' # create quadtree
 #' qt = qt_create(rast, range_limit = .9, adj_type="expand")
 #' 
@@ -107,14 +106,14 @@
 #' start_pt2 = c(ncol/2,nrow/2)
 #' # create the LCP finder object
 #' spf2 = qt_lcp_finder(qt, start_pt2)
-#' limit = 35
-#' paths2 = qt_find_lcps(spf2, limit_type="cost+distance", limit=limit)
+#' limit = 10
+#' paths2 = qt_find_lcps(spf2, limit_type="cd", limit=limit)
 #' 
 #' # plot the centroids of the reachable cells
-#' qt_plot(qt, main=paste0("reachable cells; cost+distance < ", limit), crop=TRUE, 
+#' qt_plot(qt, main=paste0("reachable cells; cost+distance < ", limit), crop=TRUE,
 #'         na_col=NULL, border_col="gray60")
-#' points((paths2$xmin + paths2$xmax)/2, (paths2$ymin + paths2$ymax)/2, 
-#'        pch=16, col="black") 
+#' points((paths2$xmin + paths2$xmax)/2, (paths2$ymin + paths2$ymax)/2,
+#'        pch=16, col="black")
 #' points(start_pt2[1], start_pt2[2], col="red", pch=16)
 #' 
 #' #----------------------------------------------------
@@ -127,7 +126,7 @@
 #' paths3 = qt_find_lcps(spf3, limit_type="none")
 #' 
 #' qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60")
-#' points((paths3$xmin + paths3$xmax)/2, (paths3$ymin + paths3$ymax)/2, 
+#' points((paths3$xmin + paths3$xmax)/2, (paths3$ymin + paths3$ymax)/2,
 #'        pch=16, col="black")
 #' rect(xlims[1], ylims[1], xlims[2], ylims[2], border="red", lwd=2)
 #' points(start_pt2[1], start_pt2[2], col="red", pch=16)
@@ -139,27 +138,27 @@
 #' nrow = 570
 #' ncol = 750
 #' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-#'
+#' 
 #' qt1 = qt_create(rast, range_limit = .9, adj_type="expand")
 #' spf = qt_lcp_finder(qt1, c(1,1))
-#'
+#' 
 #' # the LCP finder saves state. So finding the path the first time requires
 #' # computation, and takes longer, but running it again is nearly instantaneous
 #' system.time(qt_find_lcp(spf, c(740,560))) #takes longer
 #' system.time(qt_find_lcp(spf, c(740,560))) #runs MUCH faster
-#'
+#' 
 #' # in addition, because of how Dijkstra's algorithm works, the LCP finder also
 #' # found many other LCPs in the course of finding the first LCP, meaning that
 #' # subsequent LCP queries for different destination points will be much faster
 #' # (since the LCP finder saves state)
 #' system.time(qt_find_lcp(spf, c(740,1)))
 #' system.time(qt_find_lcp(spf, c(1,560)))
-#'
+#' 
 #' # now save the paths so we can plot them
 #' path1 = qt_find_lcp(spf, c(740,560))
 #' path2 = qt_find_lcp(spf, c(740,1))
 #' path3 = qt_find_lcp(spf, c(1,560))
-#'
+#' 
 #' qt_plot(qt1, crop=TRUE, border_col="transparent", na_col=NULL)
 #' lines(path1[,1:2])
 #' lines(path2[,1:2], col="red")
@@ -215,31 +214,37 @@ qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
 #' @seealso \code{\link{qt_lcp_finder}}; \code{\link{qt_find_lcps}};
 #'   \code{\link{qt_lcp_summary}}
 #' @examples
+#' library(raster)
+#' 
 #' # ----- create a quadtree
 #' # create raster of random values
 #' nrow = 57
 #' ncol = 75
 #' set.seed(4)
 #' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-#'
+#' 
 #' # create quadtree
 #' qt = qt_create(rast, range_limit = .9, adj_type="expand")
-#'
+#' 
+#' # defined our start and end points
 #' start_pt = c(.231,.14)
 #' end_pt = c(74.89,56.11)
-#'
+#' 
+#' # make an LCP finder object
+#' lcpf = qt_lcp_finder(qt, start_pt)
+#' 
 #' # use the LCP finder object to find the LCP to a certain point
 #' # this path will have the cell centroids as the start and end points
-#' path1 = qt_find_lcp(spf, end_pt)
+#' path1 = qt_find_lcp(lcpf, end_pt)
 #' # this path will be identical to path1 except that the start and end points
 #' # will be the user-provided start and end points rather than the cell centroids
-#' path2 = qt_find_lcp(spf, end_pt, use_original_end_points = TRUE)
-#'
+#' path2 = qt_find_lcp(lcpf, end_pt, use_original_end_points = TRUE)
+#' 
 #' head(path1)
 #' head(path2)
-#'
+#' 
 #' # plot the result
-#' qt_plot(qt1, crop=TRUE, border_col="gray60")
+#' qt_plot(qt, crop=TRUE, border_col="gray60", na_col=NULL)
 #' points(rbind(start_pt, end_pt), pch=16, col="red")
 #' lines(path1[,1:2], col="black", lwd=2.5)
 #' lines(path2[,1:2], col="red", lwd=1)
@@ -299,9 +304,28 @@ qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
 #' equivalent method would be to simply add 1 to all the values so they fall
 #' between 1 and 2, and then use "costdistance" as the limiting variable.
 #'
-#' A important note to make is that 
-#' @return Returns a matrix
+#' A very important note to make is that once the LCP tree is calculated, it
+#' never gets smaller. The implication of this is that great care is needed if
+#' using a LCP finder more than once - in fact, this should be avoided. For
+#' example, I could use \code{qt_find_lcps(lcp_finder, limit_type="cd",
+#' limit=10)} to find all LCPs that have a cost-distance less than 10. I could
+#' then use \code{qt_lcp_summary} to view all cells that are reachable within 10
+#' cost units. However, if I then run \code{qt_find_lcps(lcp_finder,
+#' limit_type="cd", limit=5)} to find all LCPs that have a cost-distance less
+#' than 5, the underlying LCP network \strong{will remain unchanged}. That is,
+#' if I run \code{qt_lcp_summary} on \code{lcp_finder}, it will \strong{return
+#' paths with a cost-distance greater than 5}, since we had previously used
+#' \code{lcp_finder} to find paths less than 10. As mentioned before, this
+#' happens because the underlying data structure only ever adds nodes, and never
+#' removes nodes.
+#' @return Returns a matrix summarizing each LCP found.
+#'   \code{\link{qt_lcp_summary}} is used to generate this matrix - see the help
+#'   for that function for details on the return matrix.
+#' @seealso \code{\link{qt_lcp_finder}}, \code{\link{qt_find_lcp}},
+#'   \code{\link{qt_lcp_summary}}
 #' @examples
+#' library(raster)
+#' 
 #' # ----- create a quadtree
 #' # create raster of random values
 #' nrow = 57
@@ -322,13 +346,9 @@ qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
 #' lcpf2 = qt_lcp_finder(qt, start_pt)
 #' paths2 = qt_find_lcps(lcpf2, limit_type="cd", limit=18)
 #' 
-#' #--------- limit LCPs by distance
-#' lcpf3 = qt_lcp_finder(qt, start_pt)
-#' paths3 = qt_find_lcps(lcpf3, limit_type="d", limit=18)
-#' 
 #' #--------- limit LCPs by cost-distance + distance
-#' lcpf4 = qt_lcp_finder(qt, start_pt)
-#' paths4 = qt_find_lcps(lcpf4, limit_type="cd+d", limit=18)
+#' lcpf3 = qt_lcp_finder(qt, start_pt)
+#' paths3 = qt_find_lcps(lcpf3, limit_type="cd+d", limit=18)
 #' 
 #' #--------- Now plot the reachable cells, by method
 #' # plot the centroids of the reachable cells
@@ -336,33 +356,35 @@ qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
 #' points((paths1$xmin + paths1$xmax)/2, (paths1$ymin + paths1$ymax)/2, pch=16, col="black", cex=1.4)
 #' points((paths2$xmin + paths2$xmax)/2, (paths2$ymin + paths2$ymax)/2, pch=16, col="red", cex=1.1)
 #' points((paths3$xmin + paths3$xmax)/2, (paths3$ymin + paths3$ymax)/2, pch=16, col="blue", cex=.8)
-#' points((paths4$xmin + paths4$xmax)/2, (paths4$ymin + paths4$ymax)/2, pch=16, col="yellow", cex=.5)
 #' points(start_pt[1], start_pt[2], bg="green", col="black", pch=24, cex=1.5)
-#' legend("topright", title="limit_type", legend=c("none", "cd", "d", "cd+d"), pch=c(16,16,16,16), col=c("black", "red", "blue", "yellow"), pt.cex=c(1.4,1.1,.8,.5))
+#' legend("topright", title="limit_type", legend=c("none", "cd", "cd+d"), pch=c(16,16,16), col=c("black", "red", "blue"), pt.cex=c(1.4,1.1,.8))
 #' 
 #' #----------------------------------------------------
 #' # An example of what NOT to do
 #' #----------------------------------------------------
 #' lcpf5 = qt_lcp_finder(qt, start_pt)
-#' paths5a = qt_find_lcps(lcpf5a, limit_type="cd", limit=18)
-#' paths5b = qt_find_lcps(lcpf5b, limit_type="cd", limit=5) 
-#' #^^^ DON'T DO THIS! ^^^ (don't try to reuse the lcp finder to find *shorter* paths) 
+#' paths5a = qt_find_lcps(lcpf5, limit_type="cd", limit=18)
+#' paths5b = qt_find_lcps(lcpf5, limit_type="cd", limit=5)
+#' #^^^ DON'T DO THIS! ^^^ (don't try to reuse the lcp finder to find *shorter* paths)
 #' 
 #' nrow(paths5a)
 #' nrow(paths5b) #they're the same length!!!
 #' 
-#' range(paths5b$cost_tot) #returns paths with cost greater than 5!!!
+#' range(paths5b$lcp_cost) #returns paths with cost greater than 5!!!
+#' 
+#' #if we want to find shorter paths, we need to create a new LCP finder
+#' lcpf6 = qt_lcp_finder(qt, start_pt)
+#' paths6 = qt_find_lcps(lcpf6, limit_type="cd", limit=5)
+#' range(paths6$lcp_cost)
 qt_find_lcps = function(lcp_finder, limit_type="none", limit=NULL){
-  if(!(limit_type %in% c("cd","costdistance", "d", "distance", "cd+d", "costdistance+distance", "n", "none"))){
-    stop("'limit_type' must be one of the following: 'none' or 'n', 'costdistance' or 'cd', 'distance' or 'd', 'costdistance+distance' or 'cd+d'.")
+  if(!(limit_type %in% c("cd","costdistance", "cd+d", "costdistance+distance", "n", "none"))){
+    stop("'limit_type' must be one of the following: 'none' or 'n', 'costdistance' or 'cd', 'costdistance+distance' or 'cd+d'.")
   }
-  if(limit_type %in% c("costdistance", "distance", "costdistance+distance", "cd", "d", "cd+d") && is.null(limit)){
-    stop("No value provided for 'limit'. When 'limit_type' is 'costdistance', 'distance', or 'costdistance+distance', a value is required for 'limit'.")
+  if(limit_type %in% c("costdistance", "costdistance+distance", "cd", "cd+d") && is.null(limit)){
+    stop("No value provided for 'limit'. When 'limit_type' is 'costdistance' or 'costdistance+distance', a value is required for 'limit'.")
   }
   if(limit_type == "costdistance" || limit_type == "cd"){
     lcp_finder$makeNetworkCost(limit)
-  } else if(limit_type == "distance" || limit_type == "d"){
-    lcp_finder$makeNetworkDist(limit)
   } else if(limit_type == "costdistance+distance" || limit_type == "cd+d"){
     lcp_finder$makeNetworkCostDist(limit)
   } else {
@@ -373,12 +395,50 @@ qt_find_lcps = function(lcp_finder, limit_type="none", limit=NULL){
 
 #' @title Show a summary matrix of all LCPs currently calculated
 #' @description Given an LCP finder object, returns a matrix that summarizes all
-#'   of the LCPs that have already been determined by the LCP finder.
+#'   of the LCPs that have already been calculated by the LCP finder.
 #' @param lcp_finder the LCP finder object returned from
 #'   \code{\link{qt_lcp_finder}}
-#' @details 
-#' @return Returns a matrix
-#' @examples
+#' @details Note that this function returns \strong{all} of the paths that have
+#'   been calculated. As explained in the documentation for
+#'   \code{\link{qt_lcp_finder}}, finding one LCP likely involves finding other
+#'   LCPs as well. Thus, even if the LCP finder has been used to find one LCP,
+#'   others have most likely been calculated. This function returns all of the
+#'   LCPs that have been calculated so far.
+#' @return Returns a 9-column matrix with one row for each LCP (and therefore
+#'   one row per cell). The columns are as follows: \itemize{ \item{\code{id}:
+#'   }{the ID of the destination cell} \item{\code{xmin, xmax, ymin, ymax}:
+#'   }{the extent of the destination cell} \item{\code{value}: }{the value of
+#'   the destination cell} \item{\code{area}: }{the area of the destination
+#'   cell} \item{\code{lcp_cost}: }{the cumulative cost of the LCP to this cell}
+#'   \item{\code{lcp_dist}: }{the cumulative distance of the LCP to this cell -
+#'   note that this is not straight-line distance, but instead the distance
+#'   along the path} }
+#' @seealso \code{\link{qt_lcp_finder}}, \code{\link{qt_find_lcp}},
+#'   \code{\link{qt_find_lcps}}
+#' #' @examples
+#' library(raster)
+#' 
+#' # ----- create a quadtree
+#' # create raster of random values
+#' nrow = 57
+#' ncol = 75
+#' set.seed(4)
+#' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
+#' 
+#' # create quadtree
+#' qt = qt_create(rast, range_limit = .9, adj_type="expand")
+#' 
+#' start_pt = c(ncol/2,nrow/2)
+#' 
+#' #--------- find all LCPs
+#' lcpf = qt_lcp_finder(qt, start_pt)
+#' paths = qt_find_lcps(lcpf, limit_type="cd+d", limit=10)
+#' paths
+#' 
+#' # put points in each of the cells to which an LCP has been calculated
+#' qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60")
+#' points((paths$xmin + paths$xmax)/2, (paths$ymin + paths$ymax)/2, pch=16, col="black")
+#' points(start_pt[1], start_pt[2], col="red", pch=16)
 qt_lcp_summary = function(lcp_finder){
   return(data.frame(lcp_finder$getAllPathsSummary()))
 }

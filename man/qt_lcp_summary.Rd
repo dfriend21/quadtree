@@ -11,9 +11,53 @@ qt_lcp_summary(lcp_finder)
 \code{\link{qt_lcp_finder}}}
 }
 \value{
-Returns a matrix
+Returns a 9-column matrix with one row for each LCP (and therefore
+  one row per cell). The columns are as follows: \itemize{ \item{\code{id}:
+  }{the ID of the destination cell} \item{\code{xmin, xmax, ymin, ymax}:
+  }{the extent of the destination cell} \item{\code{value}: }{the value of
+  the destination cell} \item{\code{area}: }{the area of the destination
+  cell} \item{\code{lcp_cost}: }{the cumulative cost of the LCP to this cell}
+  \item{\code{lcp_dist}: }{the cumulative distance of the LCP to this cell -
+  note that this is not straight-line distance, but instead the distance
+  along the path} }
 }
 \description{
 Given an LCP finder object, returns a matrix that summarizes all
-  of the LCPs that have already been determined by the LCP finder.
+  of the LCPs that have already been calculated by the LCP finder.
+}
+\details{
+Note that this function returns \strong{all} of the paths that have
+  been calculated. As explained in the documentation for
+  \code{\link{qt_lcp_finder}}, finding one LCP likely involves finding other
+  LCPs as well. Thus, even if the LCP finder has been used to find one LCP,
+  others have most likely been calculated. This function returns all of the
+  LCPs that have been calculated so far.
+}
+\seealso{
+\code{\link{qt_lcp_finder}}, \code{\link{qt_find_lcp}},
+  \code{\link{qt_find_lcps}}
+#' @examples
+library(raster)
+
+# ----- create a quadtree
+# create raster of random values
+nrow = 57
+ncol = 75
+set.seed(4)
+rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
+
+# create quadtree
+qt = qt_create(rast, range_limit = .9, adj_type="expand")
+
+start_pt = c(ncol/2,nrow/2)
+
+#--------- find all LCPs
+lcpf = qt_lcp_finder(qt, start_pt)
+paths = qt_find_lcps(lcpf, limit_type="cd+d", limit=10)
+paths
+
+# put points in each of the cells to which an LCP has been calculated
+qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60")
+points((paths$xmin + paths$xmax)/2, (paths$ymin + paths$ymax)/2, pch=16, col="black")
+points(start_pt[1], start_pt[2], col="red", pch=16)
 }

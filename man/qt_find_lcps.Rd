@@ -19,7 +19,9 @@ qt_find_lcps(lcp_finder, limit_type = "none", limit = NULL)
 need to be provided}
 }
 \value{
-Returns a matrix
+Returns a matrix summarizing each LCP found.
+  \code{\link{qt_lcp_summary}} is used to generate this matrix - see the help
+  for that function for details on the return matrix.
 }
 \description{
 Finds the LCPs to surrounding points. Constraints can be placed
@@ -53,9 +55,24 @@ increase as the resistance of the underlying surface increases. Note that an
 equivalent method would be to simply add 1 to all the values so they fall
 between 1 and 2, and then use "costdistance" as the limiting variable.
 
-A important note to make is that
+A very important note to make is that once the LCP tree is calculated, it
+never gets smaller. The implication of this is that great care is needed if
+using a LCP finder more than once - in fact, this should be avoided. For
+example, I could use \code{qt_find_lcps(lcp_finder, limit_type="cd",
+limit=10)} to find all LCPs that have a cost-distance less than 10. I could
+then use \code{qt_lcp_summary} to view all cells that are reachable within 10
+cost units. However, if I then run \code{qt_find_lcps(lcp_finder,
+limit_type="cd", limit=5)} to find all LCPs that have a cost-distance less
+than 5, the underlying LCP network \strong{will remain unchanged}. That is,
+if I run \code{qt_lcp_summary} on \code{lcp_finder}, it will \strong{return
+paths with a cost-distance greater than 5}, since we had previously used
+\code{lcp_finder} to find paths less than 10. As mentioned before, this
+happens because the underlying data structure only ever adds nodes, and never
+removes nodes.
 }
 \examples{
+library(raster)
+
 # ----- create a quadtree
 # create raster of random values
 nrow = 57
@@ -76,13 +93,9 @@ paths1 = qt_find_lcps(lcpf1, limit_type="none")
 lcpf2 = qt_lcp_finder(qt, start_pt)
 paths2 = qt_find_lcps(lcpf2, limit_type="cd", limit=18)
 
-#--------- limit LCPs by distance
-lcpf3 = qt_lcp_finder(qt, start_pt)
-paths3 = qt_find_lcps(lcpf3, limit_type="d", limit=18)
-
 #--------- limit LCPs by cost-distance + distance
-lcpf4 = qt_lcp_finder(qt, start_pt)
-paths4 = qt_find_lcps(lcpf4, limit_type="cd+d", limit=18)
+lcpf3 = qt_lcp_finder(qt, start_pt)
+paths3 = qt_find_lcps(lcpf3, limit_type="cd+d", limit=18)
 
 #--------- Now plot the reachable cells, by method
 # plot the centroids of the reachable cells
@@ -90,20 +103,28 @@ qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60", col=c("white", "gray30"
 points((paths1$xmin + paths1$xmax)/2, (paths1$ymin + paths1$ymax)/2, pch=16, col="black", cex=1.4)
 points((paths2$xmin + paths2$xmax)/2, (paths2$ymin + paths2$ymax)/2, pch=16, col="red", cex=1.1)
 points((paths3$xmin + paths3$xmax)/2, (paths3$ymin + paths3$ymax)/2, pch=16, col="blue", cex=.8)
-points((paths4$xmin + paths4$xmax)/2, (paths4$ymin + paths4$ymax)/2, pch=16, col="yellow", cex=.5)
 points(start_pt[1], start_pt[2], bg="green", col="black", pch=24, cex=1.5)
-legend("topright", title="limit_type", legend=c("none", "cd", "d", "cd+d"), pch=c(16,16,16,16), col=c("black", "red", "blue", "yellow"), pt.cex=c(1.4,1.1,.8,.5))
+legend("topright", title="limit_type", legend=c("none", "cd", "cd+d"), pch=c(16,16,16), col=c("black", "red", "blue"), pt.cex=c(1.4,1.1,.8))
 
 #----------------------------------------------------
 # An example of what NOT to do
 #----------------------------------------------------
 lcpf5 = qt_lcp_finder(qt, start_pt)
-paths5a = qt_find_lcps(lcpf5a, limit_type="cd", limit=18)
-paths5b = qt_find_lcps(lcpf5b, limit_type="cd", limit=5) 
-#^^^ DON'T DO THIS! ^^^ (don't try to reuse the lcp finder to find *shorter* paths) 
+paths5a = qt_find_lcps(lcpf5, limit_type="cd", limit=18)
+paths5b = qt_find_lcps(lcpf5, limit_type="cd", limit=5)
+#^^^ DON'T DO THIS! ^^^ (don't try to reuse the lcp finder to find *shorter* paths)
 
 nrow(paths5a)
 nrow(paths5b) #they're the same length!!!
 
-range(paths5b$cost_tot) #returns paths with cost greater than 5!!!
+range(paths5b$lcp_cost) #returns paths with cost greater than 5!!!
+
+#if we want to find shorter paths, we need to create a new LCP finder
+lcpf6 = qt_lcp_finder(qt, start_pt)
+paths6 = qt_find_lcps(lcpf6, limit_type="cd", limit=5)
+range(paths6$lcp_cost)
+}
+\seealso{
+\code{\link{qt_lcp_finder}}, \code{\link{qt_find_lcp}},
+  \code{\link{qt_lcp_summary}}
 }

@@ -52,6 +52,8 @@ See \code{\link{qt_lcp_finder}} for more information on how the LCP
   is found
 }
 \examples{
+library(raster)
+
 # ----- create a quadtree
 # create raster of random values
 nrow = 57
@@ -62,21 +64,25 @@ rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, y
 # create quadtree
 qt = qt_create(rast, range_limit = .9, adj_type="expand")
 
+# defined our start and end points
 start_pt = c(.231,.14)
 end_pt = c(74.89,56.11)
 
+# make an LCP finder object
+lcpf = qt_lcp_finder(qt, start_pt)
+
 # use the LCP finder object to find the LCP to a certain point
 # this path will have the cell centroids as the start and end points
-path1 = qt_find_lcp(spf, end_pt)
+path1 = qt_find_lcp(lcpf, end_pt)
 # this path will be identical to path1 except that the start and end points
 # will be the user-provided start and end points rather than the cell centroids
-path2 = qt_find_lcp(spf, end_pt, use_original_end_points = TRUE)
+path2 = qt_find_lcp(lcpf, end_pt, use_original_end_points = TRUE)
 
 head(path1)
 head(path2)
 
 # plot the result
-qt_plot(qt1, crop=TRUE, border_col="gray60")
+qt_plot(qt, crop=TRUE, border_col="gray60", na_col=NULL)
 points(rbind(start_pt, end_pt), pch=16, col="red")
 lines(path1[,1:2], col="black", lwd=2.5)
 lines(path2[,1:2], col="red", lwd=1)
