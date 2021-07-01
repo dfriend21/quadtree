@@ -66,7 +66,6 @@ RCPP_MODULE(qt) {
       //.constructor<QuadtreeWrapper, Rcpp::NumericVector>()
       //.constructor<QuadtreeWrapper, Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::NumericVector>()
       .method("makeNetworkAll", &ShortestPathFinderWrapper::makeNetworkAll)
-      .method("makeNetworkDist", &ShortestPathFinderWrapper::makeNetworkDist)
       .method("makeNetworkCost", &ShortestPathFinderWrapper::makeNetworkCost)
       .method("makeNetworkCostDist", &ShortestPathFinderWrapper::makeNetworkCostDist)
       .method("getShortestPath", &ShortestPathFinderWrapper::getShortestPath)

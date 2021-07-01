@@ -15,10 +15,6 @@ void ShortestPathFinderWrapper::makeNetworkAll(){
   spf.makeNetworkAll();
 }
 
-void ShortestPathFinderWrapper::makeNetworkDist(double constraint){
-  spf.makeNetworkDist(constraint);
-}
-
 void ShortestPathFinderWrapper::makeNetworkCost(double constraint){
   spf.makeNetworkCost(constraint);
 }
@@ -66,7 +62,7 @@ Rcpp::NumericMatrix ShortestPathFinderWrapper::getAllPathsSummary(){
   // Rcpp::NumericMatrix mat(nPaths,7);
   Rcpp::NumericMatrix mat(nPaths,9);
   // colnames(mat) = Rcpp::CharacterVector({"id","x","y","cost_tot","dist_tot","cost_cell", "cell_area"}); //name the columns
-  colnames(mat) = Rcpp::CharacterVector({"id","xmin","xmax", "ymin", "ymax","cost_tot","dist_tot","cost_cell", "cell_area"}); //name the columns
+  colnames(mat) = Rcpp::CharacterVector({"id","xmin","xmax", "ymin", "ymax","value","area","lcp_cost","lcp_dist"}); //name the columns
   int counter = 0; 
   for(size_t i = 0; i < spf.nodeEdges.size(); ++i){
     if(spf.nodeEdges[i]->parent.lock()){
@@ -78,10 +74,10 @@ Rcpp::NumericMatrix ShortestPathFinderWrapper::getAllPathsSummary(){
       mat(counter,2) = node->xMax;
       mat(counter,3) = node->yMin;
       mat(counter,4) = node->yMax;
-      mat(counter,5) = spf.nodeEdges[i]->cost;
-      mat(counter,6) = spf.nodeEdges[i]->dist;
-      mat(counter,7) = node->value;
-      mat(counter,8) = (node->xMax - node->xMin) * (node->yMax - node->yMin);
+      mat(counter,5) = node->value;
+      mat(counter,6) = (node->xMax - node->xMin) * (node->yMax - node->yMin);
+      mat(counter,7) = spf.nodeEdges[i]->cost;
+      mat(counter,8) = spf.nodeEdges[i]->dist;
       counter++;
     }
   }
