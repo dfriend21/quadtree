@@ -63,7 +63,7 @@ points(pts_cd$x, pts_cd$y, col="green", pch=16)
 pts_cd
 
 lf = qt_lcp_finder(qt, pt1)
-qt_find_paths(lf, "costdistance", 3000)
+qt_find_lcps(lf, "costdistance", 3000)
 
 # paths = data.frame(lf$_cgetAllPathsSummary())
 # x = (paths$xmin + paths$xmax)/2
@@ -97,7 +97,7 @@ plot(pts, col="black", pch=16, cex=.5)
 pt1 = c(630000, 3948000)
 
 lf = qt_lcp_finder(qt, pt1) #make the LCP finder
-paths = qt_find_paths(lf, limit_type="costdistance", limit=5000) #find all paths whose cost-distance is less than 5000
+paths = qt_find_lcps(lf, limit_type="costdistance", limit=5000) #find all paths whose cost-distance is less than 5000
 # paths = paths[paths$cost_tot + paths$dist_tot > 2000,] #optionally, we could limit the possible end points to ones that are between a min and max cost-distance
 prob = paths$cell_area/sum(paths$cell_area) #use the area of each cell as its probability of being selected
 inds = sample(1:nrow(paths),1, prob=prob, replace=TRUE) #pick one of the reachable cells, using cell area to weight the probability of being selected
