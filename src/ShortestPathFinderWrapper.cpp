@@ -10,9 +10,26 @@ ShortestPathFinderWrapper::ShortestPathFinderWrapper(std::shared_ptr<Quadtree> q
   spf = ShortestPathFinder(quadtree,Point(startPoint[0], startPoint[1]), xlims[0], xlims[1], ylims[0], ylims[1]);
 }
 
-void ShortestPathFinderWrapper::makeShortestPathNetwork(){
-  spf.makeShortestPathNetwork();
+// void ShortestPathFinderWrapper::makeShortestPathNetwork(){
+void ShortestPathFinderWrapper::makeNetworkAll(){
+  spf.makeNetworkAll();
 }
+
+void ShortestPathFinderWrapper::makeNetworkDist(double constraint){
+  spf.makeNetworkDist(constraint);
+}
+
+void ShortestPathFinderWrapper::makeNetworkCost(double constraint){
+  spf.makeNetworkCost(constraint);
+}
+
+void ShortestPathFinderWrapper::makeNetworkCostDist(double constraint){
+  spf.makeNetworkCostDist(constraint);
+}
+
+// void ShortestPathFinderWrapper::makeShortestPathNetworkConstrained(double cost, std::string type){
+//   spf.makeShortestPathNetwork(cost, type);
+// }
 
 Rcpp::NumericMatrix ShortestPathFinderWrapper::getShortestPath(Rcpp::NumericVector endPoint){
   //_endPoint = endPoint;
@@ -36,8 +53,41 @@ Rcpp::NumericMatrix ShortestPathFinderWrapper::getShortestPath(Rcpp::NumericVect
   return mat;
 }
 
-
-
+Rcpp::NumericMatrix ShortestPathFinderWrapper::getAllPathsSummary(){
+  //first we need to know how many "found" paths are currently in the network
+  int nPaths{0};
+  for(size_t i = 0; i < spf.nodeEdges.size(); ++i){
+    if(spf.nodeEdges.at(i)->parent.lock()){
+      nPaths++;
+    }
+  }
+  
+  //now we can construct a matrix to store info on each path
+  // Rcpp::NumericMatrix mat(nPaths,7);
+  Rcpp::NumericMatrix mat(nPaths,9);
+  // colnames(mat) = Rcpp::CharacterVector({"id","x","y","cost_tot","dist_tot","cost_cell", "cell_area"}); //name the columns
+  colnames(mat) = Rcpp::CharacterVector({"id","xmin","xmax", "ymin", "ymax","cost_tot","dist_tot","cost_cell", "cell_area"}); //name the columns
+  int counter = 0; 
+  for(size_t i = 0; i < spf.nodeEdges.size(); ++i){
+    if(spf.nodeEdges[i]->parent.lock()){
+      std::shared_ptr<Node> node = spf.nodeEdges[i]->node.lock();
+      mat(counter,0) = node->id;
+      // mat(counter,1) = (node->xMin + node->xMax)/2;
+      // mat(counter,2) = (node->yMin + node->yMax)/2;
+      mat(counter,1) = node->xMin;
+      mat(counter,2) = node->xMax;
+      mat(counter,3) = node->yMin;
+      mat(counter,4) = node->yMax;
+      mat(counter,5) = spf.nodeEdges[i]->cost;
+      mat(counter,6) = spf.nodeEdges[i]->dist;
+      mat(counter,7) = node->value;
+      mat(counter,8) = (node->xMax - node->xMin) * (node->yMax - node->yMin);
+      counter++;
+    }
+  }
+  
+  return(mat);
+}
 
 Rcpp::NumericVector ShortestPathFinderWrapper::getStartPoint(){
   Rcpp::NumericVector vec(2);

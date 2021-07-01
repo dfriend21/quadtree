@@ -82,6 +82,7 @@ void ShortestPathFinder::init(int startNodeID){
     //auto startNodeShared = startNode.lock();
     possibleEdges.insert(std::make_tuple(dict[startNode->id],dict[startNode->id], 0, 0)); //initialize our set with the start node
 }
+
 //performs one iteration of the shortest path algorithm
 //returns the ID of the most recently added Node (note that it returns the ID of the Node, NOT the NodeEdge)
 //returns -1 if no edge was added
@@ -198,9 +199,81 @@ std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder:
 //a certain node. But because the state of the algorithm is saved in 'possibleEdges', this algorithm can simply pick 
 //up where 'getShortestPath()' left off, rather than recalculating everything. This is why I implemented the shortest
 //functionality as a class - it lets me save the state of the algorithm in a way that I couldn't do with just a function.
-void ShortestPathFinder::makeShortestPathNetwork(){
+// void ShortestPathFinder::makeShortestPathNetwork(){
+void ShortestPathFinder::makeNetworkAll(){
     while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
         doNextIteration();
+    }
+}
+
+// //'ConstDist' is short for "constrained by distance"
+// void ShortestPathFinder::makeShortestPathNetworkConstDist(double maxResistance){
+//     while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
+//         int currentID = doNextIteration();
+//         //std::shared_ptr<NodeEdge> ne = nodeEdges.at(dict[currentID]);
+//         if(nodeEdges.at(dict[currentID])->cost > maxResistance){ //check if we've exceed the max resistance value - if so, remove the most recently added edge (since it exceeds the limit) and then break out of the loop
+//             nodeEdges.at(dict[currentID])->parent = std::weak_ptr<NodeEdge>();
+//             nodeEdges.at(dict[currentID])->dist = 0;
+//             nodeEdges.at(dict[currentID])->cost = 0;
+//             nodeEdges.at(dict[currentID])->nNodesFromOrigin = 0;
+//             break;
+//         }
+//     }
+// }
+
+void ShortestPathFinder::makeNetworkDist(double constraint){
+    while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
+        int currentID = doNextIteration();
+        //std::shared_ptr<NodeEdge> ne = nodeEdges.at(dict[currentID]);
+        int dictID = dict[currentID];
+        if(nodeEdges[dictID]->dist > constraint){ //check if we've exceed the max resistance value - if so, remove the most recently added edge (since it exceeds the limit) and then break out of the loop
+            
+            //reinsert the most recent edge that was just removed from 'possibleEdges'
+            possibleEdges.insert(std::make_tuple(nodeEdges[dictID]->parent.lock()->id, nodeEdges[dictID]->id,nodeEdges[dictID]->cost,nodeEdges[dictID]->dist));
+            
+            nodeEdges[dictID]->parent = std::weak_ptr<NodeEdge>();
+            nodeEdges[dictID]->dist = 0;
+            nodeEdges[dictID]->cost = 0;
+            nodeEdges[dictID]->nNodesFromOrigin = 0;
+            break;
+        }
+    }
+}
+void ShortestPathFinder::makeNetworkCost(double constraint){
+    while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
+        int currentID = doNextIteration();
+        //std::shared_ptr<NodeEdge> ne = nodeEdges.at(dict[currentID]);
+        int dictID = dict[currentID];
+        if(nodeEdges[dictID]->cost > constraint){ //check if we've exceed the max resistance value - if so, remove the most recently added edge (since it exceeds the limit) and then break out of the loop
+            
+            //reinsert the most recent edge that was just removed from 'possibleEdges'
+            possibleEdges.insert(std::make_tuple(nodeEdges[dictID]->parent.lock()->id, nodeEdges[dictID]->id,nodeEdges[dictID]->cost,nodeEdges[dictID]->dist));
+            
+            nodeEdges[dictID]->parent = std::weak_ptr<NodeEdge>();
+            nodeEdges[dictID]->dist = 0;
+            nodeEdges[dictID]->cost = 0;
+            nodeEdges[dictID]->nNodesFromOrigin = 0;
+            break;
+        }
+    }
+}
+
+void ShortestPathFinder::makeNetworkCostDist(double constraint){
+    while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
+        int currentID = doNextIteration();
+        //std::shared_ptr<NodeEdge> ne = nodeEdges.at(dict[currentID]);
+        int dictID = dict[currentID];
+        if((nodeEdges[dictID]->cost + nodeEdges[dictID]->dist) > constraint){ //check if we've exceed the max resistance value - if so, remove the most recently added edge (since it exceeds the limit) and then break out of the loop
+            //reinsert the most recent edge that was just removed from 'possibleEdges'
+            possibleEdges.insert(std::make_tuple(nodeEdges[dictID]->parent.lock()->id, nodeEdges[dictID]->id,nodeEdges[dictID]->cost,nodeEdges[dictID]->dist));
+            
+            
+            nodeEdges[dictID]->parent = std::weak_ptr<NodeEdge>();
+            nodeEdges[dictID]->dist = 0;
+            nodeEdges[dictID]->cost = 0;
+            nodeEdges[dictID]->nNodesFromOrigin = 0;
+            break;
+        }
     }
 }
 

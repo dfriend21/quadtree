@@ -25,6 +25,10 @@ t2 = system.time(spf$getShortestPath(pt2))
 t3 = system.time(spf$getShortestPath(pt3))
 t1+t2
 t3
+
+test = spf$getAllPathsSummary()
+dim(test)
+head(test)
 #vals = spf$getVals()
 
 #now get the actual paths

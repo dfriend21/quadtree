@@ -65,8 +65,12 @@ RCPP_MODULE(qt) {
     class_<ShortestPathFinderWrapper>("shortestPathFinder")
       //.constructor<QuadtreeWrapper, Rcpp::NumericVector>()
       //.constructor<QuadtreeWrapper, Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::NumericVector>()
-      //.method("makeShortestPathNetwork", &ShortestPathFinderWrapper::makeShortestPathNetwork)
+      .method("makeNetworkAll", &ShortestPathFinderWrapper::makeNetworkAll)
+      .method("makeNetworkDist", &ShortestPathFinderWrapper::makeNetworkDist)
+      .method("makeNetworkCost", &ShortestPathFinderWrapper::makeNetworkCost)
+      .method("makeNetworkCostDist", &ShortestPathFinderWrapper::makeNetworkCostDist)
       .method("getShortestPath", &ShortestPathFinderWrapper::getShortestPath)
+      .method("getAllPathsSummary", &ShortestPathFinderWrapper::getAllPathsSummary)
       .method("getStartPoint", &ShortestPathFinderWrapper::getStartPoint)
       .method("getSearchLimits", &ShortestPathFinderWrapper::getSearchLimits)
       .method("isValid", &ShortestPathFinderWrapper::isValid);

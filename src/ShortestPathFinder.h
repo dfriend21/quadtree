@@ -59,7 +59,15 @@ class ShortestPathFinder{
             ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Point startPoint, double _xMin, double _xMax, double _yMin, double _yMax);
 
             
-            void makeShortestPathNetwork();
+            void makeNetworkAll();
+            void makeNetworkDist(double constraint);
+            void makeNetworkCost(double constraint);
+            void makeNetworkCostDist(double constraint);
+            //void makeShortestPathNetwork(double maxResistance);
+
+            // void makeShortestPathNetworkConstDist(double constraint);
+            // void makeShortestPathNetworkConstCost(double constraint);
+            // void makeShortestPathNetworkConstCostDist(double constraint);
             // std::vector<std::shared_ptr<Node>> getShortestPath(int endNodeID);
             // std::vector<std::shared_ptr<Node>> getShortestPath(Point endPoint);
             // std::vector<NodeEdge> getShortestPath(int endNodeID);

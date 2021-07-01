@@ -3,6 +3,7 @@
 
 #include "ShortestPathFinder.h"
 #include <Rcpp.h>
+#include <string>
 #include <memory>
 
 class ShortestPathFinderWrapper{
@@ -15,8 +16,13 @@ public:
   ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint);
   ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims);
   
-  void makeShortestPathNetwork();
+  void makeNetworkAll();
+  void makeNetworkDist(double constraint);
+  void makeNetworkCost(double constraint);
+  void makeNetworkCostDist(double constraint);
+  // void makeShortestPathNetworkConstrained(double cost, std::string type);
   Rcpp::NumericMatrix getShortestPath(Rcpp::NumericVector endPoint);
+  Rcpp::NumericMatrix getAllPathsSummary();
   Rcpp::NumericVector getStartPoint();
   Rcpp::NumericVector getSearchLimits();
   bool isValid();
