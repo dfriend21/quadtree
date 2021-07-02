@@ -271,25 +271,18 @@ qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
 #'   distance or cost-distance + distance (see Details).
 #' @param lcp_finder the LCP finder object returned from
 #'   \code{\link{qt_lcp_finder}}
-#' @param limit_type character; one of "none", "costdistance", "distance", or
-#'   "costdistance+distance". Abbreviations can also be used - i.e "n", "cd",
-#'   "d", "cd+d". Specifies what variable (if any) to constrain the paths on
+#' @param limit_type character; one of "none", "costdistance", or
+#'   "costdistance+distance". Abbreviations can also be used - "n", "cd",
+#'   "cd+d". Specifies what variable (if any) to constrain the paths on
 #' @param limit numeric; the maximum value allowed for the variable specified by
 #'   \code{limit_type}. If \code{limit_type} is "none", this parameter does not
 #'   need to be provided
-#' @details
-#'
-#' When \code{limit_type} is "costdistance", all paths found will have a
-#' cost-distance less than \code{limit}. As described in the documentation for
+#' @details When \code{limit_type} is "costdistance", all paths found will have
+#' a cost-distance less than \code{limit}. As described in the documentation for
 #' \code{\link{qt_lcp_finder}}, the cost-distance is the cost of the cell times
 #' the length of the segment that falls within the cell. Because all edges
 #' connect two cells, the segments that fall in each cell are first calculated
 #' and then added.
-#'
-#' When \code{limit_type} is "distance", only distance is considered. Note that
-#' this is \strong{not} straight line distance. It is the Euclidean distance of
-#' the least-cost path - it ignores the cost value. Thus all the paths found
-#' will have a total distance less than \code{limit}.
 #'
 #' When \code{limit_type} is "costdistance+distance", the cost-distance and
 #' distance are added together. This is primarily for use when the quadtree
@@ -325,31 +318,31 @@ qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
 #'   \code{\link{qt_lcp_summary}}
 #' @examples
 #' library(raster)
-#' 
+#'
 #' # ----- create a quadtree
 #' # create raster of random values
 #' nrow = 57
 #' ncol = 75
 #' set.seed(4)
 #' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-#' 
+#'
 #' # create quadtree
 #' qt = qt_create(rast, range_limit = .9, adj_type="expand")
-#' 
+#'
 #' start_pt = c(ncol/2,nrow/2)
-#' 
+#'
 #' #--------- find all LCPs
 #' lcpf1 = qt_lcp_finder(qt, start_pt)
 #' paths1 = qt_find_lcps(lcpf1, limit_type="none")
-#' 
+#'
 #' #--------- limit LCPs by cost-distance
 #' lcpf2 = qt_lcp_finder(qt, start_pt)
 #' paths2 = qt_find_lcps(lcpf2, limit_type="cd", limit=18)
-#' 
+#'
 #' #--------- limit LCPs by cost-distance + distance
 #' lcpf3 = qt_lcp_finder(qt, start_pt)
 #' paths3 = qt_find_lcps(lcpf3, limit_type="cd+d", limit=18)
-#' 
+#'
 #' #--------- Now plot the reachable cells, by method
 #' # plot the centroids of the reachable cells
 #' qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60", col=c("white", "gray30"), main="reachable cells, by 'limit_type'")
@@ -358,7 +351,7 @@ qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
 #' points((paths3$xmin + paths3$xmax)/2, (paths3$ymin + paths3$ymax)/2, pch=16, col="blue", cex=.8)
 #' points(start_pt[1], start_pt[2], bg="green", col="black", pch=24, cex=1.5)
 #' legend("topright", title="limit_type", legend=c("none", "cd", "cd+d"), pch=c(16,16,16), col=c("black", "red", "blue"), pt.cex=c(1.4,1.1,.8))
-#' 
+#'
 #' #----------------------------------------------------
 #' # An example of what NOT to do
 #' #----------------------------------------------------
@@ -366,12 +359,12 @@ qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
 #' paths5a = qt_find_lcps(lcpf5, limit_type="cd", limit=18)
 #' paths5b = qt_find_lcps(lcpf5, limit_type="cd", limit=5)
 #' #^^^ DON'T DO THIS! ^^^ (don't try to reuse the lcp finder to find *shorter* paths)
-#' 
+#'
 #' nrow(paths5a)
 #' nrow(paths5b) #they're the same length!!!
-#' 
+#'
 #' range(paths5b$lcp_cost) #returns paths with cost greater than 5!!!
-#' 
+#'
 #' #if we want to find shorter paths, we need to create a new LCP finder
 #' lcpf6 = qt_lcp_finder(qt, start_pt)
 #' paths6 = qt_find_lcps(lcpf6, limit_type="cd", limit=5)

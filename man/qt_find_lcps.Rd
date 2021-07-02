@@ -10,9 +10,9 @@ qt_find_lcps(lcp_finder, limit_type = "none", limit = NULL)
 \item{lcp_finder}{the LCP finder object returned from
 \code{\link{qt_lcp_finder}}}
 
-\item{limit_type}{character; one of "none", "costdistance", "distance", or
-"costdistance+distance". Abbreviations can also be used - i.e "n", "cd",
-"d", "cd+d". Specifies what variable (if any) to constrain the paths on}
+\item{limit_type}{character; one of "none", "costdistance", or
+"costdistance+distance". Abbreviations can also be used - "n", "cd",
+"cd+d". Specifies what variable (if any) to constrain the paths on}
 
 \item{limit}{numeric; the maximum value allowed for the variable specified by
 \code{limit_type}. If \code{limit_type} is "none", this parameter does not
@@ -30,17 +30,12 @@ Finds the LCPs to surrounding points. Constraints can be placed
   distance or cost-distance + distance (see Details).
 }
 \details{
-When \code{limit_type} is "costdistance", all paths found will have a
-cost-distance less than \code{limit}. As described in the documentation for
+When \code{limit_type} is "costdistance", all paths found will have
+a cost-distance less than \code{limit}. As described in the documentation for
 \code{\link{qt_lcp_finder}}, the cost-distance is the cost of the cell times
 the length of the segment that falls within the cell. Because all edges
 connect two cells, the segments that fall in each cell are first calculated
 and then added.
-
-When \code{limit_type} is "distance", only distance is considered. Note that
-this is \strong{not} straight line distance. It is the Euclidean distance of
-the least-cost path - it ignores the cost value. Thus all the paths found
-will have a total distance less than \code{limit}.
 
 When \code{limit_type} is "costdistance+distance", the cost-distance and
 distance are added together. This is primarily for use when the quadtree
