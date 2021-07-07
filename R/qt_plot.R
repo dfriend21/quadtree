@@ -113,6 +113,7 @@ qt_plot = function(qt, colors = NULL, nb_line_col=NULL, border_col="black", xlim
   if(is.null(args[["ylab"]])) args[["ylab"]] = "y"
   
   nodes = dplyr::bind_rows(qt$asList())
+  nodes = nodes[nodes$hasChdn == 0,]
   if(is.null(na_col)){
     nodes = nodes[!is.na(nodes$value),]
   }
