@@ -95,14 +95,12 @@ plot(pts, col="black", pch=16, cex=.5)
 
 
 pt1 = c(630000, 3948000)
-
 lf = qt_lcp_finder(qt, pt1) #make the LCP finder
 paths = qt_find_lcps(lf, limit_type="costdistance", limit=5000) #find all paths whose cost-distance is less than 5000
 # paths = paths[paths$cost_tot + paths$dist_tot > 2000,] #optionally, we could limit the possible end points to ones that are between a min and max cost-distance
 prob = paths$cell_area/sum(paths$cell_area) #use the area of each cell as its probability of being selected
 inds = sample(1:nrow(paths),1, prob=prob, replace=TRUE) #pick one of the reachable cells, using cell area to weight the probability of being selected
 end_pt = c(runif(1,min=paths$xmin[inds], max=paths$xmax[inds]), runif(1,min=paths$ymin[inds], max=paths$ymax[inds])) #pick a random point within the selected cell
-
 
 qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60")
 points((paths$xmin + paths$xmax)/2, (paths$ymin + paths$ymax)/2, pch=16)

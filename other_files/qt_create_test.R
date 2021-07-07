@@ -13,6 +13,57 @@ l_iv = mask(crop(l,iv),iv)
 
 l_iv
 qt = qt_create(1-l_iv, .8, adj_type="expand")
+qt_plot(qt)
+
+split_fun = function(vals, args){
+  #sd = sqrt(sum((vals-mean(vals))^2)/length(vals))
+  return(sd(vals) > args$sd)
+  #return(sd > args$sd)
+}
+combine_fun = function(vals, args){
+  if(sum(is.na(vals)) != 0){
+    return(NA)
+  } else if(max(vals) < args$threshold){
+    return(args$low_val)
+  } else {
+    return(args$high_val)
+  }
+}
+
+
+combine_fun = function(vals, args){
+  mean(vals)
+}
+#qt_create <- function(x, split_threshold = NULL, split_method = "range", combine_method = "mean", split_fun=NULL, split_args=list(), combine_fun=NULL, combine_args=list(), max_cell_length=NULL, adj_type="expand", resample_n_side=NULL, extent=NULL, proj4string=NULL){
+system.time(qt_create(1-l_iv, split_threshold=.2, split_method="range"))
+
+system.time(qt_create(1-l, split_threshold=.1, split_method="sd", combine_method="mean"))
+system.time(qt_create(1-l, split_method="custom", split_fun=split_fun, split_args=list(sd=.1), combine_method="mean"))
+qt1 = qt_create(1-l_iv, split_threshold=.1, split_method="sd", combine_method="mean")
+qt2 = qt_create(1-l_iv, split_method="custom", split_fun=split_fun, split_args=list(sd=.1), combine_method="mean")
+
+qt_plot(qt1)
+qt_plot(qt2)
+
+
+qt1 = qt_create(1-l_iv, split_threshold=.1, split_method="sd", combine_method="mean")
+qt2 = qt_create(1-l_iv, split_threshold=.1, split_method="sd", combine_method="custom", combine_fun=combine_fun, combine_args=list(hi_there=1))
+qt_plot(qt1, crop=TRUE, na_col="transparent")
+qt_plot(qt1, crop=TRUE, na_col=NULL)
+qt_plot(qt2, crop=TRUE, na_col=NULL)
+
+
+combine_fun = function(vals, args){
+  return(mean(vals))
+}
+#combine_fun(c(.1,.2,.3,.1,.6), list(threshold=.5, low_val=.5, high_val=.6))
+qt = qt_create(l_iv, split_fun = qt_split_diff, split_args=list(range_limit=.15))
+qt_plot(qt, crop=TRUE, na_col=NULL)
+qt_plot(qt, na_col=NULL)
+system.time(qt_create(l, split_fun=qt_split_diff, split_args=list(range_limit=.15)))
+
+qt = qt_create(1-l, split_fun, args=list(sd=.1))
+qt_plot(qt, crop=TRUE, na_col=NULL)
 qt = qt_create(1-l_iv, .2, adj_type="expand")
 qt = qt_create(l_iv, .2, adj_type="expand")
 qt2 = qt_create(l_iv+100, .2, adj_type="expand")
