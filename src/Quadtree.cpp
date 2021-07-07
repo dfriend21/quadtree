@@ -7,9 +7,12 @@
 #include <vector>
 #include <memory>
 #include <cassert>
+#include <cmath>
 #include <string>
 #include <algorithm>
 #include <limits>
+#include <functional>
+#include <cstdarg>
 #include <cereal/archives/json.hpp>
 #include <cereal/archives/portable_binary.hpp>
 #include <cereal/archives/binary.hpp>
@@ -22,37 +25,75 @@
 // }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Quadtree::Quadtree() 
-    : Quadtree{0,0,0,0,0,0,0,0,0,0,0,""}{
-    // std::cout << "Quadtree::Quadtree()\n";
-    //: rangeLim{0}, nNodes{0}{
-    //root = Node::makeNode(0,0,0,0,0,0,0)->ptr;
-}
+// Quadtree::Quadtree() 
+//     : Quadtree{0,0,0,0,0,0,0,0,0,0,0,""}{
+// Quadtree::Quadtree() 
+//     : Quadtree{0,0,0,0,0,0,0,0,0,0,""}{
+//     // std::cout << "Quadtree::Quadtree()\n";
+//     //: rangeLim{0}, nNodes{0}{
+//     //root = Node::makeNode(0,0,0,0,0,0,0)->ptr;
+// }
 
-Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
-    : Quadtree{0,0,0,0,_rangeLim,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
+// Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
+//     : Quadtree{0,0,0,0,_rangeLim,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
+Quadtree::Quadtree(double _maxXCellLength, double _maxYCellLength) 
+    : Quadtree{0,0,0,0,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
     // std::cout << "Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength)\n";
     //: rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(0,0,0,0,0,0,0)->ptr;
 }
 
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
-    : Quadtree {xMin, xMax, yMin, yMax, _rangeLim, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
+// Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
+//     : Quadtree {xMin, xMax, yMin, yMax, _rangeLim, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength, double _maxYCellLength) 
+    : Quadtree {xMin, xMax, yMin, yMax, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
     // std::cout << "Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength)\n";
     // : rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
 }
 
-
 //maxXLength -> the maximum cell size in the x-dimension. This means that any cell
 //      that's bigger than this will be divided no matter what (unless ALL of the
 //      values in the cell are NaN)
 //maxYLength -> same as 'maxXLength', but for y
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
-    : rangeLim{_rangeLim}, nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, proj4string{_proj4string} {
+// Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
+//     : rangeLim{_rangeLim}, nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, proj4string{_proj4string} {
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
+    : nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, proj4string{_proj4string} {
     // std::cout << "Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)\n";
     root = std::make_shared<Node>(xMin,xMax,yMin,yMax,0,0,0);
     //root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
+}
+
+
+bool Quadtree::splitRange(const Matrix &mat, double limit){
+    double dif = mat.max() - mat.min(); // get the difference between the max and min cells in this node
+    return dif >= limit; //if 'dif' is greater than or equal to the limit, return true
+}
+
+bool Quadtree::splitSD(const Matrix &mat, double limit){
+    double mean = mat.mean();
+    double sum = 0; 
+    for(int i = 0; i < mat.size(); ++i){
+        sum += pow(mat.getValueByIndex(i)-mean,2);
+    }
+    double var = sum/mat.size(); //use the variance to compare the two so we can avoid taking the square root
+    return var >= pow(limit,2); //if the standard deviation is greater than the limit, return true (although I'm actually comparing the variances here)
+}
+
+double Quadtree::combineMean(const Matrix &mat){
+    return mat.mean();
+}
+
+double Quadtree::combineMedian(const Matrix &mat){
+    return mat.median();
+}
+
+double Quadtree::combineMin(const Matrix &mat){
+    return mat.min();
+}
+double Quadtree::combineMax(const Matrix &mat){
+    return mat.max();
 }
 
 //wrapper for makeTree(Matrix, std::shared_ptr<Node>, int, int)
@@ -63,14 +104,14 @@ Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _r
 //      the dimensions will be a result of 2^x. And it should be square. If
 //      a matrix with dimensions not divisible by 2 is provided, the result
 //      will be a quadtree with one node.
-void Quadtree::makeTree(const Matrix &mat){
+void Quadtree::makeTree(const Matrix &mat, std::function<bool (const Matrix&)> splitFun, std::function<double (const Matrix&)> combineFun){
     // std::cout << "Quadtree::makeTree(const Matrix &mat)\n";
     originalNX = mat.nCol();
     originalNY = mat.nRow();
     // if the value for max length is less than 0 (default is -1) then set the max length for both dimensions to be the user-defined dimensions. This essentially sets no restriction on the cell size
     if(maxXCellLength < 0) maxXCellLength = root->xMax - root->xMin; 
     if(maxYCellLength < 0) maxYCellLength = root->yMax - root->yMin;
-    nNodes = makeTree(mat, root, 0, 0) + 1; //the ID that is returned from 'makeTree' also corresponds to the number of nodes created. Add 1 to get the count (since the ID starts at 0)
+    nNodes = makeTree(mat, root, 0, 0, splitFun, combineFun) + 1; //the ID that is returned from 'makeTree' also corresponds to the number of nodes created. Add 1 to get the count (since the ID starts at 0)
     assignNeighbors(); //assign neighbors for the cells    
 }
 
@@ -80,20 +121,21 @@ void Quadtree::makeTree(const Matrix &mat){
 //node -> pointer to the node we want to try splitting into 4
 //id -> current ID
 //level -> the 'level' of this node
-int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int id, int level){
+int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int id, int level, std::function<bool (const Matrix&)> splitFun, std::function<double (const Matrix&)> combineFun){
     // std::cout << "Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int id, int level)\n";
     // std::cout << "---- CHECK 0 ----\n";
     //Matrix mat = mat.flipRows();
     //mat.flipRows();
     //assign values to our node
-    node->value = mat.mean();
+    //node->value = mat.mean();
+    node->value = combineFun(mat);
     node->level = level;
     node->id = id;
     
     //level = _level;
     //smallestChildSideLength = sideLength; // this will get changed if it ends up having children
     //root = _root;
-    double dif = mat.max() - mat.min(); // get the difference between the max and min cells in this node
+    // double dif = mat.max() - mat.min(); // get the difference between the max and min cells in this node
     //Rcpp::Rcout << dif << std::endl;
     int newid{id};// ? - not sure if this is necessary - can I just use 'id'?
     //decide whether or not to split on two conditions - whether the cell can be divided evenly into four children, and whether the difference between the min and max exceeds the user-specified threshold
@@ -105,7 +147,8 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
     //to split the cell, the following conditions must be met:
     if((mat.nRow()%2 == 0 && mat.nCol()%2 == 0) // the # of cells in both dimensions must be divisible by two AND
         && nNans != mat.size() // there is at least one non-Nan value in the matrix AND at least one of the following four conditions is true:
-        && (dif >= rangeLim // { the difference between the max and min values exceeds the user-defined threshold OR
+        && //(dif >= rangeLim // { the difference between the max and min values exceeds the user-defined threshold OR
+           (splitFun(mat)
             || x_length > maxXCellLength // the x side length is greater than the user-defined maximum length OR
             || y_length > maxYCellLength //the y side length is greater than the user-defined maximum length OR
             || nNans > 0 )){ // there is at least one Nan }
@@ -137,9 +180,11 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
                 // std::cout << child_index << "\n";
                 // std::cout << node->children.size() << "\n";
                 //node->children[child_index] = Node::makeNode(x_min, x_max, y_min, y_max, mat.mean(), id, level); //create the node
-                node->children.at(child_index) = std::make_shared<Node>(x_min, x_max, y_min, y_max, mat.mean(), id, level); //create the node
+                //double value = combineFun(mat);
+                //node->children.at(child_index) = std::make_shared<Node>(x_min, x_max, y_min, y_max, mat.mean(), id, level); //create the node
+                node->children.at(child_index) = std::make_shared<Node>(x_min, x_max, y_min, y_max, -1, -1, -1); //create the node
                 // std::cout << "---- CHECK 6 ----\n";
-                newid = makeTree(sub, node->children[child_index], newid+1, level+1); //recursively call 'makeTree' on this node, making sure to increment the 'id' and the 'level'
+                newid = makeTree(sub, node->children[child_index], newid+1, level+1, splitFun, combineFun); //recursively call 'makeTree' on this node, making sure to increment the 'id' and the 'level'
                 // std::cout << "---- CHECK 7 ----\n";
             }
             // std::cout << "---- CHECK 8 ----\n";
@@ -208,8 +253,6 @@ std::shared_ptr<Node> Quadtree::getNode(double x, double y) const{
     // std::cout << "Quadtree::getNode(double x, double y)\n";
     return getNode(x,y,root);
 }
-
-
 
 std::list<std::shared_ptr<Node>> Quadtree::getNodesInBox(double xMin, double xMax, double yMin, double yMax){
     // std::cout << "Quadtree::getNodesInBox(double xMin, double xMax, double yMin, double yMax)\n";
@@ -420,10 +463,29 @@ std::string Quadtree::toString(const std::shared_ptr<Node> node, const std::stri
 // - automatically calls 'toString()' on 'root'
 std::string Quadtree::toString() const{
     // std::cout << "Quadtree::toString()\n";
+
+//     double originalXMin;
+//   double originalXMax;
+//   double originalYMin;
+//   double originalYMax;
+//   double originalNX;
+//   double originalNY;
+//   double maxXCellLength;
+//   double maxYCellLength;
+
+  std::string proj4string;
     std::string str("");
     str = str + 
-        "rangeLim: " + std::to_string(rangeLim) + "\n" +
+        // "rangeLim: " + std::to_string(rangeLim) + "\n" +
         "nNodes: " + std::to_string(nNodes) + "\n" +
+        "originalXMin: " + std::to_string(originalXMin) + "\n" +
+        "originalXMax: " + std::to_string(originalXMax) + "\n" +
+        "originalYMin: " + std::to_string(originalYMin) + "\n" +
+        "originalYMax: " + std::to_string(originalYMax) + "\n" +
+        "originalNX: " + std::to_string(originalNX) + "\n" +
+        "originalNY: " + std::to_string(originalNY) + "\n" +
+        "maxXCellLength: " + std::to_string(maxXCellLength) + "\n" +
+        "maxYCellLength: " + std::to_string(maxYCellLength) + "\n" +
         toString(root, "") + "\n";
     return str;
 }
@@ -453,7 +515,7 @@ std::shared_ptr<Quadtree> Quadtree::readQuadtree(std::string filePath){
     // std::cout << "Quadtree::readQuadtree(std::string filePath)\n";
     std::ifstream is(filePath, std::ios::binary);
     cereal::PortableBinaryInputArchive iarchive(is);
-    Quadtree *quadtree = new Quadtree();
+    Quadtree *quadtree = new Quadtree(-1,-1);
     std::shared_ptr<Quadtree> quadtreePtr(quadtree);
     iarchive(quadtreePtr);
     quadtreePtr->assignNeighbors(); //since we're not storing the neighbor relationships in the file we need to recalculate those.

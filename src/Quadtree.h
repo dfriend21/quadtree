@@ -8,6 +8,7 @@
 #include <list>
 #include <string>
 #include <iostream> //TEMPORARY (for debugging)
+#include <functional>
 //#include <Rcpp.h>
 
 class Matrix;
@@ -18,7 +19,7 @@ class Quadtree
 {
 public:
   std::shared_ptr<Node> root;
-  double rangeLim;
+  //double rangeLim;
   int nNodes;
   
   double originalXMin;
@@ -32,10 +33,13 @@ public:
 
   std::string proj4string;
   
-  Quadtree();
-  Quadtree(double _rangeLim, double _maxXCellLength = -1, double _maxYCellLength = -1);
-  Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength = -1, double _maxYCellLength = -1);
-  Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength = -1, double _maxYCellLength = -1);
+  // Quadtree();
+  // Quadtree(double _rangeLim, double _maxXCellLength = -1, double _maxYCellLength = -1);
+  Quadtree(double _maxXCellLength = -1, double _maxYCellLength = -1);
+  // Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength = -1, double _maxYCellLength = -1);
+  Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength = -1, double _maxYCellLength = -1);
+  // Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength = -1, double _maxYCellLength = -1);
+  Quadtree(double xMin, double xMax, double yMin, double yMax, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength = -1, double _maxYCellLength = -1);
   //~Quadtree();
   
   //std::shared_ptr<Node> makeNode(double xMin, double xMax, double yMin, double yMax, double value);
@@ -47,8 +51,17 @@ public:
   void getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_ptr<Node>> &returnNodes, double xMin, double xMax, double yMin, double yMax);
   //std::shared_ptr<Node> getNode(double x, double y, Node *leaf);
   
-  int makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int id, int level);
-  void makeTree(const Matrix &mat);
+  static bool splitRange(const Matrix &mat, double limit);
+  static bool splitSD(const Matrix &mat, double limit);
+  static double combineMean(const Matrix &mat);
+  static double combineMedian(const Matrix &mat);
+  static double combineMin(const Matrix &mat);
+  static double combineMax(const Matrix &mat);
+
+  //int makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int id, int level);
+  int makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int id, int level, std::function<bool (const Matrix&)> splitFun, std::function<double (const Matrix&)> combineFun);
+  //void makeTree(const Matrix &mat);
+  void makeTree(const Matrix &mat, std::function<bool (const Matrix&)> splitFun, std::function<double (const Matrix&)> combineFun);
   std::vector<std::shared_ptr<Node> > findNeighbors(const std::shared_ptr<Node> node, double searchSideLength) const;
   void assignNeighbors(const std::shared_ptr<Node> node);
   void assignNeighbors();
@@ -69,7 +82,8 @@ public:
   template<class Archive>
   void serialize(Archive & archive){ //couldn't get serialization to work unless I defined 'serialize' in the header rather than in 'Quadtree.cpp'. WHY???????????????????????????
     // std::cout << "Quadtree::serialize(Archive & archive)\n";
-    archive(rangeLim,nNodes,originalXMin,originalXMax,originalYMin,originalYMax,originalNX,originalNY,proj4string,root);
+    // archive(rangeLim,nNodes,originalXMin,originalXMax,originalYMin,originalYMax,originalNX,originalNY,proj4string,root);
+    archive(nNodes,originalXMin,originalXMax,originalYMin,originalYMax,originalNX,originalNY,proj4string,root);
   }
 
   
