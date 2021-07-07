@@ -7,12 +7,14 @@
 //zero-based indexing
 class Matrix{
 private:
-    std::vector<double> vec;
     int nrow{0};
     int ncol{0};
 
     int getIndex(const int row, const int col) const;
 public:
+
+    std::vector<double> vec;
+
     Matrix();
     Matrix(double val, int _nrow, int _ncol);
     Matrix(std::vector<double> _vec, int _nrow, int _ncol);
@@ -32,6 +34,7 @@ public:
     Matrix getInverse() const;
     
     double mean() const;
+    double median() const;
     double min() const;
     double max() const;
     double determinant() const; //gets the determinant

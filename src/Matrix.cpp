@@ -3,6 +3,7 @@
 #include <cassert>
 #include <string>
 #include <cmath>
+#include <algorithm>
 #include "Matrix.h"
 
 Matrix::Matrix() : nrow{0}, ncol{0}{
@@ -15,7 +16,7 @@ Matrix::Matrix(double val, int _nrow, int _ncol) : nrow{_nrow}, ncol{_ncol}
 }
 
 Matrix::Matrix(std::vector<double> _vec, int _nrow, int _ncol) 
-    : vec(_vec), nrow{_nrow}, ncol{_ncol} 
+    : nrow{_nrow}, ncol{_ncol}, vec(_vec)  
 {
     assert(_nrow >= 0 && _ncol >= 0);
     assert(vec.size() == (size_t)(nrow*ncol));
@@ -180,6 +181,16 @@ double Matrix::mean() const{
         sum += vec[i];
     }
     return sum/vec.size();
+}
+
+double Matrix::median() const{
+    std::vector<double> vecSort = vec;
+    std::sort(vecSort.begin(), vecSort.end());
+    if(vecSort.size()%2 == 0){
+        return (vecSort[vecSort.size()/2] + vecSort[(vecSort.size()/2)-1]) / 2;
+    } else {
+        return vecSort[(vecSort.size()-1)/2];
+    }
 }
 
 double Matrix::min() const{
