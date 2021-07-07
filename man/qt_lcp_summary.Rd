@@ -33,10 +33,7 @@ Note that this function returns \strong{all} of the paths that have
   others have most likely been calculated. This function returns all of the
   LCPs that have been calculated so far.
 }
-\seealso{
-\code{\link{qt_lcp_finder}}, \code{\link{qt_find_lcp}},
-  \code{\link{qt_find_lcps}}
-#' @examples
+\examples{
 library(raster)
 
 # ----- create a quadtree
@@ -60,4 +57,8 @@ paths
 qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60")
 points((paths$xmin + paths$xmax)/2, (paths$ymin + paths$ymax)/2, pch=16, col="black")
 points(start_pt[1], start_pt[2], col="red", pch=16)
+}
+\seealso{
+\code{\link{qt_lcp_finder}}, \code{\link{qt_find_lcp}},
+  \code{\link{qt_find_lcps}}
 }

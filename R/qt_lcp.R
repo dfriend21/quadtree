@@ -293,7 +293,7 @@ qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
 #' the cost of the path will be equal to the distance traveled. Thus, if the
 #' limit is set at 15, the longest possible path would be 15 (which would only
 #' occur if it travels over cells that all have a resistance of 0) and would
-#' increase as the resistance of the underlying surface increases. Note that an
+#' decrease as the resistance of the underlying surface increases. Note that an
 #' equivalent method would be to simply add 1 to all the values so they fall
 #' between 1 and 2, and then use "costdistance" as the limiting variable.
 #'
@@ -408,7 +408,7 @@ qt_find_lcps = function(lcp_finder, limit_type="none", limit=NULL){
 #'   along the path} }
 #' @seealso \code{\link{qt_lcp_finder}}, \code{\link{qt_find_lcp}},
 #'   \code{\link{qt_find_lcps}}
-#' #' @examples
+#' @examples
 #' library(raster)
 #' 
 #' # ----- create a quadtree

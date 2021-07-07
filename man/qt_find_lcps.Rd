@@ -46,7 +46,7 @@ Adding the cost-distance and the cost ensures that if there is no resistance,
 the cost of the path will be equal to the distance traveled. Thus, if the
 limit is set at 15, the longest possible path would be 15 (which would only
 occur if it travels over cells that all have a resistance of 0) and would
-increase as the resistance of the underlying surface increases. Note that an
+decrease as the resistance of the underlying surface increases. Note that an
 equivalent method would be to simply add 1 to all the values so they fall
 between 1 and 2, and then use "costdistance" as the limiting variable.
 
