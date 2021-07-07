@@ -2,6 +2,7 @@
 #include <cassert>
 #include <algorithm>
 #include <string>
+#include <functional>
 
 #include "Node.h"
 #include "Matrix.h"
@@ -18,12 +19,14 @@ QuadtreeWrapper::QuadtreeWrapper(std::shared_ptr<Quadtree> _quadtree) : quadtree
 
 //creates an empty quadtree with the given x and y limits, and the given
 //range limit
-QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double rangelim, double xMaxCellLength, double yMaxCellLength){
+// QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double rangelim, double xMaxCellLength, double yMaxCellLength){
+QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double xMaxCellLength, double yMaxCellLength){
   //Matrix matNew(rMatToCppMat(mat));
   std::vector<double> xlimsNew(Rcpp::as<std::vector<double>>(xlims));
   std::vector<double> ylimsNew(Rcpp::as<std::vector<double>>(ylims));
   //quadtree = std::shared_ptr<Quadtree>(new Quadtree(rangelim, xMaxCellLength, yMaxCellLength));
-  quadtree = std::make_shared<Quadtree>(rangelim, xMaxCellLength, yMaxCellLength);
+  //quadtree = std::make_shared<Quadtree>(rangelim, xMaxCellLength, yMaxCellLength);
+  quadtree = std::make_shared<Quadtree>(xMaxCellLength, yMaxCellLength);
   // quadtree = Quadtree(rangelim);
   //quadtree->root = Node::makeNode(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0)->ptr;
   quadtree->root = std::make_shared<Node>(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0);
@@ -36,31 +39,45 @@ QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector 
 //   rangeLim = rangelim;
 // }
 
-//creates a quadtree from a given matrix
-QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericMatrix mat, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double rangelim, double xMaxCellLength, double yMaxCellLength){
-  Matrix matNew(rInterface::rMatToCppMat(mat));
-  std::vector<double> xlimsNew(Rcpp::as<std::vector<double>>(xlims));
-  std::vector<double> ylimsNew(Rcpp::as<std::vector<double>>(ylims));
-  quadtree = std::shared_ptr<Quadtree>(new Quadtree(rangelim, xMaxCellLength, yMaxCellLength));
-  // quadtree = Quadtree(rangelim);
-  // quadtree->root = Node::makeNode(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0)->ptr;
-  quadtree->root = std::make_shared<Node>(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0);
-  //list = Rcpp::List(0);
-  nodeList = Rcpp::List::create();
-  //nodeVec = std::vector<Rcpp::NumericVector>(0);
-  //Rcpp::Rcout << matNew.toString();
-  //Rcpp::Rcout << matNew.countNans();
-  quadtree->makeTree(matNew);
-  //quadtree->assignNeighbors();
-}
+// //creates a quadtree from a given matrix
+// //QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericMatrix mat, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double rangeLim, double xMaxCellLength, double yMaxCellLength){
+// //QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericMatrix mat, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs, double xMaxCellLength, double yMaxCellLength){
+// QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double xMaxCellLength, double yMaxCellLength){
+// //QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericMatrix mat, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs, double xMaxCellLength, double yMaxCellLength){
+//   //Matrix matNew(rInterface::rMatToCppMat(mat));
+//   std::vector<double> xlimsNew(Rcpp::as<std::vector<double>>(xlims));
+//   std::vector<double> ylimsNew(Rcpp::as<std::vector<double>>(ylims));
+//   // quadtree = std::shared_ptr<Quadtree>(new Quadtree(rangelim, xMaxCellLength, yMaxCellLength));
+//   quadtree = std::shared_ptr<Quadtree>(new Quadtree(xMaxCellLength, yMaxCellLength));
+//   // quadtree = Quadtree(rangelim);
+//   // quadtree->root = Node::makeNode(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0)->ptr;
+//   quadtree->root = std::make_shared<Node>(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0);
+//   //list = Rcpp::List(0);
+//   nodeList = Rcpp::List::create();
+//   //nodeVec = std::vector<Rcpp::NumericVector>(0);
+//   //Rcpp::Rcout << matNew.toString();
+//   //Rcpp::Rcout << matNew.countNans();
+//   //createTree(mat, splitFun, splitArgs, combineFun, combineArgs);
+//   // auto splitFunc = [&splitArgs, &splitFun] (const Matrix &mat) -> bool{
+//   //   return Rcpp::as<bool>(splitFun(mat.vec, splitArgs));
+//   // };
+//   // auto combineFunc = [&combineArgs, &combineFun] (const Matrix &mat) -> double{
+//   //   return Rcpp::as<double>(combineFun(mat.vec, combineArgs));
+//   // }
+//   // // auto func = [](const Matrix& mat) -> bool{
+//   // //   return Quadtree::splitRange(mat, .15);
+//   // // };
+//   // quadtree->makeTree(matNew, splitFunc);
+//   //quadtree->assignNeighbors();
+// }
 
 
 int QuadtreeWrapper::nNodes() const{
   return quadtree->nNodes; 
 }
-double QuadtreeWrapper::rangeLim() const{
-  return quadtree->rangeLim;
-}
+// double QuadtreeWrapper::rangeLim() const{
+//   return quadtree->rangeLim;
+// }
 
 NodeWrapper QuadtreeWrapper::root() const{
   return NodeWrapper(quadtree->root);
@@ -111,11 +128,67 @@ std::string QuadtreeWrapper::projection() const{
   return quadtree->proj4string;
 }
 
-void QuadtreeWrapper::createTree(Rcpp::NumericMatrix &mat){
+// // void QuadtreeWrapper::createTree(Rcpp::NumericMatrix &mat){
+// void QuadtreeWrapper::createTree(Rcpp::NumericMatrix &mat, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs){
+//   Matrix matNew(rInterface::rMatToCppMat(mat));
+//   
+//   auto split = [&splitArgs, &splitFun] (const Matrix &mat) -> bool{
+//     return Rcpp::as<bool>(splitFun(mat.vec, splitArgs));
+//   };
+//   auto combine = [&combineArgs, &combineFun] (const Matrix &mat) -> double{
+//     return Rcpp::as<double>(combineFun(mat.vec, combineArgs));
+//   };
+//   quadtree->makeTree(matNew, split, combine);
+//   //quadtree->assignNeighbors();
+// }
+
+void QuadtreeWrapper::createTree(Rcpp::NumericMatrix &mat, std::string splitMethod, double splitThreshold, std::string combineMethod, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs){
   Matrix matNew(rInterface::rMatToCppMat(mat));
-  quadtree->makeTree(matNew);
-  quadtree->assignNeighbors();
+  
+  // set the split function
+  // auto split = [&splitThreshold](const Matrix &mat) -> bool {
+  std::function<bool (const Matrix&)> split = [&splitThreshold](const Matrix &mat) -> bool {
+    return Quadtree::splitRange(mat, splitThreshold);
+  };
+  if(splitMethod != "custom"){
+    if(splitMethod == "sd"){
+      split = [&splitThreshold](const Matrix &mat) -> bool {
+        return Quadtree::splitSD(mat, splitThreshold);
+      };
+    }
+  } else {
+    split = [&splitArgs, &splitFun] (const Matrix &mat) -> bool{
+      return Rcpp::as<bool>(splitFun(mat.vec, splitArgs));
+    };
+  }
+  
+  // set the combine function
+  // auto combine = [](const Matrix &mat) -> double {
+  std::function<double (const Matrix&)> combine = [](const Matrix &mat) -> double {
+    return Quadtree::combineMean(mat);
+  };
+  if(combineMethod != "custom"){
+    if(combineMethod == "median"){
+      combine = [](const Matrix &mat) -> double {
+        return Quadtree::combineMedian(mat);
+      };   
+    } else if(combineMethod == "min"){
+      combine = [](const Matrix &mat) -> double {
+        return Quadtree::combineMin(mat);
+      };
+    } else if(combineMethod == "max"){
+      combine = [](const Matrix &mat) -> double {
+        return Quadtree::combineMax(mat);
+      };
+    }
+  } else {
+    combine = [&combineArgs, &combineFun] (const Matrix &mat) -> double{
+      return Rcpp::as<double>(combineFun(mat.vec, combineArgs));
+    };
+  }
+  quadtree->makeTree(matNew, split, combine);
 }
+
 // void Quadtree::makeTree(Rcpp::NumericMatrix &mat){
 //   Matrix matNew(rMatToCppMat(mat));
 //   Quadtree::makeTree(matNew);
