@@ -12,9 +12,15 @@ iv = spTransform(iv, crs(l))
 l_iv = mask(crop(l,iv),iv)
 
 l_iv
-qt = qt_create(1-l_iv, .8, adj_type="expand")
-qt_plot(qt)
 
+qt = qt_create(1-l_iv, .2, adj_type="expand")
+n_row = 512
+n_col = 512
+rand_vals = matrix(runif(n_row*n_col), nrow=n_row)
+qt2 = qt_create(l_iv, template_quadtree=qt)
+qt_plot(qt)
+qt_plot(qt2)
+qt_plot(qt2, border_col="transparent")
 split_fun = function(vals, args){
   #sd = sqrt(sum((vals-mean(vals))^2)/length(vals))
   return(sd(vals) > args$sd)
