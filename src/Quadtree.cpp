@@ -37,7 +37,7 @@
 // Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
 //     : Quadtree{0,0,0,0,_rangeLim,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
 Quadtree::Quadtree(double _maxXCellLength, double _maxYCellLength) 
-    : Quadtree{0,0,0,0,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
+    : Quadtree{0,0,0,0,0,0,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
     // std::cout << "Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength)\n";
     //: rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(0,0,0,0,0,0,0)->ptr;
@@ -46,7 +46,7 @@ Quadtree::Quadtree(double _maxXCellLength, double _maxYCellLength)
 // Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
 //     : Quadtree {xMin, xMax, yMin, yMax, _rangeLim, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
 Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength, double _maxYCellLength) 
-    : Quadtree {xMin, xMax, yMin, yMax, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
+    : Quadtree {xMin, xMax, yMin, yMax, 0, 0, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
     // std::cout << "Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength)\n";
     // : rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
@@ -58,7 +58,7 @@ Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _m
 //maxYLength -> same as 'maxXLength', but for y
 // Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
 //     : rangeLim{_rangeLim}, nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, proj4string{_proj4string} {
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, int _originalNX, int _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
     : nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, proj4string{_proj4string} {
     // std::cout << "Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)\n";
     root = std::make_shared<Node>(xMin,xMax,yMin,yMax,0,0,0);
@@ -92,6 +92,7 @@ double Quadtree::combineMedian(const Matrix &mat){
 double Quadtree::combineMin(const Matrix &mat){
     return mat.min();
 }
+
 double Quadtree::combineMax(const Matrix &mat){
     return mat.max();
 }
@@ -106,6 +107,8 @@ double Quadtree::combineMax(const Matrix &mat){
 //      will be a quadtree with one node.
 void Quadtree::makeTree(const Matrix &mat, std::function<bool (const Matrix&)> splitFun, std::function<double (const Matrix&)> combineFun){
     // std::cout << "Quadtree::makeTree(const Matrix &mat)\n";
+    matNX = mat.nCol();
+    matNY = mat.nRow();
     originalNX = mat.nCol();
     originalNY = mat.nRow();
     // if the value for max length is less than 0 (default is -1) then set the max length for both dimensions to be the user-defined dimensions. This essentially sets no restriction on the cell size
@@ -150,7 +153,7 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
         && //(dif >= rangeLim // { the difference between the max and min values exceeds the user-defined threshold OR
            (splitFun(mat)
             || x_length > maxXCellLength // the x side length is greater than the user-defined maximum length OR
-            || y_length > maxYCellLength //the y side length is greater than the user-defined maximum length OR
+            || y_length > maxYCellLength // the y side length is greater than the user-defined maximum length OR
             || nNans > 0 )){ // there is at least one Nan }
         node->hasChildren = true;
         double cell_x_len = (node->xMax - node->xMin)/2;//get the side length of the cells
@@ -173,7 +176,7 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
                 double y_max = y_min + cell_y_len;
                 
                 // std::cout << "---- CHECK 4 ----\n";
-                int child_index = (1-r)*2 + c; //get the index (from 0 to 3) of this child in the parent's 'children' vector
+                int childIndex = (1-r)*2 + c; //get the index (from 0 to 3) of this child in the parent's 'children' vector
                 Matrix sub = mat.subset(r_beg,r_end,c_beg,c_end); //get the matrix of values that this cell contains
                 
                 // std::cout << "---- CHECK 5 ----\n";
@@ -182,9 +185,9 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
                 //node->children[child_index] = Node::makeNode(x_min, x_max, y_min, y_max, mat.mean(), id, level); //create the node
                 //double value = combineFun(mat);
                 //node->children.at(child_index) = std::make_shared<Node>(x_min, x_max, y_min, y_max, mat.mean(), id, level); //create the node
-                node->children.at(child_index) = std::make_shared<Node>(x_min, x_max, y_min, y_max, -1, -1, -1); //create the node
+                node->children.at(childIndex) = std::make_shared<Node>(x_min, x_max, y_min, y_max, -1, -1, -1); //create the node
                 // std::cout << "---- CHECK 6 ----\n";
-                newid = makeTree(sub, node->children[child_index], newid+1, level+1, splitFun, combineFun); //recursively call 'makeTree' on this node, making sure to increment the 'id' and the 'level'
+                newid = makeTree(sub, node->children[childIndex], newid+1, level+1, splitFun, combineFun); //recursively call 'makeTree' on this node, making sure to increment the 'id' and the 'level'
                 // std::cout << "---- CHECK 7 ----\n";
             }
             // std::cout << "---- CHECK 8 ----\n";
@@ -203,6 +206,63 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
     }
     // std::cout << "---- CHECK 14 ----\n";
     return newid;
+}
+
+int Quadtree::makeTreeWithTemplate(const Matrix &mat, const std::shared_ptr<Node> node, const std::shared_ptr<Node> templateNode, std::function<double (const Matrix&)> combineFun){
+
+    node->value = combineFun(mat);
+    node->level = templateNode->level;
+    node->id = templateNode->id;
+    node->smallestChildSideLength = templateNode->smallestChildSideLength;
+    node->hasChildren = templateNode->hasChildren;
+    
+    int newid{node->id};
+    if(templateNode->hasChildren){
+        for(int r = 0; r < 2; ++r){
+            for(int c = 0; c < 2; ++c){
+                // std::cout << "---- CHECK 3 ----\n";
+                //retrieve the indices of the matrix that correspond to this node
+                int c_beg = (mat.nCol()/2)*c;
+                int c_end = (c_beg + mat.nCol()/2)-1;
+                int r_beg = (mat.nRow()/2)*r;
+                int r_end = (r_beg + mat.nRow()/2)-1;
+                
+                // std::cout << "---- CHECK 4 ----\n";
+                int childIndex = (1-r)*2 + c; //get the index (from 0 to 3) of this child in the parent's 'children' vector
+                std::shared_ptr<Node> templateChild = templateNode->children[childIndex];
+                
+                Matrix sub = mat.subset(r_beg,r_end,c_beg,c_end); //get the matrix of values that this cell contains
+                
+                node->children.at(childIndex) = std::make_shared<Node>(templateChild->xMin, templateChild->xMax, templateChild->yMin, templateChild->yMax, -1, -1, -1); //create the node
+                // std::cout << "---- CHECK 6 ----\n";
+                newid = makeTreeWithTemplate(sub, node->children[childIndex], templateChild, combineFun); //recursively call 'makeTree' on this node, making sure to increment the 'id' and the 'level'
+                // std::cout << "---- CHECK 7 ----\n";
+            }
+            // std::cout << "---- CHECK 8 ----\n";
+        }
+    }
+    return newid;
+}
+
+void Quadtree::makeTreeWithTemplate(const Matrix &mat, const std::shared_ptr<Quadtree> templateQuadtree, std::function<double (const Matrix&)> combineFun){
+    if(mat.nCol() != templateQuadtree->matNX || mat.nRow() != templateQuadtree->matNY){
+        throw std::runtime_error("The dimensions of 'mat' (" + std::to_string(mat.nRow()) + " rows, " + std::to_string(mat.nCol()) + " cols) must be identical to the dimensions of the original matrix used to create 'templateQuadtree' (" + std::to_string(templateQuadtree->matNY) + " rows, " + std::to_string(templateQuadtree->matNX) + " cols)");
+    }
+    matNX = templateQuadtree->matNX;
+    matNY = templateQuadtree->matNY;
+    originalNX = templateQuadtree->originalNX;
+    originalNY = templateQuadtree->originalNY;
+    originalXMin = templateQuadtree->originalXMin;
+    originalXMax = templateQuadtree->originalXMax;
+    originalYMin = templateQuadtree->originalYMin;
+    originalYMax = templateQuadtree->originalYMax;
+    maxXCellLength = templateQuadtree->maxXCellLength;
+    maxYCellLength = templateQuadtree->maxYCellLength;
+    nNodes = templateQuadtree->nNodes;
+    proj4string = templateQuadtree->proj4string;
+
+    makeTreeWithTemplate(mat, root, templateQuadtree->root, combineFun);
+    assignNeighbors();
 }
 
 //THOUGHT: Use getNode, and then just return the value? Then I don't have two nearly identical functions

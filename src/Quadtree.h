@@ -22,12 +22,21 @@ public:
   //double rangeLim;
   int nNodes;
   
+  //the dimensions of the matrix used to create the quadtree
+  int matNX;
+  int matNY;
+
+  //the 'original*' properties are for storing the dimensions/extent of the matrix BEFORE IT WAS EXPANDED/MODIFIED - i.e. NOT (necessarily) the dimensions of the matrix used to create the quadtree (as the matrix may have been modified to work with a quadtree)
+  //not a big fan of these. I added these because I need to know this info for the R package. But could I move these properties to 'QuadtreeWrapper' instead?
   double originalXMin;
   double originalXMax;
   double originalYMin;
   double originalYMax;
-  double originalNX;
-  double originalNY;
+  // double originalNX;
+  // double originalNY;
+  int originalNX;
+  int originalNY;
+
   double maxXCellLength;
   double maxYCellLength;
 
@@ -39,7 +48,7 @@ public:
   // Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength = -1, double _maxYCellLength = -1);
   Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength = -1, double _maxYCellLength = -1);
   // Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength = -1, double _maxYCellLength = -1);
-  Quadtree(double xMin, double xMax, double yMin, double yMax, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength = -1, double _maxYCellLength = -1);
+  Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, int _originalNX, int _originalNY, std::string _proj4string, double _maxXCellLength = -1, double _maxYCellLength = -1);
   //~Quadtree();
   
   //std::shared_ptr<Node> makeNode(double xMin, double xMax, double yMin, double yMax, double value);
@@ -62,6 +71,8 @@ public:
   int makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int id, int level, std::function<bool (const Matrix&)> splitFun, std::function<double (const Matrix&)> combineFun);
   //void makeTree(const Matrix &mat);
   void makeTree(const Matrix &mat, std::function<bool (const Matrix&)> splitFun, std::function<double (const Matrix&)> combineFun);
+  int makeTreeWithTemplate(const Matrix &mat, const std::shared_ptr<Node> node, const std::shared_ptr<Node> templateNode, std::function<double (const Matrix&)> combineFun);
+  void makeTreeWithTemplate(const Matrix &mat, const std::shared_ptr<Quadtree> templateQuadtree, std::function<double (const Matrix&)> combineFun);
   std::vector<std::shared_ptr<Node> > findNeighbors(const std::shared_ptr<Node> node, double searchSideLength) const;
   void assignNeighbors(const std::shared_ptr<Node> node);
   void assignNeighbors();
