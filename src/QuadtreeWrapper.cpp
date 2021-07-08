@@ -14,6 +14,8 @@
 #include "ShortestPathFinderWrapper.h"
 
 
+QuadtreeWrapper::QuadtreeWrapper() : quadtree{nullptr} {}
+
 QuadtreeWrapper::QuadtreeWrapper(std::shared_ptr<Quadtree> _quadtree) : quadtree{_quadtree} {}
 // QuadtreeWrapper::QuadtreeWrapper(Quadtree _quadtree) : quadtree{_quadtree} {}
 
@@ -142,25 +144,8 @@ std::string QuadtreeWrapper::projection() const{
 //   //quadtree->assignNeighbors();
 // }
 
-void QuadtreeWrapper::createTree(Rcpp::NumericMatrix &mat, std::string splitMethod, double splitThreshold, std::string combineMethod, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs){
+void QuadtreeWrapper::createTree(Rcpp::NumericMatrix &mat, std::string splitMethod, double splitThreshold, std::string combineMethod, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs, QuadtreeWrapper templateQuadtree){
   Matrix matNew(rInterface::rMatToCppMat(mat));
-  
-  // set the split function
-  // auto split = [&splitThreshold](const Matrix &mat) -> bool {
-  std::function<bool (const Matrix&)> split = [&splitThreshold](const Matrix &mat) -> bool {
-    return Quadtree::splitRange(mat, splitThreshold);
-  };
-  if(splitMethod != "custom"){
-    if(splitMethod == "sd"){
-      split = [&splitThreshold](const Matrix &mat) -> bool {
-        return Quadtree::splitSD(mat, splitThreshold);
-      };
-    }
-  } else {
-    split = [&splitArgs, &splitFun] (const Matrix &mat) -> bool{
-      return Rcpp::as<bool>(splitFun(mat.vec, splitArgs));
-    };
-  }
   
   // set the combine function
   // auto combine = [](const Matrix &mat) -> double {
@@ -186,7 +171,29 @@ void QuadtreeWrapper::createTree(Rcpp::NumericMatrix &mat, std::string splitMeth
       return Rcpp::as<double>(combineFun(mat.vec, combineArgs));
     };
   }
-  quadtree->makeTree(matNew, split, combine);
+  
+  if(templateQuadtree.quadtree){
+    quadtree->makeTreeWithTemplate(matNew, templateQuadtree.quadtree, combine);
+  } else {
+    // set the split function
+    // auto split = [&splitThreshold](const Matrix &mat) -> bool {
+    std::function<bool (const Matrix&)> split = [&splitThreshold](const Matrix &mat) -> bool {
+      return Quadtree::splitRange(mat, splitThreshold);
+    };
+    if(splitMethod != "custom"){
+      if(splitMethod == "sd"){
+        split = [&splitThreshold](const Matrix &mat) -> bool {
+          return Quadtree::splitSD(mat, splitThreshold);
+        };
+      }
+    } else {
+      split = [&splitArgs, &splitFun] (const Matrix &mat) -> bool{
+        return Rcpp::as<bool>(splitFun(mat.vec, splitArgs));
+      };
+    }
+    
+    quadtree->makeTree(matNew, split, combine);
+  }
 }
 
 // void Quadtree::makeTree(Rcpp::NumericMatrix &mat){

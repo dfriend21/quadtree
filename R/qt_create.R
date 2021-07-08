@@ -36,7 +36,7 @@
 #'   'Details' for more
 #' @param adj_type character; either \code{'expand'} or \code{'resample'}. See
 #'   'Details' for more.
-#' @param resample_n_side integer; if \code{adj_type} is \code{'expand'}, this
+#' @param resample_n_side integer; if \code{adj_type} is \code{'resample'}, this
 #'   number is used to determine the dimensions to resample the raster to
 #' @param extent \code{Extent} object or else a four-element numeric vector
 #'   describing the extent of the data (in this order: xmin, xmax, ymin, ymax).
@@ -47,6 +47,10 @@
 #'   data. Only used when \code{x} is a matrix - this parameter is ignored if
 #'   \code{x} is a raster. If no value is provided and \code{x} is a matrix, the
 #'   'proj4string' of the quadtree is set to \code{NA}.
+#' @param template_quadtree quadtree object; if provided, the new quadtree will
+#'   be created so that it has the exact same 'footprint' as the template
+#'   quadtree. Thus, no split function is used because the decision about
+#'   whether to split is pre-determined by the template quadtree.
 #' @details A quadtree is created from a raster or a matrix by successively
 #'   dividing the raster/matrix into smaller and smaller cells, with the
 #'   decision on whether to divide a cell determined by a function that checks
@@ -236,11 +240,11 @@
 #' qt8 = qt_create(rast, split_threshold = .9, split_method = "range", 
 #'                 combine_fun = cmb_fun2)
 #' qt_plot(qt8, crop=TRUE, na_col=NULL)
-qt_create <- function(x, split_threshold = NULL, split_method = "range", combine_method = "mean", split_fun=NULL, split_args=list(), combine_fun=NULL, combine_args=list(), max_cell_length=NULL, adj_type="expand", resample_n_side=NULL, extent=NULL, proj4string=NULL){
+qt_create <- function(x, split_threshold = NULL, split_method = "range", combine_method = "mean", split_fun=NULL, split_args=list(), combine_fun=NULL, combine_args=list(), max_cell_length=NULL, adj_type="expand", resample_n_side=NULL, extent=NULL, proj4string=NULL, template_quadtree=NULL){
   #validate inputs
   if(!(split_method %in% c("range", "sd", "custom"))) stop(paste0("'", split_method, "' is not a valid value for 'split_method'. Acceptable values are 'range', 'sd', or 'custom'."))
   if(!(combine_method %in% c("mean", "median", "min", "max", "custom"))) stop(paste0("'", combine_method, "' is not a valid value for 'combine_method'. Acceptable values are 'mean', 'median', 'min', 'max', or 'custom'."))
-  if(split_method != "custom" && is.null(split_threshold)) stop(paste0("When 'split_method' is not 'custom', a value is required for 'split_threshold'"))
+  if(split_method != "custom" && is.null(split_threshold) && is.null(template_quadtree)) stop(paste0("When 'split_method' is not 'custom' and 'template_quadtree' is NULL, a value is required for 'split_threshold'"))
   if(split_method == "custom" && is.null(split_fun)) stop(paste0("When 'split_method' is 'custom', a function must be provided to 'split_fun'"))
   if(combine_method == "custom" && is.null(combine_fun)) stop(paste0("When 'combine_method' is 'custom', a function must be provided to 'combine_fun'"))
   if(!is.null(split_fun)){
@@ -258,7 +262,11 @@ qt_create <- function(x, split_threshold = NULL, split_method = "range", combine
   
   if("matrix" %in% class(x)){ #if x is a matrix, convert it to a raster
     if(is.null(extent)){
-      extent = raster::extent(0,ncol(x),0,nrow(x))
+      if(is.null(template_quadtree)){
+        extent = raster::extent(0,ncol(x),0,nrow(x))
+      } else {
+        extent = qt_extent(template_quadtree)
+      }
     }
     x = raster::raster(x, extent[1], extent[2], extent[3], extent[4], crs=proj4string)
   }
@@ -299,7 +307,11 @@ qt_create <- function(x, split_threshold = NULL, split_method = "range", combine
   if(is.null(split_threshold)) split_threshold = -1
   if(is.null(combine_fun)) combine_fun = blank_fun
   
-  qt$createTree(raster::as.matrix(x), split_method, split_threshold, combine_method, split_fun, split_args, combine_fun, combine_args)
+  if(is.null(template_quadtree)){
+    template_quadtree = new(quadtree)    
+  }
+  qt$createTree(raster::as.matrix(x), split_method, split_threshold, combine_method, split_fun, split_args, combine_fun, combine_args, template_quadtree)
+  
   qt$setOriginalValues(ext[1], ext[2], ext[3], ext[4], dim[1], dim[2])
   qt$setProjection(raster::projection(x))
   return(qt)
