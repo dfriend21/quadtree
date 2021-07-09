@@ -83,7 +83,9 @@ void ShortestPathFinder::init(int startNodeID){
     //auto cmp = [](std::tuple<int,int,double> a, std::tuple<int,int,double> b) { return std::get<2>(a) < std::get<2>(b); };
     possibleEdges = std::multiset<std::tuple<int,int,double,double>, cmp>();
     //auto startNodeShared = startNode.lock();
-    possibleEdges.insert(std::make_tuple(dict[startNode->id],dict[startNode->id], 0, 0)); //initialize our set with the start node
+    if(!std::isnan(startNode->value)){ //if the starting node is NA, don't add it
+        possibleEdges.insert(std::make_tuple(dict[startNode->id],dict[startNode->id], 0, 0)); //initialize our set with the start node
+    }
 }
 
 //performs one iteration of the shortest path algorithm
