@@ -60,6 +60,8 @@ public:
   void getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_ptr<Node>> &returnNodes, double xMin, double xMax, double yMin, double yMax);
   //std::shared_ptr<Node> getNode(double x, double y, Node *leaf);
   
+  void setValue(double x, double y, double newValue);
+
   static bool splitRange(const Matrix &mat, double limit);
   static bool splitSD(const Matrix &mat, double limit);
   static double combineMean(const Matrix &mat);
@@ -76,7 +78,9 @@ public:
   std::vector<std::shared_ptr<Node> > findNeighbors(const std::shared_ptr<Node> node, double searchSideLength) const;
   void assignNeighbors(const std::shared_ptr<Node> node);
   void assignNeighbors();
-  
+
+  int copyNode(std::shared_ptr<Node> nodeCopy, const std::shared_ptr<Node> nodeOrig) const;
+  std::shared_ptr<Quadtree> copy() const;
   // std::vector<std::shared_ptr<Node>> getSubset(double xMin, double xMax, double yMin, double yMax) const;
   // std::vector<std::shared_ptr<Node>> getSubset(std::shared_ptr<Node> node, double xMin, double xMax, double yMin, double yMax) const;
 

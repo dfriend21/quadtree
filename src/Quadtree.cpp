@@ -339,6 +339,12 @@ void Quadtree::getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_p
     //}
 }
 
+void Quadtree::setValue(double x, double y, double newValue){
+    std::shared_ptr<Node> node = getNode(x,y,root);
+    if(node){
+        node->value = newValue;
+    }
+}
 //finds which nodes are adjacent to this node
 //operates by creating a set of points just outside the boundary of the node 
 //(the distance between each point, and thus the number of points, is determined
@@ -428,8 +434,38 @@ void Quadtree::assignNeighbors(){
     assignNeighbors(root);
 }
 
+std::shared_ptr<Quadtree> Quadtree::copy() const{
+    std::shared_ptr<Quadtree> qtCopy = std::make_shared<Quadtree>(root->xMin, root->xMax, root->yMin, root->yMax, matNX, matNY, originalXMin, originalXMax, originalYMin, originalYMax, originalNX, originalNY, proj4string, maxXCellLength, maxYCellLength);
+    qtCopy->nNodes = nNodes;
+    copyNode(qtCopy->root, root);
+    qtCopy->assignNeighbors();
+    return(qtCopy);
+}
 
+int Quadtree::copyNode(std::shared_ptr<Node> nodeCopy, const std::shared_ptr<Node> nodeOrig) const{
+    //std::shared_ptr<Node> nodeCopy = std::make_shared<Node>(nodeOrig->xMin, nodeOrig->xMax, nodeOrig->yMin, nodeOrig->yMax, nodeOrig->value, nodeOrig->id, nodeOrig->level, nodeOrig->smallestChildSideLength, nodeOrig->hasChildren);
+    nodeCopy->xMin = nodeOrig->xMin;
+    nodeCopy->xMax = nodeOrig->xMax;
+    nodeCopy->yMin = nodeOrig->yMin;
+    nodeCopy->yMax = nodeOrig->yMax;
+    nodeCopy->value = nodeOrig->value;
+    nodeCopy->id = nodeOrig->id;
+    nodeCopy->level = nodeOrig->level;
+    nodeCopy->smallestChildSideLength = nodeOrig->smallestChildSideLength;
+    nodeCopy->hasChildren = nodeOrig->hasChildren;
 
+    int newid{nodeOrig->id};
+    if(nodeOrig->hasChildren){
+        for(int r = 0; r < 2; ++r){
+            for(int c = 0; c < 2; ++c){
+                int childIndex = (1-r)*2 + c; //get the index (from 0 to 3) of this child 
+                nodeCopy->children.at(childIndex) = std::make_shared<Node>(); //create the node
+                newid = copyNode(nodeCopy->children[childIndex],nodeOrig->children[childIndex]);
+            }
+        }
+    }
+    return newid;
+}
 
 // std::vector<std::shared_ptr<Node>> getSubset(double xMin, double xMax, double yMin, double yMax) const{
     
