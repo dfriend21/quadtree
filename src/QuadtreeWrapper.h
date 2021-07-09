@@ -28,7 +28,7 @@ class QuadtreeWrapper{
     // double originalNY;
     //Quadtree quadtree;
     
-    Rcpp::List nodeList;
+    //Rcpp::List nodeList;
     Rcpp::List nbList;
     
     QuadtreeWrapper();
@@ -58,6 +58,8 @@ class QuadtreeWrapper{
     std::vector<double> getValues(const std::vector<double> &x, const std::vector<double> &y) const;
     //Rcpp::NumericVector getValues(const Rcpp::NumericVector &x, const Rcpp::NumericVector &y) const;
     //Rcpp::NumericVector getValues(const Rcpp::NumericMatrix &mat) const;
+    
+    void setValues(const std::vector<double> &x, const std::vector<double> &y, const std::vector<double> &newVals);
     NodeWrapper getCell(double x, double y) const;
     Rcpp::List getCells(Rcpp::NumericVector x, Rcpp::NumericVector y) const;
     Rcpp::NumericMatrix getCellDetails(Rcpp::NumericVector x, Rcpp::NumericVector y) const;
@@ -72,6 +74,8 @@ class QuadtreeWrapper{
     Rcpp::List getNbList();
     
     ShortestPathFinderWrapper getShortestPathFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims) const;
+    
+    QuadtreeWrapper copy();
     
     void writeQuadtree(std::string filePath);
     static QuadtreeWrapper readQuadtree(std::string filePath);

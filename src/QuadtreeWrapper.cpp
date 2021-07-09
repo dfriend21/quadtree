@@ -32,7 +32,7 @@ QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector 
   // quadtree = Quadtree(rangelim);
   //quadtree->root = Node::makeNode(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0)->ptr;
   quadtree->root = std::make_shared<Node>(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0);
-  nodeList = Rcpp::List::create(); 
+  //nodeList = Rcpp::List::create(); 
   //nodeVec = std::vector<Rcpp::NumericVector>(0);
 }
 
@@ -211,6 +211,16 @@ std::vector<double> QuadtreeWrapper::getValues(const std::vector<double> &x, con
   return(vals);
 }
 
+
+//I should maybe switch this to accept NumericVectors for consistency...
+void QuadtreeWrapper::setValues(const std::vector<double> &x, const std::vector<double> &y, const std::vector<double> &newVals){
+  assert(x.size() == y.size() && y.size() == newVals.size());
+  
+  for(size_t i = 0; i < x.size(); ++i){
+    quadtree->setValue(x[i], y[i], newVals[i]);
+  }
+}
+
 NodeWrapper QuadtreeWrapper::getCell(double x, double y) const{
   return NodeWrapper(quadtree->getNode(x, y));
 }
@@ -268,14 +278,17 @@ void QuadtreeWrapper::makeList(std::shared_ptr<Node> node, Rcpp::List &list) con
 
 
 Rcpp::List QuadtreeWrapper::asList(){
-  //if(nodeVec.size() == 0){
-  if(nodeList.length() == 0){
-    //nodeVec = std::vector<Rcpp::NumericVector>(nNodes);
-    Rcpp::List list = Rcpp::List(quadtree->nNodes);
-    makeList(quadtree->root, list);
-    nodeList = list;
-  } 
-  return nodeList;
+  Rcpp::List list = Rcpp::List(quadtree->nNodes);
+  makeList(quadtree->root, list);
+  return(list);
+  // //if(nodeVec.size() == 0){
+  // if(nodeList.length() == 0){
+  //   //nodeVec = std::vector<Rcpp::NumericVector>(nNodes);
+  //   Rcpp::List list = Rcpp::List(quadtree->nNodes);
+  //   makeList(quadtree->root, list);
+  //   nodeList = list;
+  // } 
+  // return nodeList;
 }
 
 //not directly callable from R - called by 'getNbList()'
@@ -341,6 +354,14 @@ Rcpp::List QuadtreeWrapper::getNbList(){
 
 ShortestPathFinderWrapper QuadtreeWrapper::getShortestPathFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims) const{
   return ShortestPathFinderWrapper(quadtree,startPoint,xlims,ylims);
+}
+
+QuadtreeWrapper QuadtreeWrapper::copy(){
+  QuadtreeWrapper qtw = QuadtreeWrapper();
+  
+  qtw.proj4String = proj4String;
+  qtw.quadtree = quadtree->copy();
+  return(qtw);
 }
 
 void QuadtreeWrapper::writeQuadtree(std::string filePath){
