@@ -17,7 +17,8 @@ qt_create(
   adj_type = "expand",
   resample_n_side = NULL,
   extent = NULL,
-  proj4string = NULL
+  proj4string = NULL,
+  template_quadtree = NULL
 )
 }
 \arguments{
@@ -46,7 +47,8 @@ larger, aggregated cell}
 or not to split the cell. Only used when \code{split_method} is "custom".
 Must take two arguments, \code{"vals"} (a numeric vector) and \code{"args"}
 (a named list of arguments used within the function), and must output
-\code{TRUE} if the quadrant is to be split and \code{FALSE} otherwise.}
+\code{TRUE} if the quadrant is to be split and \code{FALSE} otherwise. See
+'Details' and 'Examples' for more.}
 
 \item{split_args}{list; named list that contains the arguments needed by
 \code{split_fun}. This list is given to the \code{args} parameter of
@@ -54,20 +56,23 @@ Must take two arguments, \code{"vals"} (a numeric vector) and \code{"args"}
 
 \item{combine_fun}{function; function used to calculate the value of a
 quadrant that consists of multiple cells. Only used when
-\code{combine_method} is "custom"}
+\code{combine_method} is "custom" Must take two arguments, \code{"vals"} (a
+numeric vector) and \code{"args"} (a named list of arguments used within
+the function), and must output a single numeric value, which will be used
+as the cell value See 'Details' and 'Examples' for more.}
 
 \item{combine_args}{list; named list that contains the arguments needed by
 \code{combine_fun}. This list is given to the \code{args} parameter of
 \code{combine_fun}}
 
-\item{max_cell_length}{double; the maximum size allowed for a quadtree cell.
+\item{max_cell_length}{numeric; the maximum size allowed for a quadtree cell.
 If \code{NULL} no restrictions are placed on the quadtree cell size. See
 'Details' for more}
 
 \item{adj_type}{character; either \code{'expand'} or \code{'resample'}. See
 'Details' for more.}
 
-\item{resample_n_side}{integer; if \code{adj_type} is \code{'expand'}, this
+\item{resample_n_side}{integer; if \code{adj_type} is \code{'resample'}, this
 number is used to determine the dimensions to resample the raster to}
 
 \item{extent}{\code{Extent} object or else a four-element numeric vector
@@ -80,25 +85,31 @@ is assumed to be \code{c(0,ncol(x),0,nrow(x))}.}
 data. Only used when \code{x} is a matrix - this parameter is ignored if
 \code{x} is a raster. If no value is provided and \code{x} is a matrix, the
 'proj4string' of the quadtree is set to \code{NA}.}
+
+\item{template_quadtree}{quadtree object; if provided, the new quadtree will
+be created so that it has the exact same 'footprint' as the template
+quadtree. Thus, no split function is used because the decision about
+whether to split is pre-determined by the template quadtree.}
 }
 \description{
 Create a quadtree from gridded data
 }
 \details{
-A quadtree is created from a raster by successively dividing the
-  raster/matrix into smaller and smaller cells, with the decision on whether
-  to divide a cell determined by a function that checks the cell values
-  within each quadrant and returns \code{TRUE} if it should be split, and
-  \code{FALSE} otherwise. Initially, all of the cells in the raster are
-  considered. If the cell values meet the condition determined by the
-  splitting function, the raster is divided into four quadrants - otherwise,
-  the raster is not divided further and the value of this larger cell is
-  calculated by applying a 'combine function' that aggregates the cell values
-  into a single value (for example, mean and median). Then, the process is
-  repeated for each of those 'child' cells, and then for their children, and
-  so on and so forth, until either the split function returns \code{FALSE} or
-  the smallest possible cell size has been reached.
-
+A quadtree is created from a raster or a matrix by successively
+  dividing the raster/matrix into smaller and smaller cells, with the
+  decision on whether to divide a cell determined by a function that checks
+  the cell values within each quadrant and returns \code{TRUE} if it should
+  be split, and \code{FALSE} otherwise. Initially, all of the cells in the
+  raster are considered. If the cell values meet the condition determined by
+  the splitting function, the raster is divided into four quadrants -
+  otherwise, the raster is not divided further and the value of this larger
+  cell is calculated by applying a 'combine function' that aggregates the
+  cell values into a single value (for example, mean and median). If the
+  given cell is split, the process is repeated for each of those 'child'
+  cells, and then for their children, and so on and so forth, until either
+  the split function returns \code{FALSE} or the smallest possible cell size
+  has been reached.
+  
   If a quadrant contains both NA cells and non-NA cells, that quadrant is
   automatically divided. However, if a quadrant consists entirely of NA
   cells, that cell is not divided further (even if the cell is larger than
@@ -159,7 +170,7 @@ A quadtree is created from a raster by successively dividing the
   arguments need by the custom function. Any parameters needed for the
   function should be accessed through \code{args}. Note that even if no extra
   parameters are needed, the custom function still needs to take an
-  \code{args} parameter. In this case it just won't be used by the function.
+  \code{args} parameter - in that case it just won't be used by the function.
 
   \code{split_fun} must return a boolean, where \code{TRUE} indicates that
   the quadrant should be split. \code{combine_fun} must return a single

@@ -21,17 +21,21 @@
 #'   or not to split the cell. Only used when \code{split_method} is "custom".
 #'   Must take two arguments, \code{"vals"} (a numeric vector) and \code{"args"}
 #'   (a named list of arguments used within the function), and must output
-#'   \code{TRUE} if the quadrant is to be split and \code{FALSE} otherwise.
+#'   \code{TRUE} if the quadrant is to be split and \code{FALSE} otherwise. See
+#'   'Details' and 'Examples' for more.
 #' @param split_args list; named list that contains the arguments needed by
 #'   \code{split_fun}. This list is given to the \code{args} parameter of
 #'   \code{split_fun}
 #' @param combine_fun function; function used to calculate the value of a
 #'   quadrant that consists of multiple cells. Only used when
-#'   \code{combine_method} is "custom"
+#'   \code{combine_method} is "custom" Must take two arguments, \code{"vals"} (a
+#'   numeric vector) and \code{"args"} (a named list of arguments used within
+#'   the function), and must output a single numeric value, which will be used
+#'   as the cell value See 'Details' and 'Examples' for more.
 #' @param combine_args list; named list that contains the arguments needed by
 #'   \code{combine_fun}. This list is given to the \code{args} parameter of
 #'   \code{combine_fun}
-#' @param max_cell_length double; the maximum size allowed for a quadtree cell.
+#' @param max_cell_length numeric; the maximum size allowed for a quadtree cell.
 #'   If \code{NULL} no restrictions are placed on the quadtree cell size. See
 #'   'Details' for more
 #' @param adj_type character; either \code{'expand'} or \code{'resample'}. See
