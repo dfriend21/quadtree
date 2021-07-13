@@ -31,34 +31,32 @@ For documentation of all the functions, see the PDF file stored at the root dire
 
 A quadtree object is created from a 'raster' object:
 
-```{r example_create}
+```{r example_create, fig.width=5, fig.height=7, out.width="50%", out.height="50%"}
 library(quadtree)
+library(sp)
 library(raster)
-#create raster of random values
-nrow = 32
-ncol = 32
-set.seed(1)
-rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
 
-#create quadtree using the 'expand' method
-qt = qt_create(rast, range_limit = .9) 
-qt_plot(qt) #plot the quadtree
+data(habitat, package="quadtree") #load sample data
+qt = qt_create(habitat, split_threshold=.1) #create a quadtree
+qt_plot(qt, crop=TRUE, na_col=NULL) #plot the quadtree
 ```
 
 Cell values can be extracted:
 
-```{r example_extract}
-qt_extract(qt,cbind(c(1,10,30),c(15,3,17)))
+```{r example_extract, fig.width=5, fig.height=7, out.width="50%", out.height="50%"}
+pts = cbind(c(20000,32000,15000),c(10000,30000,60000))
+qt_extract(qt,pts)
 ```
 
 Least cost paths can be calculated:
 
-```{r example_lcp}
-start_point = c(1,1)
-end_point = c(31,31)
+```{r example_lcp, fig.width=5, fig.height=7, out.width="50%", out.height="50%"}
+start_point = c(27173,11134)
+end_point = c(14495,60732)
 lcp_finder = qt_lcp_finder(qt, start_point)
 lcp = qt_find_lcp(lcp_finder, end_point, use_original_end_points = TRUE)
-qt_plot(qt, border_col="gray60")
+
+qt_plot(qt, border_col="gray70", crop=TRUE, na_col=NULL)
 lines(lcp[,1:2])
 points(lcp[,1:2], pch=16, cex=.5)
 points(rbind(start_point, end_point), col="red", pch=16)

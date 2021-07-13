@@ -23,54 +23,51 @@ A quadtree object is created from a ‘raster’ object:
 
 ``` r
 library(quadtree)
+library(sp)
 library(raster)
-#> Loading required package: sp
-#create raster of random values
-nrow = 32
-ncol = 32
-set.seed(1)
-rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
 
-#create quadtree using the 'expand' method
-qt = qt_create(rast, range_limit = .9) 
-qt_plot(qt) #plot the quadtree
+data(habitat, package="quadtree") #load sample data
+qt = qt_create(habitat, split_threshold=.1) #create a quadtree
+qt_plot(qt, crop=TRUE, na_col=NULL) #plot the quadtree
 ```
 
-<img src="man/figures/README-example_create-1.png" width="100%" />
+<img src="man/figures/README-example_create-1.png" width="50%" height="50%" />
 
 Cell values can be extracted:
 
 ``` r
-qt_extract(qt,cbind(c(1,10,30),c(15,3,17)))
-#> [1] 0.7836425 0.5221430 0.3244501
+pts = cbind(c(20000,32000,15000),c(10000,30000,60000))
+qt_extract(qt,pts)
+#> [1] 0.01000000 1.00000000 0.01452716
 ```
 
 Least cost paths can be calculated:
 
 ``` r
-start_point = c(1,1)
-end_point = c(31,31)
+start_point = c(27173,11134)
+end_point = c(14495,60732)
 lcp_finder = qt_lcp_finder(qt, start_point)
 lcp = qt_find_lcp(lcp_finder, end_point, use_original_end_points = TRUE)
-qt_plot(qt, border_col="gray60")
+
+qt_plot(qt, border_col="gray70", crop=TRUE, na_col=NULL)
 lines(lcp[,1:2])
 points(lcp[,1:2], pch=16, cex=.5)
 points(rbind(start_point, end_point), col="red", pch=16)
 ```
 
-<img src="man/figures/README-example_lcp-1.png" width="100%" />
+<img src="man/figures/README-example_lcp-1.png" width="50%" height="50%" />
 
 ## File structure
 
 The code here *mostly* conforms to the standard R package structure. The
 exception is the ‘other\_files’ folder.
 
-  - /R - contains the R files
-  - /man - contains the documentation files
-  - /other\_files - contains ‘scratchwork’ scripts that I use to test
+-   /R - contains the R files
+-   /man - contains the documentation files
+-   /other\_files - contains ‘scratchwork’ scripts that I use to test
     the package functionality. This folder is ignored when the package
     is built.
-  - /src - contains the C++ code
+-   /src - contains the C++ code
 
 ## Implementation Details
 
@@ -86,17 +83,17 @@ C++ code, Rcpp C++ code, and R code.
 This consists of the following files (only the .h files are listed to
 avoid redundancy):
 
-  - Matrix.h - Defines the Matrix class implementing basic matrix
+-   Matrix.h - Defines the Matrix class implementing basic matrix
     funcitonality
-  - Node.h - Defines the Node class, which are the ‘nodes’ of the
+-   Node.h - Defines the Node class, which are the ‘nodes’ of the
     quadtree
-  - Quadtree.h - Defines the Quadtree class, which can be seen as a
+-   Quadtree.h - Defines the Quadtree class, which can be seen as a
     wrapper that provides a link to the interconnected nodes that make
     up the quadtree
-  - Point.h - Defines a simple Point class
-  - PointUtilities.h - Defines a namespace containing functions for
+-   Point.h - Defines a simple Point class
+-   PointUtilities.h - Defines a namespace containing functions for
     performing calculations with Point objects
-  - ShortestPathFinder.h - Defines a class for finding the least-cost
+-   ShortestPathFinder.h - Defines a class for finding the least-cost
     paths using a quadtree as a cost surface
 
 As mentioned before, these files are completely independent of R and can
@@ -110,9 +107,9 @@ functions that can be accessed from R. These essentially provide the
 “bridge” that allows the functionality in the core C++ files to be
 accessed from R.
 
-  - QuadtreeWrapper.h - wrapper class for ‘Quadtree’
-  - NodeWrapper.h - wrapper class for ‘Node’
-  - ShortestPathFinderWrapper.h - wrapper class for ‘ShortestPathFinder’
+-   QuadtreeWrapper.h - wrapper class for ‘Quadtree’
+-   NodeWrapper.h - wrapper class for ‘Node’
+-   ShortestPathFinderWrapper.h - wrapper class for ‘ShortestPathFinder’
 
 In addition, ‘R\_interface.h’ defines a namespace that currently
 contains only a single function, which converts an Rcpp matrix to the
