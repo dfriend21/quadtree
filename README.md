@@ -63,6 +63,7 @@ The code here *mostly* conforms to the standard R package structure. The
 exception is the ‘other\_files’ folder.
 
 -   /R - contains the R files
+-   /data - contains Rdata files (.rda) containing sample data
 -   /man - contains the documentation files
 -   /other\_files - contains ‘scratchwork’ scripts that I use to test
     the package functionality. This folder is ignored when the package
