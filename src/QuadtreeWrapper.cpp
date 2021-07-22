@@ -264,14 +264,16 @@ std::string QuadtreeWrapper::print() const{
 
 
 
-void QuadtreeWrapper::makeList(std::shared_ptr<Node> node, Rcpp::List &list) const{
+void QuadtreeWrapper::makeList(std::shared_ptr<Node> node, Rcpp::List &list, int parentID) const{
   //list.insert(node->id,node->asVector());
   NodeWrapper nodew(node);
-  list[node->id] = nodew.asVector();
+  Rcpp::NumericVector vec = nodew.asVector();
+  vec.push_back(parentID, "parentID");
+  list[node->id] = vec;
   //nodeVec[node->id] = node->asVector();
   if(node->hasChildren){
     for(int i = 0; i < node->children.size(); ++i){
-      makeList(node->children[i], list);
+      makeList(node->children[i], list, node->id);
     }
   }
 }
@@ -279,7 +281,7 @@ void QuadtreeWrapper::makeList(std::shared_ptr<Node> node, Rcpp::List &list) con
 
 Rcpp::List QuadtreeWrapper::asList(){
   Rcpp::List list = Rcpp::List(quadtree->nNodes);
-  makeList(quadtree->root, list);
+  makeList(quadtree->root, list, -1);
   return(list);
   // //if(nodeVec.size() == 0){
   // if(nodeList.length() == 0){

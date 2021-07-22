@@ -67,7 +67,7 @@ class QuadtreeWrapper{
     // void createTree(Rcpp::NumericMatrix &mat, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs);
     void createTree(Rcpp::NumericMatrix &mat, std::string splitMethod, double splitThreshold, std::string combineMethod, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs, QuadtreeWrapper templateQuadtree);
     std::string print() const;
-    void makeList(std::shared_ptr<Node> node, Rcpp::List &list) const;
+    void makeList(std::shared_ptr<Node> node, Rcpp::List &list, int parentID) const;
     Rcpp::List asList();
     
     void makeNbList(std::shared_ptr<Node> node, Rcpp::List &list) const;
