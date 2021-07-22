@@ -16,6 +16,7 @@ qt_create(
   max_cell_length = NULL,
   adj_type = "expand",
   resample_n_side = NULL,
+  resample_pad_NAs = TRUE,
   extent = NULL,
   proj4string = NULL,
   template_quadtree = NULL
@@ -28,9 +29,9 @@ extent and projection of the quadtree. If \code{x} is a \code{raster}, the
 extent and projection are derived from the raster.}
 
 \item{split_threshold}{numeric; the threshold value used by the split method
-(specified by \code{split_method}) to decided whether or not to split a
-cell. If the value for a quadrant is greater than this value, the cell is split.
-If \code{split_method} is "custom", this parameter is ignored.}
+(specified by \code{split_method}) to decide whether to split a cell. If
+the value for a quadrant is greater than this value, the cell is split. If
+\code{split_method} is "custom", this parameter is ignored.}
 
 \item{split_method}{character; one of \code{"range"}, \code{"sd"} (standard
 deviation), or \code{"custom"}. Determines the method used for calculating
@@ -41,7 +42,7 @@ cell). See 'Details' for more.}
 \item{combine_method}{character; one of \code{"mean"}, \code{"median"},
 \code{"min"}, \code{"max"}, or \code{"custom"}. Determines the method used
 for aggregating the values of multiple cells into a single value for a
-larger, aggregated cell}
+larger, aggregated cell. Default is \code{"mean"}.}
 
 \item{split_fun}{function; function used on each quadrant to decide whether
 or not to split the cell. Only used when \code{split_method} is "custom".
@@ -66,8 +67,8 @@ as the cell value See 'Details' and 'Examples' for more.}
 \code{combine_fun}}
 
 \item{max_cell_length}{numeric; the maximum size allowed for a quadtree cell.
-If \code{NULL} no restrictions are placed on the quadtree cell size. See
-'Details' for more}
+If \code{NULL} (the default) no restrictions are placed on the quadtree
+cell size. See 'Details' for more}
 
 \item{adj_type}{character; either \code{'expand'} or \code{'resample'}. See
 'Details' for more.}
@@ -75,11 +76,19 @@ If \code{NULL} no restrictions are placed on the quadtree cell size. See
 \item{resample_n_side}{integer; if \code{adj_type} is \code{'resample'}, this
 number is used to determine the dimensions to resample the raster to}
 
+\item{resample_pad_NAs}{boolean; only applicable if \code{adj_type} is
+\code{'resample'}. If \code{TRUE} (the default), \code{NA}s are added to
+the shorter side of the raster to make it square before resampling. This
+ensures that the cells of the resulting quadtree will be square. If
+\code{FALSE}, no \code{NA}s are added - the cells in the quadtree will not
+be square.}
+
 \item{extent}{\code{Extent} object or else a four-element numeric vector
 describing the extent of the data (in this order: xmin, xmax, ymin, ymax).
 Only used when \code{x} is a matrix - this parameter is ignored if \code{x}
-is a raster. If no value is provided and \code{x} is a matrix, the extent
-is assumed to be \code{c(0,ncol(x),0,nrow(x))}.}
+is a raster since the extent is derived directly from the raster. If no
+value is provided and \code{x} is a matrix, the extent is assumed to be
+\code{c(0,ncol(x),0,nrow(x))}.}
 
 \item{proj4string}{character; proj4string describing the projection of the
 data. Only used when \code{x} is a matrix - this parameter is ignored if
@@ -87,15 +96,20 @@ data. Only used when \code{x} is a matrix - this parameter is ignored if
 'proj4string' of the quadtree is set to \code{NA}.}
 
 \item{template_quadtree}{quadtree object; if provided, the new quadtree will
-be created so that it has the exact same 'footprint' as the template
+be created so that it has the exact same structure as the template
 quadtree. Thus, no split function is used because the decision about
-whether to split is pre-determined by the template quadtree.}
+whether to split is pre-determined by the template quadtree. The raster
+used to create the template should have the exact same extent and
+dimensions as \code{x}. If \code{template_quadtree} is non-\code{NULL}, 
+all \code{split_}* parameters are disregarded.}
 }
 \description{
 Create a quadtree from gridded data
 }
 \details{
-A quadtree is created from a raster or a matrix by successively
+\strong{Overview of quadtrees}
+
+  A quadtree is created from a raster or a matrix by successively
   dividing the raster/matrix into smaller and smaller cells, with the
   decision on whether to divide a cell determined by a function that checks
   the cell values within each quadrant and returns \code{TRUE} if it should
@@ -120,7 +134,9 @@ A quadtree is created from a raster or a matrix by successively
   forces any quadrants larger than \code{max_cell_length} to split. The one
   exception is that a quadrant that contains entirely \code{NA} values will
   not be split.
-
+  
+  \strong{Pre-creation dimension adjustment}
+  
   If a given quadrant has dimensions that are not divisible by 2 (for
   example, 5x5), then the process stops. Because of this, only rasters that
   have dimensions that are a power of 2 can be divided down to their smallest
@@ -138,18 +154,25 @@ A quadtree is created from a raster or a matrix by successively
   power of 2 that is also greater than 978).
 
   In the 'resample' method, the raster is resampled in order to create a
-  square matrix with dimensions that are a power of two. There are two steps.
-  First, the raster must be made square. This is done in a way similar to the
-  method described above. The smaller dimension is padded with NA cells in
-  order to equal the larger dimension. For example, if the raster has
-  dimensions 546 x 978, NA rows are added in order to create a raster with
-  dimensions 978 x 978. In the second step, this raster is then resampled to
-  a user-specified dimension (determined by the \code{resample_n_side}
-  parameter). For example, the user could set \code{resample_n_side} to be
-  1024, which will resample the 978 x 978 raster to 1024 x 1024. This raster
-  can then be used to create a quadtree. The dimensions should be a power of 
-  2 (see above for an explanation), although other numbers will be accepted 
-  (but will trigger a warning).
+  square matrix with dimensions that are a power of two. If the data does not
+  have same number of rows and columns, resampling the raster to have an
+  equal number of rows and column will result in rectangular but non-square
+  cells. If square cells are desired, an additional step is added to make the
+  raster square by setting \code{resample_pad_NAs} to be \code{TRUE} (the
+  default). This is done in a way similar to the method described above. The
+  smaller dimension is padded with NA cells in order to equal the larger
+  dimension. For example, if the raster has dimensions 546 x 978, NA rows are
+  added in order to create a raster with dimensions 978 x 978. Then,
+  regardless of whether \code{resample_pad_NAs} is \code{TRUE} or
+  \code{FALSE}, the raster is resampled to a user-specified dimension
+  (determined by the \code{resample_n_side} parameter). For example, the user
+  could set \code{resample_n_side} to be 1024, which will resample the 978 x
+  978 raster to 1024 x 1024. This raster can then be used to create a
+  quadtree. \code{resample_n_side} should be a power of 2 (see above for an
+  explanation), although other numbers will be accepted (but will trigger a
+  warning).
+  
+  \strong{Splitting and aggregating functions}
   
   The method used to determine whether or not to split a cell as well as the
   method used to aggregate cell values can be defined by the user. Simple
@@ -173,13 +196,23 @@ A quadtree is created from a raster or a matrix by successively
   \code{args} parameter - in that case it just won't be used by the function.
 
   \code{split_fun} must return a boolean, where \code{TRUE} indicates that
-  the quadrant should be split. \code{combine_fun} must return a single
-  numeric value.
+  the quadrant should be split. An \strong{important note} to make is that
+  any custom function must be able to handle \code{NA} values. The function
+  must \emph{always} return either \code{TRUE} or \code{FALSE} - if \code{NA}
+  is ever returned an error will occur. \code{combine_fun} must return a
+  single numeric value.
 
   For example, a simple splitting function that splits a quadrant when the
-  variance exceeds a certain limit could be defined as follows:
+  variance exceeds a user-defined limit could be defined as follows:
 
-  \code{splt_fun = function(vals, args) return(var(vals) > args$var_limit)}
+  \preformatted{
+  splt_fun = function(vals, args) {
+     if(any(is.na(vals))){
+        return(TRUE);
+     } else {
+        return(sd(vals) > args$var_limit)
+     }
+  }}
 
   Because the function makes use of an element of \code{args} named
   \code{var_limit}, the \code{split_args} parameter would need to contain an
@@ -188,18 +221,28 @@ A quadtree is created from a raster or a matrix by successively
   \code{qt = qt_create(rast, split_method="custom", split_fun=splt_fun,
   split_args=list(var_limit=.05))}
   
-  Note that the provided splitting and combining functions are written in
-  C++. So while we could define an R function to perform splitting based on
-  the range, the C++ version will run much faster. Custom R functions will
-  run slower than the provided C++ functions.
+  Note that the provided splitting and combining functions are written in C++.
+  So while we could define an R function to perform splitting based on the
+  range, the C++ version will run much faster. Custom R functions will run
+  slower than the provided C++ functions.
+
+  \strong{Creating a quadtree using a template}
+
+  This function also allows users to create a quadtree using another quadtree
+  as a "template" (via the \code{template_quadtree} parameter). The structure
+  of the new quadtree will be identical to that of the template quadtree, but
+  the values of the cells will be derived from the raster used to create the
+  new quadtree. The rasters used to make the template quadtree and the new
+  quadtree should have the exact same extent and dimensions - in addition the
+  exact same 'expansion method' (i.e. the method specified by
+  \code{adj_type}) should be used to create both quadtrees.
 }
 \examples{
 library(raster)
 
-#create raster of random values
-nrow = 57
-ncol = 75
-rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
+#retrieve the sample data
+data(habitat)
+rast = habitat
 
 #####################################
 # using 'adj_type'
@@ -207,15 +250,23 @@ rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, y
 
 #create quadtree using the 'expand' method - automatically adds NA cells to
 #bring the dimensions to 128 x 128 before creating the quadtree
-qt1 = qt_create(rast, split_threshold = .9, split_method = "range", adj_type="expand")
+qt1 = qt_create(rast, split_threshold = .15, split_method = "range", adj_type="expand")
 qt_plot(qt1) #plot the quadtree
 qt_plot(qt1, crop=TRUE, na_col=NULL) #we can use 'crop=TRUE' and 'na_col=NULL' 
 #if we don't want to see the padded NA's
 
 #create quadtree using the 'resample' method - we'll resample to 128 since it's a power of 2
-qt2 = qt_create(rast, split_threshold = .9, split_method = "range", adj_type="resample", resample_n_side = 128)
+
+#first we'll do it WITHOUT adding \code{NA}s to the shorter dimension, which
+#will result in non-square cells
+qt2 = qt_create(rast, split_threshold = .15, split_method = "range", adj_type="resample", resample_n_side = 128, resample_pad_NAs=FALSE)
 qt_plot(qt2)
 qt_plot(qt2, crop=TRUE, na_col=NULL)
+
+#now we'll add 'padding' \code{NA}s so that the cells of the quadtree are square
+qt3 = qt_create(rast, split_threshold = .15, split_method = "range", adj_type="resample", resample_n_side = 128)
+qt_plot(qt3)
+qt_plot(qt3, crop=TRUE, na_col=NULL)
 
 #####################################
 # using 'max_cell_length'
@@ -223,58 +274,62 @@ qt_plot(qt2, crop=TRUE, na_col=NULL)
 
 #now use the 'max_cell_length' argument to force any cells with sides longer
 #than 2 to split
-qt3 = qt_create(rast, split_threshold = .9, split_method = "range", max_cell_length = 2, adj_type="expand")
+qt4 = qt_create(rast, split_threshold = .15, split_method = "range", max_cell_length = 1000, adj_type="expand")
 
 #compare qt1 (no max cell length) and qt3 (max cell length = 2)
 par(mfrow=c(1,2))
 qt_plot(qt1, crop=TRUE, na_col=NULL, main="no max cell length")
-qt_plot(qt3, crop=TRUE, na_col=NULL, main="max cell length = 2")
+qt_plot(qt4, crop=TRUE, na_col=NULL, main="max cell length = 1000")
 
 #####################################
 # using 'split_method' and 'combine_method'
 #####################################
 
 #use the standard deviation instead of the range
-qt4 = qt_create(rast, split_threshold=.25, split_method = "sd")
+qt5 = qt_create(rast, split_threshold=.1, split_method = "sd")
 #use the max to aggregate values rather than the mean
-qt5 = qt_create(rast, split_threshold=.25, split_method = "sd", combine_method="max")
+qt6 = qt_create(rast, split_threshold=.1, split_method = "sd", combine_method="max")
 
 #compare the two quadtrees
 par(mfrow=c(1,2))
-qt_plot(qt4, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='mean'")
-qt_plot(qt5, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='max'")
+qt_plot(qt5, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='mean'")
+qt_plot(qt6, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='max'")
 par(mfrow=c(1,1))
 
 #####################################
 # using custom split and combine methods
 #####################################
 
-#custom split function - split a cell if the values exceed a given range
-spl_fun = function(vals, args){ 
-  return(any(vals < args$min) || any(vals > args$max))
+#custom split function - split a cell if any of the values are above a given value
+split_fun = function(vals, args){ 
+  if(any(is.na(vals))){ #check for NAs first
+    return(TRUE); #if there are any NAs we'll split automatically
+  } else {
+    return(any(vals > args$max))
+  }
 }
 
-qt6 = qt_create(rast, split_method="custom", split_fun=spl_fun, 
-                split_args=list(min=.02, max=.98))
-qt_plot(qt6, crop=TRUE, na_col=NULL)
+qt7 = qt_create(rast, split_method="custom", split_fun=split_fun, 
+                split_args=list(max=.98))
+qt_plot(qt7, crop=TRUE, na_col=NULL)
 
-#custom combine function
+#custom combine function - if the mean of the values is less than 
+#'threshold', set the cell value to 'low_val'. If it's greater
+#than 'threshold', set the cell value to 'high_val'
 cmb_fun = function(vals, args){
   if(any(is.na(vals))){
     return(NA)
   }
-  if(any(vals < args$low)){
-    return(args$low)
-  } else if (any(vals > args$high)){
-    return(args$high)   
+  if(mean(vals) < args$threshold){
+    return(args$low_val)
   } else {
-    return((args$low + args$high)/2)
-  }
+    return(args$high_val)   
+  } 
 }
 
-qt7 = qt_create(rast, split_threshold = .9, split_method="range", combine_method="custom",
-                combine_fun = cmb_fun, combine_args = list(low=.2, high=.8))
-qt_plot(qt7, crop=TRUE, na_col=NULL)
+qt8 = qt_create(rast, split_threshold = .9, split_method="range", combine_method="custom",
+                combine_fun = cmb_fun, combine_args = list(threshold=.5, low_val=0, high_val=1))
+qt_plot(qt8, crop=TRUE, na_col=NULL)
 
 #note that the split and combine functions are required to have an 'args'
 #parameter, but they don't have to use it
@@ -282,7 +337,25 @@ cmb_fun2 = function(vals, args){
   return(max(vals) - min(vals))
 }
 
-qt8 = qt_create(rast, split_threshold = .9, split_method = "range", 
-                combine_fun = cmb_fun2)
-qt_plot(qt8, crop=TRUE, na_col=NULL)
+qt9 = qt_create(rast, split_threshold = .9, split_method = "range", 
+                combine_method="custom", combine_fun = cmb_fun2)
+qt_plot(qt9, crop=TRUE, na_col=NULL)
+
+#####################################
+# using template quadtrees
+#####################################
+
+data(habitat_roads)
+template = habitat_roads
+
+#has the exact same extent and resolution as 'rast'
+#this raster has 1 where a road occurs and 0 otherwise
+plot(template)
+
+qt_template = qt_create(template, split_method="range", split_threshold=.01)
+qt10 = qt_create(rast, template_quadtree = qt_template)
+
+par(mfrow=c(1,2))
+qt_plot(qt_template, crop=TRUE, na_col=NULL)
+qt_plot(qt10, crop=TRUE, na_col=NULL)
 }
