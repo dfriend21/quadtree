@@ -101,7 +101,7 @@ quadtree. Thus, no split function is used because the decision about
 whether to split is pre-determined by the template quadtree. The raster
 used to create the template should have the exact same extent and
 dimensions as \code{x}. If \code{template_quadtree} is non-\code{NULL}, 
-all \code{split_}* parameters are disregarded.}
+all \code{split_}* parameters are disregarded, as is \code{max_cell_length}}
 }
 \description{
 Create a quadtree from gridded data
