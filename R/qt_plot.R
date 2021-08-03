@@ -9,6 +9,8 @@
 #'   plotted
 #' @param border_col character; the color to use for the cell borders. Use
 #'   'transparent' if you don't want borders to be shown
+#' @param border_lwd numeric; the line width of the cell borders - passed to the
+#'   'lwd' parameter of the 'rect' function
 #' @param xlim two element numeric vector; defines the minimum and maximum
 #'   values of the x axis.
 #' @param ylim two element numeric vector; defines the minimum and maximum
@@ -106,7 +108,7 @@
 #'
 #' # use 'legend_args' to customize the legend
 #' qt_plot(qt1, adj_mar_auto=10, legend_args=list(lgd_ht_pct=.8, bar_wd_pct=.4))
-qt_plot = function(qt, colors = NULL, nb_line_col=NULL, border_col="black", xlim=NULL, ylim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
+qt_plot = function(qt, colors = NULL, nb_line_col=NULL, border_col="black", border_lwd=1, xlim=NULL, ylim=NULL, zlim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
   args = list(...)
   #if the user hasn't provided custom axis labels, assign values for the labels
   if(is.null(args[["xlab"]])) args[["xlab"]] = "x"
@@ -153,7 +155,7 @@ qt_plot = function(qt, colors = NULL, nb_line_col=NULL, border_col="black", xlim
     }
   }
   do.call(plot,c(list(x=1,y=1, xlim=xlim, ylim=ylim, type="n", asp=1),args))
-  rect(nodes$xMin, nodes$yMin, nodes$xMax, nodes$yMax, col=nodes$col, border=border_col)
+  rect(nodes$xMin, nodes$yMin, nodes$xMax, nodes$yMax, col=nodes$col, border=border_col, lwd=border_lwd)
   
   if(!is.null(nb_line_col)){
     edges = data.frame(do.call(rbind,qt$getNbList()))

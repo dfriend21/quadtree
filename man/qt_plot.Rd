@@ -9,8 +9,10 @@ qt_plot(
   colors = NULL,
   nb_line_col = NULL,
   border_col = "black",
+  border_lwd = 1,
   xlim = NULL,
   ylim = NULL,
+  zlim = NULL,
   crop = FALSE,
   na_col = "white",
   adj_mar_auto = 6,
@@ -32,6 +34,9 @@ plotted}
 
 \item{border_col}{character; the color to use for the cell borders. Use
 'transparent' if you don't want borders to be shown}
+
+\item{border_lwd}{numeric; the line width of the cell borders - passed to the
+'lwd' parameter of the 'rect' function}
 
 \item{xlim}{two element numeric vector; defines the minimum and maximum
 values of the x axis.}
