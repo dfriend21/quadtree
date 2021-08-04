@@ -7,6 +7,7 @@
 add_legend(
   zlim,
   col,
+  alpha = 1,
   lgd_box_col = NULL,
   lgd_x_pct = 0.5,
   lgd_y_pct = 0.5,
@@ -25,6 +26,9 @@ add_legend(
 
 \item{col}{character vector; required; the colors that will be used to create
 the color ramp used in the plot.}
+
+\item{alpha}{numeric; transparency of the colors. Must be in the range
+0-1, where 0 is fully transparent and 1 is fully opaque. Default is 1.}
 
 \item{lgd_box_col}{character; color of the box to draw around the entire
 legend. If \code{NULL} (the default), no box is drawn}

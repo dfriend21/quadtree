@@ -4,6 +4,8 @@
 #' @param colors character vector; the colors that will be used to create the
 #'   color ramp used in the plot. If no argument is provided,
 #'   \code{terrain.colors(100,rev=TRUE)} is used.
+#' @param alpha numeric; transparency of the cell colors. Must be in the range
+#'   0-1, where 0 is fully transparent and 1 is fully opaque.
 #' @param nb_line_col character; the color of the lines drawn between
 #'   neighboring cells. If \code{NULL} (the default), these lines are not
 #'   plotted
@@ -11,10 +13,17 @@
 #'   'transparent' if you don't want borders to be shown
 #' @param border_lwd numeric; the line width of the cell borders - passed to the
 #'   'lwd' parameter of the 'rect' function
-#' @param xlim two element numeric vector; defines the minimum and maximum
-#'   values of the x axis.
-#' @param ylim two element numeric vector; defines the minimum and maximum
-#'   values of the y axis.
+#' @param xlim two element numeric vector; optional; defines the minimum and
+#'   maximum values of the x axis.
+#' @param ylim two element numeric vector; optional; defines the minimum and
+#'   maximum values of the y axis.
+#' @param zlim two element numeric vector; optional; defines how the colors are
+#'   assigned to the cell values. If this value is \code{NULL} (the default), it
+#'   uses the min and max cell values. In this case, the first color in
+#'   \code{col} corresponds to the lowest cell value and the last color is
+#'   \code{col} corresponds to the highest cell value. If \code{zlim} does not
+#'   encompass the entire range of cell values, cells that have values outside
+#'   of the range specified by \code{zlim} will be treated as NA cells.
 #' @param crop boolean; if \code{TRUE}, only displays the extent of the original
 #'   raster, thus ignoring any of the NA cells that were added to pad the raster
 #'   before making the quadtree. Ignored if either \code{xlim} or \code{ylim}
@@ -30,147 +39,176 @@
 #'   the right margin
 #' @param legend_args named list; contains arguments that are sent to the
 #'   \code{\link{add_legend}} function. See the help page for \code{add_legend}
-#'   for the parameters. Note that the two required parameters to
-#'   \code{add_legend}, \code{zlim} and \code{cols}, are supplied automatically,
-#'   so if the list contains elements named \code{zlim} or \code{cols}, they
-#'   will be ignored.
+#'   for the parameters. Note that \code{zlim}, \code{cols}, and \code{alpha}
+#'   are supplied automatically, so if the list contains elements named
+#'   \code{zlim}, \code{cols}, or \code{alpha} the user-provided values will be
+#'   ignored.
 #' @param ... arguments passed to the default \code{plot} function
 #' @details See 'Examples' for demonstrations of how the various options can be
 #' used. 
 #' @examples
-#' # create raster of random values
-#' nrow = 57
-#' ncol = 75
-#' set.seed(2)
-#' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-#'
+#' library(raster)
+#' data(habitat)
+#' rast = habitat
 #' # create quadtree
-#' qt1 = qt_create(rast, range_limit = .9, adj_type="expand")
-#'
-#' # -----------
+#' qt1 = qt_create(rast, split_threshold=.1, adj_type="expand")
+#' 
+#' #####################################
 #' # DEFAULT
-#' # -----------
-#'
+#' #####################################
+#' 
 #' # default - no additional parameters provided
 #' qt_plot(qt1)
-#'
-#' # -----------
+#' 
+#' #####################################
 #' # CHANGE PLOT EXTENT
-#' # -----------
-#'
+#' #####################################
+#' 
 #' # note that additional parameters like 'main', 'xlab', 'ylab', etc. will be
 #' # passed to the default 'plot()' function
-#'
+#' 
 #' # crop extent to the original extent of the raster
 #' qt_plot(qt1, crop=TRUE, main="cropped")
-#'
+#' 
+#' # crop and don't plot NA cells
+#' qt_plot(qt1, crop=TRUE, na_col=NULL, main="cropped")
+#' 
 #' # use 'xlim' and 'ylim' to zoom in on an area
-#' qt_plot(qt1, xlim = c(30,50), ylim = c(10,20), main="zoomed in")
-#'
-#' # -----------
+#' qt_plot(qt1, xlim = c(10000,20000), ylim = c(20000,30000), main="zoomed in")
+#' 
+#' #####################################
 #' # COLORS
-#' # -----------
-#'
-#' # change border color
+#' #####################################
+#' 
+#' # change border color and width
 #' qt_plot(qt1, border_col="transparent") #no borders
-#' qt_plot(qt1, border_col="gray60")
-#'
+#' qt_plot(qt1, border_col="gray60") #gray borders
+#' qt_plot(qt1, border_lwd=.3) #change line thickness of borders
+#' 
 #' # change color palette
-#' qt_plot(qt1, colors=c("blue", "yellow", "red"))
-#' qt_plot(qt1, colors=hcl.colors(100))
-#' qt_plot(qt1, colors=c("black", "white"))
-#'
+#' qt_plot(qt1, col=c("blue", "yellow", "red"))
+#' qt_plot(qt1, col=hcl.colors(100))
+#' qt_plot(qt1, col=c("black", "white"))
+#' 
+#' # change color transparency
+#' qt_plot(qt1, alpha=.5)
+#' qt_plot(qt1, col=c("blue", "yellow", "red"), alpha=.5)
+#' 
 #' # change color of NA cells
-#' qt_plot(qt1, na_col="pink")
-#'
-#' # don't plot NA cells
+#' qt_plot(qt1, na_col="lavender")
+#' 
+#' # don't plot NA cells at all
 #' qt_plot(qt1, na_col=NULL)
-#'
-#' # -----------
+#' 
+#' # change 'zlim'
+#' qt_plot(qt1, zlim=c(0,5))
+#' qt_plot(qt1, zlim=c(.2,.7))
+#' 
+#' #####################################
 #' # SHOW NEIGHBOR CONNECTIONS
-#' # -----------
-#'
+#' #####################################
+#' 
 #' # plot all neighbor connections
 #' qt_plot(qt1, nb_line_col="black", border_col="gray60")
-#'
+#' 
 #' # don't plot connections to NA cells
-#' qt_plot(qt1, crop=TRUE, nb_line_col="black", border_col="gray60", na_col=NULL)
-#'
-#' # -----------
+#' qt_plot(qt1, nb_line_col="black", border_col="gray60", na_col=NULL)
+#' 
+#' #####################################
 #' # LEGEND
-#' # -----------
-#'
+#' #####################################
+#' 
 #' # no legend
 #' qt_plot(qt1, legend=FALSE)
-#'
+#' 
 #' # increase right margin size
 #' qt_plot(qt1, adj_mar_auto=10)
-#'
+#' 
 #' # use 'legend_args' to customize the legend
 #' qt_plot(qt1, adj_mar_auto=10, legend_args=list(lgd_ht_pct=.8, bar_wd_pct=.4))
-qt_plot = function(qt, colors = NULL, nb_line_col=NULL, border_col="black", border_lwd=1, xlim=NULL, ylim=NULL, zlim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
+qt_plot = function(qt, col=NULL, alpha=1, nb_line_col=NULL, border_col="black", border_lwd=1, xlim=NULL, ylim=NULL, zlim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
   args = list(...)
   #if the user hasn't provided custom axis labels, assign values for the labels
   if(is.null(args[["xlab"]])) args[["xlab"]] = "x"
   if(is.null(args[["ylab"]])) args[["ylab"]] = "y"
   
-  nodes = dplyr::bind_rows(qt$asList())
-  nodes = nodes[nodes$hasChdn == 0,]
-  if(is.null(na_col)){
-    nodes = nodes[!is.na(nodes$value),]
+  nodes = dplyr::bind_rows(qt$asList()) #get all the nodes as a data frame
+  nodes = nodes[nodes$hasChdn == 0,] #we only want to plot the terminal nodes (i.e. nodes without children)
+
+  if(is.null(col)){ #if 'col' is NULL, use 'terrain.colors()' as the default
+    col = terrain.colors(100,rev=TRUE)
   }
-  if(is.null(colors)){
-    colors = terrain.colors(100,rev=TRUE)
+  colRamp = colorRamp(colors = col) #create the color ramp, which we'll use to get the color for each cell
+  if(is.null(zlim)){ #if zlim is NULL, use the max and min of the cell values as the zlim
+    zlim = range(nodes$value, na.rm=TRUE)
   }
-  colRamp = colorRamp(colors = colors)
-  if(min(nodes$value, na.rm=TRUE) != max(nodes$value, na.rm=TRUE)){
-    nodes$val_adj = (nodes$value-min(nodes$value, na.rm=TRUE))/(max(nodes$value,na.rm=TRUE)-min(nodes$value,na.rm=TRUE))
+  
+  #calculate an "adjusted" value - scales the cell values to be between 0 and 1 so they can be used with 'colRamp'
+  if(zlim[1] != zlim[2]){ #if max and min z values are the same, the denominator of the following calculation is 0, which screws things up - so we'll handle that edge case separately (in the 'else' block)
+    nodes$val_adj = (nodes$value-zlim[1])/(zlim[2]-zlim[1])
   } else {
     nodes$val_adj = ifelse(is.na(nodes$value), NA, .5)
   }
-  col_nums = colRamp(nodes$val_adj)
+  col_nums = colRamp(nodes$val_adj) #use colRamp to get the colors for each point (returns a matrix with the RGB components)
+  
+  #now we'll convert that matrix of RGB colors to hex colors, while setting the NA values to be the user-specified NA color
   nodes$col = apply(col_nums, MARGIN=1, function(row_i){
     if(any(is.na(row_i))){
-      return(na_col)
+      return(NA)
     } 
-    return(rgb(row_i[1], row_i[2], row_i[3], 255, maxColorValue = 255))
+    return(rgb(row_i[1], row_i[2], row_i[3], alpha*255, maxColorValue = 255))
   })
-  if(crop && (!is.null(xlim) || !is.null(ylim))){
+  
+  #now deal with NA cells and cells whose values fall outside of 'zlim'
+  if(is.null(na_col)){ #if na_col is NULL, we'll get rid of all the NA cells - we won't plot them at all
+    nodes = nodes[!is.na(nodes$col),]
+  } else { #otherwise we'll set the NA cells and cells with values outside of 'zlim' to be 'na_col'
+    nodes$col[is.na(nodes$col)] = na_col
+  }
+  
+  if(crop && (!is.null(xlim) || !is.null(ylim))){ #crop automatically sets the xlim and ylim values, so when 'xlim' and 'ylim' are specified by the user they conflict - in this case we'll make the user-specified x and y limits take precedence, and we'll warn the user
     warning("`crop` is TRUE, and at least one of `xlim` and `ylim` is provided; `crop` will therefore be ignored.")
   }
-  if(crop && is.null(xlim) && is.null(ylim)){
+  if(crop && is.null(xlim) && is.null(ylim)){ #if we're cropping the plot, set the x and y limits to be the original extent of the data used to create the quadtree
     orig_ext = qt$originalExtent()
     xlim = orig_ext[1:2]
     ylim = orig_ext[3:4]
   }
+  #if we're not cropping, and 'xlim' and 'ylim' have not been specified, assign values for xlim and ylim
   if(is.null(xlim)){ xlim = qt$root()$xLims() }
   if(is.null(ylim)){ ylim = qt$root()$yLims() }
   
-  if(!is.null(adj_mar_auto) && legend){ #if 'adj_mar_auto' is TRUE, make sure the right margin is big enough for the legend
-    old_mar = par("mar")
+  if(!is.null(adj_mar_auto) && legend){ #if 'adj_mar_auto' and 'legend' are both TRUE, make sure the right margin is big enough for the legend
+    old_mar = par("mar") #keep track of the old value so we can reset it after plotting
     new_mar = old_mar
-    if(new_mar[4] < adj_mar_auto){
+    if(new_mar[4] < adj_mar_auto){ #if the right margin is less 'adj_mar_auto', set it to be 'adj_mar_auto'
       new_mar[4] = adj_mar_auto
       par(mar=new_mar)
     }
   }
+  
+  #finally, plot the quadtree
   do.call(plot,c(list(x=1,y=1, xlim=xlim, ylim=ylim, type="n", asp=1),args))
   rect(nodes$xMin, nodes$yMin, nodes$xMax, nodes$yMax, col=nodes$col, border=border_col, lwd=border_lwd)
   
+  #if 'nb_line_col' is not NULL, we'll plot connections between neighboring cells
   if(!is.null(nb_line_col)){
-    edges = data.frame(do.call(rbind,qt$getNbList()))
+    edges = data.frame(do.call(rbind,qt$getNbList())) #get a data frame with one row for each 'connection'
     if(is.null(na_col)){
       edges = na.omit(edges)
     }
-    edges = edges[edges$isLowest == 1,]
+    edges = edges[edges$isLowest == 1,] #only plot connections between terminal nodes
     segments(edges$x0, edges$y0, edges$x1, edges$y1, col=nb_line_col)
   }
   
+  #if 'legend' is TRUE, use 'add_legend' to add the legend
   if(legend){
-    legend_args$zlim = range(nodes$value,na.rm=TRUE)
-    legend_args$col = colors
+    col_rgb = colRamp(seq(0,1,length.out=300))
+    col_hex = rgb(col_rgb[,1], col_rgb[,2], col_rgb[,3], maxColorValue=255)
+    legend_args$zlim = zlim
+    legend_args$col = col_hex
+    legend_args$alpha = alpha
     do.call(add_legend, legend_args)
-    #add_legend(range(nodes$value,na.rm=TRUE), colors)
   }
   
   #reset the margin setting back to what it was before
@@ -202,7 +240,7 @@ qt_plot = function(qt, colors = NULL, nb_line_col=NULL, border_col="black", bord
 #'   dimension (see examples). Both vectors need to be in the format
 #'   \code{c(max,min)}.
 #'
-#'   \code{get_coords()} is simply a wrapper for \code{get_coords} that does
+#'   \code{get_coords()} is simply a wrapper for \code{get_coords_axis} that does
 #'   both dimensions at once. In this case the output of \code{par("usr")} and
 #'   \code{par("plt")} can be directly supplied to the \code{usr} and \code{plt}
 #'   parameters, respectively. Note that for both parameters the vectors must
@@ -249,8 +287,10 @@ get_coords = function(usr, plt){
 #' @title Add a gradient legend to a plot
 #' @description Adds a gradient legent to a plot
 #' @param zlim two-element numeric vector; required; the min and max value of z
-#' @param col character vector; required; the colors that will be used to create
-#'   the color ramp used in the plot.
+#' @param col character vector; required; the colors that will be used in the
+#'   legend.
+#' @param alpha numeric; transparency of the colors. Must be in the range
+#'   0-1, where 0 is fully transparent and 1 is fully opaque. Default is 1.
 #' @param lgd_box_col character; color of the box to draw around the entire
 #'   legend. If \code{NULL} (the default), no box is drawn
 #' @param lgd_x_pct numeric; location of the center of the legend in the
@@ -311,7 +351,7 @@ get_coords = function(usr, plt){
 #' # 'Details' section, it shouldn't be called separately from 'qt_plot()' - if
 #' # customizations to the legend are desired, use the 'legend_args' parameter
 #' # of 'qt_plot()'. 
-add_legend = function(zlim, col, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_pct=.5, 
+add_legend = function(zlim, col, alpha=1, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_pct=.5, 
                       lgd_wd_pct=.5, lgd_ht_pct=.5, bar_box_col="black",
                       bar_wd_pct=.2, bar_ht_pct=1, ticks=NULL, ticks_n=5, ticks_x_pct=1){
   p = par() #get the current graphical parameter settings
@@ -337,6 +377,7 @@ add_legend = function(zlim, col, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_pct=.5,
   bar_y1 = lgd_y0+bar_ht_pct*ht_crd
   
   #make the color bar and add it to the plot
+  col = paste0(col, as.hexmode(round(alpha*255))) #take the alpha value into account
   rast = grDevices::as.raster(rev(col)) #rasterImage automatically plots the colors so that the first color is at the top and the last color is at the bottom. I want the opposite - the first color (the lowest value) should be at the bottom
   rasterImage(rast, bar_x0, bar_y0, bar_x1, bar_y1, xpd=TRUE)
   if(!is.null(bar_box_col)){ #if specified, add a box around the color bar

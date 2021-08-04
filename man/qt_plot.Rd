@@ -6,7 +6,8 @@
 \usage{
 qt_plot(
   qt,
-  colors = NULL,
+  col = NULL,
+  alpha = 1,
   nb_line_col = NULL,
   border_col = "black",
   border_lwd = 1,
@@ -24,9 +25,8 @@ qt_plot(
 \arguments{
 \item{qt}{a \code{quadtree} object}
 
-\item{colors}{character vector; the colors that will be used to create the
-color ramp used in the plot. If no argument is provided,
-\code{terrain.colors(100,rev=TRUE)} is used.}
+\item{alpha}{numeric; transparency of the cell colors. Must be in the range
+0-1, where 0 is fully transparent and 1 is fully opaque.}
 
 \item{nb_line_col}{character; the color of the lines drawn between
 neighboring cells. If \code{NULL} (the default), these lines are not
@@ -38,11 +38,19 @@ plotted}
 \item{border_lwd}{numeric; the line width of the cell borders - passed to the
 'lwd' parameter of the 'rect' function}
 
-\item{xlim}{two element numeric vector; defines the minimum and maximum
-values of the x axis.}
+\item{xlim}{two element numeric vector; optional; defines the minimum and
+maximum values of the x axis.}
 
-\item{ylim}{two element numeric vector; defines the minimum and maximum
-values of the y axis.}
+\item{ylim}{two element numeric vector; optional; defines the minimum and
+maximum values of the y axis.}
+
+\item{zlim}{two element numeric vector; optional; defines how the colors are
+assigned to the cell values. If this value is \code{NULL} (the default), it
+uses the min and max cell values. In this case, the first color in
+\code{col} corresponds to the lowest cell value and the last color is
+\code{col} corresponds to the highest cell value. If \code{zlim} does not
+encompass the entire range of cell values, cells that have values outside
+of the range specified by \code{zlim} will be treated as NA cells.}
 
 \item{crop}{boolean; if \code{TRUE}, only displays the extent of the original
 raster, thus ignoring any of the NA cells that were added to pad the raster
@@ -63,12 +71,16 @@ the right margin}
 
 \item{legend_args}{named list; contains arguments that are sent to the
 \code{\link{add_legend}} function. See the help page for \code{add_legend}
-for the parameters. Note that the two required parameters to
-\code{add_legend}, \code{zlim} and \code{cols}, are supplied automatically,
-so if the list contains elements named \code{zlim} or \code{cols}, they
-will be ignored.}
+for the parameters. Note that \code{zlim}, \code{cols}, and \code{alpha}
+are supplied automatically, so if the list contains elements named
+\code{zlim}, \code{cols}, or \code{alpha} the user-provided values will be
+ignored.}
 
 \item{...}{arguments passed to the default \code{plot} function}
+
+\item{colors}{character vector; the colors that will be used to create the
+color ramp used in the plot. If no argument is provided,
+\code{terrain.colors(100,rev=TRUE)} is used.}
 }
 \description{
 Plot a quadtree object
@@ -78,25 +90,22 @@ See 'Examples' for demonstrations of how the various options can be
 used.
 }
 \examples{
-# create raster of random values
-nrow = 57
-ncol = 75
-set.seed(2)
-rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-
+library(raster)
+data(habitat)
+rast = habitat
 # create quadtree
-qt1 = qt_create(rast, range_limit = .9, adj_type="expand")
+qt1 = qt_create(rast, split_threshold=.1, adj_type="expand")
 
-# -----------
+#####################################
 # DEFAULT
-# -----------
+#####################################
 
 # default - no additional parameters provided
 qt_plot(qt1)
 
-# -----------
+#####################################
 # CHANGE PLOT EXTENT
-# -----------
+#####################################
 
 # note that additional parameters like 'main', 'xlab', 'ylab', etc. will be
 # passed to the default 'plot()' function
@@ -104,41 +113,53 @@ qt_plot(qt1)
 # crop extent to the original extent of the raster
 qt_plot(qt1, crop=TRUE, main="cropped")
 
+# crop and don't plot NA cells
+qt_plot(qt1, crop=TRUE, na_col=NULL, main="cropped")
+
 # use 'xlim' and 'ylim' to zoom in on an area
-qt_plot(qt1, xlim = c(30,50), ylim = c(10,20), main="zoomed in")
+qt_plot(qt1, xlim = c(10000,20000), ylim = c(20000,30000), main="zoomed in")
 
-# -----------
+#####################################
 # COLORS
-# -----------
+#####################################
 
-# change border color
+# change border color and width
 qt_plot(qt1, border_col="transparent") #no borders
-qt_plot(qt1, border_col="gray60")
+qt_plot(qt1, border_col="gray60") #gray borders
+qt_plot(qt1, border_lwd=.3) #change line thickness of borders
 
 # change color palette
-qt_plot(qt1, colors=c("blue", "yellow", "red"))
-qt_plot(qt1, colors=hcl.colors(100))
-qt_plot(qt1, colors=c("black", "white"))
+qt_plot(qt1, col=c("blue", "yellow", "red"))
+qt_plot(qt1, col=hcl.colors(100))
+qt_plot(qt1, col=c("black", "white"))
+
+# change color transparency
+qt_plot(qt1, alpha=.5)
+qt_plot(qt1, col=c("blue", "yellow", "red"), alpha=.5)
 
 # change color of NA cells
-qt_plot(qt1, na_col="pink")
+qt_plot(qt1, na_col="lavender")
 
-# don't plot NA cells
+# don't plot NA cells at all
 qt_plot(qt1, na_col=NULL)
 
-# -----------
+# change 'zlim'
+qt_plot(qt1, zlim=c(0,5))
+qt_plot(qt1, zlim=c(.2,.7))
+
+#####################################
 # SHOW NEIGHBOR CONNECTIONS
-# -----------
+#####################################
 
 # plot all neighbor connections
 qt_plot(qt1, nb_line_col="black", border_col="gray60")
 
 # don't plot connections to NA cells
-qt_plot(qt1, crop=TRUE, nb_line_col="black", border_col="gray60", na_col=NULL)
+qt_plot(qt1, nb_line_col="black", border_col="gray60", na_col=NULL)
 
-# -----------
+#####################################
 # LEGEND
-# -----------
+#####################################
 
 # no legend
 qt_plot(qt1, legend=FALSE)
