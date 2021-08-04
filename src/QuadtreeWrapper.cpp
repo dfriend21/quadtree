@@ -22,16 +22,16 @@ QuadtreeWrapper::QuadtreeWrapper(std::shared_ptr<Quadtree> _quadtree) : quadtree
 //creates an empty quadtree with the given x and y limits, and the given
 //range limit
 // QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double rangelim, double xMaxCellLength, double yMaxCellLength){
-QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double xMaxCellLength, double yMaxCellLength){
+QuadtreeWrapper::QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double xMaxCellLength, double yMaxCellLength, double xMinCellLength, double yMinCellLength){
   //Matrix matNew(rMatToCppMat(mat));
   std::vector<double> xlimsNew(Rcpp::as<std::vector<double>>(xlims));
   std::vector<double> ylimsNew(Rcpp::as<std::vector<double>>(ylims));
   //quadtree = std::shared_ptr<Quadtree>(new Quadtree(rangelim, xMaxCellLength, yMaxCellLength));
   //quadtree = std::make_shared<Quadtree>(rangelim, xMaxCellLength, yMaxCellLength);
-  quadtree = std::make_shared<Quadtree>(xMaxCellLength, yMaxCellLength);
+  quadtree = std::make_shared<Quadtree>(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1],xMaxCellLength, yMaxCellLength, xMinCellLength, yMinCellLength);
   // quadtree = Quadtree(rangelim);
   //quadtree->root = Node::makeNode(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0)->ptr;
-  quadtree->root = std::make_shared<Node>(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0);
+  //quadtree->root = std::make_shared<Node>(xlimsNew[0], xlimsNew[1], ylimsNew[0], ylimsNew[1], 0, 0, 0);
   //nodeList = Rcpp::List::create(); 
   //nodeVec = std::vector<Rcpp::NumericVector>(0);
 }

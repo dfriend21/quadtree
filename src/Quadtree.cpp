@@ -36,8 +36,9 @@
 
 // Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
 //     : Quadtree{0,0,0,0,_rangeLim,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
-Quadtree::Quadtree(double _maxXCellLength, double _maxYCellLength) 
-    : Quadtree{0,0,0,0,0,0,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
+// Quadtree::Quadtree(double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength)
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax) 
+    : Quadtree{xMin,xMax,yMin,yMax,0,0,0,0,0,0,0,0, "",-1,-1,-1,-1}{
     // std::cout << "Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength)\n";
     //: rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(0,0,0,0,0,0,0)->ptr;
@@ -45,8 +46,8 @@ Quadtree::Quadtree(double _maxXCellLength, double _maxYCellLength)
 
 // Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
 //     : Quadtree {xMin, xMax, yMin, yMax, _rangeLim, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength, double _maxYCellLength) 
-    : Quadtree {xMin, xMax, yMin, yMax, 0, 0, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength) 
+    : Quadtree {xMin, xMax, yMin, yMax, 0, 0, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength, _minXCellLength, _minYCellLength}{
     // std::cout << "Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength)\n";
     // : rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
@@ -58,8 +59,8 @@ Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _m
 //maxYLength -> same as 'maxXLength', but for y
 // Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
 //     : rangeLim{_rangeLim}, nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, proj4string{_proj4string} {
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, int _originalNX, int _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
-    : nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, proj4string{_proj4string} {
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, int _originalNX, int _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength)
+    : nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, minXCellLength{_minXCellLength}, minYCellLength{_minYCellLength}, proj4string{_proj4string} {
     // std::cout << "Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)\n";
     root = std::make_shared<Node>(xMin,xMax,yMin,yMax,0,0,0);
     //root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
@@ -154,7 +155,9 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
            (splitFun(mat)
             || x_length > maxXCellLength // the x side length is greater than the user-defined maximum length OR
             || y_length > maxYCellLength // the y side length is greater than the user-defined maximum length OR
-            || nNans > 0 )){ // there is at least one Nan }
+            || nNans > 0 ) // there is at least one Nan } AND
+        && x_length/2 >= minXCellLength // the x and y length of the cell's children would be greater than the min cell length
+        && y_length/2 >= minYCellLength){ 
         node->hasChildren = true;
         double cell_x_len = (node->xMax - node->xMin)/2;//get the side length of the cells
         double cell_y_len = (node->yMax - node->yMin)/2;

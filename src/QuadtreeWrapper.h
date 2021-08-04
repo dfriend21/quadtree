@@ -34,7 +34,7 @@ class QuadtreeWrapper{
     QuadtreeWrapper();
     QuadtreeWrapper(std::shared_ptr<Quadtree> _quadtree);
     //QuadtreeWrapper(Quadtree _quadtree);
-    QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double xMaxCellLength =  -1, double yMaxCellLength = -1);
+    QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double xMaxCellLength =  -1, double yMaxCellLength = -1, double xMinCellLength = -1, double yMinCellLength = -1);
     // QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double rangeLim, double xMaxCellLength = -1, double yMaxCellLength = -1);
     //QuadtreeWrapper(Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, double xMaxCellLength = -1, double yMaxCellLength = -1);
     // QuadtreeWrapper(Rcpp::NumericMatrix mat, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs, double xMaxCellLength = -1, double yMaxCellLength = -1);

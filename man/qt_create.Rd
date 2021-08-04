@@ -14,6 +14,7 @@ qt_create(
   combine_fun = NULL,
   combine_args = list(),
   max_cell_length = NULL,
+  min_cell_length = NULL,
   adj_type = "expand",
   resample_n_side = NULL,
   resample_pad_NAs = TRUE,
@@ -66,9 +67,13 @@ as the cell value See 'Details' and 'Examples' for more.}
 \code{combine_fun}. This list is given to the \code{args} parameter of
 \code{combine_fun}}
 
-\item{max_cell_length}{numeric; the maximum size allowed for a quadtree cell.
-If \code{NULL} (the default) no restrictions are placed on the quadtree
-cell size. See 'Details' for more}
+\item{max_cell_length}{numeric; the maximum side length allowed for a
+quadtree cell. If \code{NULL} (the default) no restrictions are placed on
+the maximum cell length. See 'Details' for more.}
+
+\item{min_cell_length}{numeric; the minimum side length allowed for a quadtree
+cell. If \code{NULL} (the default) no restrictions are placed on the 
+minimum cell length. See 'Details' for more.}
 
 \item{adj_type}{character; either \code{'expand'} or \code{'resample'}. See
 'Details' for more.}
@@ -107,7 +112,7 @@ all \code{split_}* parameters are disregarded, as is \code{max_cell_length}}
 Create a quadtree from gridded data
 }
 \details{
-\strong{Overview of quadtrees}
+\strong{Overview of quadtree creation}
 
   A quadtree is created from a raster or a matrix by successively
   dividing the raster/matrix into smaller and smaller cells, with the
@@ -133,7 +138,9 @@ Create a quadtree from gridded data
   the resulting quadtree will be \code{max_cell_length}. This essentially
   forces any quadrants larger than \code{max_cell_length} to split. The one
   exception is that a quadrant that contains entirely \code{NA} values will
-  not be split.
+  not be split. Similarly, the \code{min_cell_length} parameter can be used 
+  to define a minimum side length for all cells, such that a quadrant cannot
+  be split if its children would be smaller than \code{min_cell_length}.
   
   \strong{Pre-creation dimension adjustment}
   
@@ -257,61 +264,63 @@ qt_plot(qt1, crop=TRUE, na_col=NULL) #we can use 'crop=TRUE' and 'na_col=NULL'
 
 #create quadtree using the 'resample' method - we'll resample to 128 since it's a power of 2
 
-#first we'll do it WITHOUT adding \code{NA}s to the shorter dimension, which
+#first we'll do it WITHOUT adding NAs to the shorter dimension, which
 #will result in non-square cells
 qt2 = qt_create(rast, split_threshold = .15, split_method = "range", adj_type="resample", resample_n_side = 128, resample_pad_NAs=FALSE)
 qt_plot(qt2)
 qt_plot(qt2, crop=TRUE, na_col=NULL)
 
-#now we'll add 'padding' \code{NA}s so that the cells of the quadtree are square
+#now we'll add 'padding' NAs so that the cells of the quadtree are square
 qt3 = qt_create(rast, split_threshold = .15, split_method = "range", adj_type="resample", resample_n_side = 128)
 qt_plot(qt3)
 qt_plot(qt3, crop=TRUE, na_col=NULL)
 
 #####################################
-# using 'max_cell_length'
+# using 'max_cell_length' and 'min_cell_length'
 #####################################
 
 #now use the 'max_cell_length' argument to force any cells with sides longer
 #than 2 to split
 qt4 = qt_create(rast, split_threshold = .15, split_method = "range", max_cell_length = 1000, adj_type="expand")
+qt5 = qt_create(rast, split_threshold = .15, split_method = "range", min_cell_length = 500, adj_type="expand")
 
-#compare qt1 (no max cell length) and qt3 (max cell length = 2)
-par(mfrow=c(1,2))
-qt_plot(qt1, crop=TRUE, na_col=NULL, main="no max cell length")
+par(mfrow=c(1,3))
+qt_plot(qt1, crop=TRUE, na_col=NULL, main="no cell length restrictions")
 qt_plot(qt4, crop=TRUE, na_col=NULL, main="max cell length = 1000")
+qt_plot(qt5, crop=TRUE, na_col=NULL, main="min cell length = 500")
+par(mfrow=c(1,1))
 
 #####################################
 # using 'split_method' and 'combine_method'
 #####################################
 
 #use the standard deviation instead of the range
-qt5 = qt_create(rast, split_threshold=.1, split_method = "sd")
+qt6 = qt_create(rast, split_threshold=.1, split_method = "sd")
 #use the max to aggregate values rather than the mean
-qt6 = qt_create(rast, split_threshold=.1, split_method = "sd", combine_method="max")
+qt7 = qt_create(rast, split_threshold=.1, split_method = "sd", combine_method="max")
 
 #compare the two quadtrees
 par(mfrow=c(1,2))
-qt_plot(qt5, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='mean'")
-qt_plot(qt6, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='max'")
+qt_plot(qt6, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='mean'")
+qt_plot(qt7, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='max'")
 par(mfrow=c(1,1))
 
 #####################################
-# using custom split and combine methods
+# using custom split and combine functions
 #####################################
 
-#custom split function - split a cell if any of the values are above a given value
+#custom split function - split a cell if any of the values are below a given value
 split_fun = function(vals, args){ 
   if(any(is.na(vals))){ #check for NAs first
     return(TRUE); #if there are any NAs we'll split automatically
   } else {
-    return(any(vals > args$max))
+    return(any(vals < args$threshold))
   }
 }
 
-qt7 = qt_create(rast, split_method="custom", split_fun=split_fun, 
-                split_args=list(max=.98))
-qt_plot(qt7, crop=TRUE, na_col=NULL)
+qt8 = qt_create(rast, split_method="custom", split_fun=split_fun, 
+                split_args=list(threshold=.8))
+qt_plot(qt8, crop=TRUE, na_col=NULL)
 
 #custom combine function - if the mean of the values is less than 
 #'threshold', set the cell value to 'low_val'. If it's greater
@@ -327,9 +336,9 @@ cmb_fun = function(vals, args){
   } 
 }
 
-qt8 = qt_create(rast, split_threshold = .9, split_method="range", combine_method="custom",
+qt9 = qt_create(rast, split_threshold = .1, split_method="range", combine_method="custom",
                 combine_fun = cmb_fun, combine_args = list(threshold=.5, low_val=0, high_val=1))
-qt_plot(qt8, crop=TRUE, na_col=NULL)
+qt_plot(qt9, crop=TRUE, na_col=NULL)
 
 #note that the split and combine functions are required to have an 'args'
 #parameter, but they don't have to use it
@@ -337,9 +346,9 @@ cmb_fun2 = function(vals, args){
   return(max(vals) - min(vals))
 }
 
-qt9 = qt_create(rast, split_threshold = .9, split_method = "range", 
-                combine_method="custom", combine_fun = cmb_fun2)
-qt_plot(qt9, crop=TRUE, na_col=NULL)
+qt10 = qt_create(rast, split_threshold = .1, split_method = "range", 
+                 combine_method="custom", combine_fun = cmb_fun2)
+qt_plot(qt10, crop=TRUE, na_col=NULL)
 
 #####################################
 # using template quadtrees
@@ -352,10 +361,16 @@ template = habitat_roads
 #this raster has 1 where a road occurs and 0 otherwise
 plot(template)
 
-qt_template = qt_create(template, split_method="range", split_threshold=.01)
-qt10 = qt_create(rast, template_quadtree = qt_template)
+#we can use a custom function so that a quadrant is split if it contains any 1's
+split_if_one = function(vals, args){
+  if(any(vals == 1, na.rm=TRUE)) return(TRUE)
+  return(FALSE)
+}
+qt_template = qt_create(template, split_method="custom", split_fun=split_if_one, split_threshold=.01)
+qt11 = qt_create(rast, template_quadtree = qt_template)
 
 par(mfrow=c(1,2))
 qt_plot(qt_template, crop=TRUE, na_col=NULL)
-qt_plot(qt10, crop=TRUE, na_col=NULL)
+qt_plot(qt11, crop=TRUE, na_col=NULL)
+par(mfrow=c(1,1))
 }
