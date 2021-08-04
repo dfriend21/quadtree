@@ -35,7 +35,7 @@ Given the coordinate range of a single dimension in user units
   dimension (see examples). Both vectors need to be in the format
   \code{c(max,min)}.
 
-  \code{get_coords()} is simply a wrapper for \code{get_coords} that does
+  \code{get_coords()} is simply a wrapper for \code{get_coords_axis} that does
   both dimensions at once. In this case the output of \code{par("usr")} and
   \code{par("plt")} can be directly supplied to the \code{usr} and \code{plt}
   parameters, respectively. Note that for both parameters the vectors must
