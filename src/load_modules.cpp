@@ -37,7 +37,8 @@ RCPP_MODULE(qt) {
                   // <Rcpp::NumericMatrix, Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::Function, Rcpp::List, double, double);
       // .constructor<Rcpp::NumericMatrix, Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::Function, Rcpp::List, double, double>()
          // .constructor<Rcpp::NumericMatrix, Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::Function, Rcpp::List, Rcpp::Function, Rcpp::List, double, double>() //GAH WHY DO YOU ONLY ALLOW 6 PARAMETERS?!! @#*@^%#!!!! (https://rdrr.io/rforge/Rcpp/f/inst/doc/Rcpp-modules.pdf)
-    .constructor<Rcpp::NumericVector, Rcpp::NumericVector, double, double, double, double>()
+    // .constructor<Rcpp::NumericVector, Rcpp::NumericVector, double, double, double, double>()
+    .constructor<Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::NumericVector, bool, bool>()
     //.constructor<Rcpp::NumericVector, Rcpp::NumericVector, double>()
       // .method("rangeLim", &QuadtreeWrapper::rangeLim)
     .method("nNodes", &QuadtreeWrapper::nNodes)
