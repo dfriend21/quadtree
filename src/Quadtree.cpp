@@ -37,8 +37,10 @@
 // Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
 //     : Quadtree{0,0,0,0,_rangeLim,0,0,0,0,0,0, "", _maxXCellLength, _maxYCellLength}{
 // Quadtree::Quadtree(double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength)
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax) 
-    : Quadtree{xMin,xMax,yMin,yMax,0,0,0,0,0,0,0,0, "",-1,-1,-1,-1}{
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, bool _splitAllNAs, bool _splitAnyNAs)
+    : splitAllNAs{_splitAllNAs}, splitAnyNAs{_splitAnyNAs}{
+    //: Quadtree{xMin,xMax,yMin,yMax,0,0,0,0,0,0,0,0, "",-1,-1,-1,-1}{
+    root = std::make_shared<Node>(xMin,xMax,yMin,yMax,0,0,0);
     // std::cout << "Quadtree::Quadtree(double _rangeLim, double _maxXCellLength, double _maxYCellLength)\n";
     //: rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(0,0,0,0,0,0,0)->ptr;
@@ -46,8 +48,13 @@ Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax)
 
 // Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength) 
 //     : Quadtree {xMin, xMax, yMin, yMax, _rangeLim, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength}{
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength) 
-    : Quadtree {xMin, xMax, yMin, yMax, 0, 0, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength, _minXCellLength, _minYCellLength}{
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength, bool _splitAllNAs, bool _splitAnyNAs) 
+    : Quadtree{xMin, xMax, yMin, yMax, _splitAllNAs, _splitAnyNAs}{
+    maxXCellLength = _maxXCellLength;
+    maxYCellLength = _maxYCellLength;
+    minXCellLength = _minXCellLength;
+    minYCellLength = _minYCellLength;
+    //: Quadtree {xMin, xMax, yMin, yMax, 0, 0, xMin, xMax, yMin, yMax, 0, 0, "", _maxXCellLength, _maxYCellLength, _minXCellLength, _minYCellLength}{
     // std::cout << "Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength, double _maxYCellLength)\n";
     // : rangeLim{_rangeLim}, nNodes{0}{
     //root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
@@ -59,10 +66,16 @@ Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _m
 //maxYLength -> same as 'maxXLength', but for y
 // Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)
 //     : rangeLim{_rangeLim}, nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, proj4string{_proj4string} {
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, int _originalNX, int _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength)
-    : nNodes{0}, originalXMin{_originalXMin}, originalXMax{_originalXMax}, originalYMin{_originalYMin}, originalYMax{_originalYMax}, originalNX{_originalNX}, originalNY{_originalNY}, maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, minXCellLength{_minXCellLength}, minYCellLength{_minYCellLength}, proj4string{_proj4string} {
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength, bool _splitAllNAs, bool _splitAnyNAs)
+    : Quadtree{xMin, xMax, yMin, yMax, _maxXCellLength, _maxYCellLength, _minXCellLength, _minYCellLength, _splitAllNAs, _splitAnyNAs}{
+    //: maxXCellLength{_maxXCellLength}, maxYCellLength{_maxYCellLength}, minXCellLength{_minXCellLength}, minYCellLength{_minYCellLength}, proj4string{_proj4string} {
+    
+    matNX = _matNX;
+    matNY = _matNY;
+    proj4string = _proj4string;
+
     // std::cout << "Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength)\n";
-    root = std::make_shared<Node>(xMin,xMax,yMin,yMax,0,0,0);
+    //root = std::make_shared<Node>(xMin,xMax,yMin,yMax,0,0,0);
     //root = Node::makeNode(xMin, xMax, yMin, yMax, 0, 0, 0)->ptr;
 }
 
@@ -73,12 +86,17 @@ bool Quadtree::splitRange(const Matrix &mat, double limit){
 }
 
 bool Quadtree::splitSD(const Matrix &mat, double limit){
-    double mean = mat.mean();
+    double mean = mat.mean(true);
     double sum = 0; 
+    double n = 0;
     for(int i = 0; i < mat.size(); ++i){
-        sum += pow(mat.getValueByIndex(i)-mean,2);
+        double val = mat.getValueByIndex(i);
+        if(!std::isnan(val)){
+            sum += pow(val-mean,2);
+            n++;
+        }
     }
-    double var = sum/mat.size(); //use the variance to compare the two so we can avoid taking the square root
+    double var = sum/n; //use the variance to compare the two so we can avoid taking the square root
     return var >= pow(limit,2); //if the standard deviation is greater than the limit, return true (although I'm actually comparing the variances here)
 }
 
@@ -110,8 +128,8 @@ void Quadtree::makeTree(const Matrix &mat, std::function<bool (const Matrix&)> s
     // std::cout << "Quadtree::makeTree(const Matrix &mat)\n";
     matNX = mat.nCol();
     matNY = mat.nRow();
-    originalNX = mat.nCol();
-    originalNY = mat.nRow();
+    //originalNX = mat.nCol();
+    //originalNY = mat.nRow();
     // if the value for max length is less than 0 (default is -1) then set the max length for both dimensions to be the user-defined dimensions. This essentially sets no restriction on the cell size
     if(maxXCellLength < 0) maxXCellLength = root->xMax - root->xMin; 
     if(maxYCellLength < 0) maxYCellLength = root->yMax - root->yMin;
@@ -150,14 +168,16 @@ int Quadtree::makeTree(const Matrix &mat, const std::shared_ptr<Node> node, int 
     // std::cout << "---- CHECK 1 ----\n";
     //to split the cell, the following conditions must be met:
     if((mat.nRow()%2 == 0 && mat.nCol()%2 == 0) // the # of cells in both dimensions must be divisible by two AND
-        && nNans != mat.size() // there is at least one non-Nan value in the matrix AND at least one of the following four conditions is true:
-        && //(dif >= rangeLim // { the difference between the max and min values exceeds the user-defined threshold OR
-           (splitFun(mat)
+        //&& (splitAllNAs || (!splitAllNAs && nNans != mat.size())) // (the splitAllNAs option is FALSE AND there is at least one non-Nan value in the matrix) AND at least one of the following conditions is true:
+        && (splitAllNAs || nNans != mat.size()) // (the splitAllNAs option is FALSE AND there is at least one non-Nan value in the matrix) AND at least one of the following conditions is true:
+        //&& nNans != mat.size() // (the splitAllNAs option is TRUE AND there is at least one non-Nan value in the matrix) AND at least one of the following conditions is true:
+        && (splitFun(mat) // the split function evaluates to TRUE OR
             || x_length > maxXCellLength // the x side length is greater than the user-defined maximum length OR
             || y_length > maxYCellLength // the y side length is greater than the user-defined maximum length OR
-            || nNans > 0 ) // there is at least one Nan } AND
-        && x_length/2 >= minXCellLength // the x and y length of the cell's children would be greater than the min cell length
-        && y_length/2 >= minYCellLength){ 
+            || (splitAnyNAs && nNans > 0) 
+            || (splitAllNAs && nNans == mat.size())) // (the splitAnyNAs option is TRUE AND there is at least one Nan) } AND
+        && x_length/2 >= minXCellLength // the x length of the quadrant's children would be greater than the min x length AND
+        && y_length/2 >= minYCellLength){ // the y length of the quadrant's children would be greater than the min y length
         node->hasChildren = true;
         double cell_x_len = (node->xMax - node->xMin)/2;//get the side length of the cells
         double cell_y_len = (node->yMax - node->yMin)/2;
@@ -253,12 +273,12 @@ void Quadtree::makeTreeWithTemplate(const Matrix &mat, const std::shared_ptr<Qua
     }
     matNX = templateQuadtree->matNX;
     matNY = templateQuadtree->matNY;
-    originalNX = templateQuadtree->originalNX;
-    originalNY = templateQuadtree->originalNY;
-    originalXMin = templateQuadtree->originalXMin;
-    originalXMax = templateQuadtree->originalXMax;
-    originalYMin = templateQuadtree->originalYMin;
-    originalYMax = templateQuadtree->originalYMax;
+    // originalNX = templateQuadtree->originalNX;
+    // originalNY = templateQuadtree->originalNY;
+    // originalXMin = templateQuadtree->originalXMin;
+    // originalXMax = templateQuadtree->originalXMax;
+    // originalYMin = templateQuadtree->originalYMin;
+    // originalYMax = templateQuadtree->originalYMax;
     maxXCellLength = templateQuadtree->maxXCellLength;
     maxYCellLength = templateQuadtree->maxYCellLength;
     nNodes = templateQuadtree->nNodes;
@@ -438,7 +458,10 @@ void Quadtree::assignNeighbors(){
 }
 
 std::shared_ptr<Quadtree> Quadtree::copy() const{
-    std::shared_ptr<Quadtree> qtCopy = std::make_shared<Quadtree>(root->xMin, root->xMax, root->yMin, root->yMax, matNX, matNY, originalXMin, originalXMax, originalYMin, originalYMax, originalNX, originalNY, proj4string, maxXCellLength, maxYCellLength);
+    // std::shared_ptr<Quadtree> qtCopy = std::make_shared<Quadtree>(root->xMin, root->xMax, root->yMin, root->yMax, matNX, matNY, originalXMin, originalXMax, originalYMin, originalYMax, originalNX, originalNY, proj4string, maxXCellLength, maxYCellLength);
+    // std::shared_ptr<Quadtree> qtCopy = std::make_shared<Quadtree>(root->xMin, root->xMax, root->yMin, root->yMax, matNX, matNY, proj4string, maxXCellLength, maxYCellLength);
+    std::shared_ptr<Quadtree> qtCopy = std::make_shared<Quadtree>(root->xMin, root->xMax, root->yMin, root->yMax, matNX, matNY, proj4string, maxXCellLength, maxYCellLength, minXCellLength, minYCellLength, splitAllNAs, splitAnyNAs);
+    
     qtCopy->nNodes = nNodes;
     copyNode(qtCopy->root, root);
     qtCopy->assignNeighbors();
@@ -577,12 +600,12 @@ std::string Quadtree::toString() const{
     str = str + 
         // "rangeLim: " + std::to_string(rangeLim) + "\n" +
         "nNodes: " + std::to_string(nNodes) + "\n" +
-        "originalXMin: " + std::to_string(originalXMin) + "\n" +
-        "originalXMax: " + std::to_string(originalXMax) + "\n" +
-        "originalYMin: " + std::to_string(originalYMin) + "\n" +
-        "originalYMax: " + std::to_string(originalYMax) + "\n" +
-        "originalNX: " + std::to_string(originalNX) + "\n" +
-        "originalNY: " + std::to_string(originalNY) + "\n" +
+        // "originalXMin: " + std::to_string(originalXMin) + "\n" +
+        // "originalXMax: " + std::to_string(originalXMax) + "\n" +
+        // "originalYMin: " + std::to_string(originalYMin) + "\n" +
+        // "originalYMax: " + std::to_string(originalYMax) + "\n" +
+        // "originalNX: " + std::to_string(originalNX) + "\n" +
+        // "originalNY: " + std::to_string(originalNY) + "\n" +
         "maxXCellLength: " + std::to_string(maxXCellLength) + "\n" +
         "maxYCellLength: " + std::to_string(maxYCellLength) + "\n" +
         toString(root, "") + "\n";

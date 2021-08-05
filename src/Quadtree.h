@@ -20,37 +20,41 @@ class Quadtree
 public:
   std::shared_ptr<Node> root;
   //double rangeLim;
-  int nNodes;
+  int nNodes {0};
   
   //the dimensions of the matrix used to create the quadtree
-  int matNX;
-  int matNY;
+  int matNX{0};
+  int matNY{0};
 
-  //the 'original*' properties are for storing the dimensions/extent of the matrix BEFORE IT WAS EXPANDED/MODIFIED - i.e. NOT (necessarily) the dimensions of the matrix used to create the quadtree (as the matrix may have been modified to work with a quadtree)
-  //not a big fan of these. I added these because I need to know this info for the R package. But could I move these properties to 'QuadtreeWrapper' instead?
-  double originalXMin;
-  double originalXMax;
-  double originalYMin;
-  double originalYMax;
-  // double originalNX;
-  // double originalNY;
-  int originalNX;
-  int originalNY;
+  // //the 'original*' properties are for storing the dimensions/extent of the matrix BEFORE IT WAS EXPANDED/MODIFIED - i.e. NOT (necessarily) the dimensions of the matrix used to create the quadtree (as the matrix may have been modified to work with a quadtree)
+  // //not a big fan of these. I added these because I need to know this info for the R package. But could I move these properties to 'QuadtreeWrapper' instead?
+  // double originalXMin;
+  // double originalXMax;
+  // double originalYMin;
+  // double originalYMax;
+  // // double originalNX;
+  // // double originalNY;
+  // int originalNX;
+  // int originalNY;
 
-  double maxXCellLength;
-  double maxYCellLength;
-  double minXCellLength;
-  double minYCellLength;
+  double maxXCellLength{-1};
+  double maxYCellLength{-1};
+  double minXCellLength{-1};
+  double minYCellLength{-1};
 
-  std::string proj4string;
+  bool splitAllNAs{false}; //should we split a quadrant if it contains all NAs?
+  bool splitAnyNAs{true}; //should we split a quadrant if it contains any NAs?
+
+  std::string proj4string{""};
   
   // Quadtree();
   // Quadtree(double _rangeLim, double _maxXCellLength = -1, double _maxYCellLength = -1);
-  Quadtree(double xMin = 0, double xMax = 0, double yMin = 0, double yMax = 0);
+  Quadtree(double xMin = 0, double xMax = 0, double yMin = 0, double yMax = 0, bool _splitAllNAs = false, bool _splitAnyNAs = true);
   // Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _maxXCellLength = -1, double _maxYCellLength = -1);
-  Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength);
+  Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength, bool _splitAllNAs, bool _splitAnyNAs);
   // Quadtree(double xMin, double xMax, double yMin, double yMax, double _rangeLim, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, double _originalNX, double _originalNY, std::string _proj4string, double _maxXCellLength = -1, double _maxYCellLength = -1);
-  Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, int _originalNX, int _originalNY, std::string _proj4string, double _maxXCellLength = -1, double _maxYCellLength = -1, double _minXCellLength = -1, double _minYCellLength = -1);
+  Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength, bool _splitAllNAs, bool _splitAnyNAs);
+  //Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, double _originalXMin, double _originalXMax, double _originalYMin, double _originalYMax, int _originalNX, int _originalNY, std::string _proj4string, double _maxXCellLength = -1, double _maxYCellLength = -1, double _minXCellLength = -1, double _minYCellLength = -1);
   //~Quadtree();
   
   //std::shared_ptr<Node> makeNode(double xMin, double xMax, double yMin, double yMax, double value);
@@ -100,7 +104,8 @@ public:
   void serialize(Archive & archive){ //couldn't get serialization to work unless I defined 'serialize' in the header rather than in 'Quadtree.cpp'. WHY???????????????????????????
     // std::cout << "Quadtree::serialize(Archive & archive)\n";
     // archive(rangeLim,nNodes,originalXMin,originalXMax,originalYMin,originalYMax,originalNX,originalNY,proj4string,root);
-    archive(nNodes,originalXMin,originalXMax,originalYMin,originalYMax,originalNX,originalNY,proj4string,root);
+    //archive(nNodes,originalXMin,originalXMax,originalYMin,originalYMax,originalNX,originalNY,proj4string,root);
+    archive(nNodes,proj4string,root);
   }
 
   
