@@ -33,8 +33,8 @@ public:
     Matrix getCofactorsMatrix() const;
     Matrix getInverse() const;
     
-    double mean() const;
-    double median() const;
+    double mean(bool removeNA = true) const;
+    double median(bool removeNA = true) const;
     double min() const;
     double max() const;
     double determinant() const; //gets the determinant

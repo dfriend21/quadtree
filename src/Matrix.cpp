@@ -175,16 +175,43 @@ void Matrix::setValueByIndex(const double value, const int index){
     vec.at(index) = value;
 }
 
-double Matrix::mean() const{
-    double sum = 0;
-    for(size_t i = 0; i < vec.size(); i++){
-        sum += vec[i];
+double Matrix::mean(bool removeNA) const{
+    if(removeNA){
+        double sum = 0;
+        double numCount = 0;
+        for(size_t i = 0; i < vec.size(); i++){
+            if(!std::isnan(vec[i])){
+                sum += vec[i];
+                numCount++;
+            }
+        }
+        return sum/numCount;
+    } else {
+        double sum = 0;
+        for(size_t i = 0; i < vec.size(); i++){
+            sum += vec[i];
+        }
+        return sum/vec.size();
     }
-    return sum/vec.size();
 }
 
-double Matrix::median() const{
-    std::vector<double> vecSort = vec;
+double Matrix::median(bool removeNA) const{
+    int nNans = countNans();
+    if((!removeNA && nNans > 0) || nNans == vec.size()){
+        return std::numeric_limits<double>::quiet_NaN();
+    }
+    std::vector<double> vecSort(vec.size()-nNans);
+    if(nNans == 0) {
+        vecSort = vec; 
+    } else {
+        int counter{0};
+        for(size_t i = 0; i < vec.size(); ++i){
+            if(!std::isnan(vec[i])){
+                vecSort[counter] = vec[i];
+                counter++;
+            }
+        }
+    }
     std::sort(vecSort.begin(), vecSort.end());
     if(vecSort.size()%2 == 0){
         return (vecSort[vecSort.size()/2] + vecSort[(vecSort.size()/2)-1]) / 2;
@@ -194,21 +221,27 @@ double Matrix::median() const{
 }
 
 double Matrix::min() const{
-    double min = vec[0];
-    for(size_t i = 1; i < vec.size(); i++){
-        if(vec[i] < min){
-            min = vec[i];
-        }
+    // double min = vec[0];
+    double min = std::numeric_limits<double>::infinity();
+    for(size_t i = 0; i < vec.size(); i++){
+        if(vec[i] < min) min = vec[i];
+    }
+    if(std::isinf(min)){
+        return std::numeric_limits<double>::quiet_NaN();
     }
     return min;
 }
 
 double Matrix::max() const{
-    double max = vec[0];
-    for(size_t i = 1; i < vec.size(); i++){
+    // double max = vec[0];
+    double max = std::numeric_limits<double>::infinity() * -1;
+    for(size_t i = 0; i < vec.size(); i++){
         if(vec[i] > max){
             max = vec[i];
         }
+    }
+    if(std::isinf(max)){
+        return std::numeric_limits<double>::quiet_NaN();
     }
     return max;
 }
