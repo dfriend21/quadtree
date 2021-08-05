@@ -6,6 +6,7 @@
 \usage{
 qt_plot(
   qt,
+  add = FALSE,
   col = NULL,
   alpha = 1,
   nb_line_col = NULL,

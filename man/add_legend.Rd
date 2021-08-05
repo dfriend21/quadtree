@@ -24,8 +24,8 @@ add_legend(
 \arguments{
 \item{zlim}{two-element numeric vector; required; the min and max value of z}
 
-\item{col}{character vector; required; the colors that will be used to create
-the color ramp used in the plot.}
+\item{col}{character vector; required; the colors that will be used in the
+legend.}
 
 \item{alpha}{numeric; transparency of the colors. Must be in the range
 0-1, where 0 is fully transparent and 1 is fully opaque. Default is 1.}

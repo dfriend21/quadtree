@@ -126,7 +126,7 @@
 #' 
 #' # use 'legend_args' to customize the legend
 #' qt_plot(qt1, adj_mar_auto=10, legend_args=list(lgd_ht_pct=.8, bar_wd_pct=.4))
-qt_plot = function(qt, col=NULL, alpha=1, nb_line_col=NULL, border_col="black", border_lwd=1, xlim=NULL, ylim=NULL, zlim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
+qt_plot = function(qt, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, border_col="black", border_lwd=1, xlim=NULL, ylim=NULL, zlim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
   args = list(...)
   #if the user hasn't provided custom axis labels, assign values for the labels
   if(is.null(args[["xlab"]])) args[["xlab"]] = "x"
@@ -188,7 +188,9 @@ qt_plot = function(qt, col=NULL, alpha=1, nb_line_col=NULL, border_col="black", 
   }
   
   #finally, plot the quadtree
-  do.call(plot,c(list(x=1,y=1, xlim=xlim, ylim=ylim, type="n", asp=1),args))
+  if(!add){
+    do.call(plot,c(list(x=1,y=1, xlim=xlim, ylim=ylim, type="n", asp=1),args))
+  }
   rect(nodes$xMin, nodes$yMin, nodes$xMax, nodes$yMax, col=nodes$col, border=border_col, lwd=border_lwd)
   
   #if 'nb_line_col' is not NULL, we'll plot connections between neighboring cells
