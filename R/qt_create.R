@@ -383,23 +383,39 @@
 #' qt_plot(qt14, crop=TRUE, na_col=NULL, border_lwd=.5)
 #' par(mfrow=c(1,1))
 qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun=NULL, split_args=list(), split_if_any_NA=TRUE, split_if_all_NA=FALSE, combine_method = "mean", combine_fun=NULL, combine_args=list(), max_cell_length=NULL, min_cell_length=NULL, adj_type="expand", resample_n_side=NULL, resample_pad_NAs=TRUE, extent=NULL, proj4string=NULL, template_quadtree=NULL){
-  #validate inputs
-  if(!(split_method %in% c("range", "sd", "custom"))) stop(paste0("'", split_method, "' is not a valid value for 'split_method'. Acceptable values are 'range', 'sd', or 'custom'."))
-  if(!(combine_method %in% c("mean", "median", "min", "max", "custom"))) stop(paste0("'", combine_method, "' is not a valid value for 'combine_method'. Acceptable values are 'mean', 'median', 'min', 'max', or 'custom'."))
+  #validate inputs - this may be over the top, but many of these values get passed to C++ functionality, and if they're the wrong type the errors that are thrown are totally unhelpful - by type-checking them right away, I can provide easy-to-interpret error messages rather than messages that provide zero help
+  #also, this is a complex function with a ton of options, and I want the errors to clearly point the user to the problem 
+  if(!inherits(x, c("matrix", "RasterLayer"))) stop(paste0('"x" must be a "matrix" or "RasterLayer" - an object of class "', paste(class(x), collapse='" "'), '" was provided instead'))
+  if((!is.numeric(split_threshold) && !is.null(split_threshold)) || length(split_threshold) != 1) stop(paste0("'split_threshold' must be a 'numeric' vector of length 1"))
+  if(!is.function(split_fun) && !is.null(split_fun)) stop(paste0("'split_fun' must be a function"))  
+  if(!is.list(split_args) && !is.null(split_args)) stop(paste0("'split_args' must be a list"))
+  if(!is.logical(split_if_any_NA) || length(split_if_any_NA) != 1) stop("'split_if_any_NA' must be a 'logical' vector of length 1")
+  if(!is.logical(split_if_all_NA) || length(split_if_all_NA) != 1) stop("'split_if_all_NA' must be a 'logical' vector of length 1")
+  #if((!is.numeric(max_cell_length) && !is.null(max_cell_length)) || length(max_cell_length) != 1) stop("'max_cell_length' must be a 'numeric' vector with length 1")
+  if((!is.null(max_cell_length)) && (!is.numeric(max_cell_length) || length(max_cell_length) != 1)) stop("'max_cell_length' must be a 'numeric' vector with length 1")
+  #if((!is.numeric(min_cell_length) && !is.null(min_cell_length)) || length(min_cell_length) != 1) stop("'min_cell_length' must be a 'numeric' vector with length 1")
+  if((!is.null(min_cell_length)) && (!is.numeric(min_cell_length) || length(min_cell_length) != 1)) stop("'min_cell_length' must be a 'numeric' vector with length 1")
+  if(!is.character(split_method) || length(split_method) != 1) stop("'split_method' must be a character vector with length 1")
+  if(!is.character(combine_method) || length(combine_method) != 1) stop("'combine_method' must be a character vector with length 1")
+  if(!is.function(combine_fun) && !is.null(combine_fun)) stop(paste0("'combine_fun' must be a function"))
+  if(!is.list(combine_args) && !is.null(combine_args)) stop(paste0("'combine_args' must be a list"))
+  if(!(split_method %in% c("range", "sd", "custom"))) stop(paste0("Invalid valid value given for 'split_method'. Acceptable values are 'range', 'sd', or 'custom'."))
+  if(!(combine_method %in% c("mean", "median", "min", "max", "custom"))) stop(paste0("Invalid value given for 'combine_method'. Acceptable values are 'mean', 'median', 'min', 'max', or 'custom'."))
   if(split_method != "custom" && is.null(split_threshold) && is.null(template_quadtree)) stop(paste0("When 'split_method' is not 'custom' and 'template_quadtree' is NULL, a value is required for 'split_threshold'"))
   if(split_method == "custom" && is.null(split_fun)) stop(paste0("When 'split_method' is 'custom', a function must be provided to 'split_fun'"))
   if(combine_method == "custom" && is.null(combine_fun)) stop(paste0("When 'combine_method' is 'custom', a function must be provided to 'combine_fun'"))
   if(!is.null(split_fun)){
     split_params = formalArgs(split_fun)
-    if(!all(split_params == c("vals", "args"))) stop(paste0("The provided function for 'split_fun', takes the following parameters: ", paste(split_params, sep=", "), ". It must accept two arguments - 'vals' and 'args', in that order."))
+    if(!all(split_params == c("vals", "args")) || is.null(split_params)) stop("'split_fun' must accept two arguments - 'vals' and 'args', in that order.")
   }
   if(!is.null(combine_fun)){
     combine_params = formalArgs(combine_fun)
-    if(!all(combine_params == c("vals", "args"))) stop(paste0("The provided function for 'combine_fun', takes the following parameters: ", paste(combine_params, sep=", "), ". It must accept two arguments - 'vals' and 'args', in that order."))
+    if(!all(combine_params == c("vals", "args")) || is.null(combine_params)) stop("'combine_fun' must accept two arguments - 'vals' and 'args', in that order.")
   }
   if(split_method != "custom" && !is.null(split_fun)) warning(paste0("A function was provided to 'split_fun', but 'split_method' was not set to 'custom', so 'split_fun' will be ignored."))
   if(combine_method != "custom" && !is.null(combine_fun)) warning(paste0("A function was provided to 'combine_fun', but 'combine_method' was not set to 'custom', so 'combine_fun' will be ignored."))
-  if(!(adj_type %in% c("expand", "resample", "none"))) stop(paste0("'", adj_type, "' is not a valid value for 'adj_type'. Valid values are 'expand', 'resample', or 'none'."))
+  if(!is.character(adj_type) || length(adj_type) != 1) stop("'adj_type' must be a character vector with length 1")
+  if(!(adj_type %in% c("expand", "resample", "none"))) stop(paste0("Invalid value given for 'adj_type'. Valid values are 'expand', 'resample', or 'none'."))
   
   if(is.null(max_cell_length)) max_cell_length = -1 #if `max_cell_length` is not provided, set it to -1, which indicates no limit
   if(is.null(min_cell_length)) min_cell_length = -1 #if `min_cell_length` is not provided, set it to -1, which indicates no limit
@@ -430,8 +446,8 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
       x = raster::extend(x,newExt)
     }
   } else if(adj_type == "resample"){
-    if(is.null(resample_n_side)) { stop("adj_type is 'resample', but 'resample_n_side' is not specified. Please provide a value for 'resample_n_side'.")}
-    if(log2(resample_n_side) %% 1 != 0) { warning(paste0("resample_n_side was given as ", resample_n_side, ", which is not a power of 2. Are you sure these are the dimensions you want? This will result in the smallest possible resoltion of the quadtree being larger than the resolution of the raster"))}
+    if(is.null(resample_n_side)) { stop("'adj_type' is 'resample', but 'resample_n_side' is not specified. Please provide a value for 'resample_n_side'.")}
+    if(log2(resample_n_side) %% 1 != 0) { warning(paste0("'resample_n_side' was given as ", resample_n_side, ", which is not a power of 2. Are you sure these are the dimensions you want? This will result in the smallest possible resolution of the quadtree being larger than the resolution of the raster"))}
     
     newExt = raster::extent(x)
     if(resample_pad_NAs){
