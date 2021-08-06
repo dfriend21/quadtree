@@ -140,7 +140,11 @@ qt_plot = function(qt, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, border_co
   }
   colRamp = colorRamp(colors = col) #create the color ramp, which we'll use to get the color for each cell
   if(is.null(zlim)){ #if zlim is NULL, use the max and min of the cell values as the zlim
-    zlim = range(nodes$value, na.rm=TRUE)
+    if(all(is.na(nodes$value))){ #handle the edge case where all the values are NA
+      zlim = c(0,0)
+    } else {
+      zlim = range(nodes$value, na.rm=TRUE)
+    }
   }
   
   #calculate an "adjusted" value - scales the cell values to be between 0 and 1 so they can be used with 'colRamp'
@@ -386,11 +390,19 @@ add_legend = function(zlim, col, alpha=1, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_
     rect(bar_x0, bar_y0, bar_x1, bar_y1, xpd=TRUE, border=bar_box_col)  
   }
   
+  ticks_pct = .5
   if(is.null(ticks)){ #if the user doesn't provide tick locations, calculate the ticks that we'll show on the color bar
-    ticks = pretty(zlim, ticks_n)
-    ticks = ticks[ticks >= zlim[1] & ticks <= zlim[2]] #pretty() can return ticks outside of the specified range, so get rid of any that are outside the range
+    if(all(is.na(zlim))){ #handle the edge case where both 'zlim' values are NA
+      ticks = 0
+    } else if(zlim[1] == zlim[2]){ #handle the edge case where the min and max of 'zlim' are the same
+      ticks = signif(zlim[1], 3)
+    }
+    else {
+      ticks = pretty(zlim, ticks_n)
+      ticks = ticks[ticks >= zlim[1] & ticks <= zlim[2]] #pretty() can return ticks outside of the specified range, so get rid of any that are outside the range
+      ticks_pct = (ticks-zlim[1])/diff(zlim) #get the ticks as percent of total
+    }
   }
-  ticks_pct = (ticks-zlim[1])/diff(zlim) #get the ticks as percent of total
   
   #get the x and y coordinates where we'll put the ticks
   ticks_x = rep(lgd_x0 + ticks_x_pct*wd_crd, length(ticks))
