@@ -22,13 +22,16 @@ algorithm.}
 }
 \value{
 \code{qt_find_lcp} returns a five column matrix representing the
-  least cost path. It has the following columns: \itemize{ \item{\code{x}:
-  }{x coordinate of this point} \item{\code{y}: }{y coordinate of this point}
-  \item{\code{cost_tot}: }{the cumulative cost up to this point}
-  \item{\code{dist_tot}: }{the cumulative distance up to this point - note
-  that this is not straight-line distance, but instead the distance along the
-  path} \item{\code{cost_cell}: }{the cost of the cell that contains this
-  point} }
+  least cost path. It has the following columns: 
+  \itemize{ 
+     \item{\code{x}: }{x coordinate of this point} 
+     \item{\code{y}: }{y coordinate of this point}
+     \item{\code{cost_tot}: }{the cumulative cost up to this point}
+     \item{\code{dist_tot}: }{the cumulative distance up to this point - note
+     that this is not straight-line distance, but instead the distance along the
+     path} 
+     \item{\code{cost_cell}: }{the cost of the cell that contains this point}
+   }
 
   If no path is possible between the two points, a 0-row matrix with the
   previously described columns is returned. Also, note that when creating the
@@ -54,41 +57,30 @@ See \code{\link{qt_lcp_finder}} for more information on how the LCP
 \examples{
 library(raster)
 
-# ----- create a quadtree
-# create raster of random values
-nrow = 57
-ncol = 75
-set.seed(4)
-rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
+# create a quadtree
+data(habitat)
+rast = habitat
+qt = qt_create(rast, split_threshold = .1, adj_type="expand")
+qt_plot(qt, crop=TRUE, na_col=NULL, border_lwd=.4)
 
-# create quadtree
-qt = qt_create(rast, range_limit = .9, adj_type="expand")
+# define our start and end points
+start_pt = c(6989,34007)
+end_pt = c(33015,38162)
 
-# defined our start and end points
-start_pt = c(.231,.14)
-end_pt = c(74.89,56.11)
-
-# make an LCP finder object
+# create the LCP finder object and find the LCP
 lcpf = qt_lcp_finder(qt, start_pt)
+path = qt_find_lcp(lcpf, end_pt)
 
-# use the LCP finder object to find the LCP to a certain point
-# this path will have the cell centroids as the start and end points
-path1 = qt_find_lcp(lcpf, end_pt)
-# this path will be identical to path1 except that the start and end points
-# will be the user-provided start and end points rather than the cell centroids
-path2 = qt_find_lcp(lcpf, end_pt, use_original_end_points = TRUE)
+# plot the LCP
+qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray30", border_lwd=.4)
+points(rbind(start_pt1, end_pt1), pch=16, col="red")
+lines(path1[,1:2], col="black")
 
-head(path1)
-head(path2)
-
-# plot the result
-qt_plot(qt, crop=TRUE, border_col="gray60", na_col=NULL)
-points(rbind(start_pt, end_pt), pch=16, col="red")
-lines(path1[,1:2], col="black", lwd=2.5)
-lines(path2[,1:2], col="red", lwd=1)
-points(path1, cex=.7, pch=16)
+# NOTE: see "Examples" in ?qt_lcp_finder for more examples
 }
 \seealso{
-\code{\link{qt_lcp_finder}}; \code{\link{qt_find_lcps}};
-  \code{\link{qt_lcp_summary}}
+\code{\link{qt_lcp_finder()}} creates the LCP finder object used as
+  input to this function. \code{\link{qt_find_lcps()}} calculates all LCPs
+  whose cost-distance is less than some value. \code{\link{qt_lcp_summary()}}
+  outputs a summary matrix of all LCPs that have been calculated so far.
 }
