@@ -19,7 +19,7 @@ root directory.
 
 ## Example
 
-A quadtree object is created from a ‘raster’ object:
+A quadtree object is created from a raster or matrix:
 
 ``` r
 library(quadtree)
@@ -27,35 +27,45 @@ library(sp)
 library(raster)
 
 data(habitat, package="quadtree") #load sample data
-qt = qt_create(habitat, split_threshold=.1) #create a quadtree
-qt_plot(qt, crop=TRUE, na_col=NULL) #plot the quadtree
+qt = qt_create(habitat, split_threshold=.03, split_method="sd") #create a quadtree
+
+par(mfrow=c(1,2), mar=c(3,2,2,2))
+plot(habitat, zlim=c(0,1), main="raster representation", axes=FALSE, box=FALSE)
+qt_plot(qt, crop=TRUE, na_col=NULL, border_lwd=.2,xlab="", ylab="", legend=FALSE, zlim=c(0,1), main="quadtree representation", axes=FALSE)
 ```
 
-<img src="man/figures/README-example_create-1.png" width="50%" height="50%" />
+<img src="man/figures/README-example_create-1.png" width="100%" />
 
-Cell values can be extracted:
+The package allows for flexibility in the quadtree creation process.
+Several functions defining how to split and aggregate cells are
+provided, and custom functions can be written for both of these
+processes. In addition, quadtrees can be created using other quadtrees
+as “templates”, so that the new quadtree has the identical structure as
+the template quadtree.
+
+Once created, cell values can be extracted, as with a raster:
 
 ``` r
-pts = cbind(c(20000,32000,15000),c(10000,30000,60000))
+pts = cbind(c(20000,32000,5000),c(10000,30000,27000))
 qt_extract(qt,pts)
-#> [1] 0.01000000 1.00000000 0.01452716
+#> [1] 0.9692383 0.5340000 0.1364531
 ```
 
-Least cost paths can be calculated:
+In addition, functions are provided for calculating least-cost paths
+using the quadtree as a resistance surface.
 
 ``` r
-start_point = c(27173,11134)
-end_point = c(14495,60732)
+start_point = c(6989,34007)
+end_point = c(33015,38162)
 lcp_finder = qt_lcp_finder(qt, start_point)
 lcp = qt_find_lcp(lcp_finder, end_point, use_original_end_points = TRUE)
 
-qt_plot(qt, border_col="gray70", crop=TRUE, na_col=NULL)
+qt_plot(qt, border_col="gray70", crop=TRUE, na_col=NULL, border_lwd=.5)
 lines(lcp[,1:2])
-points(lcp[,1:2], pch=16, cex=.5)
 points(rbind(start_point, end_point), col="red", pch=16)
 ```
 
-<img src="man/figures/README-example_lcp-1.png" width="50%" height="50%" />
+<img src="man/figures/README-example_lcp-1.png" width="70%" height="70%" />
 
 ## File structure
 
