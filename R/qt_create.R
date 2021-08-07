@@ -382,18 +382,17 @@
 #' qt_plot(qt_template, crop=TRUE, na_col=NULL, border_lwd=.5)
 #' qt_plot(qt14, crop=TRUE, na_col=NULL, border_lwd=.5)
 #' par(mfrow=c(1,1))
-qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun=NULL, split_args=list(), split_if_any_NA=TRUE, split_if_all_NA=FALSE, combine_method = "mean", combine_fun=NULL, combine_args=list(), max_cell_length=NULL, min_cell_length=NULL, adj_type="expand", resample_n_side=NULL, resample_pad_NAs=TRUE, extent=NULL, proj4string=NULL, template_quadtree=NULL){
+qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun=NULL, split_args=list(), split_if_any_NA=TRUE, split_if_all_NA=FALSE, combine_method = "mean", combine_fun=NULL, combine_args=list(), max_cell_length=NULL, min_cell_length=NULL, adj_type="expand", resample_n_side=NULL, resample_pad_NAs=TRUE, extent=NULL, proj4string=NULL, template_quadtree=NULL,validate_arguments=TRUE){
+  
   #validate inputs - this may be over the top, but many of these values get passed to C++ functionality, and if they're the wrong type the errors that are thrown are totally unhelpful - by type-checking them right away, I can provide easy-to-interpret error messages rather than messages that provide zero help
   #also, this is a complex function with a ton of options, and I want the errors to clearly point the user to the problem 
   if(!inherits(x, c("matrix", "RasterLayer"))) stop(paste0('"x" must be a "matrix" or "RasterLayer" - an object of class "', paste(class(x), collapse='" "'), '" was provided instead'))
-  if((!is.numeric(split_threshold) && !is.null(split_threshold)) || length(split_threshold) != 1) stop(paste0("'split_threshold' must be a 'numeric' vector of length 1"))
+  if(is.null(template_quadtree) && ((!is.numeric(split_threshold) && !is.null(split_threshold)) || length(split_threshold) != 1)) stop(paste0("'split_threshold' must be a 'numeric' vector of length 1"))
   if(!is.function(split_fun) && !is.null(split_fun)) stop(paste0("'split_fun' must be a function"))  
   if(!is.list(split_args) && !is.null(split_args)) stop(paste0("'split_args' must be a list"))
   if(!is.logical(split_if_any_NA) || length(split_if_any_NA) != 1) stop("'split_if_any_NA' must be a 'logical' vector of length 1")
   if(!is.logical(split_if_all_NA) || length(split_if_all_NA) != 1) stop("'split_if_all_NA' must be a 'logical' vector of length 1")
-  #if((!is.numeric(max_cell_length) && !is.null(max_cell_length)) || length(max_cell_length) != 1) stop("'max_cell_length' must be a 'numeric' vector with length 1")
   if((!is.null(max_cell_length)) && (!is.numeric(max_cell_length) || length(max_cell_length) != 1)) stop("'max_cell_length' must be a 'numeric' vector with length 1")
-  #if((!is.numeric(min_cell_length) && !is.null(min_cell_length)) || length(min_cell_length) != 1) stop("'min_cell_length' must be a 'numeric' vector with length 1")
   if((!is.null(min_cell_length)) && (!is.numeric(min_cell_length) || length(min_cell_length) != 1)) stop("'min_cell_length' must be a 'numeric' vector with length 1")
   if(!is.character(split_method) || length(split_method) != 1) stop("'split_method' must be a character vector with length 1")
   if(!is.character(combine_method) || length(combine_method) != 1) stop("'combine_method' must be a character vector with length 1")
@@ -412,15 +411,21 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
     combine_params = formalArgs(combine_fun)
     if(!all(combine_params == c("vals", "args")) || is.null(combine_params)) stop("'combine_fun' must accept two arguments - 'vals' and 'args', in that order.")
   }
-  if(split_method != "custom" && !is.null(split_fun)) warning(paste0("A function was provided to 'split_fun', but 'split_method' was not set to 'custom', so 'split_fun' will be ignored."))
-  if(combine_method != "custom" && !is.null(combine_fun)) warning(paste0("A function was provided to 'combine_fun', but 'combine_method' was not set to 'custom', so 'combine_fun' will be ignored."))
+  if(split_method != "custom" && !is.null(split_fun)) warning("A function was provided to 'split_fun', but 'split_method' was not set to 'custom', so 'split_fun' will be ignored.")
+  if(combine_method != "custom" && !is.null(combine_fun)) warning("A function was provided to 'combine_fun', but 'combine_method' was not set to 'custom', so 'combine_fun' will be ignored.")
   if(!is.character(adj_type) || length(adj_type) != 1) stop("'adj_type' must be a character vector with length 1")
-  if(!(adj_type %in% c("expand", "resample", "none"))) stop(paste0("Invalid value given for 'adj_type'. Valid values are 'expand', 'resample', or 'none'."))
+  if(!(adj_type %in% c("expand", "resample", "none"))) stop("Invalid value given for 'adj_type'. Valid values are 'expand', 'resample', or 'none'.")
+  if(adj_type == "resample" && (!is.numeric(resample_n_side) || length(resample_n_side) != 1)) stop("'resample_n_side' must be an integer vector with length 1.")  
+  if(adj_type == "resample" && (!is.logical(resample_pad_NAs) || length(resample_pad_NAs) != 1)) stop("'resample_pad_NAs' must be an logical vector with length 1.")  
+  if(!is.null(extent) && ((!inherits(extent, "Extent") && !is.numeric(extent)) || (is.numeric(extent) && length(extent) != 4))) stop("'extent' must either be an 'Extent' object or a numeric vector with 4 elements (xmin, xmax, ymin, ymax)")
+  if(!is.null(extent) && "RasterLayer" %in% (class(x))) warning("a value for 'extent' was provided, but it will be ignored since 'x' is a raster (the extent will be derived from the raster itself)")
+  if(!is.null(proj4string) && "RasterLayer" %in% (class(x))) warning("a value for 'proj4string' was provided, but it will be ignored since 'x' is a raster (the proj4string will be derived from the raster itself)")
+  if(!is.null(template_quadtree) && !inherits(template_quadtree, "Rcpp_quadtree")) stop("'template_quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
   
   if(is.null(max_cell_length)) max_cell_length = -1 #if `max_cell_length` is not provided, set it to -1, which indicates no limit
   if(is.null(min_cell_length)) min_cell_length = -1 #if `min_cell_length` is not provided, set it to -1, which indicates no limit
   
-  if("matrix" %in% class(x)){ #if x is a matrix, convert it to a raster
+  if(is.matrix(x)){ #if x is a matrix, convert it to a raster
     if(is.null(extent)){
       if(is.null(template_quadtree)){
         extent = raster::extent(0,ncol(x),0,nrow(x))
@@ -428,6 +433,10 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
         extent = qt_extent(template_quadtree)
       }
     }
+    proj4string = tryCatch(crs(proj4string), error=function(cond){ #if the proj4string is invalid, use an empty string for 'proj4string'
+      message("warning in 'qt_create()': invalid 'proj4string' provided - no projection will be assigned")
+      return(crs(""))
+    })
     x = raster::raster(x, extent[1], extent[2], extent[3], extent[4], crs=proj4string)
   }
   

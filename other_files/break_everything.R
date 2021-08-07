@@ -6,6 +6,10 @@ library(raster)
 data(habitat)
 r = habitat
 qt_plot(qt_create(r, .1))
+
+bench::mark(qt_create(r,.01, validate_arguments = TRUE),
+            qt_create(r,.01, validate_arguments = FALSE),
+            check=FALSE)
 #=============================================
 # give the incorrect classes to parameters
 
@@ -152,18 +156,44 @@ qt_create(r,.1,adj_type=NULL)
 qt_create(r,.1,adj_type=character(0))
 
 #-------- resample_n_side
-qt = qt_create(r,.1,adj_type="resample", resample_n_side=.4)
+qt_create(r,.1,adj_type="resample", resample_n_side=.4) 
+qt_create(r,.1,adj_type="resample", resample_n_side=numeric())# !!!
+qt_create(r,.1,adj_type="resample", resample_n_side="abc")
+qt_create(r,.1,adj_type="resample", resample_n_side=NULL)
+qt_create(r,.1,adj_type="expand", resample_n_side=NULL)
+
+#-------- resample_pad_NAs
+qt = qt_create(r,.1,adj_type="resample", resample_n_side=128, resample_pad_NAs=FALSE)
+qt_plot(qt)
+qt = qt_create(r,.1,adj_type="resample", resample_n_side=128, resample_pad_NAs="hi")
+qt = qt_create(r,.1,adj_type="resample", resample_n_side=128, resample_pad_NAs=NULL)
+
+#-------- extent
+qt_create(r,.1,extent=extent(1,2,3,4))
+qt_create(as.matrix(r), .1, extent=1)
+qt_create(as.matrix(r), .1, extent=c(1.1,2,3,4))
+qt_create(as.matrix(r), .1, extent="")
+qt_create(as.matrix(r), .1, extent=NA)
+
+#-------- proj4string
+qt_create(r,1,proj4string=9)
+qt = qt_create(as.matrix(r),.1,proj4string="hi there")
+qt = qt_create(r,.01,proj4string="hi there")
 qt_plot(qt)
 
-#-------- 
-#-------- 
-
+#-------- template_quadtree
+qt2 = qt_create(r,template_quadtree = qt)
+qt_plot(qt2)
+qt_create(r, template_quadtree=qt)
 #=============================================
 # use correct classes, but use nonsense values
 
 #-------- x
 #empty matrix
 qt = qt_create(matrix(),1)
+
+test = cbind(c(1,2,3,4), c(1,2,3,4))
+qt = qt_create(test,1, adj_type="resample", resample_n_side=4)
 qt_plot(qt)
 
 #-------- split_threshold
