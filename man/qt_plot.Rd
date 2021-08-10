@@ -5,7 +5,7 @@
 \title{Plot a quadtree object}
 \usage{
 qt_plot(
-  qt,
+  quadtree,
   add = FALSE,
   col = NULL,
   alpha = 1,
@@ -24,8 +24,6 @@ qt_plot(
 )
 }
 \arguments{
-\item{qt}{a \code{quadtree} object}
-
 \item{alpha}{numeric; transparency of the cell colors. Must be in the range
 0-1, where 0 is fully transparent and 1 is fully opaque.}
 
@@ -78,6 +76,8 @@ are supplied automatically, so if the list contains elements named
 ignored.}
 
 \item{...}{arguments passed to the default \code{plot} function}
+
+\item{qt}{a \code{quadtree} object}
 
 \item{colors}{character vector; the colors that will be used to create the
 color ramp used in the plot. If no argument is provided,

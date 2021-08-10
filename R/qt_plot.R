@@ -126,13 +126,14 @@
 #' 
 #' # use 'legend_args' to customize the legend
 #' qt_plot(qt1, adj_mar_auto=10, legend_args=list(lgd_ht_pct=.8, bar_wd_pct=.4))
-qt_plot = function(qt, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, border_col="black", border_lwd=1, xlim=NULL, ylim=NULL, zlim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
+qt_plot = function(quadtree, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, border_col="black", border_lwd=1, xlim=NULL, ylim=NULL, zlim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
+  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
   args = list(...)
   #if the user hasn't provided custom axis labels, assign values for the labels
   if(is.null(args[["xlab"]])) args[["xlab"]] = "x"
   if(is.null(args[["ylab"]])) args[["ylab"]] = "y"
   
-  nodes = dplyr::bind_rows(qt$asList()) #get all the nodes as a data frame
+  nodes = dplyr::bind_rows(quadtree$asList()) #get all the nodes as a data frame
   nodes = nodes[nodes$hasChdn == 0,] #we only want to plot the terminal nodes (i.e. nodes without children)
 
   if(is.null(col)){ #if 'col' is NULL, use 'terrain.colors()' as the default
@@ -174,13 +175,13 @@ qt_plot = function(qt, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, border_co
     warning("`crop` is TRUE, and at least one of `xlim` and `ylim` is provided; `crop` will therefore be ignored.")
   }
   if(crop && is.null(xlim) && is.null(ylim)){ #if we're cropping the plot, set the x and y limits to be the original extent of the data used to create the quadtree
-    orig_ext = qt$originalExtent()
+    orig_ext = quadtree$originalExtent()
     xlim = orig_ext[1:2]
     ylim = orig_ext[3:4]
   }
   #if we're not cropping, and 'xlim' and 'ylim' have not been specified, assign values for xlim and ylim
-  if(is.null(xlim)){ xlim = qt$root()$xLims() }
-  if(is.null(ylim)){ ylim = qt$root()$yLims() }
+  if(is.null(xlim)){ xlim = quadtree$root()$xLims() }
+  if(is.null(ylim)){ ylim = quadtree$root()$yLims() }
   
   if(!is.null(adj_mar_auto) && legend){ #if 'adj_mar_auto' and 'legend' are both TRUE, make sure the right margin is big enough for the legend
     old_mar = par("mar") #keep track of the old value so we can reset it after plotting
@@ -199,7 +200,7 @@ qt_plot = function(qt, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, border_co
   
   #if 'nb_line_col' is not NULL, we'll plot connections between neighboring cells
   if(!is.null(nb_line_col)){
-    edges = data.frame(do.call(rbind,qt$getNbList())) #get a data frame with one row for each 'connection'
+    edges = data.frame(do.call(rbind,quadtree$getNbList())) #get a data frame with one row for each 'connection'
     if(is.null(na_col)){
       edges = na.omit(edges)
     }
