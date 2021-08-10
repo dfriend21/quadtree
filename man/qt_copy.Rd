@@ -34,19 +34,14 @@ This function creates  \emph{deep} copy of a quadtree object. The
   should be used whenever a copy of a quadtree is desired.
 }
 \examples{
-library(raster)
-
-# create raster of random values
-nrow = 64
-ncol = 64
-rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
+data(habitat)
 
 # create quadtree - then create a shallow copy and a deep copy for demonstration
-qt1 = qt_create(rast, split_threshold = .9, split_method="range", adj_type="expand")
+qt1 = qt_create(habitat, split_threshold = .1)
 qt_plot(qt1)
 
-qt2 = qt1 #SHALLOW copy
-qt3 = qt_copy(qt1) #DEEP copy
+qt2 = qt1 # SHALLOW copy
+qt3 = qt_copy(qt1) # DEEP copy
 
 # change the values of qt1 so we can observe how this affects qt2 and qt3
 ext = qt_extent(qt1)

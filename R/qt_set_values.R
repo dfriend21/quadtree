@@ -19,25 +19,28 @@
 #' @return 
 #' No return value
 #' @examples
-#' library(raster)
+#' data(habitat)
+#' rast = habitat
 #' 
-#' # create raster of random values
-#' nrow = 64
-#' ncol = 64
-#' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-#' 
-#' # create quadtree - then create a shallow copy and a deep copy for demonstration
-#' qt1 = qt_create(rast, split_threshold = .9, split_method="range", adj_type="expand")
+#' # create a quadtree
+#' qt = qt_create(rast, split_threshold = .1)
 #' 
 #' par(mfrow=c(1,2))
-#' qt_plot(qt1, main="original")
+#' qt_plot(qt, main="original")
 #' 
-#' ext = qt_extent(qt1)
+#' # generate some random points, then change the values at those points
+#' ext = qt_extent(qt)
 #' pts = cbind(runif(100,ext[1], ext[2]), runif(100,ext[3], ext[4]))
-#' qt_set_values(qt1, pts, rep(10,100))
+#' qt_set_values(qt, pts, rep(10,100))
 #' 
 #' # plot it out to see what happened
-#' qt_plot(qt1, main="after modification")
+#' qt_plot(qt, main="after modification")
 qt_set_values = function(quadtree, pts, vals){
+  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
+  if(!is.matrix(pts) && !is.data.frame(pts)) stop("'pts' must be a matrix or a data frame")
+  if(ncol(pts) != 2) stop("'pts' must have two columns")
+  if(!is.numeric(pts[,1]) || !is.numeric(pts[,2])) stop("'pts' must be numeric")
+  if(!is.numeric(vals)) stop("'vals' must be numeric")
+  if(nrow(pts) != length(vals)) stop("'vals' must have the same number of elements as the number of rows in 'pts'")
   quadtree$setValues(pts[,1], pts[,2], vals)
 }

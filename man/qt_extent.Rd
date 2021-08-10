@@ -2,37 +2,41 @@
 % Please edit documentation in R/qt_extent.R
 \name{qt_extent}
 \alias{qt_extent}
-\alias{qt_extent_orig}
 \title{Get the extent of a quadtree}
 \usage{
-qt_extent(quadtree)
-
-qt_extent_orig(quadtree)
+qt_extent(quadtree, original = FALSE)
 }
 \arguments{
 \item{quadtree}{quadtree object}
+
+\item{original}{boolean; if \code{FALSE} (the default), it returns the total
+extent covered by the quadtree. If \code{TRUE}, the function returns the
+extent of the original raster used to create the quadtree, before NA
+rows/columns were added to pad the dimensions.}
 }
 \value{
-Returns an 'extent' object
+Returns an 'extent' object (from the 'raster' package)
 }
 \description{
 Gets the extent of the quadtree as an 'extent' object (from the 
 raster package)
 }
-\details{
-\code{qt_extent} returns the total extent covered by the quadtree.
-
-\code{qt_extent_orig} returns the extent of the original raster used to
-create the quadtree, before NA rows/columns were added to pad the dimensions.
-This essentially represents the extent in which the non-NA data occurs.
-}
 \examples{
-#create raster of random values
-nrow = 57
-ncol = 75
-rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-qt = qt_create(rast, .9, adj_type="expand")
+data(habitat)
+rast = habitat
 
-qt_extent(qt)
-qt_extent_orig(qt)
+# create a quadtree
+qt = qt_create(rast, split_threshold=.1, adj_type="expand")
+
+# retrieve the extent and the original extent
+ext = qt_extent(qt)
+ext_orig = qt_extent(qt,original=TRUE)
+
+ext
+ext_orig
+
+# plot them
+qt_plot(qt)
+rect(ext[1],ext[3],ext[2],ext[4],border="blue",lwd=4)
+rect(ext_orig[1],ext_orig[3],ext_orig[2],ext_orig[4],border="red",lwd=4)
 }

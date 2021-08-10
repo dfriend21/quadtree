@@ -44,6 +44,10 @@
 #' # we can also extract the cell extents in addition to the values
 #' qt_extract(qt1,pts,extents=TRUE)
 qt_extract <- function(quadtree, pts, extents=FALSE){
+  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
+  if(!is.matrix(pts) && !is.data.frame(pts)) stop("'pts' must be a matrix or a data frame")
+  if(ncol(pts) != 2) stop("'pts' must have two columns")
+  if(!is.numeric(pts[,1]) || !is.numeric(pts[,2])) stop("'pts' must be numeric")
   if(extents){
     return(quadtree$getCellDetails(pts[,1], pts[,2]))
   } else {

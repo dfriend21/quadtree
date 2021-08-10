@@ -34,23 +34,20 @@ Also note that the structure of the quadtree will not be changed - only the
 cell values will change.
 }
 \examples{
-library(raster)
+data(habitat)
+rast = habitat
 
-# create raster of random values
-nrow = 64
-ncol = 64
-rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-
-# create quadtree - then create a shallow copy and a deep copy for demonstration
-qt1 = qt_create(rast, split_threshold = .9, split_method="range", adj_type="expand")
+# create a quadtree
+qt = qt_create(rast, split_threshold = .1)
 
 par(mfrow=c(1,2))
-qt_plot(qt1, main="original")
+qt_plot(qt, main="original")
 
-ext = qt_extent(qt1)
+# generate some random points, then change the values at those points
+ext = qt_extent(qt)
 pts = cbind(runif(100,ext[1], ext[2]), runif(100,ext[3], ext[4]))
-qt_set_values(qt1, pts, rep(10,100))
+qt_set_values(qt, pts, rep(10,100))
 
 # plot it out to see what happened
-qt_plot(qt1, main="after modification")
+qt_plot(qt, main="after modification")
 }

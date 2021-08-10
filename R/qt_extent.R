@@ -1,38 +1,36 @@
-#' @name qt_extent
-#' @rdname qt_extent
-#' 
 #' @title Get the extent of a quadtree
 #' @description Gets the extent of the quadtree as an 'extent' object (from the 
 #' raster package)
 #' @param quadtree quadtree object
-#' @details
-#' \code{qt_extent} returns the total extent covered by the quadtree.
-#' 
-#' \code{qt_extent_orig} returns the extent of the original raster used to
-#' create the quadtree, before NA rows/columns were added to pad the dimensions.
-#' This essentially represents the extent in which the non-NA data occurs.
+#' @param original boolean; if \code{FALSE} (the default), it returns the total
+#'   extent covered by the quadtree. If \code{TRUE}, the function returns the
+#'   extent of the original raster used to create the quadtree, before NA
+#'   rows/columns were added to pad the dimensions.
 #' @return 
-#' Returns an 'extent' object
+#' Returns an 'extent' object (from the 'raster' package)
 #' @examples
-#' #create raster of random values
-#' nrow = 57
-#' ncol = 75
-#' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-#' qt = qt_create(rast, .9, adj_type="expand")
+#' data(habitat)
+#' rast = habitat
 #' 
-#' qt_extent(qt)
-#' qt_extent_orig(qt)
-
-NULL
-
-#' @rdname qt_extent
-#' @export
-qt_extent = function(quadtree){
-  return(raster::extent(quadtree$extent()))
-}
-
-#' @rdname qt_extent
-#' @export
-qt_extent_orig = function(quadtree){
-  return(raster::extent(quadtree$originalExtent()))
+#' # create a quadtree
+#' qt = qt_create(rast, split_threshold=.1, adj_type="expand")
+#' 
+#' # retrieve the extent and the original extent
+#' ext = qt_extent(qt)
+#' ext_orig = qt_extent(qt,original=TRUE)
+#' 
+#' ext
+#' ext_orig
+#' 
+#' # plot them
+#' qt_plot(qt)
+#' rect(ext[1],ext[3],ext[2],ext[4],border="blue",lwd=4)
+#' rect(ext_orig[1],ext_orig[3],ext_orig[2],ext_orig[4],border="red",lwd=4)
+qt_extent = function(quadtree, original=FALSE){
+  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
+  if(original){
+    return(raster::extent(quadtree$originalExtent()))
+  } else {
+    return(raster::extent(quadtree$extent()))
+  }
 }
