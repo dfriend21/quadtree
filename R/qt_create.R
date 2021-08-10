@@ -443,15 +443,18 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
   ext = raster::extent(x)
   dim = c(ncol(x), nrow(x))
   
+  #if adj_type is either "expand" or "resample", we'll adjust the dimensions of the raster
   if(adj_type == "expand"){
-    nXLog2 = log2(raster::ncol(x))
-    nYLog2 = log2(raster::nrow(x))
+    nXLog2 = log2(raster::ncol(x)) #we'll use this to find the smallest number greater than 'ncol' that is also a power of 2
+    nYLog2 = log2(raster::nrow(x)) #same as above, but for the number of rows
     if(((nXLog2 %% 1) != 0) || (nYLog2 %% 1 != 0) || (raster::nrow(x) != raster::ncol(x))){  #check if the dimensions are a power of 2 or if the dimensions aren't the same (i.e. it's not square)
+      #calculate the new extent
       newN = max(c(2^ceiling(nXLog2), 2^ceiling(nYLog2)))
       newExt = raster::extent(x)
       newExt[2] = newExt[1] + raster::res(x)[1] * newN
       newExt[4] = newExt[3] + raster::res(x)[2] * newN
       
+      #expand the raster
       x = raster::extend(x,newExt)
     }
   } else if(adj_type == "resample"){
@@ -460,9 +463,10 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
     
     newExt = raster::extent(x)
     if(resample_pad_NAs){
-      #make it square
-      newN = max(c(raster::nrow(x), raster::ncol(x)))
-      newExt[2] = newExt[1] + raster::res(x)[1] * newN
+      #first we need to make it square
+      newN = max(c(raster::nrow(x), raster::ncol(x))) #get the larger dimension then
+      #now expand the extent
+      newExt[2] = newExt[1] + raster::res(x)[1] * newN 
       newExt[4] = newExt[3] + raster::res(x)[2] * newN
       x = raster::extend(x,newExt)
     }
@@ -471,18 +475,19 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
     x = raster::resample(x, rastTemplate, method = "ngb")
   }
   
-  # qt = new(quadtree, raster::extent(x)[1:2], raster::extent(x)[3:4], max_cell_length, max_cell_length, min_cell_length, min_cell_length, split_all_NAs, split_any_NAs)
+  #create the quadtree object (but we haven't actually constructed the quadtree yet)
   qt = new(quadtree, raster::extent(x)[1:2], raster::extent(x)[3:4], c(max_cell_length, max_cell_length), c(min_cell_length, min_cell_length), split_if_all_NA, split_if_any_NA)
+  
+  #deal with any NULL parameters
   blank_fun = function(){}
   if(is.null(split_fun)) split_fun = blank_fun
   if(is.null(split_threshold)) split_threshold = -1
   if(is.null(combine_fun)) combine_fun = blank_fun
-  
   if(is.null(template_quadtree)){
     template_quadtree = new(quadtree)    
   }
+  #construct the quadtree
   qt$createTree(raster::as.matrix(x), split_method, split_threshold, combine_method, split_fun, split_args, combine_fun, combine_args, template_quadtree)
-  
   qt$setOriginalValues(ext[1], ext[2], ext[3], ext[4], dim[1], dim[2])
   qt$setProjection(raster::projection(x))
   return(qt)
