@@ -204,18 +204,35 @@
 qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
   if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
   if(!is.numeric(start_point) || length(start_point) != 2) stop("'start_point' must be a numeric vector with length 2")
+  if(any(is.na(start_point))) stop("'start_point' contains NA values")
   if(!is.null(xlims) && (!is.numeric(xlims) || length(xlims) != 2)) stop("'xlims' must be a numeric vector with length 2")
+  if(!is.null(xlims) && any(is.na(xlims))) stop("'xlims' contains NA values")
   if(!is.null(ylims) && (!is.numeric(ylims) || length(ylims) != 2)) stop("'ylims' must be a numeric vector with length 2")
+  if(!is.null(ylims) && any(is.na(ylims))) stop("'ylims' contains NA values")
   
-  if(is.null(xlims)) xlims = quadtree$extent()[1:2]
-  if(is.null(ylims)) ylims = quadtree$extent()[3:4]
-  spf = quadtree$getShortestPathFinder(start_point, xlims, ylims)
-  if(spf$isValid()){
-    return(spf)
-  } else {
-    warning(paste0("warning in qt_lcp_finder(): starting point (",start_point[1], ",", start_point[2], ") not valid (falls outside the quadtree). Returning NULL."))
-    return(NULL)
+  ext = quadtree$extent()
+  if(is.null(xlims)) xlims = ext[1:2]
+  if(is.null(ylims)) ylims = ext[3:4]
+  
+  if(xlims[1] > xlims[2]) stop("'xlims[1]' must be less than 'xlims[2]'")
+  if(ylims[1] > ylims[2]) stop("'ylims[1]' must be less than 'ylims[2]'")
+  if(xlims[2] < ext[1] || xlims[1] > ext[2] || ylims[2] < ext[3] || ylims[1] > ext[4]) {
+    warning("the search area defined by 'xlims' and 'ylims' does not overlap with the quadtree extent. No LCPs will be found.")
   }
+  if(start_point[1] < xlims[1] || start_point[1] > xlims[2] || start_point[2] < ylims[1] || start_point[2] > ylims[2]) {
+    warning(paste0("starting point (",start_point[1], ",", start_point[2], ") not valid (falls outside the search area). No LCPs will be found."))
+  }
+  spf = quadtree$getShortestPathFinder(start_point, xlims, ylims)
+  # if(!spf$isValid()){
+  #   warning(paste0("warning in qt_lcp_finder(): starting point (",start_point[1], ",", start_point[2], ") not valid (falls outside the quadtree)"))
+  # }
+  return(spf) ######### TEMPORARY
+  # if(spf$isValid()){
+  #   return(spf)
+  # } else {
+  #   warning(paste0("warning in qt_lcp_finder(): starting point (",start_point[1], ",", start_point[2], ") not valid (falls outside the quadtree). Returning NULL."))
+  #   return(NULL)
+  # }
 }
 
 #' @title Find the LCP between two points on a quadtree
@@ -286,6 +303,11 @@ qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
 #' # NOTE: see "Examples" in ?qt_lcp_finder for more examples
 qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
   if(!is.null(lcp_finder)){
+    lims = lcp_finder$getSearchLimits()
+    
+    if(end_point[1] < lims[1] || end_point[1] > lims[2] || end_point[2] < lims[3] || end_point[2] > lims[4]){
+      warning("'end_point' falls outside of the search limits of the LCP finder. No LCP will be found.")
+    }
     mat = lcp_finder$getShortestPath(end_point)
     if(use_original_end_points && nrow(mat) > 0){
       mat[1,1:2] = lcp_finder$getStartPoint()
