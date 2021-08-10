@@ -193,7 +193,7 @@ qt_create(r, template_quadtree=qt)
 qt = qt_create(matrix(),1)
 
 test = cbind(c(1,2,3,4), c(1,2,3,4))
-qt = qt_create(test,1, adj_type="resample", resample_n_side=4)
+qt = qt_create(test,1, adj_type="resample", resample_n_side=4, resample_pad_NAs=FALSE)
 qt_plot(qt)
 
 #-------- split_threshold
