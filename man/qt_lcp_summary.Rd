@@ -11,7 +11,17 @@ qt_lcp_summary(lcp_finder)
 \code{\link{qt_lcp_finder()}}}
 }
 \value{
-
+Returns a 9-column matrix with one row for each LCP (and therefore
+  one row per cell). The columns are as follows: 
+  \itemize{ 
+     \item{\code{id}: }{the ID of the destination cell}
+     \item{\code{xmin, xmax, ymin, ymax}: }{the extent of the destination cell} 
+     \item{\code{value}: }{the value of the destination cell}
+     \item{\code{area}: }{the area of the destination cell}
+     \item{\code{lcp_cost}: }{the cumulative cost of the LCP to this cell}
+     \item{\code{lcp_dist}: }{the cumulative distance of the LCP to this cell -
+     note that this is not straight-line distance, but instead the distance
+     along the path} }
 }
 \description{
 Given an LCP finder object, returns a matrix that summarizes all

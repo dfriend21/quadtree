@@ -202,6 +202,11 @@
 #' lines(path2[,1:2], col="red")
 #' lines(path3[,1:2], col="blue")
 qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
+  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
+  if(!is.numeric(start_point) || length(start_point) != 2) stop("'start_point' must be a numeric vector with length 2")
+  if(!is.null(xlims) && (!is.numeric(xlims) || length(xlims) != 2)) stop("'xlims' must be a numeric vector with length 2")
+  if(!is.null(ylims) && (!is.numeric(ylims) || length(ylims) != 2)) stop("'ylims' must be a numeric vector with length 2")
+  
   if(is.null(xlims)) xlims = quadtree$extent()[1:2]
   if(is.null(ylims)) ylims = quadtree$extent()[3:4]
   spf = quadtree$getShortestPathFinder(start_point, xlims, ylims)
@@ -436,7 +441,7 @@ qt_find_lcps = function(lcp_finder, limit_type="none", limit=NULL){
 #'   \itemize{ 
 #'      \item{\code{id}: }{the ID of the destination cell}
 #'      \item{\code{xmin, xmax, ymin, ymax}: }{the extent of the destination cell} 
-#'      \item{\code{value}: }{the value of the destination cell
+#'      \item{\code{value}: }{the value of the destination cell}
 #'      \item{\code{area}: }{the area of the destination cell}
 #'      \item{\code{lcp_cost}: }{the cumulative cost of the LCP to this cell}
 #'      \item{\code{lcp_dist}: }{the cumulative distance of the LCP to this cell -
