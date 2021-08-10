@@ -298,7 +298,7 @@ void Quadtree::makeTreeWithTemplate(const Matrix &mat, const std::shared_ptr<Qua
 //node-> pointer 
 double Quadtree::getValue(double x, double y, const std::shared_ptr<Node> node) const{
     // std::cout << "Quadtree::getValue(double x, double y, const std::shared_ptr<Node> node)\n";
-    if( (x < node->xMin) | (x > node->xMax) | (y < node->yMin) | (y > node->yMax) ){ //check to make sure the point falls within our extent
+    if( (x < node->xMin) | (x > node->xMax) | (y < node->yMin) | (y > node->yMax) | std::isnan(x) | std::isnan(y)){ //check to make sure the point falls within our extent and that x and y aren't NaN
         //return -999; //if not, return NULL
         return std::numeric_limits<double>::quiet_NaN(); //if the point doesn't fall within the quadtree, return NaN
     }
@@ -321,7 +321,7 @@ double Quadtree::getValue(double x, double y) const{
 //instead of the value of the node
 std::shared_ptr<Node> Quadtree::getNode(double x, double y, const std::shared_ptr<Node> node) const{
     // std::cout << "Quadtree::getNode(double x, double y, const std::shared_ptr<Node> node)\n";
-    if( (x < node->xMin) | (x > node->xMax) | (y < node->yMin) | (y > node->yMax) ){ //check to make sure the point falls within our extent
+    if( (x < node->xMin) | (x > node->xMax) | (y < node->yMin) | (y > node->yMax) | std::isnan(x) | std::isnan(y)){ //check to make sure the point falls within our extent
         return nullptr; //if not, return NULL
     }
     if(node->hasChildren){ //if it has children, then we need to keep going
