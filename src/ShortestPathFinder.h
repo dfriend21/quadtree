@@ -58,7 +58,7 @@ class ShortestPathFinder{
             double xMax{0};
             double yMin{0};
             double yMax{0};
-            bool isValid{false}; //the ShortestPathFinder NEEDS a valid start point. If the start point/node isn't valid (i.e. not in the quadtree), then we'll set this flag to false.
+            // bool isValid{false}; //the ShortestPathFinder NEEDS a valid start point. If the start point/node isn't valid (i.e. not in the quadtree), then we'll set this flag to false.
 
             ShortestPathFinder();
             ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID);

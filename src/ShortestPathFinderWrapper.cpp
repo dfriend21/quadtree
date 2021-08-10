@@ -101,6 +101,6 @@ Rcpp::NumericVector ShortestPathFinderWrapper::getSearchLimits(){
   return vec;
 }
 
-bool ShortestPathFinderWrapper::isValid(){
-  return spf.isValid;
-}
+// bool ShortestPathFinderWrapper::isValid(){
+//   return spf.isValid;
+// }

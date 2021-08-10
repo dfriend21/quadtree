@@ -3,7 +3,7 @@
 
 
 ShortestPathFinder::ShortestPathFinder()
-    : quadtree{nullptr}, startNode{nullptr}, isValid{false} {}//, startPoint{-1,-1}{}
+    : quadtree{nullptr}, startNode{nullptr}{}//, isValid{false} {}//, startPoint{-1,-1}{}
 
 ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID)
     : quadtree{_quadtree} {
@@ -45,46 +45,58 @@ ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Poin
 }
 
 void ShortestPathFinder::init(int startNodeID){
-    isValid = true; //since we've reached 'init()' we're going to assume that the starting point/node was valid
+    //isValid = true; //since we've reached 'init()' we're going to assume that the starting point/node was valid
         //std::shared_ptr<Node> endNode = qt.getNode(endPoint.x, endPoint.y);
     std::list<std::shared_ptr<Node>> nodes = quadtree->getNodesInBox(xMin, xMax, yMin, yMax);
+    
+    //auto it = find_if(v.begin(), v.end(), [&myString](const Type& obj) {return obj.getName() == myString;})
+
     // std::vector<std::shared_ptr<NodeEdge>> nodeEdges(nodes.size());
     nodeEdges = std::vector<std::shared_ptr<NodeEdge>>(nodes.size());
+    
     //std::list<std::shared_ptr<Node>>::iterator itr = nodes.begin();
     //for(size_t i = 0; i < nodes.size(); ++i){
-
-    int counter{0};
-    for(auto iNode : nodes){
-        // NodeEdge *ne = new NodeEdge{counter, iNode, nullptr,0,0,0};
-        NodeEdge *ne = new NodeEdge{counter, std::weak_ptr<Node>(iNode), std::weak_ptr<NodeEdge>(),0,0,0};
-        nodeEdges.at(counter) = std::shared_ptr<NodeEdge>(ne);
-        // nodeEdges.at(counter) = std::make_shared<NodeEdge>(counter, std::weak_ptr<Node>(iNode), std::weak_ptr<NodeEdge>(),0,0,0);
-        //nodeEdges.emplace_back(makeNodeEdge(iNode, nullptr));
-        counter++;
-    }
-    
-    //std::map<int, int> dict; //dictionary with Node ID's as the key and the index of the corresponding 'NodeEdge' in 'nodeEdges'
-    //int counter{0};
     dict = std::map<int, int>(); //dictionary with Node ID's as the key and the index of the corresponding 'NodeEdge' in 'nodeEdges'
-    for(size_t i = 0; i < nodeEdges.size(); ++i){
-        dict[nodeEdges.at(i)->node.lock()->id] = i; // ORIGINAL
-
-        // auto node = nodeEdges.at(i)->node.lock();
-        // if(!std::isnan(node->value)){
-        //     dict[node->id] = i; 
-        // }
-    }
-
-    //std::shared_ptr<Node> startNode = quadtree.getNode(startPoint.x, startPoint.y);
-    startNode = nodeEdges[dict[startNodeID]]->node.lock();
-    //startPoint = Point((startNode->xMin + startNode->xMax)/2, (startNode->yMin + startNode->yMax)/2);
-    // std::set<std::tuple<int,int,double>> possibleEdges; //order of tuple is nodeEdge ID 1, nodeEdge ID 2, dist between the nodes
-    //https://stackoverflow.com/questions/2620862/using-custom-stdset-comparator
-    //auto cmp = [](std::tuple<int,int,double> a, std::tuple<int,int,double> b) { return std::get<2>(a) < std::get<2>(b); };
     possibleEdges = std::multiset<std::tuple<int,int,double,double>, cmp>();
-    //auto startNodeShared = startNode.lock();
-    if(!std::isnan(startNode->value)){ //if the starting node is NA, don't add it
-        possibleEdges.insert(std::make_tuple(dict[startNode->id],dict[startNode->id], 0, 0)); //initialize our set with the start node
+    if(nodes.size() > 0){
+        int counter{0};
+        bool hasStartNode{false}; //we'll use this to check if 'nodes' includes the start node
+        for(auto iNode : nodes){
+            if(iNode->id == startNodeID){
+                hasStartNode = true;
+            }
+            // NodeEdge *ne = new NodeEdge{counter, iNode, nullptr,0,0,0};
+            NodeEdge *ne = new NodeEdge{counter, std::weak_ptr<Node>(iNode), std::weak_ptr<NodeEdge>(),0,0,0};
+            nodeEdges.at(counter) = std::shared_ptr<NodeEdge>(ne);
+            // nodeEdges.at(counter) = std::make_shared<NodeEdge>(counter, std::weak_ptr<Node>(iNode), std::weak_ptr<NodeEdge>(),0,0,0);
+            //nodeEdges.emplace_back(makeNodeEdge(iNode, nullptr));
+            counter++;
+        }
+        if(hasStartNode){ //only continue if 'nodes' includes the start node
+            //std::map<int, int> dict; //dictionary with Node ID's as the key and the index of the corresponding 'NodeEdge' in 'nodeEdges'
+            //int counter{0};
+            dict = std::map<int, int>(); //dictionary with Node ID's as the key and the index of the corresponding 'NodeEdge' in 'nodeEdges'
+            for(size_t i = 0; i < nodeEdges.size(); ++i){
+                dict[nodeEdges.at(i)->node.lock()->id] = i; // ORIGINAL
+
+                // auto node = nodeEdges.at(i)->node.lock();
+                // if(!std::isnan(node->value)){
+                //     dict[node->id] = i; 
+                // }
+            }
+
+            //std::shared_ptr<Node> startNode = quadtree.getNode(startPoint.x, startPoint.y);
+            startNode = nodeEdges[dict[startNodeID]]->node.lock();
+            //startPoint = Point((startNode->xMin + startNode->xMax)/2, (startNode->yMin + startNode->yMax)/2);
+            // std::set<std::tuple<int,int,double>> possibleEdges; //order of tuple is nodeEdge ID 1, nodeEdge ID 2, dist between the nodes
+            //https://stackoverflow.com/questions/2620862/using-custom-stdset-comparator
+            //auto cmp = [](std::tuple<int,int,double> a, std::tuple<int,int,double> b) { return std::get<2>(a) < std::get<2>(b); };
+        ///////    // possibleEdges = std::multiset<std::tuple<int,int,double,double>, cmp>();
+            //auto startNodeShared = startNode.lock();
+            if(!std::isnan(startNode->value)){ //if the starting node is NA, don't add it
+                possibleEdges.insert(std::make_tuple(dict[startNode->id],dict[startNode->id], 0, 0)); //initialize our set with the start node
+            }
+        }
     }
 }
 
@@ -176,22 +188,25 @@ int ShortestPathFinder::doNextIteration(){
 //      1 - cumulative cost to reach this node
 //      2 - 
 std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::findShortestPath(int endNodeID){
-    std::shared_ptr<NodeEdge> currentNodeEdge = nodeEdges.at(dict[endNodeID]); //get the pointer to the nodeEdge that corresponds with the ID provided by the user
-    //auto parent = currentNodeEdge->parent.lock();
-    if(currentNodeEdge->parent.lock()){ //if this NodeEdge doesn't have a parent then that means it's unreachable
-    //if(parent){ //if this NodeEdge doesn't have a parent then that means it's unreachable
-        //std::vector<std::shared_ptr<Node>> nodePath(currentNodeEdge->nNodesFromOrigin); //initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
-        std::vector<std::tuple<std::shared_ptr<Node>,double,double>> nodePath(currentNodeEdge->nNodesFromOrigin);//initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
-        //starting with the end node, trace our way back to the start node
-        for(size_t i = 1; i <= nodePath.size(); ++i){
-            //nodePath.at(i) = currentNodeEdge->node;
-            //nodePath.at(nodePath.size()-i) = currentNodeEdge->node; //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
-            nodePath.at(nodePath.size()-i) = std::make_tuple(currentNodeEdge->node.lock(), currentNodeEdge->cost, currentNodeEdge->dist); //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
-            currentNodeEdge = currentNodeEdge->parent.lock(); //set 'currentNodeEdge' to be this node's parent - this is how we'll move up the tree
+    std::map<int,int>::iterator itr = dict.find(endNodeID); //see if this node is included in our dictionary - if not, then it must fall outside our search extent
+    if(itr != dict.end()){
+        // std::shared_ptr<NodeEdge> currentNodeEdge = nodeEdges.at(dict[endNodeID]); //get the pointer to the nodeEdge that corresponds with the ID provided by the user
+        std::shared_ptr<NodeEdge> currentNodeEdge = nodeEdges.at(itr->second); //get the pointer to the nodeEdge that corresponds with the ID provided by the user
+        //auto parent = currentNodeEdge->parent.lock();
+        if(currentNodeEdge->parent.lock()){ //if this NodeEdge doesn't have a parent then that means it's unreachable
+        //if(parent){ //if this NodeEdge doesn't have a parent then that means it's unreachable
+            //std::vector<std::shared_ptr<Node>> nodePath(currentNodeEdge->nNodesFromOrigin); //initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
+            std::vector<std::tuple<std::shared_ptr<Node>,double,double>> nodePath(currentNodeEdge->nNodesFromOrigin);//initialize the vector that will store the nodes in the path. Use the 'nNodesFromOrigin' property of the destination NodeEdge to determine the size of the vector
+            //starting with the end node, trace our way back to the start node
+            for(size_t i = 1; i <= nodePath.size(); ++i){
+                //nodePath.at(i) = currentNodeEdge->node;
+                //nodePath.at(nodePath.size()-i) = currentNodeEdge->node; //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
+                nodePath.at(nodePath.size()-i) = std::make_tuple(currentNodeEdge->node.lock(), currentNodeEdge->cost, currentNodeEdge->dist); //add the node to the vector - we'll fill the vector in reverse order so that the first element is the starting node and the last is the ending node
+                currentNodeEdge = currentNodeEdge->parent.lock(); //set 'currentNodeEdge' to be this node's parent - this is how we'll move up the tree
+            }
+            return nodePath; //return the vector containing the nodes in the path
         }
-        return nodePath; //return the vector containing the nodes in the path
     }
-
     //return std::vector<std::shared_ptr<Node>>(); //return an empty vector if it's not reachable
     //return std::vector<NodeEdge>(); //return an empty vector if it's not reachable
     return std::vector<std::tuple<std::shared_ptr<Node>,double,double>>(); //return an empty vector if it's not reachable
@@ -294,15 +309,21 @@ void ShortestPathFinder::makeNetworkCostDist(double constraint){
 //runs the algorithm until it finds the desired shortest path.
 //std::vector<std::shared_ptr<Node>> ShortestPathFinder::getShortestPath(int endNodeID){
 std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::getShortestPath(int endNodeID){
-    if(!nodeEdges.at(dict[endNodeID])->parent.lock()){ // check if we've already found the path to this node
-        while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
-            int currentID = doNextIteration();
-            if(currentID == endNodeID){
-                break;
+    std::map<int,int>::iterator itr = dict.find(endNodeID); //see if this node is included in our dictionary - if not, then it must fall outside our search extent
+    if(itr != dict.end()){
+        // if(!nodeEdges.at(dict[endNodeID])->parent.lock()){ // check if we've already found the path to this node
+        if(!nodeEdges.at(itr->second)->parent.lock()){ // check if we've already found the path to this node
+            while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
+                int currentID = doNextIteration();
+                if(currentID == endNodeID){
+                    break;
+                }
             }
         }
+        return findShortestPath(endNodeID);
+    } else {
+        return std::vector<std::tuple<std::shared_ptr<Node>,double,double>>();
     }
-    return findShortestPath(endNodeID);
 }
 
 //std::vector<std::shared_ptr<Node>> ShortestPathFinder::getShortestPath(Point endPoint){

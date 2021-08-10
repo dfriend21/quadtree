@@ -24,7 +24,7 @@ public:
   Rcpp::NumericMatrix getAllPathsSummary();
   Rcpp::NumericVector getStartPoint();
   Rcpp::NumericVector getSearchLimits();
-  bool isValid();
+  // bool isValid();
 };
 
 
