@@ -54,11 +54,11 @@ class ShortestPathFinder{
             std::multiset<std::tuple<int,int,double,double>, cmp> possibleEdges; //set that contains info on the possible edges - the items in the tuple represent (in this order): ID of the first node in the edge; ID of the second node in the edge; cost-distance of the edge; cost of the edge
             // std::multiset<std::tuple<int,int,double>> possibleEdges;
 
-            double xMin;
-            double xMax;
-            double yMin;
-            double yMax;
-            bool isValid; //the ShortestPathFinder NEEDS a valid start point. If the start point/node isn't valid (i.e. not in the quadtree), then we'll set this flag to false.
+            double xMin{0};
+            double xMax{0};
+            double yMin{0};
+            double yMax{0};
+            bool isValid{false}; //the ShortestPathFinder NEEDS a valid start point. If the start point/node isn't valid (i.e. not in the quadtree), then we'll set this flag to false.
 
             ShortestPathFinder();
             ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID);
