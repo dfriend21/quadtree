@@ -12,9 +12,9 @@ qt_extract(quadtree, pts, extents = FALSE)
 \item{pts}{A two-column matrix representing point coordinates. First column
 contains the x-coordinates, second column contains the y-coordinates}
 
-\item{extents}{boolean; if \code{FALSE}, a vector containing cell values is
-returned. If \code{TRUE}, a matrix is returned providing each cell's extent
-in addition to its value}
+\item{extents}{boolean; if \code{FALSE} (the default), a vector containing
+cell values is returned. If \code{TRUE}, a matrix is returned providing
+each cell's extent in addition to its value}
 }
 \value{
 The return type depends on the value of \code{extents}. 
@@ -22,37 +22,39 @@ The return type depends on the value of \code{extents}.
 If \code{extents = FALSE}, the function returns a numeric vector
 corresponding to the values at the points represented by \code{pts}. If a
 point falls within the quadtree extent and the corresponding cell is
-\code{NA}, \code{NA} is returned. If the point falls outside of the quadtree
-extent, \code{NaN} is returned.
+\code{NA}, or if the point falls outside of the extent, \code{NaN} is
+returned.
 
-If \code{extents = TRUE}, the function returns a 5-column numeric matrix providing 
-the extent of each cell along with the cell's value. The 5 columns are, in this order:
-\code{xmin}, \code{xmax}, \code{ymin}, \code{ymax}, \code{value}. If a point falls in
-a \code{NA} cell, the cell extent is still returned but \code{value} will be \code{NA}.
-If a point falls outside of the quadtree, all values will be \code{NaN}.
+If \code{extents = TRUE}, the function returns a 5-column numeric matrix
+providing the extent of each cell along with the cell's value. The 5 columns
+are, in this order: \code{xmin}, \code{xmax}, \code{ymin}, \code{ymax},
+\code{value}. If a point falls in a \code{NA} cell, the cell extent is still
+returned but \code{value} will be \code{NaN}. If a point falls outside of the
+quadtree, all values will be \code{NaN}.
 }
 \description{
 Extract the cell values and optionally the cell extents
 }
 \examples{
-# create raster of random values
-nrow = 57
-ncol = 75
-rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
+data(habitat)
+rast = habitat
 
 # create quadtree
-qt1 = qt_create(rast, range_limit = .9, adj_type="expand")
+qt1 = qt_create(rast, split_threshold=.1, adj_type="expand")
+qt_plot(qt1)
 
 # create points at which we'll extract values
-pts = cbind(-5:15, 45:65)
+coords = seq(-1000,40010,length.out=10)
+pts = cbind(coords,coords)
+
+# extract the cell values
+vals = qt_extract(qt1,pts)
 
 # plot the quadtree and the points
-qt_plot(qt1, border_col="gray60")
+qt_plot(qt1, border_col="gray50", border_lwd=.4)
 points(pts, pch=16,cex=.6)
+text(pts,labels=round(vals,2),pos=4)
 
-# extract values only
-qt_extract(qt1,pts)
-
-# extract the cell extents in addition to the values
+# we can also extract the cell extents in addition to the values
 qt_extract(qt1,pts,extents=TRUE)
 }
