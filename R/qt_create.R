@@ -382,7 +382,7 @@
 #' qt_plot(qt_template, crop=TRUE, na_col=NULL, border_lwd=.5)
 #' qt_plot(qt14, crop=TRUE, na_col=NULL, border_lwd=.5)
 #' par(mfrow=c(1,1))
-qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun=NULL, split_args=list(), split_if_any_NA=TRUE, split_if_all_NA=FALSE, combine_method = "mean", combine_fun=NULL, combine_args=list(), max_cell_length=NULL, min_cell_length=NULL, adj_type="expand", resample_n_side=NULL, resample_pad_NAs=TRUE, extent=NULL, proj4string=NULL, template_quadtree=NULL,validate_arguments=TRUE){
+qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun=NULL, split_args=list(), split_if_any_NA=TRUE, split_if_all_NA=FALSE, combine_method = "mean", combine_fun=NULL, combine_args=list(), max_cell_length=NULL, min_cell_length=NULL, adj_type="expand", resample_n_side=NULL, resample_pad_NAs=TRUE, extent=NULL, proj4string=NULL, template_quadtree=NULL){
   
   #validate inputs - this may be over the top, but many of these values get passed to C++ functionality, and if they're the wrong type the errors that are thrown are totally unhelpful - by type-checking them right away, I can provide easy-to-interpret error messages rather than messages that provide zero help
   #also, this is a complex function with a ton of options, and I want the errors to clearly point the user to the problem 
