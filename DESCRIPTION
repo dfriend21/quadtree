@@ -13,10 +13,14 @@ License: GPL (>= 2)
 Imports: 
     Rcpp (>= 1.0.5),
     raster,
-    dplyr
+    dplyr,
+    methods
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 NeedsCompilation: yes
 URL: https://gitlab.com/dafriend/quadtree
 Depends: 
     R (>= 2.10)
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
