@@ -1,7 +1,9 @@
 #' Plot a quadtree object
 #'
-#' @param qt a \code{quadtree} object
-#' @param colors character vector; the colors that will be used to create the
+#' @param quadtree a \code{quadtree} object
+#' @param add boolean; if \code{TRUE}, the quadtree plot is added to the
+#'   existing plot
+#' @param col character vector; the colors that will be used to create the
 #'   color ramp used in the plot. If no argument is provided,
 #'   \code{terrain.colors(100,rev=TRUE)} is used.
 #' @param alpha numeric; transparency of the cell colors. Must be in the range
@@ -137,9 +139,9 @@ qt_plot = function(quadtree, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, bor
   nodes = nodes[nodes$hasChdn == 0,] #we only want to plot the terminal nodes (i.e. nodes without children)
 
   if(is.null(col)){ #if 'col' is NULL, use 'terrain.colors()' as the default
-    col = terrain.colors(100,rev=TRUE)
+    col = grDevices::terrain.colors(100,rev=TRUE)
   }
-  colRamp = colorRamp(colors = col) #create the color ramp, which we'll use to get the color for each cell
+  colRamp = grDevices::colorRamp(colors = col) #create the color ramp, which we'll use to get the color for each cell
   if(is.null(zlim)){ #if zlim is NULL, use the max and min of the cell values as the zlim
     if(all(is.na(nodes$value))){ #handle the edge case where all the values are NA
       zlim = c(0,0)
@@ -161,7 +163,7 @@ qt_plot = function(quadtree, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, bor
     if(any(is.na(row_i))){
       return(NA)
     } 
-    return(rgb(row_i[1], row_i[2], row_i[3], alpha*255, maxColorValue = 255))
+    return(grDevices::rgb(row_i[1], row_i[2], row_i[3], alpha*255, maxColorValue = 255))
   })
   
   #now deal with NA cells and cells whose values fall outside of 'zlim'
@@ -184,7 +186,7 @@ qt_plot = function(quadtree, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, bor
   if(is.null(ylim)){ ylim = quadtree$root()$yLims() }
   
   if(!is.null(adj_mar_auto) && legend){ #if 'adj_mar_auto' and 'legend' are both TRUE, make sure the right margin is big enough for the legend
-    old_mar = par("mar") #keep track of the old value so we can reset it after plotting
+    old_mar = graphics::par("mar") #keep track of the old value so we can reset it after plotting
     new_mar = old_mar
     if(new_mar[4] < adj_mar_auto){ #if the right margin is less 'adj_mar_auto', set it to be 'adj_mar_auto'
       new_mar[4] = adj_mar_auto
@@ -196,22 +198,22 @@ qt_plot = function(quadtree, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, bor
   if(!add){
     do.call(plot,c(list(x=1,y=1, xlim=xlim, ylim=ylim, type="n", asp=1),args))
   }
-  rect(nodes$xMin, nodes$yMin, nodes$xMax, nodes$yMax, col=nodes$col, border=border_col, lwd=border_lwd)
+  graphics::rect(nodes$xMin, nodes$yMin, nodes$xMax, nodes$yMax, col=nodes$col, border=border_col, lwd=border_lwd)
   
   #if 'nb_line_col' is not NULL, we'll plot connections between neighboring cells
   if(!is.null(nb_line_col)){
     edges = data.frame(do.call(rbind,quadtree$getNbList())) #get a data frame with one row for each 'connection'
     if(is.null(na_col)){
-      edges = na.omit(edges)
+      edges = stats::na.omit(edges)
     }
     edges = edges[edges$isLowest == 1,] #only plot connections between terminal nodes
-    segments(edges$x0, edges$y0, edges$x1, edges$y1, col=nb_line_col)
+    graphics::segments(edges$x0, edges$y0, edges$x1, edges$y1, col=nb_line_col)
   }
   
   #if 'legend' is TRUE, use 'add_legend' to add the legend
   if(legend){
     col_rgb = colRamp(seq(0,1,length.out=300))
-    col_hex = rgb(col_rgb[,1], col_rgb[,2], col_rgb[,3], maxColorValue=255)
+    col_hex = grDevices::rgb(col_rgb[,1], col_rgb[,2], col_rgb[,3], maxColorValue=255)
     legend_args$zlim = zlim
     legend_args$col = col_hex
     legend_args$alpha = alpha
@@ -361,7 +363,7 @@ get_coords = function(usr, plt){
 add_legend = function(zlim, col, alpha=1, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_pct=.5, 
                       lgd_wd_pct=.5, lgd_ht_pct=.5, bar_box_col="black",
                       bar_wd_pct=.2, bar_ht_pct=1, ticks=NULL, ticks_n=5, ticks_x_pct=1){
-  p = par() #get the current graphical parameter settings
+  p = graphics::par() #get the current graphical parameter settings
   crds = get_coords(p$usr, p$plt) #get the x and y limits of the ENTIRE plot area, in the units used in the plot
   mar_crds = c(p$usr[2], crds[2], crds[3], crds[4]) #get the x and y limits of the right margin area
   wd_crd = lgd_wd_pct*(diff(mar_crds[1:2])) #get the width of the legend area relative to the right margin width
@@ -374,7 +376,7 @@ add_legend = function(zlim, col, alpha=1, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_
   lgd_y1 = mar_crds[3] + lgd_y_pct*diff(mar_crds[3:4]) + ht_crd*.5
   
   if(!is.null(lgd_box_col)){ #if specified, plot a box around the whole legend
-    rect(lgd_x0,lgd_y0,lgd_x1,lgd_y1,xpd=TRUE, border=lgd_box_col)
+    graphics::rect(lgd_x0,lgd_y0,lgd_x1,lgd_y1,xpd=TRUE, border=lgd_box_col)
   }
   
   #get the coordinates where we'll put the color bar
@@ -386,9 +388,9 @@ add_legend = function(zlim, col, alpha=1, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_
   #make the color bar and add it to the plot
   col = paste0(col, as.hexmode(round(alpha*255))) #take the alpha value into account
   rast = grDevices::as.raster(rev(col)) #rasterImage automatically plots the colors so that the first color is at the top and the last color is at the bottom. I want the opposite - the first color (the lowest value) should be at the bottom
-  rasterImage(rast, bar_x0, bar_y0, bar_x1, bar_y1, xpd=TRUE)
+  graphics::rasterImage(rast, bar_x0, bar_y0, bar_x1, bar_y1, xpd=TRUE)
   if(!is.null(bar_box_col)){ #if specified, add a box around the color bar
-    rect(bar_x0, bar_y0, bar_x1, bar_y1, xpd=TRUE, border=bar_box_col)  
+    graphics::rect(bar_x0, bar_y0, bar_x1, bar_y1, xpd=TRUE, border=bar_box_col)  
   }
   
   ticks_pct = .5
@@ -411,11 +413,11 @@ add_legend = function(zlim, col, alpha=1, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_
   text(ticks_x, ticks_y, labels=ticks,xpd=TRUE, adj=1) #add the ticks
   
   #add horizontal lines between the color bar and the numbers
-  txt_bar_gap = (ticks_x - max(strwidth(ticks))) - bar_x1 #get the distances between the right side of the color bar and the left side of the text
+  txt_bar_gap = (ticks_x - max(graphics::strwidth(ticks))) - bar_x1 #get the distances between the right side of the color bar and the left side of the text
   seg_x0 = rep(bar_x1, length(ticks))
   seg_x1 = seg_x0 + txt_bar_gap*.5
   seg_y0 = ticks_y
   seg_y1 = seg_y0
-  segments(seg_x0, seg_y0, seg_x1, seg_y1,xpd=TRUE)
+  graphics::segments(seg_x0, seg_y0, seg_x1, seg_y1,xpd=TRUE)
 }
 

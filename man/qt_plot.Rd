@@ -24,6 +24,15 @@ qt_plot(
 )
 }
 \arguments{
+\item{quadtree}{a \code{quadtree} object}
+
+\item{add}{boolean; if \code{TRUE}, the quadtree plot is added to the
+existing plot}
+
+\item{col}{character vector; the colors that will be used to create the
+color ramp used in the plot. If no argument is provided,
+\code{terrain.colors(100,rev=TRUE)} is used.}
+
 \item{alpha}{numeric; transparency of the cell colors. Must be in the range
 0-1, where 0 is fully transparent and 1 is fully opaque.}
 
@@ -76,12 +85,6 @@ are supplied automatically, so if the list contains elements named
 ignored.}
 
 \item{...}{arguments passed to the default \code{plot} function}
-
-\item{qt}{a \code{quadtree} object}
-
-\item{colors}{character vector; the colors that will be used to create the
-color ramp used in the plot. If no argument is provided,
-\code{terrain.colors(100,rev=TRUE)} is used.}
 }
 \description{
 Plot a quadtree object
