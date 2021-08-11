@@ -8,10 +8,8 @@
 
 class ShortestPathFinderWrapper{
 public:
-    
   ShortestPathFinder spf;
   Rcpp::NumericVector startPoint;
-  //Rcpp::NumericVector _endPoint; //DEBUGGING ONLY - REMOVE!!!!!!!!!!!!!!!!!!!!!!!!
   
   ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint);
   ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims);
@@ -19,14 +17,11 @@ public:
   void makeNetworkAll();
   void makeNetworkCost(double constraint);
   void makeNetworkCostDist(double constraint);
-  // void makeShortestPathNetworkConstrained(double cost, std::string type);
   Rcpp::NumericMatrix getShortestPath(Rcpp::NumericVector endPoint);
   Rcpp::NumericMatrix getAllPathsSummary();
   Rcpp::NumericVector getStartPoint();
   Rcpp::NumericVector getSearchLimits();
-  // bool isValid();
 };
-
 
 RCPP_EXPOSED_CLASS(ShortestPathFinderWrapper);
 

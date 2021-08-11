@@ -18,22 +18,28 @@ Rcpp::NumericVector NodeWrapper::xLims() const{
   Rcpp::NumericVector vec = {node->xMin, node->xMax};
   return vec;
 }
+
 Rcpp::NumericVector NodeWrapper::yLims() const{
   Rcpp::NumericVector vec = {node->yMin, node->yMax};
   return vec;
 }
+
 double NodeWrapper::value() const{
   return node->value;
 }
+
 double NodeWrapper::id() const{
   return node->id;
 }
+
 double NodeWrapper::smallestChildSideLength() const{
   return node->smallestChildSideLength;
 }
+
 double NodeWrapper::level() const{
   return node->level;
 }
+
 bool NodeWrapper::hasChildren() const{
   return node->hasChildren;
 }
@@ -56,7 +62,6 @@ Rcpp::List NodeWrapper::getNeighbors() const{
   list = Rcpp::List(node->neighbors.size());
   for(int i = 0; i < node->neighbors.size(); i++){
     auto node_i = node->neighbors[i].lock();
-    //list[i] = NodeWrapper(node->neighbors[i]);
     list[i] = NodeWrapper(node_i);
   }
   return list;
@@ -93,16 +98,6 @@ Rcpp::NumericMatrix NodeWrapper::getNeighborInfo() const{
   colnames(mat) = Rcpp::CharacterVector({"id", "xMin", "xMax", "yMin", "yMax", "xMean", "yMean", "value", "hasChdn", "xOverlap", "yOverlap", "totOverlap", "nCorners"});
   for(int i = 0; i < node->neighbors.size(); i++){
     auto node_i = node->neighbors[i].lock();
-    // mat(i,0) = node->neighbors[i]->id;
-    // mat(i,1) = node->neighbors[i]->xMin;
-    // mat(i,2) = node->neighbors[i]->xMax;
-    // mat(i,3) = node->neighbors[i]->yMin;
-    // mat(i,4) = node->neighbors[i]->yMax;
-    // mat(i,5) = (node->neighbors[i]->xMin + node->neighbors[i]->xMax)/2;
-    // mat(i,6) = (node->neighbors[i]->yMin + node->neighbors[i]->yMax)/2;
-    // mat(i,7) = node->neighbors[i]->value;
-    // mat(i,8) = node->neighbors[i]->hasChildren ? 1 : 0;
-    // Rcpp::NumericVector overlapVals = getOverlapInfo(node, node->neighbors[i]);
     mat(i,0) = node_i->id;
     mat(i,1) = node_i->xMin;
     mat(i,2) = node_i->xMax;

@@ -1,3 +1,10 @@
+//' @name shortestPathFinder
+//' @rdname shortestPathFinder
+//' @title stuff
+//' @description more stuff
+//' @field spf
+//' @field startPoint
+
 #include "ShortestPathFinderWrapper.h"
 
 ShortestPathFinderWrapper::ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint)
@@ -10,7 +17,6 @@ ShortestPathFinderWrapper::ShortestPathFinderWrapper(std::shared_ptr<Quadtree> q
   spf = ShortestPathFinder(quadtree,Point(startPoint[0], startPoint[1]), xlims[0], xlims[1], ylims[0], ylims[1]);
 }
 
-// void ShortestPathFinderWrapper::makeShortestPathNetwork(){
 void ShortestPathFinderWrapper::makeNetworkAll(){
   spf.makeNetworkAll();
 }
@@ -23,22 +29,11 @@ void ShortestPathFinderWrapper::makeNetworkCostDist(double constraint){
   spf.makeNetworkCostDist(constraint);
 }
 
-// void ShortestPathFinderWrapper::makeShortestPathNetworkConstrained(double cost, std::string type){
-//   spf.makeShortestPathNetwork(cost, type);
-// }
 
 Rcpp::NumericMatrix ShortestPathFinderWrapper::getShortestPath(Rcpp::NumericVector endPoint){
-  //_endPoint = endPoint;
-  //std::vector<std::shared_ptr<Node>> path = spf.getShortestPath(Point(endPoint[0], endPoint[1]));
   std::vector<std::tuple<std::shared_ptr<Node>,double,double>> path = spf.getShortestPath(Point(endPoint[0], endPoint[1]));
   Rcpp::NumericMatrix mat(path.size(),5);
   colnames(mat) = Rcpp::CharacterVector({"x","y","cost_tot","dist_tot", "cost_cell"}); //name the columns
-  // Rcpp::Rcout << "endPoint[0]: " << endPoint[0] << "\n";
-  // Rcpp::Rcout << "endPoint[1]: " << endPoint[1] << "\n";
-  // Rcpp::Rcout << "path.size(): " << path.size() << "\n";
-  //Rcpp::NumericMatrix mat(static_cast<int>(path.size()),2);
-  //Rcpp::NumericMatrix mat(10,2);
-  //for(int i = 0; i < path.size(); ++i){  
   for(size_t i = 0; i < path.size(); ++i){  
     mat(i,0) = (std::get<0>(path.at(i))->xMin + std::get<0>(path.at(i))->xMax)/2;
     mat(i,1) = (std::get<0>(path.at(i))->yMin + std::get<0>(path.at(i))->yMax)/2;
@@ -59,17 +54,13 @@ Rcpp::NumericMatrix ShortestPathFinderWrapper::getAllPathsSummary(){
   }
   
   //now we can construct a matrix to store info on each path
-  // Rcpp::NumericMatrix mat(nPaths,7);
   Rcpp::NumericMatrix mat(nPaths,9);
-  // colnames(mat) = Rcpp::CharacterVector({"id","x","y","cost_tot","dist_tot","cost_cell", "cell_area"}); //name the columns
   colnames(mat) = Rcpp::CharacterVector({"id","xmin","xmax", "ymin", "ymax","value","area","lcp_cost","lcp_dist"}); //name the columns
   int counter = 0; 
   for(size_t i = 0; i < spf.nodeEdges.size(); ++i){
     if(spf.nodeEdges[i]->parent.lock()){
       std::shared_ptr<Node> node = spf.nodeEdges[i]->node.lock();
       mat(counter,0) = node->id;
-      // mat(counter,1) = (node->xMin + node->xMax)/2;
-      // mat(counter,2) = (node->yMin + node->yMax)/2;
       mat(counter,1) = node->xMin;
       mat(counter,2) = node->xMax;
       mat(counter,3) = node->yMin;
@@ -81,8 +72,7 @@ Rcpp::NumericMatrix ShortestPathFinderWrapper::getAllPathsSummary(){
       counter++;
     }
   }
-  
-  return(mat);
+  return mat;
 }
 
 Rcpp::NumericVector ShortestPathFinderWrapper::getStartPoint(){
@@ -100,7 +90,3 @@ Rcpp::NumericVector ShortestPathFinderWrapper::getSearchLimits(){
   vec[3] = spf.yMax;
   return vec;
 }
-
-// bool ShortestPathFinderWrapper::isValid(){
-//   return spf.isValid;
-// }

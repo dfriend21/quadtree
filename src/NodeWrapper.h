@@ -22,7 +22,6 @@ public:
   double level() const;
   bool hasChildren() const;
   
-  
   Rcpp::List getChildren() const;
   Rcpp::List getNeighbors() const;
   Rcpp::NumericMatrix getNeighborInfo() const;
