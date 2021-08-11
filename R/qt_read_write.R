@@ -23,8 +23,10 @@
 #' is MUCH more space efficient. However, this was not the primary goal when 
 #' creating this package.
 #' @examples 
+#' \dontrun{
 #' qt = qt_read("path/to/quadtree.qtree")
 #' qt_write(qt, "path/to/newQuadtree.qtree")
+#' }
 NULL
 
 #' @rdname qt_read
