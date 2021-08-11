@@ -387,7 +387,7 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
   #validate inputs - this may be over the top, but many of these values get passed to C++ functionality, and if they're the wrong type the errors that are thrown are totally unhelpful - by type-checking them right away, I can provide easy-to-interpret error messages rather than messages that provide zero help
   #also, this is a complex function with a ton of options, and I want the errors to clearly point the user to the problem 
   if(!inherits(x, c("matrix", "RasterLayer"))) stop(paste0('"x" must be a "matrix" or "RasterLayer" - an object of class "', paste(class(x), collapse='" "'), '" was provided instead'))
-  if(is.null(template_quadtree) && ((!is.numeric(split_threshold) && !is.null(split_threshold)) || length(split_threshold) != 1)) stop(paste0("'split_threshold' must be a 'numeric' vector of length 1"))
+  if(is.null(template_quadtree) && split_method != "custom" && ((!is.numeric(split_threshold) && !is.null(split_threshold)) || length(split_threshold) != 1)) stop(paste0("'split_threshold' must be a 'numeric' vector of length 1"))
   if(!is.function(split_fun) && !is.null(split_fun)) stop(paste0("'split_fun' must be a function"))  
   if(!is.list(split_args) && !is.null(split_args)) stop(paste0("'split_args' must be a list"))
   if(!is.logical(split_if_any_NA) || length(split_if_any_NA) != 1) stop("'split_if_any_NA' must be a 'logical' vector of length 1")
@@ -404,11 +404,11 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
   if(split_method == "custom" && is.null(split_fun)) stop(paste0("When 'split_method' is 'custom', a function must be provided to 'split_fun'"))
   if(combine_method == "custom" && is.null(combine_fun)) stop(paste0("When 'combine_method' is 'custom', a function must be provided to 'combine_fun'"))
   if(!is.null(split_fun)){
-    split_params = formalArgs(split_fun)
+    split_params = methods::formalArgs(split_fun)
     if(!all(split_params == c("vals", "args")) || is.null(split_params)) stop("'split_fun' must accept two arguments - 'vals' and 'args', in that order.")
   }
   if(!is.null(combine_fun)){
-    combine_params = formalArgs(combine_fun)
+    combine_params = methods::formalArgs(combine_fun)
     if(!all(combine_params == c("vals", "args")) || is.null(combine_params)) stop("'combine_fun' must accept two arguments - 'vals' and 'args', in that order.")
   }
   if(split_method != "custom" && !is.null(split_fun)) warning("A function was provided to 'split_fun', but 'split_method' was not set to 'custom', so 'split_fun' will be ignored.")
@@ -433,9 +433,9 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
         extent = qt_extent(template_quadtree)
       }
     }
-    proj4string = tryCatch(crs(proj4string), error=function(cond){ #if the proj4string is invalid, use an empty string for 'proj4string'
+    proj4string = tryCatch(raster::crs(proj4string), error=function(cond){ #if the proj4string is invalid, use an empty string for 'proj4string'
       message("warning in 'qt_create()': invalid 'proj4string' provided - no projection will be assigned")
-      return(crs(""))
+      return(raster::crs(""))
     })
     x = raster::raster(x, extent[1], extent[2], extent[3], extent[4], crs=proj4string)
   }
@@ -476,7 +476,7 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
   }
   
   #create the quadtree object (but we haven't actually constructed the quadtree yet)
-  qt = new(quadtree, raster::extent(x)[1:2], raster::extent(x)[3:4], c(max_cell_length, max_cell_length), c(min_cell_length, min_cell_length), split_if_all_NA, split_if_any_NA)
+  qt = methods::new(quadtree, raster::extent(x)[1:2], raster::extent(x)[3:4], c(max_cell_length, max_cell_length), c(min_cell_length, min_cell_length), split_if_all_NA, split_if_any_NA)
   
   #deal with any NULL parameters
   blank_fun = function(){}
