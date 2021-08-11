@@ -45,9 +45,9 @@
 #'
 #'   Two slightly different ways of calculating LCPs are provided that differ in
 #'   their stop criteria - that is, the condition on which the tree stops being
-#'   built. \code{\link{qt_find_lcp()}} finds a path to a specific point. As soon
+#'   built. \code{\link{qt_find_lcp}()} finds a path to a specific point. As soon
 #'   as that node has been added to the tree, the algorithm stops and the LCP is
-#'   returned. \code{\link{qt_find_lcps()}} doesn't use a destination point -
+#'   returned. \code{\link{qt_find_lcps}()} doesn't use a destination point -
 #'   instead, the tree continues to be built until the paths exceed a given
 #'   cost-distance, depending on which one the user selects. In addition, this
 #'   constraint can be ignored in order to find all LCPs within the given set of
@@ -68,9 +68,9 @@
 #'   needed.
 #' @return returns an LCP finder object. If \code{start_point} falls outside of
 #'   the quadtree extent, \code{NULL} is returned.
-#' @seealso \code{\link{qt_find_lcp()}} returns the LCP between two points.
-#'   \code{\link{qt_find_lcps()}} finds all LCPs whose cost-distance is less
-#'   than some value. \code{\link{qt_lcp_summary()}} outputs a summary matrix of
+#' @seealso \code{\link{qt_find_lcp}()} returns the LCP between two points.
+#'   \code{\link{qt_find_lcps}()} finds all LCPs whose cost-distance is less
+#'   than some value. \code{\link{qt_lcp_summary}()} outputs a summary matrix of
 #'   all LCPs that have been calculated so far.
 #' @examples
 #' library(raster)
@@ -297,11 +297,12 @@ qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
 #' 
 #' # plot the LCP
 #' qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray30", border_lwd=.4)
-#' points(rbind(start_pt1, end_pt1), pch=16, col="red")
-#' lines(path1[,1:2], col="black")
+#' points(rbind(start_pt, end_pt), pch=16, col="red")
+#' lines(path[,1:2], col="black")
 #' 
 #' # NOTE: see "Examples" in ?qt_lcp_finder for more examples
 qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
+  if(!inherits(lcp_finder, "Rcpp_shortestPathFinder")) stop("'lcp_finder' must be a shortestPathFinder object (i.e. have class 'Rcpp_shortestPathFinder')")
   if(!is.null(lcp_finder)){
     lims = lcp_finder$getSearchLimits()
     
@@ -431,6 +432,7 @@ qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
 #' paths5 = qt_find_lcps(lcpf5, limit_type="cd", limit=500)
 #' range(paths5$lcp_cost)
 qt_find_lcps = function(lcp_finder, limit_type="none", limit=NULL){
+  if(!inherits(lcp_finder, "Rcpp_shortestPathFinder")) stop("'lcp_finder' must be a shortestPathFinder object (i.e. have class 'Rcpp_shortestPathFinder')")
   if(!(limit_type %in% c("cd","costdistance", "cd+d", "costdistance+distance", "n", "none"))){
     stop("'limit_type' must be one of the following: 'none' or 'n', 'costdistance' or 'cd', 'costdistance+distance' or 'cd+d'.")
   }
@@ -451,10 +453,10 @@ qt_find_lcps = function(lcp_finder, limit_type="none", limit=NULL){
 #' @description Given an LCP finder object, returns a matrix that summarizes all
 #'   of the LCPs that have already been calculated by the LCP finder.
 #' @param lcp_finder an LCP finder object created using
-#'   \code{\link{qt_lcp_finder()}}
+#'   \code{\link{qt_lcp_finder}()}
 #' @details Note that this function returns \strong{all} of the paths that have
 #'   been calculated. As explained in the documentation for
-#'   \code{\link{qt_lcp_finder()}}, finding one LCP likely involves finding other
+#'   \code{\link{qt_lcp_finder}()}, finding one LCP likely involves finding other
 #'   LCPs as well. Thus, even if the LCP finder has been used to find one LCP,
 #'   others have most likely been calculated. This function returns all of the
 #'   LCPs that have been calculated so far.
@@ -469,9 +471,9 @@ qt_find_lcps = function(lcp_finder, limit_type="none", limit=NULL){
 #'      \item{\code{lcp_dist}: }{the cumulative distance of the LCP to this cell -
 #'      note that this is not straight-line distance, but instead the distance
 #'      along the path} }
-#' @seealso \code{\link{qt_lcp_finder()}} creates the LCP finder object used as
-#'   input to this function. \code{\link{qt_find_lcp()}} returns the LCP between
-#'   two points. \code{\link{qt_find_lcps()}} calculates all LCPs
+#' @seealso \code{\link{qt_lcp_finder}()} creates the LCP finder object used as
+#'   input to this function. \code{\link{qt_find_lcp}()} returns the LCP between
+#'   two points. \code{\link{qt_find_lcps}()} calculates all LCPs
 #'   whose cost-distance is less than some value.
 #' @examples
 #' library(raster)
@@ -496,5 +498,6 @@ qt_find_lcps = function(lcp_finder, limit_type="none", limit=NULL){
 #' points((paths$xmin + paths$xmax)/2, (paths$ymin + paths$ymax)/2, pch=16, col="black", cex=.4)
 #' points(rbind(start_pt, end_pt), col=c("red", "blue"), pch=16)
 qt_lcp_summary = function(lcp_finder){
+  if(!inherits(lcp_finder, "Rcpp_shortestPathFinder")) stop("'lcp_finder' must be a shortestPathFinder object (i.e. have class 'Rcpp_shortestPathFinder')")
   return(data.frame(lcp_finder$getAllPathsSummary()))
 }

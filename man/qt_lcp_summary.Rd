@@ -8,7 +8,7 @@ qt_lcp_summary(lcp_finder)
 }
 \arguments{
 \item{lcp_finder}{an LCP finder object created using
-\code{\link{qt_lcp_finder()}}}
+\code{\link{qt_lcp_finder}()}}
 }
 \value{
 Returns a 9-column matrix with one row for each LCP (and therefore
@@ -30,7 +30,7 @@ Given an LCP finder object, returns a matrix that summarizes all
 \details{
 Note that this function returns \strong{all} of the paths that have
   been calculated. As explained in the documentation for
-  \code{\link{qt_lcp_finder()}}, finding one LCP likely involves finding other
+  \code{\link{qt_lcp_finder}()}, finding one LCP likely involves finding other
   LCPs as well. Thus, even if the LCP finder has been used to find one LCP,
   others have most likely been calculated. This function returns all of the
   LCPs that have been calculated so far.
@@ -59,8 +59,8 @@ points((paths$xmin + paths$xmax)/2, (paths$ymin + paths$ymax)/2, pch=16, col="bl
 points(rbind(start_pt, end_pt), col=c("red", "blue"), pch=16)
 }
 \seealso{
-\code{\link{qt_lcp_finder()}} creates the LCP finder object used as
-  input to this function. \code{\link{qt_find_lcp()}} returns the LCP between
-  two points. \code{\link{qt_find_lcps()}} calculates all LCPs
+\code{\link{qt_lcp_finder}()} creates the LCP finder object used as
+  input to this function. \code{\link{qt_find_lcp}()} returns the LCP between
+  two points. \code{\link{qt_find_lcps}()} calculates all LCPs
   whose cost-distance is less than some value.
 }

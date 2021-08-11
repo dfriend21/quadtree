@@ -73,8 +73,8 @@ path = qt_find_lcp(lcpf, end_pt)
 
 # plot the LCP
 qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray30", border_lwd=.4)
-points(rbind(start_pt1, end_pt1), pch=16, col="red")
-lines(path1[,1:2], col="black")
+points(rbind(start_pt, end_pt), pch=16, col="red")
+lines(path[,1:2], col="black")
 
 # NOTE: see "Examples" in ?qt_lcp_finder for more examples
 }

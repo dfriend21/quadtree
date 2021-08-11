@@ -64,9 +64,9 @@ This function creates an object that can then be used by
 
   Two slightly different ways of calculating LCPs are provided that differ in
   their stop criteria - that is, the condition on which the tree stops being
-  built. \code{\link{qt_find_lcp()}} finds a path to a specific point. As soon
+  built. \code{\link{qt_find_lcp}()} finds a path to a specific point. As soon
   as that node has been added to the tree, the algorithm stops and the LCP is
-  returned. \code{\link{qt_find_lcps()}} doesn't use a destination point -
+  returned. \code{\link{qt_find_lcps}()} doesn't use a destination point -
   instead, the tree continues to be built until the paths exceed a given
   cost-distance, depending on which one the user selects. In addition, this
   constraint can be ignored in order to find all LCPs within the given set of
@@ -217,8 +217,8 @@ lines(path2[,1:2], col="red")
 lines(path3[,1:2], col="blue")
 }
 \seealso{
-\code{\link{qt_find_lcp()}} returns the LCP between two points.
-  \code{\link{qt_find_lcps()}} finds all LCPs whose cost-distance is less
-  than some value. \code{\link{qt_lcp_summary()}} outputs a summary matrix of
+\code{\link{qt_find_lcp}()} returns the LCP between two points.
+  \code{\link{qt_find_lcps}()} finds all LCPs whose cost-distance is less
+  than some value. \code{\link{qt_lcp_summary}()} outputs a summary matrix of
   all LCPs that have been calculated so far.
 }
