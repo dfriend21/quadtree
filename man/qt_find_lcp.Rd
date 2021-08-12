@@ -79,8 +79,8 @@ lines(path[,1:2], col="black")
 # NOTE: see "Examples" in ?qt_lcp_finder for more examples
 }
 \seealso{
-\code{\link{qt_lcp_finder()}} creates the LCP finder object used as
-  input to this function. \code{\link{qt_find_lcps()}} calculates all LCPs
-  whose cost-distance is less than some value. \code{\link{qt_lcp_summary()}}
+\code{\link{qt_lcp_finder}()} creates the LCP finder object used as
+  input to this function. \code{\link{qt_find_lcps}()} calculates all LCPs
+  whose cost-distance is less than some value. \code{\link{qt_lcp_summary}()}
   outputs a summary matrix of all LCPs that have been calculated so far.
 }

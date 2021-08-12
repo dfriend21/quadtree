@@ -78,7 +78,7 @@ This function creates an object that can then be used by
   some distortion, especially with large cells.
 
   Also note that the \code{xlims} and \code{ylims} arguments in
-  \code{qt_lcp_finder()} can be used to restrict the search space to the
+  \code{\link{qt_lcp_finder}()} can be used to restrict the search space to the
   rectangle defined by xlims and ylims. This speeds up the computation of the
   LCP by limiting the number of cells considered.
 

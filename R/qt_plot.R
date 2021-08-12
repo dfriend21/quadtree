@@ -190,7 +190,7 @@ qt_plot = function(quadtree, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, bor
     new_mar = old_mar
     if(new_mar[4] < adj_mar_auto){ #if the right margin is less 'adj_mar_auto', set it to be 'adj_mar_auto'
       new_mar[4] = adj_mar_auto
-      par(mar=new_mar)
+      graphics::par(mar=new_mar)
     }
   }
   
@@ -222,7 +222,7 @@ qt_plot = function(quadtree, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, bor
   
   #reset the margin setting back to what it was before
   if(!is.null(adj_mar_auto) && legend){
-    par(mar=old_mar)
+    graphics::par(mar=old_mar)
   }
 }
 
@@ -410,7 +410,7 @@ add_legend = function(zlim, col, alpha=1, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_
   #get the x and y coordinates where we'll put the ticks
   ticks_x = rep(lgd_x0 + ticks_x_pct*wd_crd, length(ticks))
   ticks_y = lgd_y0 + ticks_pct*ht_crd
-  text(ticks_x, ticks_y, labels=ticks,xpd=TRUE, adj=1) #add the ticks
+  graphics::text(ticks_x, ticks_y, labels=ticks,xpd=TRUE, adj=1) #add the ticks
   
   #add horizontal lines between the color bar and the numbers
   txt_bar_gap = (ticks_x - max(graphics::strwidth(ticks))) - bar_x1 #get the distances between the right side of the color bar and the left side of the text

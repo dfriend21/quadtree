@@ -254,12 +254,14 @@
 #' 
 #' # first we'll do it WITHOUT adding NAs to the shorter dimension, which
 #' # will result in non-square cells
-#' qt2 = qt_create(rast, split_threshold = .15, split_method = "range", adj_type="resample", resample_n_side = 128, resample_pad_NAs=FALSE)
+#' qt2 = qt_create(rast, split_threshold = .15, split_method = "range", 
+#'    adj_type="resample", resample_n_side = 128, resample_pad_NAs=FALSE)
 #' qt_plot(qt2)
 #' qt_plot(qt2, crop=TRUE, na_col=NULL)
 #' 
 #' # now we'll add 'padding' NAs so that the cells of the quadtree are square
-#' qt3 = qt_create(rast, split_threshold = .15, split_method = "range", adj_type="resample", resample_n_side = 128)
+#' qt3 = qt_create(rast, split_threshold = .15, split_method = "range", 
+#'    adj_type="resample", resample_n_side = 128)
 #' qt_plot(qt3)
 #' qt_plot(qt3, crop=TRUE, na_col=NULL)
 #' 
@@ -269,8 +271,10 @@
 #' 
 #' # we can use the 'max_cell_length' and 'min_cell_length' parameters to control the
 #' # maximum and minimum cell sizes
-#' qt4 = qt_create(rast, split_threshold = .15, split_method = "range", max_cell_length = 1000, adj_type="expand")
-#' qt5 = qt_create(rast, split_threshold = .15, split_method = "range", min_cell_length = 1000, adj_type="expand")
+#' qt4 = qt_create(rast, split_threshold = .15, split_method = "range", 
+#'    max_cell_length = 1000, adj_type="expand")
+#' qt5 = qt_create(rast, split_threshold = .15, split_method = "range", 
+#'    min_cell_length = 1000, adj_type="expand")
 #' 
 #' par(mfrow=c(1,3))
 #' qt_plot(qt1, crop=TRUE, na_col=NULL, main="no cell length restrictions")
@@ -290,7 +294,8 @@
 #' qt7 = qt_create(rast, split_threshold=.15, split_method="range", split_if_any_NA=FALSE)
 #' # 'split_if_any_NA=FALSE' can be used in conjunction with 'max_cell_size' to 
 #' # avoid tiny cells on the border of an irregularly shaped raster
-#' qt8 = qt_create(rast, split_threshold=.15, split_method="range", split_if_any_NA=FALSE, max_cell_length=1000)
+#' qt8 = qt_create(rast, split_threshold=.15, split_method="range", 
+#'    split_if_any_NA=FALSE, max_cell_length=1000)
 #' 
 #' par(mfrow=c(1,3))
 #' qt_plot(qt6, border_lwd=.4)
@@ -361,12 +366,11 @@
 #' #####################################
 #' # using template quadtrees
 #' #####################################
-#' 
+#' # 'habitat_roads' has the exact same extent and resolution as 'rast' - it has
+#' # 1 where a road occurs and 0 otherwise
 #' data(habitat_roads)
 #' template = habitat_roads
 #' 
-#' # has the exact same extent and resolution as 'rast'
-#' # this raster has 1 where a road occurs and 0 otherwise
 #' plot(template)
 #' 
 #' # we can use a custom function so that a quadrant is split if it contains any 1's
@@ -374,7 +378,8 @@
 #'   if(any(vals == 1, na.rm=TRUE)) return(TRUE)
 #'   return(FALSE)
 #' }
-#' qt_template = qt_create(template, split_method="custom", split_fun=split_if_one, split_threshold=.01)
+#' qt_template = qt_create(template, split_method="custom", split_fun=split_if_one, 
+#'    split_threshold=.01)
 #' # now use the template to create a quadtree from 'rast'
 #' qt14 = qt_create(rast, template_quadtree = qt_template)
 #' 
@@ -383,7 +388,6 @@
 #' qt_plot(qt14, crop=TRUE, na_col=NULL, border_lwd=.5)
 #' par(mfrow=c(1,1))
 qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun=NULL, split_args=list(), split_if_any_NA=TRUE, split_if_all_NA=FALSE, combine_method = "mean", combine_fun=NULL, combine_args=list(), max_cell_length=NULL, min_cell_length=NULL, adj_type="expand", resample_n_side=NULL, resample_pad_NAs=TRUE, extent=NULL, proj4string=NULL, template_quadtree=NULL){
-  
   #validate inputs - this may be over the top, but many of these values get passed to C++ functionality, and if they're the wrong type the errors that are thrown are totally unhelpful - by type-checking them right away, I can provide easy-to-interpret error messages rather than messages that provide zero help
   #also, this is a complex function with a ton of options, and I want the errors to clearly point the user to the problem 
   if(!inherits(x, c("matrix", "RasterLayer"))) stop(paste0('"x" must be a "matrix" or "RasterLayer" - an object of class "', paste(class(x), collapse='" "'), '" was provided instead'))
@@ -484,7 +488,7 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
   if(is.null(split_threshold)) split_threshold = -1
   if(is.null(combine_fun)) combine_fun = blank_fun
   if(is.null(template_quadtree)){
-    template_quadtree = new(quadtree)    
+    template_quadtree = methods::new(quadtree)    
   }
   #construct the quadtree
   qt$createTree(raster::as.matrix(x), split_method, split_threshold, combine_method, split_fun, split_args, combine_fun, combine_args, template_quadtree)

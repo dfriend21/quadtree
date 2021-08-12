@@ -34,8 +34,12 @@ Calculates the LCPs to surrounding points. Constraints can be placed
   distance or cost-distance + distance (see Details).
 }
 \details{
-When \code{limit_type} is "costdistance", all paths found will have
-a cost-distance less than \code{limit}. As described in the documentation for
+When \code{limit_type} is "none", least-cost paths are calculated to all 
+cells within the search area (as defined by \code{xlims} and \code{ylims} in
+\code{\link{qt_lcp_finder}()}).
+
+When \code{limit_type} is "costdistance", all paths found will have a
+cost-distance less than \code{limit}. As described in the documentation for
 \code{\link{qt_lcp_finder}}, the cost-distance is the cost of the cell times
 the length of the segment that falls within the cell. Because all edges
 connect two cells, the segments that fall in each cell are first calculated
@@ -96,12 +100,14 @@ lcpf3 = qt_lcp_finder(qt, start_pt)
 paths3 = qt_find_lcps(lcpf3, limit_type="cd+d", limit=5000)
 
 # Now plot the reachable cells, by method - we'll plot the centroids of the reachable cells
-qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60", col=c("white", "gray30"), main="reachable cells, by 'limit_type'")
+qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60", col=c("white", "gray30"), 
+   main="reachable cells, by 'limit_type'")
 points((paths1$xmin + paths1$xmax)/2, (paths1$ymin + paths1$ymax)/2, pch=16, col="black", cex=1.4)
 points((paths2$xmin + paths2$xmax)/2, (paths2$ymin + paths2$ymax)/2, pch=16, col="red", cex=1.1)
 points((paths3$xmin + paths3$xmax)/2, (paths3$ymin + paths3$ymax)/2, pch=16, col="blue", cex=.8)
 points(start_pt[1], start_pt[2], bg="green", col="black", pch=24, cex=1.5)
-legend("topright", title="limit_type", legend=c("none", "cd", "cd+d"), pch=c(16,16,16), col=c("black", "red", "blue"), pt.cex=c(1.4,1.1,.8))
+legend("topright", title="limit_type", legend=c("none", "cd", "cd+d"), pch=c(16,16,16), 
+   col=c("black", "red", "blue"), pt.cex=c(1.4,1.1,.8))
 legend("topleft", legend="start point", pch=24, pt.cex=1.5, pt.bg="green", col="black")
 
 #####################################
@@ -122,8 +128,8 @@ paths5 = qt_find_lcps(lcpf5, limit_type="cd", limit=500)
 range(paths5$lcp_cost)
 }
 \seealso{
-\code{\link{qt_lcp_finder()}} creates the LCP finder object used as
-  input to this function. \code{\link{qt_find_lcp()}} returns the LCP between
-  two points. \code{\link{qt_lcp_summary()}} outputs a summary matrix of all
+\code{\link{qt_lcp_finder}()} creates the LCP finder object used as
+  input to this function. \code{\link{qt_find_lcp}()} returns the LCP between
+  two points. \code{\link{qt_lcp_summary}()} outputs a summary matrix of all
   LCPs that have been calculated so far.
 }
