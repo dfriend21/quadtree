@@ -70,6 +70,11 @@ Rcpp::NumericVector QuadtreeWrapper::originalRes() const{
   return v;
 }
 
+Rcpp::NumericVector QuadtreeWrapper::minCellDims() const{
+  Rcpp::NumericVector v = Rcpp::NumericVector::create(Rcpp::Named("xMinCellLength", quadtree->minXCellLength), Rcpp::Named("yMinCellLength", quadtree->minYCellLength));
+  return v;
+}
+
 Rcpp::NumericVector QuadtreeWrapper::maxCellDims() const{
   Rcpp::NumericVector v = Rcpp::NumericVector::create(Rcpp::Named("xMaxCellLength", quadtree->maxXCellLength), Rcpp::Named("yMaxCellLength", quadtree->maxYCellLength));
   return v;

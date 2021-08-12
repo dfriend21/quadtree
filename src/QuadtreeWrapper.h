@@ -41,6 +41,7 @@ class QuadtreeWrapper{
     Rcpp::NumericVector originalExtent() const;
     Rcpp::NumericVector originalDim() const;
     Rcpp::NumericVector originalRes() const;
+    Rcpp::NumericVector minCellDims() const;
     Rcpp::NumericVector maxCellDims() const;
     std::string projection() const;
     std::vector<double> getValues(const std::vector<double> &x, const std::vector<double> &y) const;

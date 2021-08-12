@@ -61,6 +61,7 @@ RCPP_MODULE(qt) {
     .method("originalExtent", &QuadtreeWrapper::originalExtent)
     .method("originalDim", &QuadtreeWrapper::originalDim)
     .method("originalRes", &QuadtreeWrapper::originalRes)
+    .method("minCellDims", &QuadtreeWrapper::minCellDims)
     .method("maxCellDims", &QuadtreeWrapper::maxCellDims)
     .method("projection", &QuadtreeWrapper::projection);
   
