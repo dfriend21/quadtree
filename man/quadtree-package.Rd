@@ -28,7 +28,7 @@
   
   \code{\link{qt_create}}: create a quadtree from a raster
   
-  \code{\link{qt_extent}}, \code{\link{qt_extent_orig}}: get the extent of a quadtree
+  \code{\link{qt_extent}}: get the extent of a quadtree
   
   \code{\link{qt_extract}}: extract values from the quadtree at point locations
   
