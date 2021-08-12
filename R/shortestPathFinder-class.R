@@ -1,0 +1,94 @@
+#' @name shortestPathFinder-class
+#' @aliases Rcpp_shortestPathFinder Rcpp_shortestPathFinder-class
+#'   shortestPathFinder shortestPathFinder$getAllPathsSummary
+#'   shortestPathFinder$getSearchLimits shortestPathFinder$getShortestPath
+#'   shortestPathFinder$getStartPoint shortestPathFinder$makeNetworkAll
+#'   shortestPathFinder$makeNetworkCost shortestPathFinder$makeNetworkCostDist
+#'   Rcpp_shortestPathFinder$getAllPathsSummary
+#'   Rcpp_shortestPathFinder$getSearchLimits
+#'   Rcpp_shortestPathFinder$getShortestPath
+#'   Rcpp_shortestPathFinder$getStartPoint
+#'   Rcpp_shortestPathFinder$makeNetworkAll
+#'   Rcpp_shortestPathFinder$makeNetworkCost
+#'   Rcpp_shortestPathFinder$makeNetworkCostDist
+#' @title C++ Shortest Path Finder
+#' @description The 'shortestPathFinder' class is a C++ data structure used to
+#'   find least-cost paths using a quadtree as a resistance surface. A
+#'   'shortestPathFinder' object is essentially defined by a quadtree and a
+#'   starting point on that quadtree, and it can be used to find least-cost
+#'   paths from the starting point to any other point on the quadtree. The
+#'   average user should not need to use any of the methods defined here, as
+#'   wrapper functions have been defined to perform these methods.
+#' @details 
+#'   Note that there is no constructor made accessible to R. This is because a
+#'   'shortestPathFinder' object is always used "on top of" a quadtree object -
+#'   to create a 'shortestPathFinder', therefore, use the
+#'   'getShortestPathFinder' member function from the 'quadtree' class.
+#' @field getAllPathsSummary \itemize{
+#'   \item \strong{Description}: Returns a matrix summarizing all the LCPs 
+#'   calculated so far. \code{\link{qt_lcp_summary}()} is a wrapper for this
+#'   function - see documentation of that function for more details.
+#'   \item \strong{Parameters}: none
+#'   \item \strong{Returns}: a matrix with one row per LCP. See documentation of 
+#'   \code{\link{qt_lcp_summary}()} for details.
+#' }
+#' @field getSearchLimits \itemize{
+#'   \item \strong{Description}: Returns the x and y limits of the search area. 
+#'   \item \strong{Parameters}: none
+#'   \item \strong{Returns}:  4-element numeric vector, in this order: xMin,
+#'   xMax, yMin, yMax
+#' }
+#' @field getShortestPath \itemize{
+#'   \item \strong{Description}: Finds the least-cost path from the starting
+#'   point to another point. \code{\link{qt_find_lcp}} is a wrapper for this 
+#'   function - see its documentation for more details.
+#'   \item \strong{Parameters}: \itemize{
+#'     \item \code{endPoint}: 2-element numeric vector - the point to find a 
+#'     shortest path to
+#'   }
+#'   \item \strong{Returns}: A matrix representing the least-cost path. See
+#'   \code{\link{qt_find_lcp}()} for details on the return matrix.
+#' }
+#' @field getStartPoint \itemize{
+#'   \item \strong{Description}: Returns the start point 
+#'   \item \strong{Parameters}: none
+#'   \item \strong{Returns}: 2-element numeric vector (x,y)
+#' }
+#' @field makeNetworkAll \itemize{
+#'   \item \strong{Description}: Calculates least-cost paths to all cells in the
+#'   search area. This corresponds to
+#'   \code{\link{qt_find_lcps}(lcp_finder,limit_type="none")}. See documentation
+#'   of that function for more details.
+#'   \item \strong{Parameters}: none
+#'   \item \strong{Returns}: void - no return value. Specific paths can be
+#'   retrieved using \code{getShortestPath}, and \code{getAllPathsSummary} can
+#'   be used to summarize all paths that have been found.
+#' }
+#' @field makeNetworkCost \itemize{
+#'   \item \strong{Description}: Calculates all least-cost paths whose
+#'   cost-distance is less than a given threshold. This correspnds to
+#'   \code{\link{qt_find_lcps}(lcp_finder,limit_type="costdistance")}. See
+#'   documentation of that function for more details
+#'   \item \strong{Parameters}: \itemize{
+#'     \item \code{constraint}: double; the maximum value of cost-distance
+#'     allowed for a least-cost path
+#'   }
+#'   \item \strong{Returns}: void - no return value. Specific paths can be
+#'   retrieved using \code{getShortestPath}, and \code{getAllPathsSummary} can
+#'   be used to summarize all paths that have been found.
+#' }
+#' @field makeNetworkCostDist \itemize{
+#'   \item \strong{Description}: Calculates all least-cost paths whose
+#'   "costdistance + distance" is less than a given threshold. This correspnds
+#'   to
+#'   \code{\link{qt_find_lcps}(lcp_finder,limit_type="costdistance+distance")}.
+#'   See documentation of that function for more details.
+#'   \item \strong{Parameters}: \itemize{
+#'     \item \code{constraint}: double; the maximum value of
+#'     costdistance+distance allowed for a least-cost path
+#'   }
+#'   \item \strong{Returns}: void - no return value. Specific paths can be
+#'   retrieved using \code{getShortestPath}, and \code{getAllPathsSummary} can
+#'   be used to summarize all paths that have been found.
+#' }
+NULL

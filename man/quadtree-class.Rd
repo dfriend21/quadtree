@@ -3,63 +3,140 @@
 \name{quadtree-class}
 \alias{quadtree-class}
 \alias{Rcpp_quadtree}
+\alias{Rcpp_quadtree-class}
 \alias{readQuadtree}
+\alias{quadtree$asList}
+\alias{quadtree$copy}
+\alias{quadtree$createTree}
+\alias{quadtree$extent}
+\alias{quadtree$getCell}
+\alias{quadtree$getCellDetails}
+\alias{quadtree$getCells}
+\alias{quadtree$getNbList}
+\alias{quadtree$getShortestPathFinder}
+\alias{quadtree$getValues}
+\alias{quadtree$minCellDims}
+\alias{quadtree$maxCellDims}
+\alias{quadtree$nNodes}
+\alias{quadtree$originalDim}
+\alias{quadtree$originalExtent}
+\alias{quadtree$originalRes}
+\alias{quadtree$print}
+\alias{quadtree$projection}
+\alias{quadtree$root}
+\alias{quadtree$setOriginalValues}
+\alias{Rcpp_quadtree$setProjection}
+\alias{Rcpp_quadtree$setValues}
+\alias{Rcpp_quadtree$writeQuadtree}
+\alias{Rcpp_quadtree$asList}
+\alias{Rcpp_quadtree$copy}
+\alias{Rcpp_quadtree$createTree}
+\alias{Rcpp_quadtree$extent}
+\alias{Rcpp_quadtree$getCell}
+\alias{Rcpp_quadtree$getCellDetails}
+\alias{Rcpp_quadtree$getCells}
+\alias{Rcpp_quadtree$getNbList}
+\alias{Rcpp_quadtree$getShortestPathFinder}
+\alias{Rcpp_quadtree$getValues}
+\alias{Rcpp_quadtree$minCellDims}
+\alias{Rcpp_quadtree$maxCellDims}
+\alias{Rcpp_quadtree$nNodes}
+\alias{Rcpp_quadtree$originalDim}
+\alias{Rcpp_quadtree$originalExtent}
+\alias{Rcpp_quadtree$originalRes}
+\alias{Rcpp_quadtree$print}
+\alias{Rcpp_quadtree$projection}
+\alias{Rcpp_quadtree$root}
+\alias{Rcpp_quadtree$setOriginalValues}
 \title{\code{quadtree}: C++ quadtree data structure}
 \description{
-The \code{Rcpp_quadtree} class is the underlying C++ data structure used
+The \code{quadtree} class is the underlying C++ data structure used
   in the \code{quadtree} package. Note that the average user should not need
   to use these functions - the functions prefixed with 'qt_' are R wrapper 
   functions that provide access to the many of the member functions.
 }
 \details{
 Note that the name of the class as it is defined is actually
-  'QuadtreeWrapper', but it is exposed to R simply as 'quadtree'. Thus, all
-  the code is in 'QuadtreeWrapper.h' and QuadtreeWrapper.cpp'. As the name
-  suggests 'QuadtreeWrapper' is a wrapper for the 'Quadtree' class. The
-  'Quadtree' class was written to be completely independent of R and Rcpp,
-  and thus operates as a stand-alone C++ class. 'QuadtreeWrapper' contains an
-  instance of a 'Quadtree' object and contains the code necessary to
-  interface between R and C++.
+  'QuadtreeWrapper', but it is exposed to R simply as 'quadtree'. Thus, this
+  class is defined in the 'QuadtreeWrapper.h' and QuadtreeWrapper.cpp' files.
+  As the name suggests 'QuadtreeWrapper' is a wrapper for the 'Quadtree'
+  class. The 'Quadtree' class was written to be completely independent of R
+  and Rcpp, and thus operates as a stand-alone C++ class. 'QuadtreeWrapper'
+  contains an instance of a 'Quadtree' object and contains the code necessary
+  to interface between R and C++.
+  
+  Each member function exposed to R is described below. Note that when a
+  function directly corresponds with one of the 'qt_*' functions, the user is
+  referred to the documentation for that function for more details (in order
+  to avoid replication of documentation)
 }
 \section{Fields}{
 
 \describe{
-\item{\code{asList}}{\itemize{
-  \item Description: outputs a list containing details about each cell
-  \item Parameters: none
-  \item Returns: a \code{list} of named numeric vectors. Each numeric vector
-  provides information on a single cell. The elements returned are:
-  \itemize{
-    \item \code{id}: the id of the cell
-    \item \code{hasChdn}: 1 if the cell has children, 0 otherwise
-    \item \code{level}: integer; the depth of this cell/node in the quadtree,
-    where the root of the quadtree is considered to be level 0
-    \item \code{xMin}, \code{xMax}, \code{yMin}, \code{yMax}: the x and y
-    limits of the cell
-    \item \code{value}: the value of the cell
-    \item \code{smSide}: the smallest cell length among all of this cells
-    descendants
-    \item \code{parentID}: the ID of the cell's parent. The root, which has
-    no parent, has a value of -1 for this element
+\item{\code{constructor}}{\itemize{
+  \item \strong{Description}: default constructor. Can be used as follows:
+  \code{qt = new(quadtree)}
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: an empty quadtree object
+}}
+
+\item{\code{constructor}}{\itemize{
+  \item \strong{Description}: constructor. Can be used as follows: \code{qt =
+  new(quadtree, xlims, ylims, maxCellLength, minCellLength, splitAllNAs,
+  splitAnyNAs)}. Used in \code{\link{qt_create}()}. The parameters for this
+  constructor correspond with the similarly named parameters in
+  \code{\link{qt_create}()} - see its documentation for more details on what
+  the parameters signify. Note that the constructor does not "build" the
+  quadtree structure - that is done by \code{createTree()}.
+  \item \strong{Parameters}: \itemize{
+    \item \code{xlims}: 2-element numeric vector
+    \item \code{ylims}: 2-element numeric vector
+    \item \code{maxCellLength}: 2-element numeric vector - first element is
+    for the x dimension, second is for the y dimension
+    \item \code{minCellLength}: 2-element numeric vector - first element is
+    for the x dimension, second is for the y dimension
+    \item \code{splitAllNAs}: boolean
+    \item \code{splitAnyNAs}: boolean
   }
-  It may be desirable to have this information as a data frame - this can done
-  with the following line of code: \code{do.call(rbind,qt$asList())}
+}}
+
+\item{\code{readQuadtree}}{\itemize{
+  \item \strong{Description}: Reads a quadtree from a file. Note that this is
+  a static function, so does not require an instance of \code{Rcpp_quadtree}
+  to be called. \code{\link{qt_read}()} is a wrapper for this function - see
+  its documentation for more details.
+  \item \strong{Parameters}: \itemize{ 
+    \item \code{filePath}: string; the file to read from
+  }
+  \item \strong{Returns}: a \code{Rcpp_quadtree} object
+}}
+
+\item{\code{asList}}{\itemize{
+  \item \strong{Description}: outputs a list containing details about each
+  cell. \code{\link{qt_as_data_frame}()} is a wrapper for this function that
+  rbinds the individual list elements into a data frame.
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: a \code{list} of named numeric vectors. Each
+  numeric vector provides information on a single cell. The elements returned
+  are the same as the columns described in the documentation for
+  \code{\link{qt_as_data_frame}()} - see that help page for details.
 }}
 
 \item{\code{copy}}{\itemize{
-  \item Description: returns a deep copy of a quadtree. \code{qt_copy} is a
-  wrapper for this function - see \code{?qt_copy} for more
-  \item Parameters: none
-  \item Returns: a quadtree object
+  \item \strong{Description}: returns a deep copy of a quadtree.
+  \code{\link{qt_copy}()} is a wrapper for this function - see the
+  documentation for that function for more details.
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: a quadtree object
 }}
 
 \item{\code{createTree}}{\itemize{
-  \item Description: constructs the quadtree from a matrix. \code{qt_create}
-  is a wrapper for this function and should be used to create quadtrees. The
-  parameters correspond with the similarly named parameters in
-  \code{qt_create} - see the documentation of that function for details on
-  the parameters
-  \item Parameters: \itemize{
+  \item \strong{Description}: constructs the quadtree from a matrix.
+  \code{\link{qt_create}()} is a wrapper for this function and should be used
+  to create quadtrees. The parameters correspond with the similarly
+  named parameters in \code{\link{qt_create}} - see the
+  documentation of that function for details on the parameters
+  \item \strong{Parameters}: \itemize{
     \item \code{mat}: matrix; data to be used to create the quadtree
     \item \code{splitMethod}: string
     \item \code{splitThreshold}: double
@@ -69,129 +146,233 @@ Note that the name of the class as it is defined is actually
     \item \code{combineArgs}: list
     \item \code{templateQuadtree}: quadtree
   }
-  \item Returns: void - no return value
+  \item \strong{Returns}: void - no return value
 }}
 
 \item{\code{extent}}{\itemize{
-  \item Description: returns the extent of the quadtree. This is equivalent
-  to \code{qt_extent(qt,original=FALSE)}
-  \item Parameters: none
-  \item Returns: 4-element numeric vector, in this order: xMin, xMax, yMin,
-  yMax
+  \item \strong{Description}: returns the extent of the quadtree. This is
+  equivalent to \code{\link{qt_extent}(qt,original=FALSE)}
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: 4-element numeric vector, in this order: xMin,
+  xMax, yMin, yMax
 }}
 
 \item{\code{getCell}}{\itemize{
-  \item Description: Given the x and y coordinates of a point, returns the 
-  cell at that point (as a 'Rcpp_node' object)
-  \item Parameters: \itemize{
+  \item \strong{Description}: Given the x and y coordinates of a point,
+  returns the cell at that point (as a 'Rcpp_node' object)
+  \item \strong{Parameters}: \itemize{
     \item \code{x}: double; x coordinate
     \item \code{y}: double; y coordinate
   }
-  \item Returns: a 'Rcpp_node' object representing the cell that contains
-  the point
+  \item \strong{Returns}: a 'Rcpp_node' object representing the cell that
+  contains the point
 }}
 
 \item{\code{getCellDetails}}{\itemize{
-  \item Description: Given points defined by their x and y coordinates,
-  returns a matrix giving details on the cells at each of the points. 
-  \code{qt_extract(qt,extents=TRUE)} is a wrapper for this function.
-  \item Parameters: \itemize{
+  \item \strong{Description}: Given points defined by their x and y
+  coordinates, returns a matrix giving details on the cells at each of the
+  points.
+  \code{\link{qt_extract}(qt,extents=TRUE)} is a wrapper for this function.
+  \item \strong{Parameters}: \itemize{
     \item \code{x}: numeric vector; the x coordinates
     \item \code{y}: numeric vector; the y coordinates; must be the same
     length as x
   }
-  \item Returns: A matrix with the cell details. See ?qt_extract for details
-  about the matrix structure
+  \item \strong{Returns}: A matrix with the cell details. See
+  \code{\link{qt_extract}()} for details about the matrix columns
 }}
 
 \item{\code{getCells}}{\itemize{
-  \item Description: Given x and y coordinates of points, returns a list
-  of the cells at those points (as 'Rcpp_node' objects)
-  \item Parameters: 
-  \item Returns:
+  \item \strong{Description}: Given x and y coordinates of points, returns a
+  list of the cells at those points (as 'Rcpp_node' objects). It is the same
+  as \code{getCell}, except that it allows users to get multiple cells at
+  once instead of one at a time.
+  \item \strong{Parameters}: \itemize{
+    \item \code{x}: numeric vector; the x coordinates
+    \item \code{y}: numeric vector; the y coordinates; must be the same
+    length as x
+  }
+  \item \strong{Returns}: a \code{list} of \code{Rcpp_node} objects
+  corresponding to
+  the x and y coordinates passed to the function
 }}
 
 \item{\code{getNbList}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Returns the neighbor relationships between all
+  cells
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: \code{list} of matrices. Each matrix corresponds to
+  a single cell and has one line for each neighboring cell. "neighbor"
+  includes
+  diagonal adjacency. Each matrix has the following columns: \itemize{
+    \item \code{id0}, \code{x0}, \code{y0}, \code{val0}: the ID, x and y
+    coordinates of the centroid, and cell value for the cell of interest.
+    Note that all of these values of these columns will be same across all
+    rows because they refer to the same cell.
+    \item \code{id1}, \code{x1}, \code{y1}, \code{val1}: the ID, x and y
+    coordinates of the centroid, and cell value for each cell that neighbors
+    the cell of interest (i.e. the cell represented by the columns suffixed
+    with '0').
+    \item \code{isLowest}: 1 or 0 - whether or not the cell of interest (i.e.
+    the cell represented by the columns suffixed with '0') is a terminal
+    node, where 1 means it is a terminal node (no children) and 0 means it is
+    not a terminal node (has children).
+  }
 }}
 
 \item{\code{getShortestPathFinder}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Returns a shortestPathFinder object (i.e.
+  object with class \code{Rcpp_shortestPathFinder}) that can be used to find
+  least-cost paths on the quadtree. \code{\link{qt_lcp_finder}()} is a
+  wrapper for this function. For details on the parameters see the
+  \strong{Description} of the similarly named parameters in
+  \code{\link{qt_lcp_finder}()}
+  \item \strong{Parameters}: \itemize{
+    \item \code{startPoint}: two element numeric vector
+    \item \code{xlims}: two element numeric vector
+    \item \code{ylims}: two element numeric vector
+  }
+  \item \strong{Returns}: an object with class \code{Rcpp_shortestPathFinder}
 }}
 
 \item{\code{getValues}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Given points defined by their x and y
+  coordinates, returns a numeric vector of the values of the cells at each of
+  the points.
+  \code{\link{qt_extract}(qt,extents=FALSE)} is a wrapper for this function.
+  \item \strong{Parameters}: \itemize{
+    \item \code{x}: numeric vector; the x coordinates
+    \item \code{y}: numeric vector; the y coordinates; must be the same
+    length as x
+  }
+  \item \strong{Returns}: a numeric vector of cell values corresponding with
+  the x and y coordinates passed to the function
 }}
 
 \item{\code{maxCellDims}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Returns the maximum allowable cell length used
+  when constructing the quadtree (i.e. the value passed to the
+  \code{max_cell_length}) parameter of \code{\link{qt_create}()}). Note that
+  this does \strong{not} return the maximum cell size in the quadtree - it
+  returns the maximum \emph{allowable} cell size. Note that if no value was
+  provided for \code{max_cell_length}, the max allowable cell length is set
+  to the length and width of the total extent.
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: A two-element numeric vector giving the maximum
+  allowable
+  side length in the x and y dimensions.
+}}
+
+\item{\code{minCellDims}}{\itemize{
+  \item \strong{Description}: Returns the minimum allowable cell length used
+  when constructing the quadtree (i.e. the value passed to the
+  \code{min_cell_length}) parameter of \code{\link{qt_create}()}). Note that
+  this does \strong{not} return the minimum cell size in the quadtree - it
+  returns the minimum \emph{allowable} cell size. Note that if no value was
+  provided for \code{min_cell_length}, the min allowable cell length is set
+  to -1.
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: A two-element numeric vector giving the minimum
+  allowable side length in the x and y dimensions.
 }}
 
 \item{\code{nNodes}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Returns the total number of nodes in the
+  quadtree. Note that this includes \emph{all} nodes, not just terminal
+  nodes.
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: integer
 }}
 
 \item{\code{originalDim}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Returns the dimensions of the raster used to
+  create the quadtree \emph{before} its dimensions were adjusted.
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: 2-element numeric vector that given the number of
+  cells along the x and y dimensions.
 }}
 
 \item{\code{originalExtent}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Returns the extent of the raster used to create
+  the quadtree \emph{before} its dimensions/extent were adjusted. This is
+  equivalent to \code{\link{qt_extent}(qt,original=TRUE)}
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: 4-element numeric vector, in this order: xMin,
+  xMax, yMin, yMax
 }}
 
 \item{\code{originalRes}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Returns the resolution of the raster used to
+  create the quadtree \emph{before} its dimensions/extent were adjusted.
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: 2-element numeric vector
 }}
 
 \item{\code{print}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Returns a string that represents the quadtree
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: a string
 }}
 
 \item{\code{projection}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Returns the proj4string of the quadtree
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: a string
 }}
 
 \item{\code{root}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Returns the root node of the quadree
+  \item \strong{Parameters}: none
+  \item \strong{Returns}: a \code{Rcpp_node} object
 }}
 
 \item{\code{setOriginalValues}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Sets the properties that record the extent and
+  dimensions of the original raster used to create the quadtree
+  \item \strong{Parameters}: \itemize{
+    \item \code{xMin}: double
+    \item \code{xMax}: double
+    \item \code{yMin}: double
+    \item \code{yMax}: double
+    \item \code{nX}: integer - number of cells along the x dimension
+    \item \code{nY}: integer - number of cells along the y dimension
+  }
+  \item \strong{Returns}: void - no return value
 }}
 
 \item{\code{setProjection}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Sets the property that records the proj4string
+  of the
+  quadtree
+  \item \strong{Parameters}: \itemize{
+    \item \code{proj4string}: string
+  }
+  \item \strong{Returns}: void - no return value
 }}
 
 \item{\code{setValues}}{\itemize{
-  \item Parameters:
-  \item Returns:
+  \item \strong{Description}: Given points defined by their x and y
+  coordinates and a vector of values, sets the values of the quadtree cells
+  at each of the points. \code{\link{qt_set_values}()} is a wrapper for this
+  function - see its documentation page for more details.
+  \code{\link{qt_extract}(qt,extents=FALSE)} is a wrapper for this function.
+  \item \strong{Parameters}: \itemize{
+    \item \code{x}: numeric vector; the x coordinates
+    \item \code{y}: numeric vector; the y coordinates; must be the same
+    length as x
+    \item \code{newVals}: numeric vector; must be the same length as x and y
+  }
+  \item \strong{Returns}: void - no return value
 }}
 
 \item{\code{writeQuadtree}}{\itemize{
-  \item Parameters:
-  \item Returns:
-}}
-
-\item{\code{readQuadtree}}{\itemize{
-   \item Parameters: \itemize{ 
-      \item filePath
-      \item otherthing
-   }
-   \item Returns: product of the values
+  \item \strong{Description}: Writes a quadtree to a file.
+  \code{\link{qt_write}()} is a wrapper for this function - see its
+  documentation page for more details.
+  \item \strong{Parameters}: \itemize{
+    \item \code{filePath}: string; the file to save the quadtree to
+  }
+  \item \strong{Returns}: void - no return value
 }}
 }}
 
