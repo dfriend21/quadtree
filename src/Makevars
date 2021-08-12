@@ -1,2 +1,2 @@
 PKG_CPPFLAGS = -I libs
-PKG_CXXFLAGS = -std=c++17
+CXX_STD = CXX14
