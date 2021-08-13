@@ -117,7 +117,7 @@
 #' 
 #' #plot all the LCPs
 #' qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray30", border_lwd=.4)
-#' lapply(all_paths1, lines)
+#' invisible(lapply(all_paths1, lines))
 #' points(start_pt1[1], start_pt1[2], bg="red", col="black", pch=21, cex=1.2)
 #' 
 #' # --------------------
@@ -159,7 +159,7 @@
 #' # plot the results
 #' qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60")
 #' with(paths_summary3, points((xmin+xmax)/2, (ymin+ymax)/2, pch=16, col="black", cex=.4))
-#' lapply(all_paths3, lines)
+#' invisible(lapply(all_paths3, lines))
 #' rect(xlims[1], ylims[1], xlims[2], ylims[2], border="red", lwd=2)
 #' points(start_pt2[1], start_pt2[2], col="red", pch=16)
 #' 
