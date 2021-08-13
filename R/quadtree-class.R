@@ -1,22 +1,5 @@
 #' @name quadtree-class
-#' @aliases Rcpp_quadtree Rcpp_quadtree-class readQuadtree quadtree$asList
-#'   quadtree$copy quadtree$createTree quadtree$extent quadtree$getCell
-#'   quadtree$getCellDetails quadtree$getCells quadtree$getNbList
-#'   quadtree$getShortestPathFinder quadtree$getValues quadtree$minCellDims
-#'   quadtree$maxCellDims quadtree$nNodes quadtree$originalDim
-#'   quadtree$originalExtent quadtree$originalRes quadtree$print
-#'   quadtree$projection quadtree$root quadtree$setOriginalValues
-#'   Rcpp_quadtree$setProjection Rcpp_quadtree$setValues
-#'   Rcpp_quadtree$writeQuadtree Rcpp_quadtree$asList Rcpp_quadtree$copy
-#'   Rcpp_quadtree$createTree Rcpp_quadtree$extent Rcpp_quadtree$getCell
-#'   Rcpp_quadtree$getCellDetails Rcpp_quadtree$getCells Rcpp_quadtree$getNbList
-#'   Rcpp_quadtree$getShortestPathFinder Rcpp_quadtree$getValues
-#'   Rcpp_quadtree$minCellDims Rcpp_quadtree$maxCellDims Rcpp_quadtree$nNodes
-#'   Rcpp_quadtree$originalDim Rcpp_quadtree$originalExtent
-#'   Rcpp_quadtree$originalRes Rcpp_quadtree$print Rcpp_quadtree$projection
-#'   Rcpp_quadtree$root Rcpp_quadtree$setOriginalValues
-#'   Rcpp_quadtree$setProjection Rcpp_quadtree$setValues
-#'   Rcpp_quadtree$writeQuadtree
+#' @aliases Rcpp_quadtree Rcpp_quadtree-class readQuadtree
 #' @title \code{quadtree}: C++ quadtree data structure
 #' @description
 #'   The \code{quadtree} class is the underlying C++ data structure used

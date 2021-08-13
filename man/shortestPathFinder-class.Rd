@@ -5,20 +5,6 @@
 \alias{Rcpp_shortestPathFinder}
 \alias{Rcpp_shortestPathFinder-class}
 \alias{shortestPathFinder}
-\alias{shortestPathFinder$getAllPathsSummary}
-\alias{shortestPathFinder$getSearchLimits}
-\alias{shortestPathFinder$getShortestPath}
-\alias{shortestPathFinder$getStartPoint}
-\alias{shortestPathFinder$makeNetworkAll}
-\alias{shortestPathFinder$makeNetworkCost}
-\alias{shortestPathFinder$makeNetworkCostDist}
-\alias{Rcpp_shortestPathFinder$getAllPathsSummary}
-\alias{Rcpp_shortestPathFinder$getSearchLimits}
-\alias{Rcpp_shortestPathFinder$getShortestPath}
-\alias{Rcpp_shortestPathFinder$getStartPoint}
-\alias{Rcpp_shortestPathFinder$makeNetworkAll}
-\alias{Rcpp_shortestPathFinder$makeNetworkCost}
-\alias{Rcpp_shortestPathFinder$makeNetworkCostDist}
 \title{C++ Shortest Path Finder}
 \description{
 The 'shortestPathFinder' class is a C++ data structure used to

@@ -1,16 +1,6 @@
 #' @name shortestPathFinder-class
-#' @aliases Rcpp_shortestPathFinder Rcpp_shortestPathFinder-class
-#'   shortestPathFinder shortestPathFinder$getAllPathsSummary
-#'   shortestPathFinder$getSearchLimits shortestPathFinder$getShortestPath
-#'   shortestPathFinder$getStartPoint shortestPathFinder$makeNetworkAll
-#'   shortestPathFinder$makeNetworkCost shortestPathFinder$makeNetworkCostDist
-#'   Rcpp_shortestPathFinder$getAllPathsSummary
-#'   Rcpp_shortestPathFinder$getSearchLimits
-#'   Rcpp_shortestPathFinder$getShortestPath
-#'   Rcpp_shortestPathFinder$getStartPoint
-#'   Rcpp_shortestPathFinder$makeNetworkAll
-#'   Rcpp_shortestPathFinder$makeNetworkCost
-#'   Rcpp_shortestPathFinder$makeNetworkCostDist
+#' @aliases Rcpp_shortestPathFinder Rcpp_shortestPathFinder-class 
+#' shortestPathFinder
 #' @title C++ Shortest Path Finder
 #' @description The 'shortestPathFinder' class is a C++ data structure used to
 #'   find least-cost paths using a quadtree as a resistance surface. A
