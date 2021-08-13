@@ -19,6 +19,8 @@
 #' easy-to-access datasets for users to experiment with when learning how to use
 #' the 'quadtree' package.
 #' @examples
+#' library(raster)
+#' 
 #' data("habitat")
 #' data("habitat_roads")
 #' 
