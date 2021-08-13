@@ -10,53 +10,32 @@
 #include <cereal/types/memory.hpp>
 #include <cereal/types/vector.hpp>
 
-  // double xMin;    
-  // double xMax;
-  // double yMin;
-  // double yMax;
-  // double value;
-  // double id;
-  // double level;
-  // double smallestChildSideLength;
-  // bool hasChildren;
-  // std::shared_ptr<Node> ptr;                                                              //                           2 3
-  // std::vector<std::shared_ptr<Node>> children;//first element is lower left corner. Indexing then proceeds by row -->  0 1 
-  // std::vector<std::shared_ptr<Node>> neighbors;
+//-------------------------
+// constructors
+//-------------------------
 
-Node::Node()
-  : Node{0,0,0,0,0,0,0} {
-  // std::cout << "Node::Node()\n";
-//  : xMin{0}, xMax{0}, yMin{0}, yMax{0}, value{0}, id{0}, level{0}, smallestChildSideLength{0}, hasChildren{false}{
-    //ptr = std::shared_ptr<Node>(nullptr);
-    // children = std::vector<std::shared_ptr<Node>>(0);
-    // neighbors = std::vector<std::shared_ptr<Node>>(0);
-  }
+Node::Node() : Node{0,0,0,0,0,0,0} {}
 
 Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level)
-  : Node{_xMin, _xMax, _yMin ,_yMax, _value, _id, _level, 0, false} {
-  // std::cout << "Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level)\n";
-  // std::cout << "---- node check 0\n";
-}
+  : Node{_xMin, _xMax, _yMin ,_yMax, _value, _id, _level, 0, false} {}
 
 Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level, double _smallestChildSideLength, bool _hasChildren)
   : xMin{_xMin}, xMax{_xMax}, yMin{_yMin}, yMax{_yMax}, value{_value}, id{_id}, level{_level}, smallestChildSideLength{_smallestChildSideLength}, hasChildren{_hasChildren}{
-  // std::cout << "Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level, double _smallestChildSideLength, bool _hasChildren)\n";
+  
   smallestChildSideLength = xMax-xMin;
   children = std::vector<std::shared_ptr<Node>>(4);
-  // std::cout << "---- node check 1\n";
-  // neighbors = std::vector<std::shared_ptr<Node>>();
   neighbors = std::vector<std::weak_ptr<Node>>();
-  // std::cout << "---- node check 2\n";
 }
 
+//-------------------------
+// getChildIndex
+//-------------------------
 //given an x and a y coordinate, returns the index of the child that contains
 //the point. Based on the assumption that the first element is lower left corner. 
 //Indexing then proceeds by row
 int Node::getChildIndex(double x, double y) const {
-  // std::cout << "Node::getChildIndex(double x, double y)\n";
   if( (x < xMin) | (x > xMax) | (y < yMin) | (y > yMax) ){ //check to make sure the point falls within our extent
-    //return -999; //if not, return NULL
-    return std::numeric_limits<double>::quiet_NaN(); 
+    return std::numeric_limits<double>::quiet_NaN(); //if not, return Nan
   }
   int col = (x < (xMin + xMax)/2) ? 0 : 1; 
   int row = (y < (yMin + yMax)/2) ? 0 : 1;
@@ -64,21 +43,16 @@ int Node::getChildIndex(double x, double y) const {
   return index;
 }
 
+//-------------------------
+// getNearestNeighborDistance
+//-------------------------
+//get the distance to the nearest neighbor (using centroids)
 double Node::getNearestNeighborDistance() const{
-  // std::cout << "Node::getNearestNeighborDistance()\n";
-  //std::vector<double> vals(ptr->neighbors.size());
   double min{0};
-  // double xMean{(ptr->xMin + ptr->xMax)/2};
-  // double yMean{(ptr->yMin + ptr->yMax)/2};
   double xMean{(xMin + xMax)/2};
   double yMean{(yMin + yMax)/2};
-  //for(size_t i = 0; i < ptr->neighbors.size(); ++i){
   for(size_t i = 0; i < neighbors.size(); ++i){
     auto nb_i = neighbors[i].lock();
-    // double xMeanNb{(ptr->neighbors[i]->xMin + ptr->neighbors[i]->xMax)/2};
-    // double yMeanNb{(ptr->neighbors[i]->yMin + ptr->neighbors[i]->yMax)/2};
-    // double xMeanNb{(neighbors[i]->xMin + neighbors[i]->xMax)/2};
-    // double yMeanNb{(neighbors[i]->yMin + neighbors[i]->yMax)/2};
     double xMeanNb{(nb_i->xMin + nb_i->xMax)/2};
     double yMeanNb{(nb_i->yMin + nb_i->yMax)/2};
     double dist = std::pow(xMean - xMeanNb,2) + std::pow(yMean - yMeanNb,2);
@@ -91,15 +65,9 @@ double Node::getNearestNeighborDistance() const{
 
 //find the minimum distance from a point to the centroids of the neighbors of this node
 double Node::getNearestNeighborDistance(const Point& point) const{
-  // std::cout << "Node::getNearestNeighborDistance(const Point& point)\n";
-  //std::vector<double> vals(node->neighbors.size());
   double min{0};
-  //double xMean{(node->xMin + node->xMax)/2};
-  //double yMean{(node->yMin + node->yMax)/2};
   for(size_t i = 0; i < neighbors.size(); ++i){
     auto nb_i = neighbors[i].lock();
-    // double xMeanNb{(neighbors[i]->xMin + neighbors[i]->xMax)/2};
-    // double yMeanNb{(neighbors[i]->yMin + neighbors[i]->yMax)/2};
     double xMeanNb{(nb_i->xMin + nb_i->xMax)/2};
     double yMeanNb{(nb_i->yMin + nb_i->yMax)/2};
     double dist = pow(point.getX() - xMeanNb,2) + pow(point.getY() - yMeanNb,2);
@@ -110,50 +78,13 @@ double Node::getNearestNeighborDistance(const Point& point) const{
   return sqrt(min);
 }
 
+//-------------------------
+// toString
+//-------------------------
 std::string Node::toString() const{
-  // std::cout << "Node::toString()\n";
   std::string str = "x: [" + std::to_string(xMin) + ", " + std::to_string(xMax) + "] | y: [" + std::to_string(yMin) + ", " + std::to_string(yMax) + "]";
   str = str + " | value: " + std::to_string(value) + " | hasChildren: " + std::to_string(hasChildren) + " | smallestChildSideLength: " +
     std::to_string(smallestChildSideLength)+ " | size(children): " + std::to_string(children.size()) + " | size(neighbors): " + std::to_string(neighbors.size()) +
     " | level: " + std::to_string(level) + " | id: " + std::to_string(id);
   return str;
 }
-
-// template<class Archive> 
-//   void Node::serialize(Archive & archive){
-//   //archive(xMin, xMax, yMin, yMax, value, id, level, smallestChildSideLength, hasChildren, ptr, children, neighbors);
-//   //archive(xMin, xMax, yMin, yMax, value, id, level, smallestChildSideLength, hasChildren);
-//   archive(xMin);
-// }
-
-// template<class Archive>
-//   void Node::save(Archive & archive) const
-//   {
-//     archive(xMin); 
-//   }
-
-//   template<class Archive>
-//   void Node::load(Archive & archive)
-//   {
-//     archive(xMin); 
-//   }
-
-// std::shared_ptr<Node> Node::makeNode(double xMin, double xMax, double yMin, double yMax, double value, int id, int level){
-//   //Node node(xMin, xMax, yMin, yMax, value);
-//   assert(xMax-xMin == yMax-yMin);
-//   //Node* node = new Node();
-//   std::shared_ptr<Node> node = std::make_shared<Node>();
-//   node->xMin = xMin;
-//   node->xMax = xMax;
-//   node->yMin = yMin;
-//   node->yMax = yMax;
-//   node->value = value;
-//   node->id = id;
-//   node->level = level;
-//   node->smallestChildSideLength = xMax-xMin;
-//   //node->ptr = std::shared_ptr<Node>(node);
-//   node->ptr = node;
-//   node->children = std::vector<std::shared_ptr<Node>>(4);
-//   node->neighbors = std::vector<std::shared_ptr<Node>>();
-//   return node->ptr;
-// }

@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 
-//zero-based indexing
 class Matrix{
 private:
     int nrow{0};
@@ -24,9 +23,15 @@ public:
     int size() const;
     std::vector<double> asVector() const;
 
+    double getValueByIndex(const int index) const;
+    double getValue(const int row, const int col) const;
+    void setValueByIndex(const double value, const int index);
+    void setValue(const double value, const int row, const int col);
+
     Matrix getRow(const int index) const;
     Matrix getCol(const int index) const;
     Matrix subset(int rMin, int rMax, int cMin, int cMax) const;
+
     Matrix flipRows() const;
     Matrix getTranspose() const;
     Matrix getMinorsMatrix() const;
@@ -38,12 +43,6 @@ public:
     double min() const;
     double max() const;
     double determinant() const; //gets the determinant
-
-    double getValue(const int row, const int col) const;
-    double getValueByIndex(const int index) const;
-
-    void setValue(const double value, const int row, const int col);
-    void setValueByIndex(const double value, const int index);
 
     int countNans() const;
     std::string toString() const;
@@ -68,5 +67,4 @@ std::ostream& operator<< (std::ostream &out, const Matrix mat);
 
 Matrix cbind(const Matrix &mat1, const Matrix &mat2);
 Matrix rbind(const Matrix &mat1, const Matrix &mat2);
-
 #endif
