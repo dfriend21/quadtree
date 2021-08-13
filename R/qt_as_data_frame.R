@@ -17,7 +17,7 @@
 #'     no parent, has a value of -1 for this element
 #'   }
 #' @examples 
-#' mat = matrix(rbind(c(1,1,0,1),c(1,1,1,0),c(1,0,1,1),c(0,1,1,1)))
+#' mat = rbind(c(1,1,0,1),c(1,1,1,0),c(1,0,1,1),c(0,1,1,1))
 #' qt = qt_create(mat,.1)
 #' qt_plot(qt)
 #' qt_as_data_frame(qt)
