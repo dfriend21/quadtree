@@ -66,6 +66,12 @@ lines(lcp[,1:2])
 points(rbind(start_point, end_point), col="red", pch=16)
 ```
 
+## Learning how to use the `quadtree` package
+
+Currently there are no vignettes, as this package is still in development, although in the future I hope to add some. However, all of the functions in the package are well documented and have extensive examples that the user can run. To understand the basics of the library, I'd recommend first reading the documentation for `qt_create` (i.e. run `?qt_create` in the console) first - this help file contains all the basic info on what a quadtree is and how it is constructed. To learn more about the least-cost path functionality, start with the documentation for `?qt_lcp_finder` and also take a look at `?qt_find_lcp` and `?qt_find_lcps`.
+
+Most of the other functions are quite simple - take a look at the PDF manual included in the repository for information on how to use them. 
+
 ## File structure
 
 The code here *mostly* conforms to the standard R package structure. The exception is the 'other_files' folder.
@@ -75,6 +81,7 @@ The code here *mostly* conforms to the standard R package structure. The excepti
 * /man - contains the documentation files
 * /other_files - contains 'scratchwork' scripts that I use to test the package functionality. This folder is ignored when the package is built.
 * /src - contains the C++ code
+* /tests - contains unit tests
 
 ## Implementation Details
 
@@ -84,13 +91,13 @@ The overall design philosophy was to keep the core C++ code completely independe
 
 ### Core C++ code
 
-This consists of the following files (only the .h files are listed to avoid redundancy):
+This consists of the following files (only the .h files are listed to avoid redundancy, but each of these files has a corresponding .cpp file):
 
 * Matrix.h - Defines the Matrix class implementing basic matrix funcitonality
 * Node.h - Defines the Node class, which are the 'nodes' of the quadtree
-* Quadtree.h - Defines the Quadtree class, which can be seen as a wrapper that provides a link to the interconnected nodes that make up the quadtree
 * Point.h - Defines a simple Point class
 * PointUtilities.h - Defines a namespace containing functions for performing  calculations with Point objects
+* Quadtree.h - Defines the Quadtree class, which can be seen as a wrapper that provides a link to the interconnected nodes that make up the quadtree
 * ShortestPathFinder.h - Defines a class for finding the least-cost paths using a quadtree as a cost surface
 
 As mentioned before, these files are completely independent of R and can be built and run independently of R.
@@ -99,11 +106,10 @@ As mentioned before, these files are completely independent of R and can be buil
 
 These files are called 'wrappers' - essentially they each contain an instance of relevant object, and provide additional Rcpp-related functions that can be accessed from R. These essentially provide the "bridge" that allows the functionality in the core C++ files to be accessed from R.
 
-* QuadtreeWrapper.h - wrapper class for 'Quadtree'
 * NodeWrapper.h - wrapper class for 'Node'
+* QuadtreeWrapper.h - wrapper class for 'Quadtree'
 * ShortestPathFinderWrapper.h - wrapper class for 'ShortestPathFinder'
-
-In addition, 'R_interface.h' defines a namespace that currently contains only a single function, which converts an Rcpp matrix to the Matrix class I created. This function is separate from the other files because it is a general-purpose function and thus didn't fit in any of the wrapper classes.
+* R_interface.h - defines a namespace that currently contains only a single function, which converts an Rcpp matrix to the Matrix class I created. This function is separate from the other files because it is a general-purpose function and thus didn't fit in any of the wrapper classes.
 
 ### R code
 
