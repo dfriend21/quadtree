@@ -77,3 +77,14 @@ test_that("reading and writing quadtrees works",{
   
   unlink(filepath)
 })
+
+test_that("changing quadtree values works",{
+  data(habitat)
+  qt = qt_create(habitat,.2)
+  set.seed(10)
+  ext = qt_extent(qt)
+  pts = cbind(runif(100,ext[1],ext[2]),runif(100,ext[3],ext[4]))
+  expect_error(qt_set_values(qt,pts,rep(-5,nrow(pts))),NA)
+  vals = qt_extract(qt,pts)  
+  expect_true(all(vals == -5))
+})
