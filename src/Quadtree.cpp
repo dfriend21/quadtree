@@ -401,6 +401,20 @@ void Quadtree::setValue(double x, double y, double newValue){
     }
 }
 
+//-------------------------
+// transformValues
+//-------------------------
+void Quadtree::transformValues(std::shared_ptr<Node> node, std::function<double (const double)> &transformFun){
+    node->value = transformFun(node->value);
+    if(node->hasChildren){
+        for(size_t i = 0; i < node->children.size(); ++i){
+            transformValues(node->children[i],transformFun);
+        }
+    }
+}
+void Quadtree::transformValues(std::function<double (const double)> &transformFun){
+    transformValues(root, transformFun);
+}
 
 //-------------------------
 // copyNode
