@@ -51,3 +51,7 @@ qt_set_values(qt, pts, rep(10,100))
 # plot it out to see what happened
 qt_plot(qt, main="after modification")
 }
+\seealso{
+\code{\link{qt_transform}()} can be used to transform the existing
+  values of all cells
+}

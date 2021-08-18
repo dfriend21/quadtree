@@ -18,6 +18,8 @@
 #' cell values will change.
 #' @return 
 #' No return value
+#' @seealso \code{\link{qt_transform}()} can be used to transform the existing
+#'   values of all cells
 #' @examples
 #' data(habitat)
 #' rast = habitat
