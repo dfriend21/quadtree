@@ -63,8 +63,8 @@ test_that("qt_find_lcps() finds the same paths as in previous runs", {
   points(rbind(start_point),col="red",pch=16)
   lcpf = qt_lcp_finder(qt,start_point)
   lcp_sum = expect_error(qt_find_lcps(lcpf,limit_type="none"),NA)
-  #write.csv(lcp_sum,"qt_find_lcps_data.csv", row.names=FALSE)
-  lcp_sum_prev = read.csv("qt_find_lcps_data.csv")
+  #write.csv(lcp_sum,"lcps/qt_find_lcps_data.csv", row.names=FALSE)
+  lcp_sum_prev = read.csv("lcps/qt_find_lcps_data.csv")
   expect_true(all(round(lcp_sum,6) == round(lcp_sum_prev,6)))
 })
 test_that("qt_find_lcp() finds the same path as in previous runs", {
@@ -80,7 +80,7 @@ test_that("qt_find_lcp() finds the same path as in previous runs", {
   lcpf = qt_lcp_finder(qt,start_point)
   lcp = qt_find_lcp(lcpf,end_point)
   
-  #write.csv(lcp,"qt_find_lcp_data.csv", row.names=FALSE)
-  lcp_prev = read.csv("qt_find_lcp_data.csv")
+  #write.csv(lcp,"lcps/qt_find_lcp_data.csv", row.names=FALSE)
+  lcp_prev = read.csv("lcps/qt_find_lcp_data.csv")
   expect_true(all(round(lcp,6)==round(lcp_prev,6))) #differences in precision was messing with this
 })
