@@ -25,12 +25,12 @@ point falls within the quadtree extent and the corresponding cell is
 \code{NA}, or if the point falls outside of the extent, \code{NaN} is
 returned.
 
-If \code{extents = TRUE}, the function returns a 5-column numeric matrix
-providing the extent of each cell along with the cell's value. The 5 columns
-are, in this order: \code{xmin}, \code{xmax}, \code{ymin}, \code{ymax},
-\code{value}. If a point falls in a \code{NA} cell, the cell extent is still
-returned but \code{value} will be \code{NaN}. If a point falls outside of the
-quadtree, all values will be \code{NaN}.
+If \code{extents = TRUE}, the function returns a 6-column numeric matrix
+providing the extent of each cell along with the cell's value and ID. The 6
+columns are, in this order: \code{id}, \code{xmin}, \code{xmax}, \code{ymin},
+\code{ymax}, \code{value}. If a point falls in a \code{NA} cell, the cell
+extent is still returned but \code{value} will be \code{NaN}. If a point
+falls outside of the quadtree, all values will be \code{NaN}.
 }
 \description{
 Extract the cell values and optionally the cell extents

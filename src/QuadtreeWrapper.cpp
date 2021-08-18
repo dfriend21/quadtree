@@ -193,22 +193,24 @@ Rcpp::List QuadtreeWrapper::getCells(Rcpp::NumericVector x, Rcpp::NumericVector 
 
 Rcpp::NumericMatrix QuadtreeWrapper::getCellDetails(Rcpp::NumericVector x, Rcpp::NumericVector y) const{
   assert(x.length() == y.length());
-  Rcpp::NumericMatrix mat(x.length(),5);
-  colnames(mat) = Rcpp::CharacterVector({"xmin","xmax","ymin","ymax","value"}); //name the columns
+  Rcpp::NumericMatrix mat(x.length(),6);
+  colnames(mat) = Rcpp::CharacterVector({"id","xmin","xmax","ymin","ymax","value"}); //name the columns
   for(int i = 0; i < x.length(); ++i){
     auto node = quadtree->getNode(x[i],y[i]);
     if(node){
-      mat(i,0) = node->xMin;
-      mat(i,1) = node->xMax;
-      mat(i,2) = node->yMin;
-      mat(i,3) = node->yMax;
-      mat(i,4) = node->value;
+      mat(i,0) = node->id;
+      mat(i,1) = node->xMin;
+      mat(i,2) = node->xMax;
+      mat(i,3) = node->yMin;
+      mat(i,4) = node->yMax;
+      mat(i,5) = node->value;
     } else {
       mat(i,0) = std::numeric_limits<double>::quiet_NaN();
       mat(i,1) = std::numeric_limits<double>::quiet_NaN();
       mat(i,2) = std::numeric_limits<double>::quiet_NaN();
       mat(i,3) = std::numeric_limits<double>::quiet_NaN();
       mat(i,4) = std::numeric_limits<double>::quiet_NaN();
+      mat(i,5) = std::numeric_limits<double>::quiet_NaN();
     }
   }
   return mat;
