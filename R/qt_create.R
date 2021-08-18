@@ -493,6 +493,11 @@ qt_create <- function(x, split_threshold=NULL, split_method = "range", split_fun
   #construct the quadtree
   qt$createTree(raster::as.matrix(x), split_method, split_threshold, combine_method, split_fun, split_args, combine_fun, combine_args, template_quadtree)
   qt$setOriginalValues(ext[1], ext[2], ext[3], ext[4], dim[1], dim[2])
-  qt$setProjection(raster::projection(x))
+  proj = raster::projection(x)
+  if(!is.na(proj)) {
+    qt$setProjection(proj)
+  } else {
+    qt$setProjection("")
+  }
   return(qt)
 }
