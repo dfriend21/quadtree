@@ -144,6 +144,22 @@ std::vector<double> QuadtreeWrapper::getValues(const std::vector<double> &x, con
   return(vals);
 }
 
+Rcpp::NumericMatrix QuadtreeWrapper::getNeighbors(Rcpp::NumericVector pt) const{
+  std::vector<double> ptVec(Rcpp::as<std::vector<double>>(pt));
+  auto node = quadtree->getNode(ptVec[0],ptVec[1]);
+  Rcpp::NumericMatrix mat(node->neighbors.size(),6);
+  colnames(mat) = Rcpp::CharacterVector({"id","xmin","xmax","ymin","ymax","value"}); //name the columns
+  for(size_t i = 0; i < node->neighbors.size(); ++i){
+    auto nb_i = node->neighbors[i].lock();
+    mat(i,0) = nb_i->id;
+    mat(i,1) = nb_i->xMin;
+    mat(i,2) = nb_i->xMax;
+    mat(i,3) = nb_i->yMin;
+    mat(i,4) = nb_i->yMax;
+    mat(i,5) = nb_i->value;
+  }
+  return mat;
+}
 
 //I should maybe switch this to accept NumericVectors for consistency...
 void QuadtreeWrapper::setValues(const std::vector<double> &x, const std::vector<double> &y, const std::vector<double> &newVals){
@@ -153,6 +169,14 @@ void QuadtreeWrapper::setValues(const std::vector<double> &x, const std::vector<
     quadtree->setValue(x[i], y[i], newVals[i]);
   }
 }
+
+void QuadtreeWrapper::transformValues(Rcpp::Function transformFun){
+  std::function<double (const double)> transform = [&transformFun] (const double val) -> double{
+    return Rcpp::as<double>(transformFun(val));
+  };
+  quadtree->transformValues(transform);
+}
+
 
 NodeWrapper QuadtreeWrapper::getCell(double x, double y) const{
   return NodeWrapper(quadtree->getNode(x, y));
@@ -269,6 +293,12 @@ QuadtreeWrapper QuadtreeWrapper::copy(){
   QuadtreeWrapper qtw = QuadtreeWrapper();
   
   qtw.proj4String = proj4String;
+  qtw.originalXMin = originalXMin;
+  qtw.originalXMax = originalXMax;
+  qtw.originalYMin = originalYMin;
+  qtw.originalYMax = originalYMax;
+  qtw.originalNX = originalNX;
+  qtw.originalNY = originalNY;
   qtw.quadtree = quadtree->copy();
   return(qtw);
 }

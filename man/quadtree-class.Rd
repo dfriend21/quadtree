@@ -177,6 +177,24 @@ Note that the name of the class as it is defined is actually
   }
 }}
 
+\item{\code{getNeighbors}}{\itemize{
+  \item \strong{Description}: Given a point, returns a matrix with info on
+  the cells that neighbor the cell that the point falls in.
+  \item \strong{Parameters}: \itemize{
+    \item \code{pt}: numeric vector of length two giving the x and y
+    coordinates of a point
+  }
+  \item \strong{Returns}: a 6-column matrix with one row per neighboring cell.
+  It has the following columns: \itemize{
+    \item \code{id} 
+    \item \code{xmin}
+    \item \code{xmax}
+    \item \code{ymin}
+    \item \code{ymax}
+    \item \code{value}
+  }
+}}
+
 \item{\code{getShortestPathFinder}}{\itemize{
   \item \strong{Description}: Returns a shortestPathFinder object (i.e.
   object with class \code{Rcpp_shortestPathFinder}) that can be used to find
@@ -318,6 +336,16 @@ Note that the name of the class as it is defined is actually
     \item \code{y}: numeric vector; the y coordinates; must be the same
     length as x
     \item \code{newVals}: numeric vector; must be the same length as x and y
+  }
+  \item \strong{Returns}: void - no return value
+}}
+
+\item{\code{transformValues}}{\itemize{
+  \item \strong{Description}: Uses a function to transform the values of
+  all cells. \code{\link{qt_transform}()} is a wrapper for this function - 
+  see its documentation page for more details.
+  \item \strong{Parameters}: \itemize{
+    \item \code{trasform_fun}: function
   }
   \item \strong{Returns}: void - no return value
 }}

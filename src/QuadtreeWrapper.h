@@ -45,8 +45,10 @@ class QuadtreeWrapper{
     Rcpp::NumericVector maxCellDims() const;
     std::string projection() const;
     std::vector<double> getValues(const std::vector<double> &x, const std::vector<double> &y) const;
+    Rcpp::NumericMatrix getNeighbors(Rcpp::NumericVector pt) const;
     
     void setValues(const std::vector<double> &x, const std::vector<double> &y, const std::vector<double> &newVals);
+    void transformValues(Rcpp::Function transformFun);
     NodeWrapper getCell(double x, double y) const;
     Rcpp::List getCells(Rcpp::NumericVector x, Rcpp::NumericVector y) const;
     Rcpp::NumericMatrix getCellDetails(Rcpp::NumericVector x, Rcpp::NumericVector y) const;
