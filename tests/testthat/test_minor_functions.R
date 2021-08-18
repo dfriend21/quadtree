@@ -78,7 +78,7 @@ test_that("reading and writing quadtrees works",{
   unlink(filepath)
 })
 
-test_that("changing quadtree values works",{
+test_that("setting quadtree values works",{
   data(habitat)
   qt = qt_create(habitat,.2)
   set.seed(10)
@@ -88,3 +88,71 @@ test_that("changing quadtree values works",{
   vals = qt_extract(qt,pts)  
   expect_true(all(vals == -5))
 })
+
+test_that("transforming quadtree values works",{
+  data(habitat)
+  qt1 = qt_create(habitat,.1,split_method="sd")
+  qt2 = qt_copy(qt1)
+  
+  expect_error(qt_transform(qt2, function(x) 2*x),NA)
+  qt1df = qt_as_data_frame(qt1)
+  qt2df = qt_as_data_frame(qt2)
+  
+  qt1df$value[is.na(qt1df$value)] = 0
+  qt2df$value[is.na(qt2df$value)] = 0
+  expect_true(all(qt1df$value*2 == qt2df$value))
+})
+
+test_that("qt_as_raster() works",{
+  data(habitat)
+  qt = qt_create(habitat,.1,split_method="sd")
+  rst1 = expect_error(qt_as_raster(qt),NA)
+  rst2 = expect_error(qt_as_raster(qt,habitat),NA)
+  
+  rst_template = raster::raster(nrows=189, ncols=204, xmn=0, xmx=30000, ymn=10000, ymx=45000)
+  rst3 = expect_error(qt_as_raster(qt,rst_template),NA)
+  
+  pts1 = raster::rasterToPoints(rst1,spatial=FALSE)
+  pts2 = raster::rasterToPoints(rst2,spatial=FALSE)
+  pts3 = raster::rasterToPoints(rst3,spatial=FALSE)
+  
+  expect_true(all(qt_extract(qt,pts1[,1:2]) == extract(rst1,pts1[,1:2])))
+  expect_true(all(qt_extract(qt,pts2[,1:2]) == extract(rst2,pts2[,1:2])))
+  expect_true(all(qt_extract(qt,pts3[,1:2]) == extract(rst3,pts3[,1:2])))
+})
+
+test_that("qt_get_neighbors() works",{
+  data(habitat)
+  mat = as.matrix(read.table("sample_data/8by8_01_matrix.txt",sep=","))
+  qt = qt_create(mat,.1)
+  
+  pt = c(5,5)
+  nbs = expect_error(qt_get_neighbors(qt,pt),NA)
+  
+  nb_centroids = rbind(c(2,6),
+                       c(4.5,6.5),
+                       c(5.5,6.5),
+                       c(7,7),
+                       c(7,5),
+                       c(7,3),
+                       c(5.5,3.5),
+                       c(4.5,3.5),
+                       c(3.5,3.5))
+  expect_true(nrow(nbs) == nrow(nb_centroids))
+  
+  nb_ids = qt_extract(qt,nb_centroids, extents=TRUE)[,"id"]
+  expect_true(all(sort(nbs[,"id"]) == sort(nb_ids)))
+})
+
+# 
+# mat = rbind(c(1,1,1,1,0,1,1,1),
+#             c(1,1,1,1,1,0,1,1),
+#             c(1,1,1,1,0,0,1,1),
+#             c(1,1,1,1,0,0,1,1),
+#             c(0,0,1,0,1,0,1,1),
+#             c(0,0,0,1,0,1,1,1),
+#             c(1,0,1,1,0,1,0,0),
+#             c(0,1,1,1,1,0,0,0))
+# write.table(mat, "sample_data/8by8_01_matrix.txt",sep=",",col.names=FALSE,row.names=FALSE)
+# qt = qt_create(mat,.1)
+# qt_plot(qt,col="white")
