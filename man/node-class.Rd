@@ -47,9 +47,9 @@ The 'node' class represents a single quadtree node.
   \item \strong{Description}: Returns a matrix with info on each of the 
   neighboring cells
   \item \strong{Parameters}: none
-  \item \strong{Returns}: a matrix. \code{\link{quadtree$getNbList}()} makes
-  use of this function - see documentation of that function for details on
-  the return matrix.
+  \item \strong{Returns}: a matrix. \code{quadtree$getNbList()} makes
+  use of this function - see documentation of that function (by running
+  \code{?'quadtree-class'}) for details on the return matrix.
 }}
 
 \item{\code{getNeighborVals}}{\itemize{
