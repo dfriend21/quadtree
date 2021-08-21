@@ -1,7 +1,7 @@
 #' @title Get the extent of a quadtree
 #' @description Gets the extent of the quadtree as an 'extent' object (from the 
 #' raster package)
-#' @param quadtree quadtree object
+#' @param qt quadtree object
 #' @param original boolean; if \code{FALSE} (the default), it returns the total
 #'   extent covered by the quadtree. If \code{TRUE}, the function returns the
 #'   extent of the original raster used to create the quadtree, before NA
@@ -26,11 +26,12 @@
 #' qt_plot(qt)
 #' rect(ext[1],ext[3],ext[2],ext[4],border="blue",lwd=4)
 #' rect(ext_orig[1],ext_orig[3],ext_orig[2],ext_orig[4],border="red",lwd=4)
-qt_extent = function(quadtree, original=FALSE){
-  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
-  if(original){
-    return(raster::extent(quadtree$originalExtent()))
-  } else {
-    return(raster::extent(quadtree$extent()))
+setMethod("extent", signature(qt = "quadtree"),
+  function(qt, original=FALSE){
+    if(original){
+      return(raster::extent(qt@ptr$originalExtent()))
+    } else {
+      return(raster::extent(qt@ptr$extent()))
+    }
   }
-}
+)

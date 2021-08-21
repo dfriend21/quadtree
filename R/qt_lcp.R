@@ -201,39 +201,42 @@
 #' lines(path1[,1:2])
 #' lines(path2[,1:2], col="red")
 #' lines(path3[,1:2], col="blue")
-qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
-  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
-  if(!is.numeric(start_point) || length(start_point) != 2) stop("'start_point' must be a numeric vector with length 2")
-  if(any(is.na(start_point))) stop("'start_point' contains NA values")
-  if(!is.null(xlims) && (!is.numeric(xlims) || length(xlims) != 2)) stop("'xlims' must be a numeric vector with length 2")
-  if(!is.null(xlims) && any(is.na(xlims))) stop("'xlims' contains NA values")
-  if(!is.null(ylims) && (!is.numeric(ylims) || length(ylims) != 2)) stop("'ylims' must be a numeric vector with length 2")
-  if(!is.null(ylims) && any(is.na(ylims))) stop("'ylims' contains NA values")
-  
-  ext = quadtree$extent()
-  if(is.null(xlims)) xlims = ext[1:2]
-  if(is.null(ylims)) ylims = ext[3:4]
-  
-  if(xlims[1] > xlims[2]) stop("'xlims[1]' must be less than 'xlims[2]'")
-  if(ylims[1] > ylims[2]) stop("'ylims[1]' must be less than 'ylims[2]'")
-  if(xlims[2] < ext[1] || xlims[1] > ext[2] || ylims[2] < ext[3] || ylims[1] > ext[4]) {
-    warning("the search area defined by 'xlims' and 'ylims' does not overlap with the quadtree extent. No LCPs will be found.")
+
+setMethod("lcp_finder", signature(qt = "quadtree", pt = "numeric"), 
+  function(qt, pt, xlims=NULL, ylims=NULL){
+    if(!is.numeric(pt) || length(pt) != 2) stop("'pt' must be a numeric vector with length 2")
+    if(any(is.na(pt))) stop("'pt' contains NA values")
+    if(!is.null(xlims) && (!is.numeric(xlims) || length(xlims) != 2)) stop("'xlims' must be a numeric vector with length 2")
+    if(!is.null(xlims) && any(is.na(xlims))) stop("'xlims' contains NA values")
+    if(!is.null(ylims) && (!is.numeric(ylims) || length(ylims) != 2)) stop("'ylims' must be a numeric vector with length 2")
+    if(!is.null(ylims) && any(is.na(ylims))) stop("'ylims' contains NA values")
+    
+    ext = qt@ptr$extent()
+    if(is.null(xlims)) xlims = ext[1:2]
+    if(is.null(ylims)) ylims = ext[3:4]
+    
+    if(xlims[1] > xlims[2]) stop("'xlims[1]' must be less than 'xlims[2]'")
+    if(ylims[1] > ylims[2]) stop("'ylims[1]' must be less than 'ylims[2]'")
+    if(xlims[2] < ext[1] || xlims[1] > ext[2] || ylims[2] < ext[3] || ylims[1] > ext[4]) {
+      warning("the search area defined by 'xlims' and 'ylims' does not overlap with the quadtree extent. No LCPs will be found.")
+    }
+    if(pt[1] < xlims[1] || pt[1] > xlims[2] || pt[2] < ylims[1] || pt[2] > ylims[2]) {
+      warning(paste0("starting point (",pt[1], ",", pt[2], ") not valid (falls outside the search area). No LCPs will be found."))
+    }
+    spf = new("lcp_finder")
+    spf@ptr = qt@ptr$getShortestPathFinder(pt, xlims, ylims)
+    # if(!spf$isValid()){
+    #   warning(paste0("warning in qt_lcp_finder(): starting point (",pt[1], ",", pt[2], ") not valid (falls outside the quadtree)"))
+    # }
+    return(spf) ######### TEMPORARY
+    # if(spf$isValid()){
+    #   return(spf)
+    # } else {
+    #   warning(paste0("warning in qt_lcp_finder(): starting point (",pt[1], ",", pt[2], ") not valid (falls outside the quadtree). Returning NULL."))
+    #   return(NULL)
+    # }
   }
-  if(start_point[1] < xlims[1] || start_point[1] > xlims[2] || start_point[2] < ylims[1] || start_point[2] > ylims[2]) {
-    warning(paste0("starting point (",start_point[1], ",", start_point[2], ") not valid (falls outside the search area). No LCPs will be found."))
-  }
-  spf = quadtree$getShortestPathFinder(start_point, xlims, ylims)
-  # if(!spf$isValid()){
-  #   warning(paste0("warning in qt_lcp_finder(): starting point (",start_point[1], ",", start_point[2], ") not valid (falls outside the quadtree)"))
-  # }
-  return(spf) ######### TEMPORARY
-  # if(spf$isValid()){
-  #   return(spf)
-  # } else {
-  #   warning(paste0("warning in qt_lcp_finder(): starting point (",start_point[1], ",", start_point[2], ") not valid (falls outside the quadtree). Returning NULL."))
-  #   return(NULL)
-  # }
-}
+)
 
 #' @title Find the LCP between two points on a quadtree
 #' @description Finds the least cost path (LCP) between two points, using a
@@ -301,26 +304,27 @@ qt_lcp_finder = function(quadtree, start_point, xlims=NULL, ylims=NULL){
 #' lines(path[,1:2], col="black")
 #' 
 #' # NOTE: see "Examples" in ?qt_lcp_finder for more examples
-qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
-  if(!inherits(lcp_finder, "Rcpp_shortestPathFinder")) stop("'lcp_finder' must be a shortestPathFinder object (i.e. have class 'Rcpp_shortestPathFinder')")
-  if(!is.null(lcp_finder)){
-    lims = lcp_finder$getSearchLimits()
-    
-    if(end_point[1] < lims[1] || end_point[1] > lims[2] || end_point[2] < lims[3] || end_point[2] > lims[4]){
-      warning("'end_point' falls outside of the search limits of the LCP finder. No LCP will be found.")
+setMethod("find_lcp", signature(lcpf = "lcp_finder", pt = "numeric"),
+  function(lcpf, pt, use_original_end_points=FALSE){
+    if(!is.null(lcpf)){
+      lims = lcpf@ptr$getSearchLimits()
+      
+      if(pt[1] < lims[1] || pt[1] > lims[2] || pt[2] < lims[3] || pt[2] > lims[4]){
+        warning("'pt' falls outside of the search limits of the LCP finder. No LCP will be found.")
+      }
+      mat = lcpf@ptr$getShortestPath(pt)
+      if(use_original_end_points && nrow(mat) > 0){
+        mat[1,1:2] = lcpf@ptr$getStartPoint()
+        mat[nrow(mat),1:2] = pt
+      }
+      return(mat)
+    } else {
+      warning("warning in qt_find_lcp(): NULL passed to the 'lcpf' parameter. Returning an empty matrix.")
+      mat = matrix(nrow=0,ncol=5, dimnames=list(NULL,c("x","y","cost_tot","dist_tot","cost_cell")))
+      return(mat)
     }
-    mat = lcp_finder$getShortestPath(end_point)
-    if(use_original_end_points && nrow(mat) > 0){
-      mat[1,1:2] = lcp_finder$getStartPoint()
-      mat[nrow(mat),1:2] = end_point
-    }
-    return(mat)
-  } else {
-    warning("warning in qt_find_lcp(): NULL passed to the 'lcp_finder' parameter. Returning an empty matrix.")
-    mat = matrix(nrow=0,ncol=5, dimnames=list(NULL,c("x","y","cost_tot","dist_tot","cost_cell")))
-    return(mat)
   }
-}
+)
 
 #' @title Find LCPs to surrounding points
 #' @description Calculates the LCPs to surrounding points. Constraints can be placed
@@ -438,23 +442,24 @@ qt_find_lcp = function(lcp_finder, end_point, use_original_end_points=FALSE){
 #' lcpf5 = qt_lcp_finder(qt, start_pt)
 #' paths5 = qt_find_lcps(lcpf5, limit_type="cd", limit=500)
 #' range(paths5$lcp_cost)
-qt_find_lcps = function(lcp_finder, limit_type="none", limit=NULL){
-  if(!inherits(lcp_finder, "Rcpp_shortestPathFinder")) stop("'lcp_finder' must be a shortestPathFinder object (i.e. have class 'Rcpp_shortestPathFinder')")
-  if(!(limit_type %in% c("cd","costdistance", "cd+d", "costdistance+distance", "n", "none"))){
-    stop("'limit_type' must be one of the following: 'none' or 'n', 'costdistance' or 'cd', 'costdistance+distance' or 'cd+d'.")
+setMethod("find_lcps", signature(lcpf = "lcp_finder"),
+  function(lcpf, limit_type="none", limit=NULL){
+    if(!(limit_type %in% c("cd","costdistance", "cd+d", "costdistance+distance", "n", "none"))){
+      stop("'limit_type' must be one of the following: 'none' or 'n', 'costdistance' or 'cd', 'costdistance+distance' or 'cd+d'.")
+    }
+    if(limit_type %in% c("costdistance", "costdistance+distance", "cd", "cd+d") && is.null(limit)){
+      stop("No value provided for 'limit'. When 'limit_type' is 'costdistance' or 'costdistance+distance', a value is required for 'limit'.")
+    }
+    if(limit_type == "costdistance" || limit_type == "cd"){
+      lcpf@ptr$makeNetworkCost(limit)
+    } else if(limit_type == "costdistance+distance" || limit_type == "cd+d"){
+      lcpf@ptr$makeNetworkCostDist(limit)
+    } else {
+      lcpf@ptr$makeNetworkAll()
+    }
+    return(lcp_summary(lcpf))
   }
-  if(limit_type %in% c("costdistance", "costdistance+distance", "cd", "cd+d") && is.null(limit)){
-    stop("No value provided for 'limit'. When 'limit_type' is 'costdistance' or 'costdistance+distance', a value is required for 'limit'.")
-  }
-  if(limit_type == "costdistance" || limit_type == "cd"){
-    lcp_finder$makeNetworkCost(limit)
-  } else if(limit_type == "costdistance+distance" || limit_type == "cd+d"){
-    lcp_finder$makeNetworkCostDist(limit)
-  } else {
-    lcp_finder$makeNetworkAll()
-  }
-  return(qt_lcp_summary(lcp_finder))
-}
+)
 
 #' @title Show a summary matrix of all LCPs currently calculated
 #' @description Given an LCP finder object, returns a matrix that summarizes all
@@ -504,7 +509,8 @@ qt_find_lcps = function(lcp_finder, limit_type="none", limit=NULL){
 #' qt_plot(qt, crop=TRUE, na_col=NULL, border_col="gray60")
 #' points((paths$xmin + paths$xmax)/2, (paths$ymin + paths$ymax)/2, pch=16, col="black", cex=.4)
 #' points(rbind(start_pt, end_pt), col=c("red", "blue"), pch=16)
-qt_lcp_summary = function(lcp_finder){
-  if(!inherits(lcp_finder, "Rcpp_shortestPathFinder")) stop("'lcp_finder' must be a shortestPathFinder object (i.e. have class 'Rcpp_shortestPathFinder')")
-  return(data.frame(lcp_finder$getAllPathsSummary()))
-}
+setMethod("lcp_summary", signature(lcpf = "lcp_finder"),
+  function(lcpf){
+    return(data.frame(lcpf@ptr$getAllPathsSummary()))
+  }
+)

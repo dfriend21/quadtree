@@ -31,13 +31,18 @@ NULL
 
 #' @rdname qt_read
 #' @export
-qt_read = function(filepath){
-  return(readQuadtree(filepath))
-}
+setMethod("read_quadtree", signature(path = "character"),
+  function(path){
+    qt = new("quadtree")
+    qt@ptr = readQuadtreeCpp(path)
+    return(qt)
+  }
+)
 
 #' @rdname qt_read
 #' @export
-qt_write = function(quadtree, filepath){
-  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
-  quadtree$writeQuadtree(filepath)
-}
+setMethod("write_quadtree", signature(qt = "quadtree", path = "character"),
+  function(qt, path){
+    qt@ptr$writeQuadtree(path)
+  }
+)

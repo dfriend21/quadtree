@@ -1,6 +1,6 @@
 #' Plot a quadtree object
 #'
-#' @param quadtree a \code{quadtree} object
+#' @param qt a \code{quadtree} object
 #' @param add boolean; if \code{TRUE}, the quadtree plot is added to the
 #'   existing plot
 #' @param col character vector; the colors that will be used to create the
@@ -128,103 +128,104 @@
 #' 
 #' # use 'legend_args' to customize the legend
 #' qt_plot(qt1, adj_mar_auto=10, legend_args=list(lgd_ht_pct=.8, bar_wd_pct=.4))
-qt_plot = function(quadtree, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, border_col="black", border_lwd=1, xlim=NULL, ylim=NULL, zlim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
-  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
-  args = list(...)
-  #if the user hasn't provided custom axis labels, assign values for the labels
-  if(is.null(args[["xlab"]])) args[["xlab"]] = "x"
-  if(is.null(args[["ylab"]])) args[["ylab"]] = "y"
+setMethod("plot", signature(x = "quadtree", y = "missing"),
+  function(x, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, border_col="black", border_lwd=1, xlim=NULL, ylim=NULL, zlim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
+    args = list(...)
+    #if the user hasn't provided custom axis labels, assign values for the labels
+    if(is.null(args[["xlab"]])) args[["xlab"]] = "x"
+    if(is.null(args[["ylab"]])) args[["ylab"]] = "y"
+    
+    nodes = dplyr::bind_rows(qt@ptr$asList()) #get all the nodes as a data frame
+    nodes = nodes[nodes$hasChdn == 0,] #we only want to plot the terminal nodes (i.e. nodes without children)
   
-  nodes = dplyr::bind_rows(quadtree$asList()) #get all the nodes as a data frame
-  nodes = nodes[nodes$hasChdn == 0,] #we only want to plot the terminal nodes (i.e. nodes without children)
-
-  if(is.null(col)){ #if 'col' is NULL, use 'terrain.colors()' as the default
-    col = grDevices::terrain.colors(100,rev=TRUE)
-  }
-  colRamp = grDevices::colorRamp(colors = col) #create the color ramp, which we'll use to get the color for each cell
-  if(is.null(zlim)){ #if zlim is NULL, use the max and min of the cell values as the zlim
-    if(all(is.na(nodes$value))){ #handle the edge case where all the values are NA
-      zlim = c(0,0)
+    if(is.null(col)){ #if 'col' is NULL, use 'terrain.colors()' as the default
+      col = grDevices::terrain.colors(100,rev=TRUE)
+    }
+    colRamp = grDevices::colorRamp(colors = col) #create the color ramp, which we'll use to get the color for each cell
+    if(is.null(zlim)){ #if zlim is NULL, use the max and min of the cell values as the zlim
+      if(all(is.na(nodes$value))){ #handle the edge case where all the values are NA
+        zlim = c(0,0)
+      } else {
+        zlim = range(nodes$value, na.rm=TRUE)
+      }
+    }
+    
+    #calculate an "adjusted" value - scales the cell values to be between 0 and 1 so they can be used with 'colRamp'
+    if(zlim[1] != zlim[2]){ #if max and min z values are the same, the denominator of the following calculation is 0, which screws things up - so we'll handle that edge case separately (in the 'else' block)
+      nodes$val_adj = (nodes$value-zlim[1])/(zlim[2]-zlim[1])
     } else {
-      zlim = range(nodes$value, na.rm=TRUE)
+      nodes$val_adj = ifelse(is.na(nodes$value), NA, .5)
+    }
+    col_nums = colRamp(nodes$val_adj) #use colRamp to get the colors for each point (returns a matrix with the RGB components)
+    
+    #now we'll convert that matrix of RGB colors to hex colors, while setting the NA values to be the user-specified NA color
+    nodes$col = apply(col_nums, MARGIN=1, function(row_i){
+      if(any(is.na(row_i))){
+        return(NA)
+      } 
+      return(grDevices::rgb(row_i[1], row_i[2], row_i[3], alpha*255, maxColorValue = 255))
+    })
+    
+    #now deal with NA cells and cells whose values fall outside of 'zlim'
+    if(is.null(na_col)){ #if na_col is NULL, we'll get rid of all the NA cells - we won't plot them at all
+      nodes = nodes[!is.na(nodes$col),]
+    } else { #otherwise we'll set the NA cells and cells with values outside of 'zlim' to be 'na_col'
+      nodes$col[is.na(nodes$col)] = na_col
+    }
+    
+    if(crop && (!is.null(xlim) || !is.null(ylim))){ #crop automatically sets the xlim and ylim values, so when 'xlim' and 'ylim' are specified by the user they conflict - in this case we'll make the user-specified x and y limits take precedence, and we'll warn the user
+      warning("`crop` is TRUE, and at least one of `xlim` and `ylim` is provided; `crop` will therefore be ignored.")
+    }
+    if(crop && is.null(xlim) && is.null(ylim)){ #if we're cropping the plot, set the x and y limits to be the original extent of the data used to create the quadtree
+      orig_ext = qt@ptr$originalExtent()
+      xlim = orig_ext[1:2]
+      ylim = orig_ext[3:4]
+    }
+    #if we're not cropping, and 'xlim' and 'ylim' have not been specified, assign values for xlim and ylim
+    if(is.null(xlim)){ xlim = qt@ptr$root()$xLims() }
+    if(is.null(ylim)){ ylim = qt@ptr$root()$yLims() }
+    
+    if(!is.null(adj_mar_auto) && legend){ #if 'adj_mar_auto' and 'legend' are both TRUE, make sure the right margin is big enough for the legend
+      old_mar = graphics::par("mar") #keep track of the old value so we can reset it after plotting
+      new_mar = old_mar
+      if(new_mar[4] < adj_mar_auto){ #if the right margin is less 'adj_mar_auto', set it to be 'adj_mar_auto'
+        new_mar[4] = adj_mar_auto
+        graphics::par(mar=new_mar)
+      }
+    }
+    
+    #finally, plot the quadtree
+    if(!add){
+      do.call(graphics::plot,c(list(x=1,y=1, xlim=xlim, ylim=ylim, type="n", asp=1),args))
+    }
+    graphics::rect(nodes$xMin, nodes$yMin, nodes$xMax, nodes$yMax, col=nodes$col, border=border_col, lwd=border_lwd)
+    
+    #if 'nb_line_col' is not NULL, we'll plot connections between neighboring cells
+    if(!is.null(nb_line_col)){
+      edges = data.frame(do.call(rbind,qt@ptr$getNbList())) #get a data frame with one row for each 'connection'
+      if(is.null(na_col)){
+        edges = stats::na.omit(edges)
+      }
+      edges = edges[edges$isLowest == 1,] #only plot connections between terminal nodes
+      graphics::segments(edges$x0, edges$y0, edges$x1, edges$y1, col=nb_line_col)
+    }
+    
+    #if 'legend' is TRUE, use 'add_legend' to add the legend
+    if(legend){
+      col_rgb = colRamp(seq(0,1,length.out=300))
+      col_hex = grDevices::rgb(col_rgb[,1], col_rgb[,2], col_rgb[,3], maxColorValue=255)
+      legend_args$zlim = zlim
+      legend_args$col = col_hex
+      legend_args$alpha = alpha
+      do.call(add_legend, legend_args)
+    }
+    
+    #reset the margin setting back to what it was before
+    if(!is.null(adj_mar_auto) && legend){
+      graphics::par(mar=old_mar)
     }
   }
-  
-  #calculate an "adjusted" value - scales the cell values to be between 0 and 1 so they can be used with 'colRamp'
-  if(zlim[1] != zlim[2]){ #if max and min z values are the same, the denominator of the following calculation is 0, which screws things up - so we'll handle that edge case separately (in the 'else' block)
-    nodes$val_adj = (nodes$value-zlim[1])/(zlim[2]-zlim[1])
-  } else {
-    nodes$val_adj = ifelse(is.na(nodes$value), NA, .5)
-  }
-  col_nums = colRamp(nodes$val_adj) #use colRamp to get the colors for each point (returns a matrix with the RGB components)
-  
-  #now we'll convert that matrix of RGB colors to hex colors, while setting the NA values to be the user-specified NA color
-  nodes$col = apply(col_nums, MARGIN=1, function(row_i){
-    if(any(is.na(row_i))){
-      return(NA)
-    } 
-    return(grDevices::rgb(row_i[1], row_i[2], row_i[3], alpha*255, maxColorValue = 255))
-  })
-  
-  #now deal with NA cells and cells whose values fall outside of 'zlim'
-  if(is.null(na_col)){ #if na_col is NULL, we'll get rid of all the NA cells - we won't plot them at all
-    nodes = nodes[!is.na(nodes$col),]
-  } else { #otherwise we'll set the NA cells and cells with values outside of 'zlim' to be 'na_col'
-    nodes$col[is.na(nodes$col)] = na_col
-  }
-  
-  if(crop && (!is.null(xlim) || !is.null(ylim))){ #crop automatically sets the xlim and ylim values, so when 'xlim' and 'ylim' are specified by the user they conflict - in this case we'll make the user-specified x and y limits take precedence, and we'll warn the user
-    warning("`crop` is TRUE, and at least one of `xlim` and `ylim` is provided; `crop` will therefore be ignored.")
-  }
-  if(crop && is.null(xlim) && is.null(ylim)){ #if we're cropping the plot, set the x and y limits to be the original extent of the data used to create the quadtree
-    orig_ext = quadtree$originalExtent()
-    xlim = orig_ext[1:2]
-    ylim = orig_ext[3:4]
-  }
-  #if we're not cropping, and 'xlim' and 'ylim' have not been specified, assign values for xlim and ylim
-  if(is.null(xlim)){ xlim = quadtree$root()$xLims() }
-  if(is.null(ylim)){ ylim = quadtree$root()$yLims() }
-  
-  if(!is.null(adj_mar_auto) && legend){ #if 'adj_mar_auto' and 'legend' are both TRUE, make sure the right margin is big enough for the legend
-    old_mar = graphics::par("mar") #keep track of the old value so we can reset it after plotting
-    new_mar = old_mar
-    if(new_mar[4] < adj_mar_auto){ #if the right margin is less 'adj_mar_auto', set it to be 'adj_mar_auto'
-      new_mar[4] = adj_mar_auto
-      graphics::par(mar=new_mar)
-    }
-  }
-  
-  #finally, plot the quadtree
-  if(!add){
-    do.call(plot,c(list(x=1,y=1, xlim=xlim, ylim=ylim, type="n", asp=1),args))
-  }
-  graphics::rect(nodes$xMin, nodes$yMin, nodes$xMax, nodes$yMax, col=nodes$col, border=border_col, lwd=border_lwd)
-  
-  #if 'nb_line_col' is not NULL, we'll plot connections between neighboring cells
-  if(!is.null(nb_line_col)){
-    edges = data.frame(do.call(rbind,quadtree$getNbList())) #get a data frame with one row for each 'connection'
-    if(is.null(na_col)){
-      edges = stats::na.omit(edges)
-    }
-    edges = edges[edges$isLowest == 1,] #only plot connections between terminal nodes
-    graphics::segments(edges$x0, edges$y0, edges$x1, edges$y1, col=nb_line_col)
-  }
-  
-  #if 'legend' is TRUE, use 'add_legend' to add the legend
-  if(legend){
-    col_rgb = colRamp(seq(0,1,length.out=300))
-    col_hex = grDevices::rgb(col_rgb[,1], col_rgb[,2], col_rgb[,3], maxColorValue=255)
-    legend_args$zlim = zlim
-    legend_args$col = col_hex
-    legend_args$alpha = alpha
-    do.call(add_legend, legend_args)
-  }
-  
-  #reset the margin setting back to what it was before
-  if(!is.null(adj_mar_auto) && legend){
-    graphics::par(mar=old_mar)
-  }
-}
+)
 
 #' @name get_coords
 #' @rdname get_coords

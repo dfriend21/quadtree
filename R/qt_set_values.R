@@ -2,7 +2,7 @@
 #' @description Given a set of points and a vector of new values, changes the
 #'   value of the quadtree cells containing the points to the corresponding
 #'   value
-#' @param quadtree The \code{quadtree} object to copy
+#' @param qt The \code{quadtree} object to copy
 #' @param pts A two-column matrix representing point coordinates. First column
 #'   contains the x-coordinates, second column contains the y-coordinates
 #' @param vals A numeric vector the same length as the number of rows of
@@ -37,12 +37,13 @@
 #' 
 #' # plot it out to see what happened
 #' qt_plot(qt, main="after modification")
-qt_set_values = function(quadtree, pts, vals){
-  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
-  if(!is.matrix(pts) && !is.data.frame(pts)) stop("'pts' must be a matrix or a data frame")
-  if(ncol(pts) != 2) stop("'pts' must have two columns")
-  if(!is.numeric(pts[,1]) || !is.numeric(pts[,2])) stop("'pts' must be numeric")
-  if(!is.numeric(vals)) stop("'vals' must be numeric")
-  if(nrow(pts) != length(vals)) stop("'vals' must have the same number of elements as the number of rows in 'pts'")
-  quadtree$setValues(pts[,1], pts[,2], vals)
-}
+setMethod("set_values", signature(qt = "quadtree", pts="ANY", vals="numeric"),
+  function(qt, pts, vals){
+    if(!is.matrix(pts) && !is.data.frame(pts)) stop("'pts' must be a matrix or a data frame")
+    if(ncol(pts) != 2) stop("'pts' must have two columns")
+    if(!is.numeric(pts[,1]) || !is.numeric(pts[,2])) stop("'pts' must be numeric")
+    if(!is.numeric(vals)) stop("'vals' must be numeric")
+    if(nrow(pts) != length(vals)) stop("'vals' must have the same number of elements as the number of rows in 'pts'")
+    qt@ptr$setValues(pts[,1], pts[,2], vals)
+  }
+)

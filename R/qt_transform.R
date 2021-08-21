@@ -1,6 +1,6 @@
 #' @title Transform the Values of All Cells
 #' @description Uses a function to change all cell values
-#' @param quadtree The \code{quadtree} object to copy
+#' @param qt The \code{quadtree} object to copy
 #' @param transform_fun function; function used on each cell to transform the 
 #'   value. Must accept a single numeric value and return a single numeric
 #'   value. The function must also be able to handle NA values.
@@ -48,7 +48,8 @@
 #' qt_plot(qt2, main="1 - value", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
 #' qt_plot(qt3, main="values cubed", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
 #' qt_plot(qt4, main="values converted to 0/1", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
-qt_transform = function(quadtree, transform_fun){
-  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
-  quadtree$transformValues(transform_fun)
-}
+setMethod("transform", signature(qt = "quadtree", fun = "function"),
+  function(qt, fun){
+    qt@ptr$transformValues(fun)
+  }
+)

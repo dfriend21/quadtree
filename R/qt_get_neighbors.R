@@ -1,7 +1,7 @@
 #' @title Get the Neighbors of a Quadtree Cell
 #' @description Returns a matrix with information about the neighbors of a 
 #' quadtree cell
-#' @param quadtree quadtree object
+#' @param qt quadtree object
 #' @param pt numeric vector of length 2; the x and y coordinates of a point - 
 #' this is used to identify which quadtree cell to find neighbors for.
 #' @return 
@@ -30,7 +30,8 @@
 #' qt_plot(qt,border_lwd=.3)
 #' points(pt[1],pt[2],col="black",bg="lightblue",pch=21)
 #' with(data.frame(nbs),rect(xmin,ymin,xmax,ymax,col="red",border="black",lwd=2))
-qt_get_neighbors = function(quadtree, pt){
-  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
-  return(quadtree$getNeighbors(pt))
-}
+setMethod("get_neighbors", signature(qt = "quadtree", pt = "numeric"),
+  function(qt, pt){
+    return(qt@ptr$getNeighbors(pt))
+  }
+)

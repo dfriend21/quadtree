@@ -1,6 +1,6 @@
 #' @title Create a Raster from a Quadtree
 #' @description Creates a raster from a quadtree
-#' @param quadtree The \code{quadtree} object to create the raster from
+#' @param qt The \code{quadtree} object to create the raster from
 #' @param rast A \code{RasterLayer} object; optional; this will be used as a
 #' template - the output raster will have the same extent and dimensions as this
 #' raster. If \code{NULL} (the default), a raster is automatically created, where
@@ -32,15 +32,17 @@
 #' qt_plot(qt, main="quadtree")
 #' plot(rst1, main="raster from quadtree")
 #' plot(rst2, main="raster from quadtree")
-qt_as_raster = function(quadtree, rast=NULL){
-  if(is.null(rast)){
-    res = quadtree$root()$smallestChildSideLength()
-    rast = raster::raster(qt_extent(quadtree), resolution=res, crs=qt_proj4string(quadtree))
-  } else {
-    rast = raster::raster(rast)
+setMethod("as_raster", signature(qt = "quadtree"),
+  function(qt, rast=NULL){
+    if(is.null(rast)){
+      res = qt@ptr$root()$smallestChildSideLength()
+      rast = raster::raster(extent(qt), resolution=res, crs=proj4string(qt))
+    } else {
+      rast = raster::raster(rast)
+    }
+    pts = raster::rasterToPoints(rast,spatial=FALSE)
+    vals = extract(qt, pts[,1:2])
+    rast[] = vals
+    return(rast)
   }
-  pts = raster::rasterToPoints(rast,spatial=FALSE)
-  vals = qt_extract(quadtree, pts[,1:2])
-  rast[] = vals
-  return(rast)
-}
+)

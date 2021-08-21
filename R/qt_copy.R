@@ -1,6 +1,6 @@
 #' @title Create a deep copy of a quadtree object
 #' @description Creates a \emph{deep} copy of a quadtree object
-#' @param quadtree The \code{quadtree} object to copy
+#' @param qt The \code{quadtree} object to copy
 #' @details This function creates  \emph{deep} copy of a quadtree object. The
 #'   quadtree class accessible from R uses pointers to a Quadtree C++ object.
 #'   Thus, if a copy is attempted by simply assigning the quadtree to a new
@@ -40,7 +40,11 @@
 #' qt_plot(qt2, main="qt2")
 #' qt_plot(qt3, main="qt3")
 #' # qt2 was modified but qt3 was not
-qt_copy = function(quadtree){
-  if(!inherits(quadtree, "Rcpp_quadtree")) stop("'quadtree' must be a quadtree object (i.e. have class 'Rcpp_quadtree')")
-  return(quadtree$copy())
-}
+setMethod("copy",signature(qt = "quadtree"),
+  function(qt){
+    if(!inherits(qt, "quadtree")) stop("'quadtree' must be a quadtree object")
+    qt_new = new("quadtree")
+    qt_new@ptr = qt@ptr$copy()
+    return(qt_new)
+  }
+)
