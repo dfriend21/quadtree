@@ -12,7 +12,7 @@
 RCPP_MODULE(qt) {
   using namespace Rcpp;
   
-  class_<NodeWrapper>("node")
+  class_<NodeWrapper>("cpp_node")
     .method("xLims", &NodeWrapper::xLims)
     .method("yLims", &NodeWrapper::yLims)
     .method("value", &NodeWrapper::value)
@@ -30,7 +30,7 @@ RCPP_MODULE(qt) {
   //.field("hasChildren", &Node::hasChildren)
   //.field("children", &Node::children);
   
-  class_<QuadtreeWrapper>("quadtree") 
+  class_<QuadtreeWrapper>("cpp_quadtree") 
     .constructor()
     //.constructor<double, double, double, double, double>()
       //.constructor<Rcpp::NumericMatrix, Rcpp::NumericVector, Rcpp::NumericVector, double, double, double>()
@@ -72,7 +72,7 @@ RCPP_MODULE(qt) {
   // 
   // Rcpp::NumericMatrix makeShortestPathNetwork();
   // Rcpp::NumericMatrix getShortestPath(std::vector<double> endPoint);
-  class_<ShortestPathFinderWrapper>("shortestPathFinder")
+  class_<ShortestPathFinderWrapper>("cpp_shortestPathFinder")
     //.constructor<QuadtreeWrapper, Rcpp::NumericVector>()
     //.constructor<QuadtreeWrapper, Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::NumericVector>()
     .method("makeNetworkAll", &ShortestPathFinderWrapper::makeNetworkAll)
@@ -84,7 +84,7 @@ RCPP_MODULE(qt) {
     .method("getSearchLimits", &ShortestPathFinderWrapper::getSearchLimits);
     //.method("isValid", &ShortestPathFinderWrapper::isValid);
 
-  function("readQuadtree", &QuadtreeWrapper::readQuadtree);
+  function("readQuadtreeCpp", &QuadtreeWrapper::readQuadtree);
   //.
   //
   //function("getNextPoint" , &getNextPoint);
