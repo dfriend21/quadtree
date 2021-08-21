@@ -1,19 +1,19 @@
-test_that("qt_as_data_frame runs without errors and produces expected output",{
+test_that("as_data_frame() runs without errors and produces expected output",{
   data(habitat)
-  qt = expect_error(qt_create(habitat,.4),NA)
-  df = qt_as_data_frame(qt)
+  qt = expect_error(quadtree(habitat,.4),NA)
+  df = as_data_frame(qt)
   expect_s3_class(df, "data.frame")
   expect_true(nrow(df) > 0)
-  expect_true(qt$nNodes() == nrow(df))
+  expect_true(qt@ptr$nNodes() == nrow(df))
 })
 
-test_that("qt_copy runs without errors and produces expected output",{
+test_that("copy() runs without errors and produces expected output",{
   data(habitat)
-  qt1 = qt_create(habitat,.3,split_method="sd")
-  qt2 = expect_error(qt_copy(qt1),NA)
-  expect_s4_class(qt2,"Rcpp_quadtree")
-  df1 = qt_as_data_frame(qt1)
-  df2 = qt_as_data_frame(qt2)
+  qt1 = quadtree(habitat,.3,split_method="sd")
+  qt2 = expect_error(copy(qt1),NA)
+  expect_s4_class(qt2,"quadtree")
+  df1 = as_data_frame(qt1)
+  df2 = as_data_frame(qt2)
   #first test w/o the value column because NA columns mess up the equality check
   expect_true(all(df1[,-1*which(names(df1)=="value")] == df2[,-1*which(names(df2)=="value")]))
   #now do the 'value' column separately
@@ -21,30 +21,30 @@ test_that("qt_copy runs without errors and produces expected output",{
   expect_true(all(which(is.na(df1$value)) == which(is.na(df2$value))))
 })
 
-test_that("qt_extent runs without errors and produces expected output",{
+test_that("extent runs without errors and produces expected output",{
   library(raster)
   data(habitat)
-  qt1 = qt_create(habitat,.3,split_method="sd")
-  expect_error(qt_extent(qt1,original=FALSE),NA)
-  qt_ext = expect_error(qt_extent(qt1,original=TRUE),NA)
+  qt1 = quadtree(habitat,.3,split_method="sd")
+  expect_error(extent(qt1,original=FALSE),NA)
+  qt_ext = expect_error(extent(qt1,original=TRUE),NA)
   expect_true(qt_ext == extent(habitat))
 })
 
-test_that("qt_extract runs without errors and returns correct values",{
+test_that("extract runs without errors and returns correct values",{
   library(raster)
   data(habitat)
-  qt1 = qt_create(habitat,0) #use 0 to make sure everything gets split as small as possible
+  qt1 = quadtree(habitat,0) #use 0 to make sure everything gets split as small as possible
   
   ext = extent(habitat)
   pts = cbind(runif(1000, ext[1], ext[2]), runif(1000, ext[3], ext[4]))  
   rst_ext = extract(habitat,pts)
-  qt_ext = expect_error(qt_extract(qt1,pts),NA)
+  qt_ext = expect_error(extract(qt1,pts),NA)
   rst_ext[is.na(rst_ext)] = -1
   qt_ext[is.na(qt_ext)] = -1
   expect_true(all(qt_ext == rst_ext))
 
   #make sure it works with the 'extents=TRUE' option too  
-  qt_ext2 = expect_error(qt_extract(qt1,pts,extents=TRUE),NA)
+  qt_ext2 = expect_error(extract(qt1,pts,extents=TRUE),NA)
   expect_true("matrix" %in% class(qt_ext2))
   expect_true(nrow(qt_ext2) > 0)
   nums = qt_ext2[,"value"]
@@ -52,23 +52,23 @@ test_that("qt_extract runs without errors and returns correct values",{
   expect_true(all(nums == rst_ext))
 })
 
-test_that("qt_proj4string runs without errors and returns correct value",{
+test_that("proj4string runs without errors and returns correct value",{
   data(habitat)
   suppressWarnings({crs(habitat) = "+init=EPSG:27700"})
-  qt1 = qt_create(habitat,.5)
-  qt_proj = expect_error(qt_proj4string(qt1),NA)
+  qt1 = quadtree(habitat,.5)
+  qt_proj = expect_error(proj4string(qt1),NA)
   expect_true(qt_proj == proj4string(habitat))
 })
 
 test_that("reading and writing quadtrees works",{
   data(habitat)
-  qt1 = qt_create(habitat,.1)
+  qt1 = quadtree(habitat,.1)
   filepath = tempfile()
-  expect_error(qt_write(qt1,filepath),NA)
-  qt2 = expect_error(qt_read(filepath),NA)
+  expect_error(write(qt1,filepath),NA)
+  qt2 = expect_error(read(filepath),NA)
   
-  df1 = qt_as_data_frame(qt1)
-  df2 = qt_as_data_frame(qt2)
+  df1 = as_data_frame(qt1)
+  df2 = as_data_frame(qt2)
   #first test w/o the value column because NA columns mess up the equality check
   expect_true(all(df1[,-1*which(names(df1)=="value")] == df2[,-1*which(names(df2)=="value")]))
   #now do the 'value' column separately
@@ -80,54 +80,54 @@ test_that("reading and writing quadtrees works",{
 
 test_that("setting quadtree values works",{
   data(habitat)
-  qt = qt_create(habitat,.2)
+  qt = quadtree(habitat,.2)
   set.seed(10)
-  ext = qt_extent(qt)
+  ext = extent(qt)
   pts = cbind(runif(100,ext[1],ext[2]),runif(100,ext[3],ext[4]))
-  expect_error(qt_set_values(qt,pts,rep(-5,nrow(pts))),NA)
-  vals = qt_extract(qt,pts)  
+  expect_error(set_values(qt,pts,rep(-5,nrow(pts))),NA)
+  vals = extract(qt,pts)  
   expect_true(all(vals == -5))
 })
 
 test_that("transforming quadtree values works",{
   data(habitat)
-  qt1 = qt_create(habitat,.1,split_method="sd")
-  qt2 = qt_copy(qt1)
+  qt1 = quadtree(habitat,.1,split_method="sd")
+  qt2 = copy(qt1)
   
-  expect_error(qt_transform(qt2, function(x) 2*x),NA)
-  qt1df = qt_as_data_frame(qt1)
-  qt2df = qt_as_data_frame(qt2)
+  expect_error(transform(qt2, function(x) 2*x),NA)
+  qt1df = as_data_frame(qt1)
+  qt2df = as_data_frame(qt2)
   
   qt1df$value[is.na(qt1df$value)] = 0
   qt2df$value[is.na(qt2df$value)] = 0
   expect_true(all(qt1df$value*2 == qt2df$value))
 })
 
-test_that("qt_as_raster() works",{
+test_that("as_raster() works",{
   data(habitat)
-  qt = qt_create(habitat,.1,split_method="sd")
-  rst1 = expect_error(qt_as_raster(qt),NA)
-  rst2 = expect_error(qt_as_raster(qt,habitat),NA)
+  qt = quadtree(habitat,.1,split_method="sd")
+  rst1 = expect_error(as_raster(qt),NA)
+  rst2 = expect_error(as_raster(qt,habitat),NA)
   
   rst_template = raster::raster(nrows=189, ncols=204, xmn=0, xmx=30000, ymn=10000, ymx=45000)
-  rst3 = expect_error(qt_as_raster(qt,rst_template),NA)
+  rst3 = expect_error(as_raster(qt,rst_template),NA)
   
   pts1 = raster::rasterToPoints(rst1,spatial=FALSE)
   pts2 = raster::rasterToPoints(rst2,spatial=FALSE)
   pts3 = raster::rasterToPoints(rst3,spatial=FALSE)
   
-  expect_true(all(qt_extract(qt,pts1[,1:2]) == extract(rst1,pts1[,1:2])))
-  expect_true(all(qt_extract(qt,pts2[,1:2]) == extract(rst2,pts2[,1:2])))
-  expect_true(all(qt_extract(qt,pts3[,1:2]) == extract(rst3,pts3[,1:2])))
+  expect_true(all(extract(qt,pts1[,1:2]) == extract(rst1,pts1[,1:2])))
+  expect_true(all(extract(qt,pts2[,1:2]) == extract(rst2,pts2[,1:2])))
+  expect_true(all(extract(qt,pts3[,1:2]) == extract(rst3,pts3[,1:2])))
 })
 
-test_that("qt_get_neighbors() works",{
+test_that("get_neighbors() works",{
   data(habitat)
   mat = as.matrix(read.table("sample_data/8by8_01_matrix.txt",sep=","))
-  qt = qt_create(mat,.1)
+  qt = quadtree(mat,.1)
   
   pt = c(5,5)
-  nbs = expect_error(qt_get_neighbors(qt,pt),NA)
+  nbs = expect_error(get_neighbors(qt,pt),NA)
   
   nb_centroids = rbind(c(2,6),
                        c(4.5,6.5),
@@ -140,7 +140,7 @@ test_that("qt_get_neighbors() works",{
                        c(3.5,3.5))
   expect_true(nrow(nbs) == nrow(nb_centroids))
   
-  nb_ids = qt_extract(qt,nb_centroids, extents=TRUE)[,"id"]
+  nb_ids = extract(qt,nb_centroids, extents=TRUE)[,"id"]
   expect_true(all(sort(nbs[,"id"]) == sort(nb_ids)))
 })
 
@@ -154,5 +154,5 @@ test_that("qt_get_neighbors() works",{
 #             c(1,0,1,1,0,1,0,0),
 #             c(0,1,1,1,1,0,0,0))
 # write.table(mat, "sample_data/8by8_01_matrix.txt",sep=",",col.names=FALSE,row.names=FALSE)
-# qt = qt_create(mat,.1)
-# qt_plot(qt,col="white")
+# qt = quadtree(mat,.1)
+# plot(qt,col="white")
