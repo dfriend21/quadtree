@@ -1,3 +1,8 @@
 useDynLib(quadtree, .registration=TRUE)
 import(methods,Rcpp)
-exportPattern("^[[:alpha:]]+")
+#exportPattern("^[[:alpha:]]+")
+
+exportClasses(quadtree, lcp_finder)
+exportMethods(as_data_frame, as_raster, copy, extent, extract, 
+              find_lcp, find_lcps, get_neighbors, lcp_finder, lcp_summary, plot, proj4string,
+              read_quadtree, write_quadtree, set_values, transform)
