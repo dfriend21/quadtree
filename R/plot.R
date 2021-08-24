@@ -1,6 +1,8 @@
-#' Plot a quadtree object
-#'
-#' @param qt a \code{quadtree} object
+#' @include generics.R
+
+#' @name plot
+#' @title Plot a \code{\link{Quadtree}} object
+#' @param x a \code{\link{Quadtree}} object
 #' @param add boolean; if \code{TRUE}, the quadtree plot is added to the
 #'   existing plot
 #' @param col character vector; the colors that will be used to create the
@@ -53,14 +55,14 @@
 #' data(habitat)
 #' rast = habitat
 #' # create quadtree
-#' qt1 = qt_create(rast, split_threshold=.1, adj_type="expand")
+#' qt1 = quadtree(rast, split_threshold=.1, adj_type="expand")
 #' 
 #' #####################################
 #' # DEFAULT
 #' #####################################
 #' 
 #' # default - no additional parameters provided
-#' qt_plot(qt1)
+#' plot(qt1)
 #' 
 #' #####################################
 #' # CHANGE PLOT EXTENT
@@ -70,72 +72,73 @@
 #' # passed to the default 'plot()' function
 #' 
 #' # crop extent to the original extent of the raster
-#' qt_plot(qt1, crop=TRUE, main="cropped")
+#' plot(qt1, crop=TRUE, main="cropped")
 #' 
 #' # crop and don't plot NA cells
-#' qt_plot(qt1, crop=TRUE, na_col=NULL, main="cropped")
+#' plot(qt1, crop=TRUE, na_col=NULL, main="cropped")
 #' 
 #' # use 'xlim' and 'ylim' to zoom in on an area
-#' qt_plot(qt1, xlim = c(10000,20000), ylim = c(20000,30000), main="zoomed in")
+#' plot(qt1, xlim = c(10000,20000), ylim = c(20000,30000), main="zoomed in")
 #' 
 #' #####################################
 #' # COLORS
 #' #####################################
 #' 
 #' # change border color and width
-#' qt_plot(qt1, border_col="transparent") #no borders
-#' qt_plot(qt1, border_col="gray60") #gray borders
-#' qt_plot(qt1, border_lwd=.3) #change line thickness of borders
+#' plot(qt1, border_col="transparent") #no borders
+#' plot(qt1, border_col="gray60") #gray borders
+#' plot(qt1, border_lwd=.3) #change line thickness of borders
 #' 
 #' # change color palette
-#' qt_plot(qt1, col=c("blue", "yellow", "red"))
-#' qt_plot(qt1, col=hcl.colors(100))
-#' qt_plot(qt1, col=c("black", "white"))
+#' plot(qt1, col=c("blue", "yellow", "red"))
+#' plot(qt1, col=hcl.colors(100))
+#' plot(qt1, col=c("black", "white"))
 #' 
 #' # change color transparency
-#' qt_plot(qt1, alpha=.5)
-#' qt_plot(qt1, col=c("blue", "yellow", "red"), alpha=.5)
+#' plot(qt1, alpha=.5)
+#' plot(qt1, col=c("blue", "yellow", "red"), alpha=.5)
 #' 
 #' # change color of NA cells
-#' qt_plot(qt1, na_col="lavender")
+#' plot(qt1, na_col="lavender")
 #' 
 #' # don't plot NA cells at all
-#' qt_plot(qt1, na_col=NULL)
+#' plot(qt1, na_col=NULL)
 #' 
 #' # change 'zlim'
-#' qt_plot(qt1, zlim=c(0,5))
-#' qt_plot(qt1, zlim=c(.2,.7))
+#' plot(qt1, zlim=c(0,5))
+#' plot(qt1, zlim=c(.2,.7))
 #' 
 #' #####################################
 #' # SHOW NEIGHBOR CONNECTIONS
 #' #####################################
 #' 
 #' # plot all neighbor connections
-#' qt_plot(qt1, nb_line_col="black", border_col="gray60")
+#' plot(qt1, nb_line_col="black", border_col="gray60")
 #' 
 #' # don't plot connections to NA cells
-#' qt_plot(qt1, nb_line_col="black", border_col="gray60", na_col=NULL)
+#' plot(qt1, nb_line_col="black", border_col="gray60", na_col=NULL)
 #' 
 #' #####################################
 #' # LEGEND
 #' #####################################
 #' 
 #' # no legend
-#' qt_plot(qt1, legend=FALSE)
+#' plot(qt1, legend=FALSE)
 #' 
 #' # increase right margin size
-#' qt_plot(qt1, adj_mar_auto=10)
+#' plot(qt1, adj_mar_auto=10)
 #' 
 #' # use 'legend_args' to customize the legend
-#' qt_plot(qt1, adj_mar_auto=10, legend_args=list(lgd_ht_pct=.8, bar_wd_pct=.4))
-setMethod("plot", signature(x = "quadtree", y = "missing"),
+#' plot(qt1, adj_mar_auto=10, legend_args=list(lgd_ht_pct=.8, bar_wd_pct=.4))
+#' @export
+setMethod("plot", signature(x = "Quadtree", y = "missing"),
   function(x, add=FALSE, col=NULL, alpha=1, nb_line_col=NULL, border_col="black", border_lwd=1, xlim=NULL, ylim=NULL, zlim=NULL, crop=FALSE, na_col="white", adj_mar_auto=6, legend=TRUE, legend_args=list(), ...) {
     args = list(...)
     #if the user hasn't provided custom axis labels, assign values for the labels
     if(is.null(args[["xlab"]])) args[["xlab"]] = "x"
     if(is.null(args[["ylab"]])) args[["ylab"]] = "y"
     
-    nodes = dplyr::bind_rows(qt@ptr$asList()) #get all the nodes as a data frame
+    nodes = dplyr::bind_rows(x@ptr$asList()) #get all the nodes as a data frame
     nodes = nodes[nodes$hasChdn == 0,] #we only want to plot the terminal nodes (i.e. nodes without children)
   
     if(is.null(col)){ #if 'col' is NULL, use 'terrain.colors()' as the default
@@ -177,13 +180,13 @@ setMethod("plot", signature(x = "quadtree", y = "missing"),
       warning("`crop` is TRUE, and at least one of `xlim` and `ylim` is provided; `crop` will therefore be ignored.")
     }
     if(crop && is.null(xlim) && is.null(ylim)){ #if we're cropping the plot, set the x and y limits to be the original extent of the data used to create the quadtree
-      orig_ext = qt@ptr$originalExtent()
+      orig_ext = x@ptr$originalExtent()
       xlim = orig_ext[1:2]
       ylim = orig_ext[3:4]
     }
     #if we're not cropping, and 'xlim' and 'ylim' have not been specified, assign values for xlim and ylim
-    if(is.null(xlim)){ xlim = qt@ptr$root()$xLims() }
-    if(is.null(ylim)){ ylim = qt@ptr$root()$yLims() }
+    if(is.null(xlim)){ xlim = x@ptr$root()$xLims() }
+    if(is.null(ylim)){ ylim = x@ptr$root()$yLims() }
     
     if(!is.null(adj_mar_auto) && legend){ #if 'adj_mar_auto' and 'legend' are both TRUE, make sure the right margin is big enough for the legend
       old_mar = graphics::par("mar") #keep track of the old value so we can reset it after plotting
@@ -202,7 +205,7 @@ setMethod("plot", signature(x = "quadtree", y = "missing"),
     
     #if 'nb_line_col' is not NULL, we'll plot connections between neighboring cells
     if(!is.null(nb_line_col)){
-      edges = data.frame(do.call(rbind,qt@ptr$getNbList())) #get a data frame with one row for each 'connection'
+      edges = data.frame(do.call(rbind,x@ptr$getNbList())) #get a data frame with one row for each 'connection'
       if(is.null(na_col)){
         edges = stats::na.omit(edges)
       }
@@ -227,58 +230,57 @@ setMethod("plot", signature(x = "quadtree", y = "missing"),
   }
 )
 
-#' @name get_coords
-#' @rdname get_coords
-#' @title Get the extent of the figure area in plot units (for one dimension)
-#' @description Given the coordinate range of a single dimension in user units
-#'   (\code{par("usr")}) and the coordinates of that same coordinate range as a
-#'   fraction of the current figure region (\code{par("plt")}), calculates the
-#'   extent of the entire figure area in user units.
-#' @param usr two-element (\code{get_coords_axis}) or four-element
-#'   (\code{get_coords}) numeric vector; specifies the user coordinates of the
-#'   plot region. Can be retrieved using \code{par("usr")}, and subscripts can
-#'   be used to get only one dimension (for \code{get_coords_axis} - i.e
-#'   \code{par("usr")[1:2]})
-#' @param plt two-element (\code{get_coords_axis}) or four-element
-#'   (\code{get_coords}) numeric vector; specifies the coordinates of the plot
-#'   region as fractions of the figure region. Can be retrieved using
-#'   \code{par("plt")}, and subscripts can be used to get only one dimension
-#'   (for \code{get_coords_axis} - i.e \code{par("plt")[1:2]})
-#' @details \code{get_coords_axis()} is used to find the user coordinates of a
-#'   single dimension of the figure area. In this case, \code{usr} and
-#'   \code{plt} should both be two-element vectors corresponding to the same
-#'   dimension (see examples). Both vectors need to be in the format
-#'   \code{c(max,min)}.
-#'
-#'   \code{get_coords()} is simply a wrapper for \code{get_coords_axis} that does
-#'   both dimensions at once. In this case the output of \code{par("usr")} and
-#'   \code{par("plt")} can be directly supplied to the \code{usr} and \code{plt}
-#'   parameters, respectively. Note that for both parameters the vectors must
-#'   have length 4 and be in this order: \code{c(xmin,xmax,ymin,ymax)}.
-#'
-#'   These functions were written for use in \code{\link{add_legend}}. In order
-#'   to properly place the legend, I needed to know the extent of the entire
-#'   figure region in user coordinates. However, there's nothing about this
-#'   function that is specific to that one application, and could be used in
-#'   other situations as well.
-#'
-#'   Understanding what these functions do (and why they're necessary) requires
-#'   an understanding of the graphical parameters, and in particular what
-#'   \code{usr} and \code{plt} represent. See \code{?par} for more on these
-#'   parameters.
-#' @examples
-#' p = par() # retrieve the graphical parameters as a list
-#' get_coords_axis(p$usr[1:2], p$plt[1:2]) # x-axis
-#' get_coords_axis(p$usr[3:4], p$plt[3:4]) # y-axis
-#'
-#' get_coords(p$usr, p$plt) # both dimensions at once
-#' get_coords(par("usr"), par("plt")) # this also works
-#' @seealso Run \code{?par} for more details on the \code{usr} and \code{plt}
-#'   parameters
+# @name get_coords
+# @rdname get_coords
+# @title Get the extent of the figure area in plot units (for one dimension)
+# @description Given the coordinate range of a single dimension in user units
+#   (\code{par("usr")}) and the coordinates of that same coordinate range as a
+#   fraction of the current figure region (\code{par("plt")}), calculates the
+#   extent of the entire figure area in user units.
+# @param usr two-element (\code{get_coords_axis}) or four-element
+#   (\code{get_coords}) numeric vector; specifies the user coordinates of the
+#   plot region. Can be retrieved using \code{par("usr")}, and subscripts can
+#   be used to get only one dimension (for \code{get_coords_axis} - i.e
+#   \code{par("usr")[1:2]})
+# @param plt two-element (\code{get_coords_axis}) or four-element
+#   (\code{get_coords}) numeric vector; specifies the coordinates of the plot
+#   region as fractions of the figure region. Can be retrieved using
+#   \code{par("plt")}, and subscripts can be used to get only one dimension
+#   (for \code{get_coords_axis} - i.e \code{par("plt")[1:2]})
+# @details \code{get_coords_axis()} is used to find the user coordinates of a
+#   single dimension of the figure area. In this case, \code{usr} and
+#   \code{plt} should both be two-element vectors corresponding to the same
+#   dimension (see examples). Both vectors need to be in the format
+#   \code{c(max,min)}.
+#
+#   \code{get_coords()} is simply a wrapper for \code{get_coords_axis} that does
+#   both dimensions at once. In this case the output of \code{par("usr")} and
+#   \code{par("plt")} can be directly supplied to the \code{usr} and \code{plt}
+#   parameters, respectively. Note that for both parameters the vectors must
+#   have length 4 and be in this order: \code{c(xmin,xmax,ymin,ymax)}.
+#
+#   These functions were written for use in \code{\link{add_legend}}. In order
+#   to properly place the legend, I needed to know the extent of the entire
+#   figure region in user coordinates. However, there's nothing about this
+#   function that is specific to that one application, and could be used in
+#   other situations as well.
+#
+#   Understanding what these functions do (and why they're necessary) requires
+#   an understanding of the graphical parameters, and in particular what
+#   \code{usr} and \code{plt} represent. See \code{?par} for more on these
+#   parameters.
+# @examples
+# p = par() # retrieve the graphical parameters as a list
+# get_coords_axis(p$usr[1:2], p$plt[1:2]) # x-axis
+# get_coords_axis(p$usr[3:4], p$plt[3:4]) # y-axis
+#
+# get_coords(p$usr, p$plt) # both dimensions at once
+# get_coords(par("usr"), par("plt")) # this also works
+# @seealso Run \code{?par} for more details on the \code{usr} and \code{plt}
+#   parameters
 NULL
 
-#' @rdname get_coords
-#' @export
+# @rdname get_coords
 get_coords_axis = function(usr, plt){
   b_a = (usr[2]-usr[1])/(plt[2]-plt[1])
   a = usr[1] - plt[1]*b_a
@@ -286,8 +288,7 @@ get_coords_axis = function(usr, plt){
   return(c(a,b))
 }
  
-#' @rdname get_coords
-#' @export
+# @rdname get_coords
 get_coords = function(usr, plt){
   x = get_coords_axis(usr[1:2], plt[1:2])
   y = get_coords_axis(usr[3:4], plt[3:4])
@@ -343,24 +344,25 @@ get_coords = function(usr, plt){
 #'   I obviously wrote this for plotting the quadtree, but there's nothing
 #'   quadtree-specific about this particular function.
 #'
-#'   This function is used within \code{\link{qt_plot}}, so the user shouldn't
+#'   This function is used within \code{\link{plot}}, so the user shouldn't
 #'   call this function to manually create the legend. Customizations to the
 #'   legend can be done via the \code{legend_args} parameter of
-#'   \code{qt_plot()}. Using this function to plot the legend after using
-#'   \code{qt_plot()} raises the possibility of the legend not corresponding
+#'   \code{plot()}. Using this function to plot the legend after using
+#'   \code{plot()} raises the possibility of the legend not corresponding
 #'   correctly with the plot, and thus should be avoided.
 #' @examples
 #' set.seed(23)
 #' mat = matrix(runif(64,0,1), nrow=8)
-#' qt = qt_create(mat, .75)
+#' qt = quadtree(mat, .75)
 #' 
 #' par(mar=c(5,4,4,5))
-#' qt_plot(qt,legend=FALSE)
+#' plot(qt,legend=FALSE)
 #' add_legend(range(mat), rev(terrain.colors(100)))
 #' # this example simply illustrates how it COULD be used, but as stated in the
-#' # 'Details' section, it shouldn't be called separately from 'qt_plot()' - if
+#' # 'Details' section, it shouldn't be called separately from 'plot()' - if
 #' # customizations to the legend are desired, use the 'legend_args' parameter
-#' # of 'qt_plot()'. 
+#' # of 'plot()'. 
+#' @export
 add_legend = function(zlim, col, alpha=1, lgd_box_col=NULL, lgd_x_pct=.5, lgd_y_pct=.5, 
                       lgd_wd_pct=.5, lgd_ht_pct=.5, bar_box_col="black",
                       bar_wd_pct=.2, bar_ht_pct=1, ticks=NULL, ticks_n=5, ticks_x_pct=1){

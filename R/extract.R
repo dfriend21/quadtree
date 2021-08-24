@@ -1,7 +1,7 @@
 #' @title Extract the values of a quadtree at the given locations
 #' @description Extract the cell values and optionally the cell extents
-#' @param qt A \code{quadtree} object
-#' @param pts A two-column matrix representing point coordinates. First column
+#' @param x A \code{\link{Quadtree}} object
+#' @param y A two-column matrix representing point coordinates. First column
 #'   contains the x-coordinates, second column contains the y-coordinates
 #' @param extents boolean; if \code{FALSE} (the default), a vector containing
 #'   cell values is returned. If \code{TRUE}, a matrix is returned providing
@@ -26,7 +26,7 @@
 #' rast = habitat
 #' 
 #' # create quadtree
-#' qt1 = qt_create(rast, split_threshold=.1, adj_type="expand")
+#' qt1 = quadtree(rast, split_threshold=.1, adj_type="expand")
 #' qt_plot(qt1)
 #' 
 #' # create points at which we'll extract values
@@ -34,24 +34,24 @@
 #' pts = cbind(coords,coords)
 #' 
 #' # extract the cell values
-#' vals = qt_extract(qt1,pts)
+#' vals = extract(qt1,pts)
 #' 
 #' # plot the quadtree and the points
-#' qt_plot(qt1, border_col="gray50", border_lwd=.4)
+#' plot(qt1, border_col="gray50", border_lwd=.4)
 #' points(pts, pch=16,cex=.6)
 #' text(pts,labels=round(vals,2),pos=4)
 #' 
 #' # we can also extract the cell extents in addition to the values
-#' qt_extract(qt1,pts,extents=TRUE)
-setMethod("extract", signature(qt = "quadtree", pts="ANY"),
-  function(qt, pts, extents=FALSE){
-    if(!is.matrix(pts) && !is.data.frame(pts)) stop("'pts' must be a matrix or a data frame")
-    if(ncol(pts) != 2) stop("'pts' must have two columns")
-    if(!is.numeric(pts[,1]) || !is.numeric(pts[,2])) stop("'pts' must be numeric")
+#' extract(qt1,pts,extents=TRUE)
+setMethod("extract", signature(x = "Quadtree", y="ANY"),
+  function(x, y, extents=FALSE){
+    if(!is.matrix(y) && !is.data.frame(y)) stop("'y' must be a matrix or a data frame")
+    if(ncol(y) != 2) stop("'y' must have two columns")
+    if(!is.numeric(y[,1]) || !is.numeric(y[,2])) stop("'y' must be numeric")
     if(extents){
-      return(qt@ptr$getCellDetails(pts[,1], pts[,2]))
+      return(x@ptr$getCellDetails(y[,1], y[,2]))
     } else {
-      return(qt@ptr$getValues(pts[,1], pts[,2]))
+      return(x@ptr$getValues(y[,1], y[,2]))
     }
   }
 )

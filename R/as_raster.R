@@ -1,6 +1,9 @@
+#' @include generics.R
+
+#' @name as_raster
 #' @title Create a Raster from a Quadtree
 #' @description Creates a raster from a quadtree
-#' @param qt The \code{quadtree} object to create the raster from
+#' @param x The \link{\code{Quadtree}} object to create the raster from
 #' @param rast A \code{RasterLayer} object; optional; this will be used as a
 #' template - the output raster will have the same extent and dimensions as this
 #' raster. If \code{NULL} (the default), a raster is automatically created, where
@@ -22,26 +25,27 @@
 #' rast = habitat
 #' 
 #' # create a quadtree
-#' qt = qt_create(rast, split_threshold = .1, split_method = "sd")
+#' qt = quadtree(rast, split_threshold = .1, split_method = "sd")
 #' 
-#' rst1 = qt_as_raster(qt) #use the default raster
-#' rst2 = qt_as_raster(qt, habitat) #use another raster as a template
+#' rst1 = as_raster(qt) #use the default raster
+#' rst2 = as_raster(qt, habitat) #use another raster as a template
 #' 
 #' par(mfrow=c(2,2))
 #' plot(habitat, main="original raster")
-#' qt_plot(qt, main="quadtree")
+#' plot(qt, main="quadtree")
 #' plot(rst1, main="raster from quadtree")
 #' plot(rst2, main="raster from quadtree")
-setMethod("as_raster", signature(qt = "quadtree"),
-  function(qt, rast=NULL){
+#' @export
+setMethod("as_raster", signature(x = "Quadtree"),
+  function(x, rast=NULL){
     if(is.null(rast)){
-      res = qt@ptr$root()$smallestChildSideLength()
-      rast = raster::raster(extent(qt), resolution=res, crs=proj4string(qt))
+      res = x@ptr$root()$smallestChildSideLength()
+      rast = raster::raster(extent(x), resolution=res, crs=projection(x))
     } else {
       rast = raster::raster(rast)
     }
     pts = raster::rasterToPoints(rast,spatial=FALSE)
-    vals = extract(qt, pts[,1:2])
+    vals = extract(x, pts[,1:2])
     rast[] = vals
     return(rast)
   }

@@ -1,6 +1,9 @@
+#' @include generics.R
+
+#' @name as_data_frame
 #' @title convert a quadtree to a data frame
 #' @description creates a data frame with information on each quadtree cell.
-#' @param qt a quadtree object
+#' @param x a \link{\code{Quadtree}} object
 #' @return a data frame with one row for each quadtree cell. The columns are as
 #'   follows:
 #'   \itemize{
@@ -18,11 +21,12 @@
 #'   }
 #' @examples 
 #' mat = rbind(c(1,1,0,1),c(1,1,1,0),c(1,0,1,1),c(0,1,1,1))
-#' qt = qt_create(mat,.1)
-#' qt_plot(qt)
-#' qt_as_data_frame(qt)
-setMethod("as_data_frame", signature(qt = "quadtree"),
-  function(qt){
-    return(data.frame(do.call(rbind,qt@ptr$asList())))
+#' qt = quadtree(mat,.1)
+#' plot(qt)
+#' as_data_frame(qt)
+#' @export
+setMethod("as_data_frame", signature(x = "Quadtree"),
+  function(x){
+    return(data.frame(do.call(rbind,x@ptr$asList())))
   }
 )

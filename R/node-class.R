@@ -1,4 +1,4 @@
-#' @name node-class
+#' @name CppNode-class
 #' @aliases Rcpp_node Rcpp_node-class node
 #' @title C++ Quadtree Node
 #' @description The 'node' class represents a single quadtree node.

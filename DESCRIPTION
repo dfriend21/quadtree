@@ -24,3 +24,27 @@ Depends:
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Encoding: UTF-8
+Collate: 
+    'classes.R'
+    'generics.R'
+    'as_data_frame.R'
+    'as_raster.R'
+    'copy.R'
+    'data_documentation.R'
+    'extent.R'
+    'extract.R'
+    'get_neighbors.R'
+    'lcp.R'
+    'node-class.R'
+    'plot.R'
+    'projection.R'
+    'qtree-exports.R'
+    'quadtree-class.R'
+    'quadtree-package.R'
+    'quadtree.R'
+    'read_write.R'
+    'set_values.R'
+    'shortestPathFinder-class.R'
+    'show.R'
+    'transform_values.R'

@@ -1,8 +1,22 @@
-#' Retrieve the proj4string of a quadtree
-#' @param qt a quadtree object
+#' @include generics.R
+
+#' @name projection
+#' @title Retrieve the proj4string of a quadtree
+#' @param x a \code{\link{Quadtree}} object
 #' @return A character containing the proj4string
-setMethod("proj4string", signature(qt = "quadtree"),
-  function(qt){
-    return(qt@ptr$projection())
+#' @export
+setMethod("projection", signature(x = "Quadtree"),
+  function(x){
+    return(x@ptr$projection())
+  }
+)
+
+#' @rdname projection
+#' @param value character; the projection to assign to the quadtree
+#' @export
+setMethod("projection<-", signature(x = "Quadtree", value = "ANY"),
+  function(x, value){
+    x@ptr$setProjection(value)
+    x
   }
 )

@@ -1,5 +1,7 @@
-#' Create a quadtree from gridded data
-#'
+#' @include generics.R
+#' 
+#' @name quadtree
+#' @title Create a \code{\link{Quadtree}} from gridded data
 #' @param x a \code{raster} or a \code{matrix}. If \code{x} is a \code{matrix},
 #'   the \code{extent} and \code{proj4string} parameters can be used to set the
 #'   extent and projection of the quadtree. If \code{x} is a \code{raster}, the
@@ -71,14 +73,14 @@
 #'   \code{x} is a raster since the proj4string of the raster is automatically
 #'   used. If no value is provided and \code{x} is a matrix, the 'proj4string'
 #'   of the quadtree is set to \code{NA}.
-#' @param template_quadtree quadtree object; if provided, the new quadtree will
-#'   be created so that it has the exact same structure as the template
-#'   quadtree. Thus, no split function is used because the decision about
-#'   whether to split is pre-determined by the template quadtree. The raster
-#'   used to create the template quadtree should have the exact same extent and
-#'   dimensions as \code{x}. If \code{template_quadtree} is non-\code{NULL}, all
-#'   \code{split_}* parameters are disregarded, as are \code{max_cell_length}
-#'   and \code{min_cell_length}
+#' @param template_quadtree \code{\link{Quadtree}} object; if provided, the new
+#'   quadtree will be created so that it has the exact same structure as the
+#'   template quadtree. Thus, no split function is used because the decision
+#'   about whether to split is pre-determined by the template quadtree. The
+#'   raster used to create the template quadtree should have the exact same
+#'   extent and dimensions as \code{x}. If \code{template_quadtree} is
+#'   non-\code{NULL}, all \code{split_}* parameters are disregarded, as are
+#'   \code{max_cell_length} and \code{min_cell_length}
 #' @details 
 #'  \strong{Overview of quadtree creation}
 #' 
@@ -182,7 +184,7 @@
 #'   \code{var_limit}, the \code{split_args} parameter would need to contain an
 #'   element called \code{var_limit}. For example:
 #'
-#'   \code{qt = qt_create(rast, split_method="custom", split_fun=splt_fun,
+#'   \code{qt = quadtree(rast, split_method="custom", split_fun=splt_fun,
 #'   split_args=list(var_limit=.05))}
 #'   
 #'   \code{combine_fun} must return a single numeric value. Unlike
@@ -245,25 +247,25 @@
 #' 
 #' # create quadtree using the 'expand' method - automatically adds NA cells to
 #' # bring the dimensions to 128 x 128 before creating the quadtree
-#' qt1 = qt_create(rast, split_threshold = .15, split_method = "range", adj_type="expand")
-#' qt_plot(qt1) #plot the quadtree
-#' qt_plot(qt1, crop=TRUE, na_col=NULL) #we can use 'crop=TRUE' and 'na_col=NULL' 
+#' qt1 = quadtree(rast, split_threshold = .15, split_method = "range", adj_type="expand")
+#' plot(qt1) #plot the quadtree
+#' plot(qt1, crop=TRUE, na_col=NULL) #we can use 'crop=TRUE' and 'na_col=NULL' 
 #' # if we don't want to see the padded NA's
 #' 
 #' # create quadtree using the 'resample' method - we'll resample to 128 since it's a power of 2
 #' 
 #' # first we'll do it WITHOUT adding NAs to the shorter dimension, which
 #' # will result in non-square cells
-#' qt2 = qt_create(rast, split_threshold = .15, split_method = "range", 
+#' qt2 = quadtree(rast, split_threshold = .15, split_method = "range", 
 #'    adj_type="resample", resample_n_side = 128, resample_pad_NAs=FALSE)
-#' qt_plot(qt2)
-#' qt_plot(qt2, crop=TRUE, na_col=NULL)
+#' plot(qt2)
+#' plot(qt2, crop=TRUE, na_col=NULL)
 #' 
 #' # now we'll add 'padding' NAs so that the cells of the quadtree are square
-#' qt3 = qt_create(rast, split_threshold = .15, split_method = "range", 
+#' qt3 = quadtree(rast, split_threshold = .15, split_method = "range", 
 #'    adj_type="resample", resample_n_side = 128)
-#' qt_plot(qt3)
-#' qt_plot(qt3, crop=TRUE, na_col=NULL)
+#' plot(qt3)
+#' plot(qt3, crop=TRUE, na_col=NULL)
 #' 
 #' #####################################
 #' # using 'max_cell_length' and 'min_cell_length'
@@ -271,15 +273,15 @@
 #' 
 #' # we can use the 'max_cell_length' and 'min_cell_length' parameters to control the
 #' # maximum and minimum cell sizes
-#' qt4 = qt_create(rast, split_threshold = .15, split_method = "range", 
+#' qt4 = quadtree(rast, split_threshold = .15, split_method = "range", 
 #'    max_cell_length = 1000, adj_type="expand")
-#' qt5 = qt_create(rast, split_threshold = .15, split_method = "range", 
+#' qt5 = quadtree(rast, split_threshold = .15, split_method = "range", 
 #'    min_cell_length = 1000, adj_type="expand")
 #' 
 #' par(mfrow=c(1,3))
-#' qt_plot(qt1, crop=TRUE, na_col=NULL, main="no cell length restrictions")
-#' qt_plot(qt4, crop=TRUE, na_col=NULL, main="max cell length = 1000")
-#' qt_plot(qt5, crop=TRUE, na_col=NULL, main="min cell length = 1000")
+#' plot(qt1, crop=TRUE, na_col=NULL, main="no cell length restrictions")
+#' plot(qt4, crop=TRUE, na_col=NULL, main="max cell length = 1000")
+#' plot(qt5, crop=TRUE, na_col=NULL, main="min cell length = 1000")
 #' par(mfrow=c(1,1))
 #' 
 #' #####################################
@@ -288,19 +290,19 @@
 #' 
 #' # split quadrants with all NA values - this will result in NA quadrants being split
 #' # to the smallest possible cell size
-#' qt6 = qt_create(rast, split_threshold=.15, split_method="range", split_if_all_NA=TRUE)
+#' qt6 = quadtree(rast, split_threshold=.15, split_method="range", split_if_all_NA=TRUE)
 #' # don't force quadrants with NA cells to automatically split - note that this
 #' # can produce rather unexpected results (see the plot of qt7)
-#' qt7 = qt_create(rast, split_threshold=.15, split_method="range", split_if_any_NA=FALSE)
+#' qt7 = quadtree(rast, split_threshold=.15, split_method="range", split_if_any_NA=FALSE)
 #' # 'split_if_any_NA=FALSE' can be used in conjunction with 'max_cell_size' to 
 #' # avoid tiny cells on the border of an irregularly shaped raster
-#' qt8 = qt_create(rast, split_threshold=.15, split_method="range", 
+#' qt8 = quadtree(rast, split_threshold=.15, split_method="range", 
 #'    split_if_any_NA=FALSE, max_cell_length=1000)
 #' 
 #' par(mfrow=c(1,3))
-#' qt_plot(qt6, border_lwd=.4)
-#' qt_plot(qt7)
-#' qt_plot(qt8)
+#' plot(qt6, border_lwd=.4)
+#' plot(qt7)
+#' plot(qt8)
 #' par(mfrow=c(1,1))
 #' 
 #' #####################################
@@ -308,14 +310,14 @@
 #' #####################################
 #' 
 #' # use the standard deviation instead of the range
-#' qt9 = qt_create(rast, split_threshold=.1, split_method = "sd")
+#' qt9 = quadtree(rast, split_threshold=.1, split_method = "sd")
 #' # use the min to aggregate values rather than the mean
-#' qt10 = qt_create(rast, split_threshold=.1, split_method = "sd", combine_method="min")
+#' qt10 = quadtree(rast, split_threshold=.1, split_method = "sd", combine_method="min")
 #' 
 #' # compare the two quadtrees - note that their structures are identical
 #' par(mfrow=c(1,2))
-#' qt_plot(qt9, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='mean'", zlim=c(0,1))
-#' qt_plot(qt10, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='min'", zlim=c(0,1))
+#' plot(qt9, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='mean'", zlim=c(0,1))
+#' plot(qt10, crop=TRUE, na_col=NULL, main="split_method='sd', combine_method='min'", zlim=c(0,1))
 #' par(mfrow=c(1,1))
 #' 
 #' #####################################
@@ -331,9 +333,9 @@
 #'   }
 #' }
 #' 
-#' qt11 = qt_create(rast, split_method="custom", split_fun=split_fun, 
+#' qt11 = quadtree(rast, split_method="custom", split_fun=split_fun, 
 #'                  split_args=list(threshold=.8))
-#' qt_plot(qt11, crop=TRUE, na_col=NULL, border_lwd=.5)
+#' plot(qt11, crop=TRUE, na_col=NULL, border_lwd=.5)
 #' 
 #' # custom combine function - if the mean of the values is less than 
 #' # 'threshold', set the cell value to 'low_val'. If it's greater
@@ -349,9 +351,9 @@
 #'   } 
 #' }
 #' 
-#' qt12 = qt_create(rast, split_threshold = .1, split_method="range", combine_method="custom",
+#' qt12 = quadtree(rast, split_threshold = .1, split_method="range", combine_method="custom",
 #'                  combine_fun = cmb_fun, combine_args = list(threshold=.5, low_val=0, high_val=1))
-#' qt_plot(qt12, crop=TRUE, na_col=NULL)
+#' plot(qt12, crop=TRUE, na_col=NULL)
 #' 
 #' # note that the split and combine functions are required to have an 'args'
 #' # parameter, but they don't have to use it
@@ -359,9 +361,9 @@
 #'   return(max(vals) - min(vals))
 #' }
 #' 
-#' qt13 = qt_create(rast, split_threshold = .1, split_method = "range", 
+#' qt13 = quadtree(rast, split_threshold = .1, split_method = "range", 
 #'                  combine_method="custom", combine_fun = cmb_fun2)
-#' qt_plot(qt13, crop=TRUE, na_col=NULL, border_lwd=.5)
+#' plot(qt13, crop=TRUE, na_col=NULL, border_lwd=.5)
 #' 
 #' #####################################
 #' # using template quadtrees
@@ -378,16 +380,16 @@
 #'   if(any(vals == 1, na.rm=TRUE)) return(TRUE)
 #'   return(FALSE)
 #' }
-#' qt_template = qt_create(template, split_method="custom", split_fun=split_if_one, 
+#' qt_template = quadtree(template, split_method="custom", split_fun=split_if_one, 
 #'    split_threshold=.01)
 #' # now use the template to create a quadtree from 'rast'
-#' qt14 = qt_create(rast, template_quadtree = qt_template)
+#' qt14 = quadtree(rast, template_quadtree = qt_template)
 #' 
 #' par(mfrow=c(1,2))
-#' qt_plot(qt_template, crop=TRUE, na_col=NULL, border_lwd=.5)
-#' qt_plot(qt14, crop=TRUE, na_col=NULL, border_lwd=.5)
+#' plot(qt_template, crop=TRUE, na_col=NULL, border_lwd=.5)
+#' plot(qt14, crop=TRUE, na_col=NULL, border_lwd=.5)
 #' par(mfrow=c(1,1))
-
+#' @export
 setMethod("quadtree", signature(x = "ANY"),
   function(x, split_threshold=NULL, split_method = "range", split_fun=NULL, split_args=list(), split_if_any_NA=TRUE, split_if_all_NA=FALSE, combine_method = "mean", combine_fun=NULL, combine_args=list(), max_cell_length=NULL, min_cell_length=NULL, adj_type="expand", resample_n_side=NULL, resample_pad_NAs=TRUE, extent=NULL, proj4string=NULL, template_quadtree=NULL){
     #validate inputs - this may be over the top, but many of these values get passed to C++ functionality, and if they're the wrong type the errors that are thrown are totally unhelpful - by type-checking them right away, I can provide easy-to-interpret error messages rather than messages that provide zero help
@@ -426,7 +428,7 @@ setMethod("quadtree", signature(x = "ANY"),
     if(!is.null(extent) && ((!inherits(extent, "Extent") && !is.numeric(extent)) || (is.numeric(extent) && length(extent) != 4))) stop("'extent' must either be an 'Extent' object or a numeric vector with 4 elements (xmin, xmax, ymin, ymax)")
     if(!is.null(extent) && "RasterLayer" %in% (class(x))) warning("a value for 'extent' was provided, but it will be ignored since 'x' is a raster (the extent will be derived from the raster itself)")
     if(!is.null(proj4string) && "RasterLayer" %in% (class(x))) warning("a value for 'proj4string' was provided, but it will be ignored since 'x' is a raster (the proj4string will be derived from the raster itself)")
-    if(!is.null(template_quadtree) && !inherits(template_quadtree, "quadtree")) stop("'template_quadtree' must be a 'quadtree' object")
+    if(!is.null(template_quadtree) && !inherits(template_quadtree, "Quadtree")) stop("'template_quadtree' must be a 'Quadtree' object")
     
     if(is.null(max_cell_length)) max_cell_length = -1 #if `max_cell_length` is not provided, set it to -1, which indicates no limit
     if(is.null(min_cell_length)) min_cell_length = -1 #if `min_cell_length` is not provided, set it to -1, which indicates no limit
@@ -436,11 +438,11 @@ setMethod("quadtree", signature(x = "ANY"),
         if(is.null(template_quadtree)){
           extent = raster::extent(0,ncol(x),0,nrow(x))
         } else {
-          extent = qt_extent(template_quadtree)
+          extent = extent(template_quadtree)
         }
       }
       proj4string = tryCatch(raster::crs(proj4string), error=function(cond){ #if the proj4string is invalid, use an empty string for 'proj4string'
-        message("warning in 'qt_create()': invalid 'proj4string' provided - no projection will be assigned")
+        message("warning in 'quadtree()': invalid 'proj4string' provided - no projection will be assigned")
         return(raster::crs(""))
       })
       x = raster::raster(x, extent[1], extent[2], extent[3], extent[4], crs=proj4string)
@@ -482,8 +484,8 @@ setMethod("quadtree", signature(x = "ANY"),
     }
     
     #create the quadtree object (but we haven't actually constructed the quadtree yet)
-    qt = methods::new("quadtree")
-    qt@ptr = methods::new(cpp_quadtree, raster::extent(x)[1:2], raster::extent(x)[3:4], c(max_cell_length, max_cell_length), c(min_cell_length, min_cell_length), split_if_all_NA, split_if_any_NA)
+    qt = methods::new("Quadtree")
+    qt@ptr = methods::new(CppQuadtree, raster::extent(x)[1:2], raster::extent(x)[3:4], c(max_cell_length, max_cell_length), c(min_cell_length, min_cell_length), split_if_all_NA, split_if_any_NA)
     
     #deal with any NULL parameters
     blank_fun = function(){}
@@ -491,8 +493,8 @@ setMethod("quadtree", signature(x = "ANY"),
     if(is.null(split_threshold)) split_threshold = -1
     if(is.null(combine_fun)) combine_fun = blank_fun
     if(is.null(template_quadtree)){
-      template_quadtree = methods::new("quadtree")
-      template_quadtree@ptr = methods::new(cpp_quadtree)
+      template_quadtree = methods::new("Quadtree")
+      template_quadtree@ptr = methods::new(CppQuadtree)
     }
     #construct the quadtree
     qt@ptr$createTree(raster::as.matrix(x), split_method, split_threshold, combine_method, split_fun, split_args, combine_fun, combine_args, template_quadtree@ptr)

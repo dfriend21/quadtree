@@ -1,4 +1,5 @@
-setClass("quadtree",
+#' @export 
+setClass("Quadtree",
    slots = c(
      ptr = "C++Object"
    ),
@@ -6,7 +7,7 @@ setClass("quadtree",
      ptr = NULL
    ),
    validity = function(object)	{
-     if (is.null(object@ptr) || is(object@ptr, "Rcpp_quadtree")){
+     if (is.null(object@ptr) || is(object@ptr, "Rcpp_CppQuadtree")){
        return(TRUE)
      } else {
        return(FALSE)
@@ -14,7 +15,8 @@ setClass("quadtree",
    }
 )
 
-setClass("lcp_finder",
+#' @export
+setClass("LcpFinder",
   slots = c(
     ptr = "C++Object"
   ),
@@ -22,7 +24,7 @@ setClass("lcp_finder",
     ptr = NULL
   ),
   validity = function(object)	{
-    if (is.null(object@ptr) || is(object@ptr, "Rcpp_shortestPathFinder")){
+    if (is.null(object@ptr) || is(object@ptr, "Rcpp_CppShortestPathFinder")){
       return(TRUE)
     } else {
       return(FALSE)
