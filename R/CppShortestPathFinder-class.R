@@ -1,6 +1,5 @@
-#' @name shortestPathFinder-class
-#' @aliases Rcpp_shortestPathFinder Rcpp_shortestPathFinder-class 
-#' shortestPathFinder
+#' @name CppShortestPathFinder-class
+#' @aliases CppShortestPathFinder
 #' @title C++ Shortest Path Finder
 #' @description The 'shortestPathFinder' class is a C++ data structure used to
 #'   find least-cost paths using a quadtree as a resistance surface. A
@@ -16,11 +15,11 @@
 #'   'getShortestPathFinder' member function from the 'quadtree' class.
 #' @field getAllPathsSummary \itemize{
 #'   \item \strong{Description}: Returns a matrix summarizing all the LCPs 
-#'   calculated so far. \code{\link{qt_lcp_summary}()} is a wrapper for this
+#'   calculated so far. \code{\link{lcp_summary}()} is a wrapper for this
 #'   function - see documentation of that function for more details.
 #'   \item \strong{Parameters}: none
 #'   \item \strong{Returns}: a matrix with one row per LCP. See documentation of 
-#'   \code{\link{qt_lcp_summary}()} for details.
+#'   \code{\link{lcp_summary}()} for details.
 #' }
 #' @field getSearchLimits \itemize{
 #'   \item \strong{Description}: Returns the x and y limits of the search area. 
@@ -30,14 +29,14 @@
 #' }
 #' @field getShortestPath \itemize{
 #'   \item \strong{Description}: Finds the least-cost path from the starting
-#'   point to another point. \code{\link{qt_find_lcp}} is a wrapper for this 
+#'   point to another point. \code{\link{find_lcp}} is a wrapper for this 
 #'   function - see its documentation for more details.
 #'   \item \strong{Parameters}: \itemize{
 #'     \item \code{endPoint}: 2-element numeric vector - the point to find a 
 #'     shortest path to
 #'   }
 #'   \item \strong{Returns}: A matrix representing the least-cost path. See
-#'   \code{\link{qt_find_lcp}()} for details on the return matrix.
+#'   \code{\link{find_lcp}()} for details on the return matrix.
 #' }
 #' @field getStartPoint \itemize{
 #'   \item \strong{Description}: Returns the start point 
@@ -47,7 +46,7 @@
 #' @field makeNetworkAll \itemize{
 #'   \item \strong{Description}: Calculates least-cost paths to all cells in the
 #'   search area. This corresponds to
-#'   \code{\link{qt_find_lcps}(lcp_finder,limit_type="none")}. See documentation
+#'   \code{\link{find_lcps}(lcp_finder,limit_type="none")}. See documentation
 #'   of that function for more details.
 #'   \item \strong{Parameters}: none
 #'   \item \strong{Returns}: void - no return value. Specific paths can be
@@ -57,7 +56,7 @@
 #' @field makeNetworkCost \itemize{
 #'   \item \strong{Description}: Calculates all least-cost paths whose
 #'   cost-distance is less than a given threshold. This correspnds to
-#'   \code{\link{qt_find_lcps}(lcp_finder,limit_type="costdistance")}. See
+#'   \code{\link{find_lcps}(lcp_finder,limit_type="costdistance")}. See
 #'   documentation of that function for more details
 #'   \item \strong{Parameters}: \itemize{
 #'     \item \code{constraint}: double; the maximum value of cost-distance
@@ -71,7 +70,7 @@
 #'   \item \strong{Description}: Calculates all least-cost paths whose
 #'   "costdistance + distance" is less than a given threshold. This correspnds
 #'   to
-#'   \code{\link{qt_find_lcps}(lcp_finder,limit_type="costdistance+distance")}.
+#'   \code{\link{find_lcps}(lcp_finder,limit_type="costdistance+distance")}.
 #'   See documentation of that function for more details.
 #'   \item \strong{Parameters}: \itemize{
 #'     \item \code{constraint}: double; the maximum value of

@@ -122,7 +122,7 @@
 #' }
 #' @field getCells \itemize{
 #'   \item \strong{Description}: Given x and y coordinates of points, returns a
-#'   list of the cells at those points (as \code{\link{CppNode objects}}). It is
+#'   list of the cells at those points (as \code{\link{CppNode}} objects). It is
 #'   the same as \code{getCell}, except that it allows users to get multiple
 #'   cells at once instead of one at a time.
 #'   \item \strong{Parameters}: \itemize{
@@ -158,7 +158,7 @@
 #' @field getNeighbors \itemize{
 #'   \item \strong{Description}: Given a point, returns a matrix with info on
 #'   the cells that neighbor the cell that the point falls in.
-#'   \code{\link{get_neighbor}} is a wrapper for this function.
+#'   \code{\link{get_neighbors}} is a wrapper for this function.
 #'   \item \strong{Parameters}: \itemize{
 #'     \item \code{pt}: numeric vector of length two giving the x and y
 #'     coordinates of a point
