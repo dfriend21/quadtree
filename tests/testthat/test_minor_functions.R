@@ -11,7 +11,7 @@ test_that("copy() runs without errors and produces expected output",{
   data(habitat)
   qt1 = quadtree(habitat,.3,split_method="sd")
   qt2 = expect_error(copy(qt1),NA)
-  expect_s4_class(qt2,"quadtree")
+  expect_s4_class(qt2,"Quadtree")
   df1 = as_data_frame(qt1)
   df2 = as_data_frame(qt2)
   #first test w/o the value column because NA columns mess up the equality check
@@ -21,7 +21,7 @@ test_that("copy() runs without errors and produces expected output",{
   expect_true(all(which(is.na(df1$value)) == which(is.na(df2$value))))
 })
 
-test_that("extent runs without errors and produces expected output",{
+test_that("extent() runs without errors and produces expected output",{
   library(raster)
   data(habitat)
   qt1 = quadtree(habitat,.3,split_method="sd")
@@ -52,25 +52,26 @@ test_that("extract runs without errors and returns correct values",{
   expect_true(all(nums == rst_ext))
 })
 
-test_that("proj4string runs without errors and returns correct value",{
+test_that("projection() runs without errors and returns correct value",{
   data(habitat)
   suppressWarnings({crs(habitat) = "+init=EPSG:27700"})
   qt1 = quadtree(habitat,.5)
-  qt_proj = expect_error(proj4string(qt1),NA)
-  expect_true(qt_proj == proj4string(habitat))
+  qt_proj = expect_error(projection(qt1),NA)
+  expect_true(qt_proj == projection(habitat))
 })
 
 test_that("reading and writing quadtrees works",{
   data(habitat)
   qt1 = quadtree(habitat,.1)
   filepath = tempfile()
-  expect_error(write(qt1,filepath),NA)
-  qt2 = expect_error(read(filepath),NA)
+  expect_error(write_quadtree(qt1,filepath),NA)
+  qt2 = expect_error(read_quadtree(filepath),NA)
   
   df1 = as_data_frame(qt1)
   df2 = as_data_frame(qt2)
   #first test w/o the value column because NA columns mess up the equality check
   expect_true(all(df1[,-1*which(names(df1)=="value")] == df2[,-1*which(names(df2)=="value")]))
+  expect_true(extent(qt1, original=TRUE) == extent(qt2, original=TRUE))
   #now do the 'value' column separately
   expect_true(all(df1$value == df2$value,na.rm=TRUE))
   expect_true(all(which(is.na(df1$value)) == which(is.na(df2$value))))
@@ -94,7 +95,7 @@ test_that("transforming quadtree values works",{
   qt1 = quadtree(habitat,.1,split_method="sd")
   qt2 = copy(qt1)
   
-  expect_error(transform(qt2, function(x) 2*x),NA)
+  expect_error(transform_values(qt2, function(x) 2*x),NA)
   qt1df = as_data_frame(qt1)
   qt2df = as_data_frame(qt2)
   

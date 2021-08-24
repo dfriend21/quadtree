@@ -1,14 +1,14 @@
 test_that("we can create a quadtree from a matrix",{
   mat = matrix(runif(16),4)
   qt = quadtree(mat,split_threshold=.2,split_method="range",combine_method="mean")
-  expect_s4_class(qt,"quadtree")
+  expect_s4_class(qt,"Quadtree")
 })
 
 test_that("we can create a quadtree from a raster",{
   mat = matrix(runif(16),4)
   rast = raster::raster(mat)
   qt = quadtree(rast,split_threshold=.2, split_method="range",combine_method="mean")
-  expect_s4_class(qt,"quadtree")
+  expect_s4_class(qt,"Quadtree")
 })
 
 test_that("quadtree creation with templates works",{
