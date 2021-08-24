@@ -91,7 +91,7 @@ test_that("'quadtree()' runs without errors for all parameter settings",{
   # useful for alerting me when the result of 'qt_create' changes
   
   # for(i in 1:length(qts)){
-  #   qt_write(qts[[i]], paste0("qtrees/qt",sprintf("%03d",i),".qtree"))
+  #   write_quadtree(paste0("qtrees/qt",sprintf("%03d",i),".qtree"), qts[[i]])
   # }
 
   paths = list.files("qtrees/",pattern="*.qtree",full.names=TRUE)

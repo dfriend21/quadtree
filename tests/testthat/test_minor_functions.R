@@ -64,14 +64,21 @@ test_that("reading and writing quadtrees works",{
   data(habitat)
   qt1 = quadtree(habitat,.1)
   filepath = tempfile()
-  expect_error(write_quadtree(qt1,filepath),NA)
+  expect_error(write_quadtree(filepath,qt1),NA)
   qt2 = expect_error(read_quadtree(filepath),NA)
+  
+  expect_s4_class(qt2, "Quadtree")
+  expect_true(extent(qt1, original=TRUE) == extent(qt2, original=TRUE))
+  qt1_nb = do.call(rbind, qt1@ptr$getNbList())
+  qt2_nb = do.call(rbind, qt2@ptr$getNbList())
+  qt1_nb[is.na(qt1_nb[,"val1"]),"val1"] = -1
+  qt2_nb[is.na(qt2_nb[,"val1"]),"val1"] = -1
   
   df1 = as_data_frame(qt1)
   df2 = as_data_frame(qt2)
   #first test w/o the value column because NA columns mess up the equality check
   expect_true(all(df1[,-1*which(names(df1)=="value")] == df2[,-1*which(names(df2)=="value")]))
-  expect_true(extent(qt1, original=TRUE) == extent(qt2, original=TRUE))
+  
   #now do the 'value' column separately
   expect_true(all(df1$value == df2$value,na.rm=TRUE))
   expect_true(all(which(is.na(df1$value)) == which(is.na(df2$value))))
@@ -123,7 +130,6 @@ test_that("as_raster() works",{
 })
 
 test_that("get_neighbors() works",{
-  data(habitat)
   mat = as.matrix(read.table("sample_data/8by8_01_matrix.txt",sep=","))
   qt = quadtree(mat,.1)
   
@@ -145,6 +151,16 @@ test_that("get_neighbors() works",{
   expect_true(all(sort(nbs[,"id"]) == sort(nb_ids)))
 })
 
+test_that("as_vector() works",{
+  mat = matrix(runif(10000,0,1),nrow=100)
+  qt = quadtree(mat,0) #force it to split to the smallest cell size
+  plot(qt)
+  vals = expect_error(as_vector(qt),NA)
+  expect_true(inherits(vals,"numeric"))
+  vals = vals[!is.na(vals)]   
+  expect_true(length(vals) == length(mat))
+  expect_true(all(sort(as.numeric(mat)) == sort(vals)))
+})
 # 
 # mat = rbind(c(1,1,1,1,0,1,1,1),
 #             c(1,1,1,1,1,0,1,1),
