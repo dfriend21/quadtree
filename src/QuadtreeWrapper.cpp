@@ -1,9 +1,3 @@
-#include <Rcpp.h>
-#include <cassert>
-#include <algorithm>
-#include <string>
-#include <functional>
-
 #include "Node.h"
 #include "Matrix.h"
 #include "Quadtree.h"
@@ -13,6 +7,27 @@
 #include "QuadtreeWrapper.h"
 #include "ShortestPathFinderWrapper.h"
 
+#include <Rcpp.h>
+#include <cassert>
+#include <algorithm>
+#include <string>
+#include <functional>
+
+/////////////////
+// #include <iostream>
+#include <fstream>
+// #include <vector>
+// #include <memory>
+// #include <cassert>
+// #include <cmath>
+// #include <string>
+// #include <algorithm>
+// #include <limits>
+// #include <functional>
+// #include <cstdarg>
+#include <cereal/archives/portable_binary.hpp>
+#include <cereal/types/memory.hpp>
+////////////////////
 
 QuadtreeWrapper::QuadtreeWrapper() : quadtree{nullptr} {}
 
@@ -304,11 +319,36 @@ QuadtreeWrapper QuadtreeWrapper::copy(){
   qtw.quadtree = quadtree->copy();
   return(qtw);
 }
+// 
+// void QuadtreeWrapper::writeQuadtree(std::string filePath){
+//   Quadtree::writeQuadtree(quadtree, filePath);
+// }
 
-void QuadtreeWrapper::writeQuadtree(std::string filePath){
-  Quadtree::writeQuadtree(quadtree, filePath);
+// QuadtreeWrapper QuadtreeWrapper::readQuadtree(std::string filePath){
+//   return(QuadtreeWrapper(Quadtree::readQuadtree(filePath)));
+// }
+
+void QuadtreeWrapper::writeQuadtree(QuadtreeWrapper qw, std::string filePath){
+  //Quadtree::writeQuadtree(quadtree, filePath);
+  std::ofstream os(filePath, std::ios::binary);
+  cereal::PortableBinaryOutputArchive oarchive(os);
+  oarchive(qw);
 }
 
 QuadtreeWrapper QuadtreeWrapper::readQuadtree(std::string filePath){
-  return(QuadtreeWrapper(Quadtree::readQuadtree(filePath)));
+  std::ifstream is(filePath, std::ios::binary);
+  cereal::PortableBinaryInputArchive iarchive(is);
+  QuadtreeWrapper qw;
+  iarchive(qw);
+  return qw;
 }
+
+
+// void QuadtreeWrapper::writeQuadtree(QuadtreeWrapper qw, std::string filePath){
+//   int x = 0;
+// }
+// 
+// QuadtreeWrapper QuadtreeWrapper::readQuadtree(std::string filePath){
+//   QuadtreeWrapper qw;
+//   return qw;
+// }

@@ -1,10 +1,10 @@
-#' @name qt_read
-#' @rdname qt_read
-#' 
+#' @include generics.R
+
+#' @name read_quadtree
 #' @title Read/write a quadtree
 #' @description Read/write a quadtree
-#' @param filepath character; the filepath to read from or write to
-#' @param quadtree quadtree object; the quadtree to write
+#' @param x character; the filepath to read from or write to
+#' @param y quadtree object; the quadtree to write
 #' @details
 #' To read/write a quadtree object, the C++ library \code{cereal} is used to
 #' serialize the quadtree and save it to a file. The file extension is
@@ -24,25 +24,44 @@
 #' creating this package.
 #' @examples 
 #' \dontrun{
-#' qt = qt_read("path/to/quadtree.qtree")
-#' qt_write(qt, "path/to/newQuadtree.qtree")
+#' qt = read_quadtree("path/to/quadtree.qtree")
+#' write_quadtree(qt, "path/to/newQuadtree.qtree")
 #' }
 NULL
 
-#' @rdname qt_read
+# #' @rdname read_quadtree
+# #' @export
+# setMethod("read_quadtree", signature(x = "character"),
+#   function(x){
+#     qt = new("Quadtree")
+#     qt@ptr = readQuadtreeCpp(x)
+#     return(qt)
+#   }
+# )
+# 
+# #' @rdname read_quadtree
+# #' @export
+# setMethod("write_quadtree", signature(x = "Quadtree", y = "character"),
+#   function(x, y){
+#     x@ptr$writeQuadtree(y)
+#   }
+# )
+
+
+#' @rdname read_quadtree
 #' @export
-setMethod("read_quadtree", signature(path = "character"),
-  function(path){
-    qt = new("quadtree")
-    qt@ptr = readQuadtreeCpp(path)
+setMethod("read_quadtree", signature(x = "character"),
+  function(x){
+    qt = new("Quadtree")
+    qt@ptr = readQuadtreeCpp(x)
     return(qt)
   }
 )
 
-#' @rdname qt_read
+#' @rdname read_quadtree
 #' @export
-setMethod("write_quadtree", signature(qt = "quadtree", path = "character"),
-  function(qt, path){
-    qt@ptr$writeQuadtree(path)
+setMethod("write_quadtree", signature(x = "character", y = "Quadtree"),
+  function(x, y){
+    writeQuadtreeCpp(y@ptr,x)
   }
 )

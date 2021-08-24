@@ -65,8 +65,17 @@ class QuadtreeWrapper{
     
     QuadtreeWrapper copy();
     
-    void writeQuadtree(std::string filePath);
+    //void writeQuadtree(std::string filePath);
+    //static QuadtreeWrapper readQuadtree(std::string filePath);
+    static void writeQuadtree(QuadtreeWrapper qw, std::string filePath);
     static QuadtreeWrapper readQuadtree(std::string filePath);
+    
+    template<class Archive>
+    void serialize(Archive & archive){ //couldn't get serialization to work unless I defined 'serialize' in the header rather than in 'Quadtree.cpp'
+      archive(quadtree, proj4String, originalXMin, originalXMax,originalYMin,originalYMax,originalNX,originalNY);
+    }
+    
+    
 };
 
 RCPP_EXPOSED_CLASS(QuadtreeWrapper);

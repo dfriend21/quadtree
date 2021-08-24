@@ -12,7 +12,7 @@
 RCPP_MODULE(qt) {
   using namespace Rcpp;
   
-  class_<NodeWrapper>("cpp_node")
+  class_<NodeWrapper>("CppNode")
     .method("xLims", &NodeWrapper::xLims)
     .method("yLims", &NodeWrapper::yLims)
     .method("value", &NodeWrapper::value)
@@ -30,7 +30,7 @@ RCPP_MODULE(qt) {
   //.field("hasChildren", &Node::hasChildren)
   //.field("children", &Node::children);
   
-  class_<QuadtreeWrapper>("cpp_quadtree") 
+  class_<QuadtreeWrapper>("CppQuadtree") 
     .constructor()
     //.constructor<double, double, double, double, double>()
       //.constructor<Rcpp::NumericMatrix, Rcpp::NumericVector, Rcpp::NumericVector, double, double, double>()
@@ -56,7 +56,7 @@ RCPP_MODULE(qt) {
     .method("getNbList", &QuadtreeWrapper::getNbList)
     .method("getShortestPathFinder", &QuadtreeWrapper::getShortestPathFinder)
     .method("copy", &QuadtreeWrapper::copy)
-    .method("writeQuadtree", &QuadtreeWrapper::writeQuadtree)
+    // .method("writeQuadtree", &QuadtreeWrapper::writeQuadtree)
     .method("setProjection", &QuadtreeWrapper::setProjection)
     .method("setOriginalValues", &QuadtreeWrapper::setOriginalValues)
     .method("extent", &QuadtreeWrapper::extent)
@@ -72,7 +72,7 @@ RCPP_MODULE(qt) {
   // 
   // Rcpp::NumericMatrix makeShortestPathNetwork();
   // Rcpp::NumericMatrix getShortestPath(std::vector<double> endPoint);
-  class_<ShortestPathFinderWrapper>("cpp_shortestPathFinder")
+  class_<ShortestPathFinderWrapper>("CppShortestPathFinder")
     //.constructor<QuadtreeWrapper, Rcpp::NumericVector>()
     //.constructor<QuadtreeWrapper, Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::NumericVector>()
     .method("makeNetworkAll", &ShortestPathFinderWrapper::makeNetworkAll)
@@ -85,6 +85,7 @@ RCPP_MODULE(qt) {
     //.method("isValid", &ShortestPathFinderWrapper::isValid);
 
   function("readQuadtreeCpp", &QuadtreeWrapper::readQuadtree);
+  function("writeQuadtreeCpp", &QuadtreeWrapper::writeQuadtree);
   //.
   //
   //function("getNextPoint" , &getNextPoint);
