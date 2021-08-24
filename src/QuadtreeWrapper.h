@@ -58,12 +58,13 @@ class QuadtreeWrapper{
     void makeList(std::shared_ptr<Node> node, Rcpp::List &list, int parentID) const;
     Rcpp::List asList();
     
+    std::vector<double> asVector() const;
     void makeNbList(std::shared_ptr<Node> node, Rcpp::List &list) const;
     Rcpp::List getNbList();
     
     ShortestPathFinderWrapper getShortestPathFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims) const;
     
-    QuadtreeWrapper copy();
+    QuadtreeWrapper copy() const;
     
     //void writeQuadtree(std::string filePath);
     //static QuadtreeWrapper readQuadtree(std::string filePath);

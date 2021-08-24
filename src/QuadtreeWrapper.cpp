@@ -12,22 +12,10 @@
 #include <algorithm>
 #include <string>
 #include <functional>
-
-/////////////////
-// #include <iostream>
+#include <cmath>
 #include <fstream>
-// #include <vector>
-// #include <memory>
-// #include <cassert>
-// #include <cmath>
-// #include <string>
-// #include <algorithm>
-// #include <limits>
-// #include <functional>
-// #include <cstdarg>
 #include <cereal/archives/portable_binary.hpp>
 #include <cereal/types/memory.hpp>
-////////////////////
 
 QuadtreeWrapper::QuadtreeWrapper() : quadtree{nullptr} {}
 
@@ -251,8 +239,14 @@ void QuadtreeWrapper::makeList(std::shared_ptr<Node> node, Rcpp::List &list, int
 Rcpp::List QuadtreeWrapper::asList(){
   Rcpp::List list = Rcpp::List(quadtree->nNodes);
   makeList(quadtree->root, list, -1);
-  return(list);
+  return list;
 }
+
+std::vector<double> QuadtreeWrapper::asVector() const{
+  return quadtree->toVector();
+}
+
+
 
 //not directly callable from R - called by 'getNbList()'
 //recursively creates a matrix of that represents all the neighbors of a node
@@ -306,7 +300,7 @@ ShortestPathFinderWrapper QuadtreeWrapper::getShortestPathFinder(Rcpp::NumericVe
   return ShortestPathFinderWrapper(quadtree,startPoint,xlims,ylims);
 }
 
-QuadtreeWrapper QuadtreeWrapper::copy(){
+QuadtreeWrapper QuadtreeWrapper::copy() const{
   QuadtreeWrapper qtw = QuadtreeWrapper();
   
   qtw.proj4String = proj4String;

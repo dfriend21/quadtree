@@ -458,6 +458,30 @@ std::shared_ptr<Quadtree> Quadtree::copy() const{
     return(qtCopy);
 }
 
+
+//-------------------------
+// toVector
+//-------------------------
+// puts all the cell values into a vector
+std::vector<double> Quadtree::toVector() const{
+    int nLeaves = (floor(nNodes/4)*3)+1;
+    std::vector<double> vals(nLeaves);
+    toVector(root, vals, 0);
+    return vals;
+}
+
+int Quadtree::toVector(std::shared_ptr<Node> node, std::vector<double> &vals, int index) const{
+    if(node->hasChildren){
+        for(size_t i = 0; i < node->children.size(); ++i){
+            index = toVector(node->children[i], vals, index);
+        }
+        return index;
+    } else {
+        vals.at(index) = node->value;
+        return index+1;
+    }
+}
+
 //-------------------------
 // toString
 //-------------------------

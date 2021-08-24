@@ -41,6 +41,7 @@ RCPP_MODULE(qt) {
     .constructor<Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::NumericVector, bool, bool>()
     //.constructor<Rcpp::NumericVector, Rcpp::NumericVector, double>()
       // .method("rangeLim", &QuadtreeWrapper::rangeLim)
+    .method("asVector", &QuadtreeWrapper::asVector)
     .method("nNodes", &QuadtreeWrapper::nNodes)
     .method("root", &QuadtreeWrapper::root)
     .method("createTree", &QuadtreeWrapper::createTree)
