@@ -1,6 +1,7 @@
 #' @include generics.R
 #' 
 #' @name quadtree
+#' @aliases quadtree,ANY-method
 #' @title Create a \code{\link{Quadtree}} from gridded data
 #' @param x a \code{raster} or a \code{matrix}. If \code{x} is a \code{matrix},
 #'   the \code{extent} and \code{proj4string} parameters can be used to set the

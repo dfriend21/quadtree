@@ -2,6 +2,7 @@
 % Please edit documentation in R/lcp.R
 \name{lcp_summary}
 \alias{lcp_summary}
+\alias{lcp_summary,LcpFinder-method}
 \title{Show a summary matrix of all LCPs currently calculated}
 \usage{
 \S4method{lcp_summary}{LcpFinder}(x)

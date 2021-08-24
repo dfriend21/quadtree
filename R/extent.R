@@ -1,10 +1,11 @@
 #' @include generics.R
 
 #' @name extent
+#' @aliases extent,Quadtree-method
 #' @title Get the extent of a quadtree
 #' @description Gets the extent of the quadtree as an 'extent' object (from the 
 #' raster package)
-#' @param x \link{\code{Quadtree}} object
+#' @param x \code{\link{Quadtree}} object
 #' @param original boolean; if \code{FALSE} (the default), it returns the total
 #'   extent covered by the quadtree. If \code{TRUE}, the function returns the
 #'   extent of the original raster used to create the quadtree, before NA

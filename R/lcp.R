@@ -1,11 +1,12 @@
 #' @include generics.R
 
 #' @name lcp_finder
+#' @aliases lcp_finder,Quadtree,numeric-method
 #' @title Create an object for finding LCPs on a quadtree
 #' @description This function creates an LcpFinder object that can then be used
 #'   by \code{\link{find_lcp}} and \code{\link{find_lcps}} to find
 #'   least-cost paths (LCPs).
-#' @param x a \link{\code{Quadtree}} object to be used as a resistance surface
+#' @param x a \code{\link{Quadtree}} object to be used as a resistance surface
 #' @param y numeric vector with 2 elements - the x and y coordinates
 #'   of the starting point of the path(s)
 #' @param xlims numeric vector with 2 elements - paths will be constrained so
@@ -242,6 +243,7 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
 )
 
 #' @name find_lcp
+#' @aliases find_lcp,LcpFinder,numeric-method
 #' @title Find the LCP between two points on a quadtree
 #' @description Finds the least cost path (LCP) between two points, using a
 #'   quadtree as a resistance surface
@@ -334,6 +336,7 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 )
 
 #' @name find_lcps
+#' @aliases find_lcps,LcpFinder-method
 #' @title Find LCPs to surrounding points
 #' @description Calculates the LCPs to surrounding points. Constraints can be placed
 #'   on the LCPs, so that only LCPs that are less than some specified
@@ -469,6 +472,7 @@ setMethod("find_lcps", signature(x = "LcpFinder"),
 )
 
 #' @name lcp_summary
+#' @aliases lcp_summary,LcpFinder-method
 #' @title Show a summary matrix of all LCPs currently calculated
 #' @description Given an \code{\link{LcpFinder}} object, returns a matrix that
 #'   summarizes all of the LCPs that have already been calculated by the LCP

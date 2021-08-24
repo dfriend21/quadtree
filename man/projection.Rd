@@ -2,6 +2,9 @@
 % Please edit documentation in R/projection.R
 \name{projection}
 \alias{projection}
+\alias{projection,Quadtree-method}
+\alias{projection<-}
+\alias{projection<-,Quadtree,ANY-method}
 \alias{projection<-,Quadtree-method}
 \title{Retrieve the proj4string of a quadtree}
 \usage{

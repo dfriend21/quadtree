@@ -2,12 +2,13 @@
 % Please edit documentation in R/as_data_frame.R
 \name{as_data_frame}
 \alias{as_data_frame}
+\alias{as_data_frame,Quadtree-method}
 \title{convert a quadtree to a data frame}
 \usage{
 \S4method{as_data_frame}{Quadtree}(x)
 }
 \arguments{
-\item{x}{a \link{\code{Quadtree}} object}
+\item{x}{a \code{\link{Quadtree}} object}
 }
 \value{
 a data frame with one row for each quadtree cell. The columns are as
@@ -34,4 +35,8 @@ mat = rbind(c(1,1,0,1),c(1,1,1,0),c(1,0,1,1),c(0,1,1,1))
 qt = quadtree(mat,.1)
 plot(qt)
 as_data_frame(qt)
+}
+\seealso{
+\code{\link{as_vector}} returns all the cell values as a numeric 
+vector
 }

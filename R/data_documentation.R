@@ -29,10 +29,10 @@
 #' plot(habitat_roads)
 #' 
 #' #use them to make quadtrees
-#' qt1 = qt_create(habitat, .1)
-#' qt2 = qt_create(habitat_roads, .1)
+#' qt1 = quadtree(habitat, .1)
+#' qt2 = quadtree(habitat_roads, .1)
 #' 
 #' par(mfrow=c(1,2))
-#' qt_plot(qt1,crop=TRUE,na_col=NULL,border_lwd=.3)
-#' qt_plot(qt2,crop=TRUE,na_col=NULL,border_lwd=.3)
+#' plot(qt1,crop=TRUE,na_col=NULL,border_lwd=.3)
+#' plot(qt2,crop=TRUE,na_col=NULL,border_lwd=.3)
 NULL

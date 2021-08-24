@@ -1,9 +1,10 @@
 #' @include generics.R
 
 #' @name as_raster
+#' @aliases as_raster,Quadtree-method
 #' @title Create a Raster from a Quadtree
 #' @description Creates a raster from a quadtree
-#' @param x The \link{\code{Quadtree}} object to create the raster from
+#' @param x The \code{\link{Quadtree}} object to create the raster from
 #' @param rast A \code{RasterLayer} object; optional; this will be used as a
 #' template - the output raster will have the same extent and dimensions as this
 #' raster. If \code{NULL} (the default), a raster is automatically created, where

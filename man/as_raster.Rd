@@ -2,12 +2,13 @@
 % Please edit documentation in R/as_raster.R
 \name{as_raster}
 \alias{as_raster}
+\alias{as_raster,Quadtree-method}
 \title{Create a Raster from a Quadtree}
 \usage{
 \S4method{as_raster}{Quadtree}(x, rast = NULL)
 }
 \arguments{
-\item{x}{The \link{\code{Quadtree}} object to create the raster from}
+\item{x}{The \code{\link{Quadtree}} object to create the raster from}
 
 \item{rast}{A \code{RasterLayer} object; optional; this will be used as a
 template - the output raster will have the same extent and dimensions as this

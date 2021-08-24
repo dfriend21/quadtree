@@ -2,6 +2,7 @@
 % Please edit documentation in R/set_values.R
 \name{set_values}
 \alias{set_values}
+\alias{set_values,Quadtree,ANY,numeric-method}
 \title{Change values of quadtree cells}
 \usage{
 \S4method{set_values}{Quadtree,ANY,numeric}(x, y, z)
@@ -38,20 +39,20 @@ data(habitat)
 rast = habitat
 
 # create a quadtree
-qt = qt_create(rast, split_threshold = .1)
+qt = quadtree(rast, split_threshold = .1)
 
 par(mfrow=c(1,2))
-qt_plot(qt, main="original")
+plot(qt, main="original")
 
 # generate some random points, then change the values at those points
-ext = qt_extent(qt)
+ext = extent(qt)
 pts = cbind(runif(100,ext[1], ext[2]), runif(100,ext[3], ext[4]))
-qt_set_values(qt, pts, rep(10,100))
+set_values(qt, pts, rep(10,100))
 
 # plot it out to see what happened
-qt_plot(qt, main="after modification")
+plot(qt, main="after modification")
 }
 \seealso{
-\code{\link{transform_values}()} can be used to transform the existing
-  values of all cells
+\code{\link{transform_values}()} can be used to transform the
+  existing values of all cells using a function
 }

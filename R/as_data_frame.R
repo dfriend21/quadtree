@@ -1,9 +1,10 @@
 #' @include generics.R
 
 #' @name as_data_frame
+#' @aliases as_data_frame,Quadtree-method
 #' @title convert a quadtree to a data frame
 #' @description creates a data frame with information on each quadtree cell.
-#' @param x a \link{\code{Quadtree}} object
+#' @param x a \code{\link{Quadtree}} object
 #' @return a data frame with one row for each quadtree cell. The columns are as
 #'   follows:
 #'   \itemize{
@@ -19,6 +20,8 @@
 #'     \item \code{parentID}: the ID of the cell's parent. The root, which has
 #'     no parent, has a value of -1 for this element
 #'   }
+#' @seealso \code{\link{as_vector}} returns all the cell values as a numeric 
+#' vector
 #' @examples 
 #' mat = rbind(c(1,1,0,1),c(1,1,1,0),c(1,0,1,1),c(0,1,1,1))
 #' qt = quadtree(mat,.1)

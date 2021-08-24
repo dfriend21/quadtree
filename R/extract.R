@@ -1,3 +1,7 @@
+#' @include generics.R
+
+#' @name extract
+#' @aliases extract,Quadtree,ANY-method
 #' @title Extract the values of a quadtree at the given locations
 #' @description Extract the cell values and optionally the cell extents
 #' @param x A \code{\link{Quadtree}} object
@@ -27,7 +31,7 @@
 #' 
 #' # create quadtree
 #' qt1 = quadtree(rast, split_threshold=.1, adj_type="expand")
-#' qt_plot(qt1)
+#' plot(qt1)
 #' 
 #' # create points at which we'll extract values
 #' coords = seq(-1000,40010,length.out=10)
@@ -43,6 +47,7 @@
 #' 
 #' # we can also extract the cell extents in addition to the values
 #' extract(qt1,pts,extents=TRUE)
+#' @export
 setMethod("extract", signature(x = "Quadtree", y="ANY"),
   function(x, y, extents=FALSE){
     if(!is.matrix(y) && !is.data.frame(y)) stop("'y' must be a matrix or a data frame")

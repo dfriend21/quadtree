@@ -2,6 +2,7 @@
 % Please edit documentation in R/quadtree.R
 \name{quadtree}
 \alias{quadtree}
+\alias{quadtree,ANY-method}
 \title{Create a \code{\link{Quadtree}} from gridded data}
 \usage{
 \S4method{quadtree}{ANY}(

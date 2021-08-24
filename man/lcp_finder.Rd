@@ -2,12 +2,13 @@
 % Please edit documentation in R/lcp.R
 \name{lcp_finder}
 \alias{lcp_finder}
+\alias{lcp_finder,Quadtree,numeric-method}
 \title{Create an object for finding LCPs on a quadtree}
 \usage{
 \S4method{lcp_finder}{Quadtree,numeric}(x, y, xlims = NULL, ylims = NULL)
 }
 \arguments{
-\item{x}{a \link{\code{Quadtree}} object to be used as a resistance surface}
+\item{x}{a \code{\link{Quadtree}} object to be used as a resistance surface}
 
 \item{y}{numeric vector with 2 elements - the x and y coordinates
 of the starting point of the path(s)}

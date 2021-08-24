@@ -2,6 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot}
 \alias{plot}
+\alias{plot,Quadtree,missing-method}
 \title{Plot a \code{\link{Quadtree}} object}
 \usage{
 \S4method{plot}{Quadtree,missing}(

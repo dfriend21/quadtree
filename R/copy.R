@@ -1,9 +1,10 @@
 #' @include generics.R
-#' 
+
 #' @name copy
+#' @aliases copy,Quadtree-method
 #' @title Create a deep copy of a quadtree object
 #' @description Creates a \emph{deep} copy of a quadtree object
-#' @param x The \link{\code{Quadtree}} object to copy
+#' @param x The \code{\link{Quadtree}} object to copy
 #' @details This function creates  \emph{deep} copy of a quadtree object. The
 #'   quadtree class accessible from R uses pointers to a CppQuadtree C++ object.
 #'   Thus, if a copy is attempted by simply assigning the quadtree to a new

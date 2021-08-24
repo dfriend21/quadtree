@@ -2,6 +2,7 @@
 % Please edit documentation in R/lcp.R
 \name{find_lcp}
 \alias{find_lcp}
+\alias{find_lcp,LcpFinder,numeric-method}
 \title{Find the LCP between two points on a quadtree}
 \usage{
 \S4method{find_lcp}{LcpFinder,numeric}(x, y, use_original_end_points = FALSE)

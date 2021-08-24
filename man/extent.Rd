@@ -2,12 +2,13 @@
 % Please edit documentation in R/extent.R
 \name{extent}
 \alias{extent}
+\alias{extent,Quadtree-method}
 \title{Get the extent of a quadtree}
 \usage{
 \S4method{extent}{Quadtree}(x, original = FALSE)
 }
 \arguments{
-\item{x}{\link{\code{Quadtree}} object}
+\item{x}{\code{\link{Quadtree}} object}
 
 \item{original}{boolean; if \code{FALSE} (the default), it returns the total
 extent covered by the quadtree. If \code{TRUE}, the function returns the

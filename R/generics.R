@@ -4,6 +4,7 @@
 setGeneric("plot", function(x, y, ...) standardGeneric("plot"))
 setGeneric("as_data_frame", function(x, ...) standardGeneric("as_data_frame"))
 setGeneric("as_raster", function(x, ...) standardGeneric("as_raster"))
+setGeneric("as_vector", function(x, ...) standardGeneric("as_vector"))
 setGeneric("copy", function(x, ...) standardGeneric("copy"))
 setGeneric("quadtree", function(x, ...) standardGeneric("quadtree"))
 setGeneric("find_lcp", function(x, y, ...) standardGeneric("find_lcp"))
@@ -11,12 +12,14 @@ setGeneric("find_lcps", function(x, ...) standardGeneric("find_lcps"))
 setGeneric("get_neighbors", function(x, y, ...) standardGeneric("get_neighbors"))
 setGeneric("lcp_finder", function(x, y, ...) standardGeneric("lcp_finder"))
 setGeneric("lcp_summary", function(x, ...) standardGeneric("lcp_summary"))
+setGeneric("n_cells", function(x, ...) standardGeneric("n_cells"))
+setGeneric("projection<-", function(x, value) standardGeneric("projection<-"))
 setGeneric("read_quadtree", function(x, ...) standardGeneric("read_quadtree"))
 setGeneric("write_quadtree", function(x, y, ...) standardGeneric("write_quadtree"))
 setGeneric("set_values", function(x, y, z, ...) standardGeneric("set_values"))
 setGeneric("transform_values", function(x, y, ...) standardGeneric("transform_values"))
 # setGeneric("projection", function(x, ...) standardGeneric("projection"))
-setGeneric("projection<-", function(x, value) standardGeneric("projection<-"))
+
 
 
 

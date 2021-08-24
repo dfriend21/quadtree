@@ -2,6 +2,7 @@
 % Please edit documentation in R/lcp.R
 \name{find_lcps}
 \alias{find_lcps}
+\alias{find_lcps,LcpFinder-method}
 \title{Find LCPs to surrounding points}
 \usage{
 \S4method{find_lcps}{LcpFinder}(x, limit_type = "none", limit = NULL)

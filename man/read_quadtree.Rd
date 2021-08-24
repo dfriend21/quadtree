@@ -2,7 +2,9 @@
 % Please edit documentation in R/read_write.R
 \name{read_quadtree}
 \alias{read_quadtree}
+\alias{write_quadtree}
 \alias{read_quadtree,character-method}
+\alias{write_quadtree,character-method}
 \alias{write_quadtree,character,Quadtree-method}
 \title{Read/write a quadtree}
 \usage{

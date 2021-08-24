@@ -1,11 +1,12 @@
 #' @include generics.R
 
 #' @name get_neighbors
+#' @aliases get_neighbors,Quadtree,numeric-method
 #' @title Get the Neighbors of a Quadtree Cell
 #' @description Returns a matrix with information about the neighbors of a 
 #' quadtree cell
-#' @param qt \code{\link{Quadtree}} object
-#' @param pt numeric vector of length 2; the x and y coordinates of a point - 
+#' @param x \code{\link{Quadtree}} object
+#' @param y numeric vector of length 2; the x and y coordinates of a point - 
 #' this is used to identify which quadtree cell to find neighbors for.
 #' @return 
 #' A 6-column matrix with one row per neighboring cell. It has the following

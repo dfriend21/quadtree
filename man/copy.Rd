@@ -2,12 +2,13 @@
 % Please edit documentation in R/copy.R
 \name{copy}
 \alias{copy}
+\alias{copy,Quadtree-method}
 \title{Create a deep copy of a quadtree object}
 \usage{
 \S4method{copy}{Quadtree}(x)
 }
 \arguments{
-\item{x}{The \link{\code{Quadtree}} object to copy}
+\item{x}{The \code{\link{Quadtree}} object to copy}
 }
 \value{
 A Quadtree object

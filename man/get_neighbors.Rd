@@ -2,14 +2,15 @@
 % Please edit documentation in R/get_neighbors.R
 \name{get_neighbors}
 \alias{get_neighbors}
+\alias{get_neighbors,Quadtree,numeric-method}
 \title{Get the Neighbors of a Quadtree Cell}
 \usage{
 \S4method{get_neighbors}{Quadtree,numeric}(x, y)
 }
 \arguments{
-\item{qt}{\code{\link{Quadtree}} object}
+\item{x}{\code{\link{Quadtree}} object}
 
-\item{pt}{numeric vector of length 2; the x and y coordinates of a point - 
+\item{y}{numeric vector of length 2; the x and y coordinates of a point - 
 this is used to identify which quadtree cell to find neighbors for.}
 }
 \value{

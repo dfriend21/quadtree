@@ -1,6 +1,7 @@
 #' @include generics.R
 
 #' @name plot
+#' @aliases plot,Quadtree,missing-method
 #' @title Plot a \code{\link{Quadtree}} object
 #' @param x a \code{\link{Quadtree}} object
 #' @param add boolean; if \code{TRUE}, the quadtree plot is added to the

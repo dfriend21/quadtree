@@ -1,6 +1,7 @@
 #' @include generics.R
 
 #' @name transform_values
+#' @aliases transform_values,Quadtree,function-method
 #' @title Transform the Values of All Cells
 #' @description Uses a function to change all cell values
 #' @param x A \code{\link{Quadtree}} object
@@ -23,7 +24,7 @@
 #' beforehand to make a copy of the quadtree (see 'Examples').
 #' @return 
 #' No return value
-#' @seealso \code{\link{qt_set_values}()} can be used to set the values of cells 
+#' @seealso \code{\link{set_values}()} can be used to set the values of cells 
 #' to specified values (rather than transforming the existing values)
 #' @examples
 #' data(habitat)
@@ -47,10 +48,11 @@
 #' })
 #' 
 #' par(mfrow=c(2,2))
-#' qt_plot(qt1, main="original", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
-#' qt_plot(qt2, main="1 - value", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
-#' qt_plot(qt3, main="values cubed", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
-#' qt_plot(qt4, main="values converted to 0/1", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
+#' plot(qt1, main="original", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
+#' plot(qt2, main="1 - value", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
+#' plot(qt3, main="values cubed", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
+#' plot(qt4, main="values converted to 0/1", crop=TRUE, na_col=NULL, border_lwd=.3, zlim=c(0,1))
+#' @export
 setMethod("transform_values", signature(x = "Quadtree", y = "function"),
   function(x, y){
     x@ptr$transformValues(y)

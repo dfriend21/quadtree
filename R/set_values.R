@@ -1,6 +1,7 @@
 #' @include generics.R
 
 #' @name set_values
+#' @aliases set_values,Quadtree,ANY,numeric-method
 #' @title Change values of quadtree cells
 #' @description Given a quadtree, a set of points and a vector of new values,
 #'   changes the value of the quadtree cells containing the points to the
@@ -21,25 +22,26 @@
 #' cell values will change.
 #' @return 
 #' No return value
-#' @seealso \code{\link{transform_values}()} can be used to transform the existing
-#'   values of all cells
+#' @seealso \code{\link{transform_values}()} can be used to transform the
+#'   existing values of all cells using a function
 #' @examples
 #' data(habitat)
 #' rast = habitat
 #' 
 #' # create a quadtree
-#' qt = qt_create(rast, split_threshold = .1)
+#' qt = quadtree(rast, split_threshold = .1)
 #' 
 #' par(mfrow=c(1,2))
-#' qt_plot(qt, main="original")
+#' plot(qt, main="original")
 #' 
 #' # generate some random points, then change the values at those points
-#' ext = qt_extent(qt)
+#' ext = extent(qt)
 #' pts = cbind(runif(100,ext[1], ext[2]), runif(100,ext[3], ext[4]))
-#' qt_set_values(qt, pts, rep(10,100))
+#' set_values(qt, pts, rep(10,100))
 #' 
 #' # plot it out to see what happened
-#' qt_plot(qt, main="after modification")
+#' plot(qt, main="after modification")
+#' @export
 setMethod("set_values", signature(x = "Quadtree", y="ANY", z="numeric"),
   function(x, y, z){
     if(!is.matrix(y) && !is.data.frame(y)) stop("'y' must be a matrix or a data frame")

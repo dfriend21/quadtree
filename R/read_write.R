@@ -1,6 +1,8 @@
 #' @include generics.R
 
 #' @name read_quadtree
+#' @aliases write_quadtree read_quadtree,character-method
+#'   write_quadtree,character-method
 #' @title Read/write a quadtree
 #' @description Read/write a quadtree
 #' @param x character; the filepath to read from or write to
@@ -28,25 +30,6 @@
 #' write_quadtree(qt, "path/to/newQuadtree.qtree")
 #' }
 NULL
-
-# #' @rdname read_quadtree
-# #' @export
-# setMethod("read_quadtree", signature(x = "character"),
-#   function(x){
-#     qt = new("Quadtree")
-#     qt@ptr = readQuadtreeCpp(x)
-#     return(qt)
-#   }
-# )
-# 
-# #' @rdname read_quadtree
-# #' @export
-# setMethod("write_quadtree", signature(x = "Quadtree", y = "character"),
-#   function(x, y){
-#     x@ptr$writeQuadtree(y)
-#   }
-# )
-
 
 #' @rdname read_quadtree
 #' @export
