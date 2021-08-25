@@ -7,7 +7,6 @@
 #include <vector>
 #include <list>
 #include <string>
-#include <iostream> //TEMPORARY (for debugging)
 #include <functional>
 
 class Matrix;

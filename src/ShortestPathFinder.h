@@ -7,7 +7,6 @@
 #include <set>
 #include <tuple>
 
-
 class ShortestPathFinder{
         
         //defines a connection between two nodes

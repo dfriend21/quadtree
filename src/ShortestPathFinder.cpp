@@ -79,7 +79,6 @@ void ShortestPathFinder::init(int startNodeID){
     }
 }
 
-
 //-------------------------
 // doNextIteration
 //-------------------------

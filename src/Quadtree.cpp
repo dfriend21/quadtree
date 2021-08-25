@@ -1,7 +1,6 @@
 #include "Matrix.h"
 #include "Quadtree.h"
 #include "Node.h"
-#include <iostream>
 #include <fstream>
 #include <vector>
 #include <memory>
@@ -12,9 +11,7 @@
 #include <limits>
 #include <functional>
 #include <cstdarg>
-#include <cereal/archives/json.hpp>
 #include <cereal/archives/portable_binary.hpp>
-#include <cereal/archives/binary.hpp>
 #include <cereal/types/memory.hpp>
 
 //-------------------------
@@ -404,6 +401,7 @@ void Quadtree::setValue(double x, double y, double newValue){
 //-------------------------
 // transformValues
 //-------------------------
+// modify the values of all cells using a function
 void Quadtree::transformValues(std::shared_ptr<Node> node, std::function<double (const double)> &transformFun){
     node->value = transformFun(node->value);
     if(node->hasChildren){
