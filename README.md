@@ -4,7 +4,7 @@
 # quadtree
 
 This package provides functionality for working with raster-like
-quadtrees.
+quadtrees, which allow for variable-sized cells.
 
 ## Installation
 
@@ -25,13 +25,18 @@ A quadtree object is created from a raster or matrix:
 library(quadtree)
 library(sp)
 library(raster)
+#> 
+#> Attaching package: 'raster'
+#> The following objects are masked from 'package:quadtree':
+#> 
+#>     projection, projection<-
 
 data(habitat, package="quadtree") #load sample data
-qt = qt_create(habitat, split_threshold=.03, split_method="sd") #create a quadtree
+qt = quadtree(habitat, split_threshold=.03, split_method="sd") #create a quadtree
 
 par(mfrow=c(1,2), mar=c(3,2,2,2))
 plot(habitat, zlim=c(0,1), main="raster representation", axes=FALSE, box=FALSE)
-qt_plot(qt, crop=TRUE, na_col=NULL, border_lwd=.2,xlab="", ylab="", legend=FALSE, zlim=c(0,1), main="quadtree representation", axes=FALSE)
+plot(qt, crop=TRUE, na_col=NULL, border_lwd=.2,xlab="", ylab="", legend=FALSE, zlim=c(0,1), main="quadtree representation", axes=FALSE)
 ```
 
 <img src="man/figures/README-example_create-1.png" width="100%" />
@@ -47,7 +52,7 @@ Once created, cell values can be extracted, as with a raster:
 
 ``` r
 pts = cbind(c(20000,32000,5000),c(10000,30000,27000))
-qt_extract(qt,pts)
+extract(qt,pts)
 #> [1] 0.9692383 0.5340000 0.1364531
 ```
 
@@ -57,10 +62,10 @@ using the quadtree as a resistance surface.
 ``` r
 start_point = c(6989,34007)
 end_point = c(33015,38162)
-lcp_finder = qt_lcp_finder(qt, start_point)
-lcp = qt_find_lcp(lcp_finder, end_point, use_original_end_points = TRUE)
+lcp_finder = lcp_finder(qt, start_point)
+lcp = find_lcp(lcp_finder, end_point, use_original_end_points = TRUE)
 
-qt_plot(qt, border_col="gray70", crop=TRUE, na_col=NULL, border_lwd=.5)
+plot(qt, border_col="gray70", crop=TRUE, na_col=NULL, border_lwd=.5)
 lines(lcp[,1:2])
 points(rbind(start_point, end_point), col="red", pch=16)
 ```
@@ -73,12 +78,12 @@ Currently there are no vignettes, as this package is still in
 development, although in the future I hope to add some. However, all of
 the functions in the package are well documented and have extensive
 examples that the user can run. To understand the basics of the library,
-I’d recommend first reading the documentation for `qt_create` (i.e. run
-`?qt_create` in the console) first - this help file contains all the
+I’d recommend first reading the documentation for `quadtree` (i.e. run
+`?quadtree` in the console) first - this help file contains all the
 basic info on what a quadtree is and how it is constructed. To learn
 more about the least-cost path functionality, start with the
-documentation for `?qt_lcp_finder` and also take a look at
-`?qt_find_lcp` and `?qt_find_lcps`.
+documentation for `?lcp_finder` and also take a look at `?find_lcp` and
+`?find_lcps`.
 
 Most of the other functions are quite simple - take a look at the PDF
 manual included in the repository for information on how to use them.
@@ -131,54 +136,43 @@ be built and run independently of R.
 ### Rcpp C++ code
 
 These files are called ‘wrappers’ - essentially they each contain an
-instance of relevant object, and provide additional Rcpp-related
+instance of the relevant object and provide additional Rcpp-related
 functions that can be accessed from R. These essentially provide the
 “bridge” that allows the functionality in the core C++ files to be
 accessed from R.
 
--   NodeWrapper.h - wrapper class for ‘Node’
--   QuadtreeWrapper.h - wrapper class for ‘Quadtree’
--   ShortestPathFinderWrapper.h - wrapper class for ‘ShortestPathFinder’
--   R\_interface.h - defines a namespace that currently contains only a
+-   NodeWrapper.h - wrapper class for ‘Node’. This class is exposed to R
+    as ‘CppNode’.
+-   QuadtreeWrapper.h - wrapper class for ‘Quadtree’. This class is
+    exposed to R as ‘CppQuadtree’.
+-   ShortestPathFinderWrapper.h - wrapper class for
+    ‘ShortestPathFinder’. This class is exposed to R as
+    ‘CppShortestPathFinder’.
+-   R\_Interface.h - defines a namespace that currently contains only a
     single function, which converts an Rcpp matrix to the Matrix class I
     created. This function is separate from the other files because it
     is a general-purpose function and thus didn’t fit in any of the
     wrapper classes.
+-   load\_modules.cpp - contains code that exposes the wrapper classes
+    to R using Rcpp modules.
 
 ### R code
 
-This category consists of the files in the ‘R’ folder. Many of these
-functions are actually unnecessary, as all of the relevant functionality
-can be accessed from R via the ‘Wrapper’ classes. However, because of
-the object-based representation of these objects, the syntax for
-accessing this functionality differs from typical R syntax. Thus, most
-of the R functions provided here are syntactic sugar designed to make
-the functionality available in a format that conforms to traditional R
-code syntax. The two exceptions are `qt_create.R` and `qt_plot.R` which
-are more complex and are not simple wrappers for C++ functions.
+Almost all of the core functionality of the quadtree package is
+contained in the C++ code, and the R code serves primarily as an
+interface for working with the C++ quadtree data structure. A Quadtree
+S4 class is defined which consists only of one slot, which contains a
+‘CppQuadtree’ object. The methods for this class are often quite simple,
+merely consisting of calling one of the methods on the CppQuadtree
+object. Using this approach has a few benefits. First, wrapping the C++
+class in an S4 class allows the quadtree functionality to be accessed in
+a way that is much more consistent with typical R syntax, which will
+hopefully be more intuitive to R users. Second, it allows for me to add
+R code to validate and make any necessary modifications to parameters
+before calling the C++ methods - this helps make the functions more
+robust. This also allows me to take advantage of existing R
+functionality (for example, resampling a raster from the ‘raster’
+package).
 
-## Notes on package structure
-
-The 3-tiered structure described here may be needlessly complicated. I
-designed it this way because I am using the functionality implemented in
-the C++ files for a pure-C++ implementation of an agent-based model.
-Thus, to avoid having to unnecessarily include R interface code in those
-files, I wanted a way to be able to use the original files for both
-projects (this package and the C++ ABM) without needing to have slightly
-different implementations to fit their respective purposes. Thus, I
-settled on using the ‘wrapper class’ approach as a way to augment the
-original classes with the necessary Rcpp functionality without having to
-make any changes to the underlying C++ code.
-
-I added most of the R code later because I wanted a way to access the
-functions in a way that more closely resembles typical R syntax - this
-will hopefully make it more intuitive for R users to work with.
-
-Overall, the structure works fairly well, but I wonder if it’s overly
-complicated. I’m worried my desire to keep the C++ code independent of
-the R code results in a cumbersome project organization. Regardless, it
-works, and has allowed me to easily make edits to the underlying C++
-structure and then use those exact files for both projects I’m working
-on rather than needing slightly different versions for each. There
-definitely might be more sophisticated ways of achieving the same
-purpose, but what I’m doing works.
+I won’t discuss each R file/function here - see the documentation PDF
+for details on each R function.
