@@ -24,12 +24,12 @@ setMethod("summary", signature(object = "Quadtree"),
     e = extent(object)
     proj = projection(object)
     vals = as_vector(object)
-    if(proj == "") proj = "none"
+    if(proj == "") proj = "NA"
     cat("class         : Quadtree\n",
         "# of cells    : ", n_cells(object, terminal_only = TRUE), "\n",
         "min cell size : ", object@ptr$root()$smallestChildSideLength(),"\n",
         "extent        : ", e[1], ", ", e[2], ", ", e[3], ", ", e[4], " (xmin, xmax, ymin, ymax)\n", 
-        "projection    : ", proj, "\n",
+        "crs           : ", proj, "\n",
         "values        : ", min(vals, na.rm=TRUE), ", ", max(vals, na.rm=TRUE), " (min, max)", sep="")    
   }
 )
