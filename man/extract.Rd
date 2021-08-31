@@ -18,7 +18,7 @@ cell values is returned. If \code{TRUE}, a matrix is returned providing
 each cell's extent in addition to its value}
 }
 \value{
-The return type depends on the value of \code{extents}. 
+The return type depends on the value of \code{extents}.
 
 If \code{extents = FALSE}, the function returns a numeric vector
 corresponding to the values at the points represented by \code{pts}. If a
@@ -38,24 +38,24 @@ Extract the cell values and optionally the cell extents
 }
 \examples{
 data(habitat)
-rast = habitat
+rast <- habitat
 
 # create quadtree
-qt1 = quadtree(rast, split_threshold=.1, adj_type="expand")
+qt1 <- quadtree(rast, split_threshold = .1, adj_type = "expand")
 plot(qt1)
 
 # create points at which we'll extract values
-coords = seq(-1000,40010,length.out=10)
-pts = cbind(coords,coords)
+coords <- seq(-1000, 40010, length.out = 10)
+pts <- cbind(coords,coords)
 
 # extract the cell values
-vals = extract(qt1,pts)
+vals <- extract(qt1, pts)
 
 # plot the quadtree and the points
-plot(qt1, border_col="gray50", border_lwd=.4)
-points(pts, pch=16,cex=.6)
-text(pts,labels=round(vals,2),pos=4)
+plot(qt1, border_col = "gray50", border_lwd = .4)
+points(pts, pch = 16, cex = .6)
+text(pts, labels = round(vals, 2), pos = 4)
 
 # we can also extract the cell extents in addition to the values
-extract(qt1,pts,extents=TRUE)
+extract(qt1, pts, extents = TRUE)
 }

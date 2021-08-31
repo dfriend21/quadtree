@@ -97,9 +97,9 @@ used.
 \examples{
 library(raster)
 data(habitat)
-rast = habitat
+rast <- habitat
 # create quadtree
-qt1 = quadtree(rast, split_threshold=.1, adj_type="expand")
+qt1 <- quadtree(rast, split_threshold = .1, adj_type = "expand")
 
 #####################################
 # DEFAULT
@@ -116,62 +116,63 @@ plot(qt1)
 # passed to the default 'plot()' function
 
 # crop extent to the original extent of the raster
-plot(qt1, crop=TRUE, main="cropped")
+plot(qt1, crop = TRUE, main = "cropped")
 
 # crop and don't plot NA cells
-plot(qt1, crop=TRUE, na_col=NULL, main="cropped")
+plot(qt1, crop = TRUE, na_col = NULL, main = "cropped")
 
 # use 'xlim' and 'ylim' to zoom in on an area
-plot(qt1, xlim = c(10000,20000), ylim = c(20000,30000), main="zoomed in")
+plot(qt1, xlim = c(10000, 20000), ylim = c(20000, 30000), main = "zoomed in")
 
 #####################################
 # COLORS
 #####################################
 
 # change border color and width
-plot(qt1, border_col="transparent") #no borders
-plot(qt1, border_col="gray60") #gray borders
-plot(qt1, border_lwd=.3) #change line thickness of borders
+plot(qt1, border_col = "transparent") #no borders
+plot(qt1, border_col = "gray60") #gray borders
+plot(qt1, border_lwd = .3) #change line thickness of borders
 
 # change color palette
-plot(qt1, col=c("blue", "yellow", "red"))
-plot(qt1, col=hcl.colors(100))
-plot(qt1, col=c("black", "white"))
+plot(qt1, col = c("blue", "yellow", "red"))
+plot(qt1, col = hcl.colors(100))
+plot(qt1, col = c("black", "white"))
 
 # change color transparency
-plot(qt1, alpha=.5)
-plot(qt1, col=c("blue", "yellow", "red"), alpha=.5)
+plot(qt1, alpha = .5)
+plot(qt1, col = c("blue", "yellow", "red"), alpha = .5)
 
 # change color of NA cells
-plot(qt1, na_col="lavender")
+plot(qt1, na_col = "lavender")
 
 # don't plot NA cells at all
-plot(qt1, na_col=NULL)
+plot(qt1, na_col = NULL)
 
 # change 'zlim'
-plot(qt1, zlim=c(0,5))
-plot(qt1, zlim=c(.2,.7))
+plot(qt1, zlim = c(0, 5))
+plot(qt1, zlim = c(.2, .7))
 
 #####################################
 # SHOW NEIGHBOR CONNECTIONS
 #####################################
 
 # plot all neighbor connections
-plot(qt1, nb_line_col="black", border_col="gray60")
+plot(qt1, nb_line_col = "black", border_col = "gray60")
 
 # don't plot connections to NA cells
-plot(qt1, nb_line_col="black", border_col="gray60", na_col=NULL)
+plot(qt1, nb_line_col = "black", border_col = "gray60", na_col = NULL)
 
 #####################################
 # LEGEND
 #####################################
 
 # no legend
-plot(qt1, legend=FALSE)
+plot(qt1, legend = FALSE)
 
 # increase right margin size
-plot(qt1, adj_mar_auto=10)
+plot(qt1, adj_mar_auto = 10)
 
 # use 'legend_args' to customize the legend
-plot(qt1, adj_mar_auto=10, legend_args=list(lgd_ht_pct=.8, bar_wd_pct=.4))
+plot(qt1, adj_mar_auto = 10,
+     legend_args = list(lgd_ht_pct = .8, bar_wd_pct = .4))
 }

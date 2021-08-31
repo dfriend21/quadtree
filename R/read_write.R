@@ -11,7 +11,7 @@
 #' To read/write a quadtree object, the C++ library \code{cereal} is used to
 #' serialize the quadtree and save it to a file. The file extension is
 #' unimportant - it can be anything (I've been using the extension '.qtree').
-#' 
+#'
 #' Note that typically the quadtree isn't particularly space-efficient - it's
 #' not uncommon for a quadtree file to be larger than the original raster file
 #' (although, of course, this depends on how 'coarse' the quadtree is in
@@ -20,23 +20,26 @@
 #' pointers to its neighbors, among other things) while a raster can store only
 #' the value since the coordinates of the cell can be determined from the
 #' knowledge of the extent and the dimensions of the raster.
-#' 
+#'
 #' It's entirely possible that a quadtree implemention could be written that
-#' is MUCH more space efficient. However, this was not the primary goal when 
+#' is MUCH more space efficient. However, this was not the primary goal when
 #' creating this package.
-#' @examples 
+#' @examples
 #' \dontrun{
-#' qt = read_quadtree("path/to/quadtree.qtree")
-#' write_quadtree(qt, "path/to/newQuadtree.qtree")
+#' data(habitat)
+#'
+#' qt1 <- quadtree(habitat, .1)
+#' write_quadtree(qt1, "path/to/quadtree.qtree")
+#' qt2 <- read_quadtree("path/to/quadtree.qtree")
 #' }
 NULL
 
 #' @rdname read_quadtree
 #' @export
 setMethod("read_quadtree", signature(x = "character"),
-  function(x){
-    qt = new("Quadtree")
-    qt@ptr = readQuadtreeCpp(x)
+  function(x) {
+    qt <- new("Quadtree")
+    qt@ptr <- readQuadtreeCpp(x)
     return(qt)
   }
 )
@@ -44,7 +47,7 @@ setMethod("read_quadtree", signature(x = "character"),
 #' @rdname read_quadtree
 #' @export
 setMethod("write_quadtree", signature(x = "character", y = "Quadtree"),
-  function(x, y){
-    writeQuadtreeCpp(y@ptr,x)
+  function(x, y) {
+    writeQuadtreeCpp(y@ptr, x)
   }
 )

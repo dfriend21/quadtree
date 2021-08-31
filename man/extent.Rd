@@ -19,25 +19,26 @@ rows/columns were added to pad the dimensions.}
 Returns an 'extent' object (from the 'raster' package)
 }
 \description{
-Gets the extent of the quadtree as an 'extent' object (from the 
+Gets the extent of the quadtree as an 'extent' object (from the
 raster package)
 }
 \examples{
 data(habitat)
-rast = habitat
+rast <- habitat
 
 # create a quadtree
-qt = quadtree(rast, split_threshold=.1, adj_type="expand")
+qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
 
 # retrieve the extent and the original extent
-ext = extent(qt)
-ext_orig = extent(qt,original=TRUE)
+ext <- extent(qt)
+ext_orig <- extent(qt, original = TRUE)
 
 ext
 ext_orig
 
 # plot them
 plot(qt)
-rect(ext[1],ext[3],ext[2],ext[4],border="blue",lwd=4)
-rect(ext_orig[1],ext_orig[3],ext_orig[2],ext_orig[4],border="red",lwd=4)
+rect(ext[1], ext[3], ext[2], ext[4], border = "blue", lwd = 4)
+rect(ext_orig[1], ext_orig[3], ext_orig[2], ext_orig[4],
+     border = "red", lwd = 4)
 }

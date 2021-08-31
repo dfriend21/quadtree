@@ -20,16 +20,19 @@
 #'     \item \code{parentID}: the ID of the cell's parent. The root, which has
 #'     no parent, has a value of -1 for this element
 #'   }
-#' @seealso \code{\link{as_vector}} returns all the cell values as a numeric 
+#' @seealso \code{\link{as_vector}} returns all the cell values as a numeric
 #' vector
-#' @examples 
-#' mat = rbind(c(1,1,0,1),c(1,1,1,0),c(1,0,1,1),c(0,1,1,1))
-#' qt = quadtree(mat,.1)
+#' @examples
+#' mat <- rbind(c(1, 1, 0, 1),
+#'              c(1, 1, 1, 0),
+#'              c(1, 0, 1, 1),
+#'              c(0, 1, 1, 1))
+#' qt <- quadtree(mat, .1)
 #' plot(qt)
 #' as_data_frame(qt)
 #' @export
 setMethod("as_data_frame", signature(x = "Quadtree"),
-  function(x){
-    return(data.frame(do.call(rbind,x@ptr$asList())))
+  function(x) {
+    return(data.frame(do.call(rbind, x@ptr$asList())))
   }
 )

@@ -8,7 +8,7 @@
 \title{C++ Quadtree Node}
 \description{
 The 'CppNode' is a C++ class represents a single quadtree node.
-This is used internally - end users should have no need to use any of the 
+This is used internally - end users should have no need to use any of the
 methods listed here.
 }
 \section{Fields}{
@@ -46,7 +46,7 @@ methods listed here.
 }}
 
 \item{\code{getNeighborInfo}}{\itemize{
-  \item \strong{Description}: Returns a matrix with info on each of the 
+  \item \strong{Description}: Returns a matrix with info on each of the
   neighboring cells
   \item \strong{Parameters}: none
   \item \strong{Returns}: a matrix. \code{quadtree$getNbList()} makes

@@ -9,10 +9,10 @@
 #' @param x a \code{\link{Quadtree}} object to be used as a resistance surface
 #' @param y numeric vector with 2 elements - the x and y coordinates
 #'   of the starting point of the path(s)
-#' @param xlims numeric vector with 2 elements - paths will be constrained so
+#' @param xlim numeric vector with 2 elements - paths will be constrained so
 #'   that all points fall within the min and max x coordinates specified in
-#'   \code{xlims}. If \code{NULL} the x limits of \code{x} are used
-#' @param ylims same as \code{xlims}, but for y
+#'   \code{xlim}. If \code{NULL} the x limits of \code{x} are used
+#' @param ylim same as \code{xlim}, but for y
 #' @details This function creates an object that can then be used by
 #'   \code{\link{find_lcp}} or \code{\link{find_lcps}} to calculate
 #'   least-cost paths.
@@ -62,9 +62,9 @@
 #'   This is because treating the centroids of the cells as the nodes introduces
 #'   some distortion, especially with large cells.
 #'
-#'   Also note that the \code{xlims} and \code{ylims} arguments in
+#'   Also note that the \code{xlim} and \code{ylim} arguments in
 #'   \code{\link{lcp_finder}()} can be used to restrict the search space to the
-#'   rectangle defined by xlims and ylims. This speeds up the computation of the
+#'   rectangle defined by xlim and ylim. This speeds up the computation of the
 #'   LCP by limiting the number of cells considered.
 #'
 #'   Another note is that an LcpFinder object is specific to a given
@@ -78,167 +78,180 @@
 #'   all LCPs that have been calculated so far.
 #' @examples
 #' library(raster)
-#' 
+#'
 #' #####################################
 #' # create a quadtree
 #' #####################################
-#' 
+#'
 #' data(habitat)
-#' rast = habitat
-#' qt = quadtree(rast, split_threshold = .1, adj_type="expand")
-#' plot(qt, crop=TRUE, na_col=NULL, border_lwd=.4)
-#' 
+#' rast <- habitat
+#' qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+#' plot(qt, crop = TRUE, na_col = NULL, border_lwd = .4)
+#'
 #' #####################################
 #' # basic usage
 #' #####################################
-#' 
+#'
 #' # --------------------
 #' # find the LCP to a single point
 #' # --------------------
-#' start_pt1 = c(6989,34007)
-#' end_pt1 = c(33015,38162)
-#' 
+#' start_pt1 <- c(6989, 34007)
+#' end_pt1 <- c(33015, 38162)
+#'
 #' # create the LCP finder object and find the LCP
-#' lcpf1 = lcp_finder(qt, start_pt1)
-#' path1 = find_lcp(lcpf1, end_pt1)
-#' 
+#' lcpf1 <- lcp_finder(qt, start_pt1)
+#' path1 <- find_lcp(lcpf1, end_pt1)
+#'
 #' # plot the LCP
-#' plot(qt, crop=TRUE, na_col=NULL, border_col="gray30", border_lwd=.4)
-#' points(rbind(start_pt1, end_pt1), pch=16, col="red")
-#' lines(path1[,1:2], col="black")
-#' 
+#' plot(qt, crop = TRUE, na_col = NULL, border_col = "gray30", border_lwd = .4)
+#' points(rbind(start_pt1, end_pt1), pch = 16, col = "red")
+#' lines(path1[, 1:2], col = "black")
+#'
 #' # --------------------
 #' # find all LCPs
 #' # --------------------
 #' # calculate all LCPs
-#' paths_summary1 = find_lcps(lcpf1, limit_type="none")
+#' paths_summary1 <- find_lcps(lcpf1, limit_type = "none")
 #' # retrieve each individual LCP
-#' all_paths1 = lapply(1:nrow(paths_summary1), function(i){
-#'   row_i = paths_summary1[i,]
-#'   pt_i = with(row_i, c((xmin+xmax)/2, (ymin+ymax)/2))
-#'   return(find_lcp(lcpf1,pt_i))
+#' all_paths1 <- lapply(1:nrow(paths_summary1), function(i) {
+#'   row_i <- paths_summary1[i, ]
+#'   pt_i <- with(row_i, c((xmin + xmax) / 2, (ymin + ymax) / 2))
+#'   return(find_lcp(lcpf1, pt_i))
 #' })
-#' 
-#' #plot all the LCPs
-#' plot(qt, crop=TRUE, na_col=NULL, border_col="gray30", border_lwd=.4)
+#'
+#' # plot all the LCPs
+#' plot(qt, crop = TRUE, na_col = NULL, border_col = "gray30", border_lwd = .4)
 #' invisible(lapply(all_paths1, lines))
 #' points(start_pt1[1], start_pt1[2], bg="red", col="black", pch=21, cex=1.2)
-#' 
+#'
 #' # --------------------
 #' # find all cells reachable under a given threshold
 #' # --------------------
-#' start_pt2 = c(19000,25000)
-#' limit = 5000
-#' 
+#' start_pt2 <- c(19000, 25000)
+#' limit <- 5000
+#'
 #' # create the LCP finder object and find all the valid LCPs
-#' lcpf2 = lcp_finder(qt, start_pt2)
-#' # we could use limit_type="none" if we wanted to find LCPs to ALL cells
-#' paths_summary2 = find_lcps(lcpf2, limit_type="cd", limit=limit)
-#' 
+#' lcpf2 <- lcp_finder(qt, start_pt2)
+#' # we could use limit_type = "none" if we wanted to find LCPs to ALL cells
+#' paths_summary2 <- find_lcps(lcpf2, limit_type = "cd", limit = limit)
+#'
 #' # plot the centroids of the reachable cells
-#' plot(qt, main=paste0("reachable cells; cost+distance < ", limit), crop=TRUE,
-#'         na_col=NULL, border_col="gray60")
-#' with(paths_summary2, points((xmin+xmax)/2, (ymin+ymax)/2, pch=16, col="black", cex=.4))
-#' points(start_pt2[1], start_pt2[2], col="red", pch=16)
-#' 
+#' plot(qt, main = paste0("reachable cells; cost + distance < ", limit),
+#'      crop = TRUE, na_col = NULL, border_col = "gray60")
+#' with(paths_summary2,
+#'      points((xmin + xmax) / 2, (ymin + ymax) / 2,
+#'             pch = 16, col = "black", cex = .4))
+#' points(start_pt2[1], start_pt2[2], col = "red", pch = 16)
+#'
 #' # --------------------
 #' # limiting the search area
 #' # --------------------
 #' # define the search area
-#' box_length = 7000
-#' xlims = c(start_pt2[1] - box_length/2, start_pt2[1] + box_length/2)
-#' ylims = c(start_pt2[2] - box_length/2, start_pt2[2] + box_length/2)
-#' 
+#' box_length <- 7000
+#' xlim <- c(start_pt2[1] - box_length / 2, start_pt2[1] + box_length / 2)
+#' ylim <- c(start_pt2[2] - box_length / 2, start_pt2[2] + box_length / 2)
+#'
 #' # find the LCPs to all the cells inside the search area
-#' lcpf3 = lcp_finder(qt, start_pt2, xlims=xlims, ylims=ylims)
-#' paths_summary3 = find_lcps(lcpf3, limit_type="none")
-#' 
+#' lcpf3 <- lcp_finder(qt, start_pt2, xlim = xlim, ylim = ylim)
+#' paths_summary3 <- find_lcps(lcpf3, limit_type = "none")
+#'
 #' # retrive each LCP
-#' all_paths3 = lapply(1:nrow(paths_summary3), function(i){
-#'   row_i = paths_summary3[i,]
-#'   pt_i = with(row_i, c((xmin+xmax)/2, (ymin+ymax)/2))
-#'   return(find_lcp(lcpf3,pt_i))
+#' all_paths3 <- lapply(1:nrow(paths_summary3), function(i) {
+#'   row_i <- paths_summary3[i, ]
+#'   pt_i <- with(row_i, c((xmin + xmax) / 2, (ymin + ymax) / 2))
+#'   return(find_lcp(lcpf3, pt_i))
 #' })
-#' 
+#'
 #' # plot the results
-#' plot(qt, crop=TRUE, na_col=NULL, border_col="gray60")
-#' with(paths_summary3, points((xmin+xmax)/2, (ymin+ymax)/2, pch=16, col="black", cex=.4))
+#' plot(qt, crop = TRUE, na_col = NULL, border_col = "gray60")
+#' with(paths_summary3,
+#'      points((xmin + xmax) / 2, (ymin + ymax) / 2,
+#'             pch = 16, col = "black", cex = .4))
 #' invisible(lapply(all_paths3, lines))
-#' rect(xlims[1], ylims[1], xlims[2], ylims[2], border="red", lwd=2)
-#' points(start_pt2[1], start_pt2[2], col="red", pch=16)
-#' 
-#' 
+#' rect(xlim[1], ylim[1], xlim[2], ylim[2], border = "red", lwd = 2)
+#' points(start_pt2[1], start_pt2[2], col = "red", pch = 16)
+#'
+#'
 #' #####################################
 #' # a larger example to demonstrate run time
 #' #####################################
-#' 
+#'
 #' #generate a large matrix of random values between 0 and 1
-#' nrow = 570
-#' ncol = 750
-#' rast = raster(matrix(runif(nrow*ncol), nrow=nrow, ncol=ncol), xmn=0, xmx=ncol, ymn=0, ymx=nrow)
-#' 
+#' nrow <- 570
+#' ncol <- 750
+#' rast <- raster(matrix(runif(nrow * ncol), nrow = nrow, ncol = ncol),
+#'               xmn = 0, xmx = ncol, ymn = 0, ymx = nrow)
+#'
 #' #make the quadtree
-#' qt1 = quadtree(rast, split_threshold = .9, adj_type="expand")
-#' 
+#' qt1 <- quadtree(rast, split_threshold = .9, adj_type = "expand")
+#'
 #' #get the LCP finder
-#' lcpf = lcp_finder(qt1, c(1,1))
-#' 
+#' lcpf <- lcp_finder(qt1, c(1, 1))
+#'
 #' # the LCP finder saves state. So finding the path the first time requires
 #' # computation, and takes longer, but running it again is nearly instantaneous
-#' system.time(find_lcp(lcpf, c(740,560))) #takes longer
-#' system.time(find_lcp(lcpf, c(740,560))) #runs MUCH faster
-#' 
+#' system.time(find_lcp(lcpf, c(740, 560))) #takes longer
+#' system.time(find_lcp(lcpf, c(740, 560))) #runs MUCH faster
+#'
 #' # in addition, because of how Dijkstra's algorithm works, the LCP finder also
 #' # found many other LCPs in the course of finding the first LCP, meaning that
 #' # subsequent LCP queries for different destination points will be much faster
 #' # (since the LCP finder saves state)
-#' system.time(find_lcp(lcpf, c(740,1)))
-#' system.time(find_lcp(lcpf, c(1,560)))
-#' 
+#' system.time(find_lcp(lcpf, c(740, 1)))
+#' system.time(find_lcp(lcpf, c(1, 560)))
+#'
 #' # now save the paths so we can plot them
-#' path1 = find_lcp(lcpf, c(740,560))
-#' path2 = find_lcp(lcpf, c(740,1))
-#' path3 = find_lcp(lcpf, c(1,560))
-#' 
+#' path1 <- find_lcp(lcpf, c(740, 560))
+#' path2 <- find_lcp(lcpf, c(740, 1))
+#' path3 <- find_lcp(lcpf, c(1, 560))
+#'
 #' # plot the paths
-#' plot(qt1, crop=TRUE, border_col="transparent", na_col=NULL)
-#' lines(path1[,1:2])
-#' lines(path2[,1:2], col="red")
-#' lines(path3[,1:2], col="blue")
+#' plot(qt1, crop = TRUE, border_col = "transparent", na_col = NULL)
+#' lines(path1[, 1:2])
+#' lines(path2[, 1:2], col = "red")
+#' lines(path3[, 1:2], col = "blue")
 #' @export
-setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"), 
-  function(x, y, xlims=NULL, ylims=NULL){
-    if(!is.numeric(y) || length(y) != 2) stop("'y' must be a numeric vector with length 2")
-    if(any(is.na(y))) stop("'y' contains NA values")
-    if(!is.null(xlims) && (!is.numeric(xlims) || length(xlims) != 2)) stop("'xlims' must be a numeric vector with length 2")
-    if(!is.null(xlims) && any(is.na(xlims))) stop("'xlims' contains NA values")
-    if(!is.null(ylims) && (!is.numeric(ylims) || length(ylims) != 2)) stop("'ylims' must be a numeric vector with length 2")
-    if(!is.null(ylims) && any(is.na(ylims))) stop("'ylims' contains NA values")
-    
-    ext = x@ptr$extent()
-    if(is.null(xlims)) xlims = ext[1:2]
-    if(is.null(ylims)) ylims = ext[3:4]
-    
-    if(xlims[1] > xlims[2]) stop("'xlims[1]' must be less than 'xlims[2]'")
-    if(ylims[1] > ylims[2]) stop("'ylims[1]' must be less than 'ylims[2]'")
-    if(xlims[2] < ext[1] || xlims[1] > ext[2] || ylims[2] < ext[3] || ylims[1] > ext[4]) {
-      warning("the search area defined by 'xlims' and 'ylims' does not overlap with the quadtree extent. No LCPs will be found.")
+setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
+  function(x, y, xlim = NULL, ylim = NULL) {
+    if (!is.numeric(y) || length(y) != 2)
+      stop("'y' must be a numeric vector with length 2")
+    if (any(is.na(y)))
+      stop("'y' contains NA values")
+    if (!is.null(xlim) && (!is.numeric(xlim) || length(xlim) != 2))
+      stop("'xlim' must be a numeric vector with length 2")
+    if (!is.null(xlim) && any(is.na(xlim)))
+      stop("'xlim' contains NA values")
+    if (!is.null(ylim) && (!is.numeric(ylim) || length(ylim) != 2))
+      stop("'ylim' must be a numeric vector with length 2")
+    if (!is.null(ylim) && any(is.na(ylim)))
+      stop("'ylim' contains NA values")
+
+    ext <- x@ptr$extent()
+    if (is.null(xlim)) xlim <- ext[1:2]
+    if (is.null(ylim)) ylim <- ext[3:4]
+
+    if (xlim[1] > xlim[2])
+      stop("'xlim[1]' must be less than 'xlim[2]'")
+    if (ylim[1] > ylim[2])
+      stop("'ylim[1]' must be less than 'ylim[2]'")
+    if (xlim[2] < ext[1] ||
+        xlim[1] > ext[2] ||
+        ylim[2] < ext[3] ||
+        ylim[1] > ext[4]) {
+      warning("the search area defined by 'xlim' and 'ylim' does not overlap
+              with the quadtree extent. No LCPs will be found.")
     }
-    if(y[1] < xlims[1] || y[1] > xlims[2] || y[2] < ylims[1] || y[2] > ylims[2]) {
-      warning(paste0("starting point (",y[1], ",", y[2], ") not valid (falls outside the search area). No LCPs will be found."))
+    if (y[1] < xlim[1] ||
+        y[1] > xlim[2] ||
+        y[2] < ylim[1] ||
+        y[2] > ylim[2]) {
+      warning(paste0("starting point (", y[1], ",", y[2], ") not valid (falls
+                     outside the search area). No LCPs will be found."))
     }
-    spf = new("LcpFinder")
-    spf@ptr = x@ptr$getShortestPathFinder(y, xlims, ylims)
-    # if(!spf$isValid()){
-    #   warning(paste0("warning in lcp_finder(): starting point (",y[1], ",", y[2], ") not valid (falls outside the quadtree)"))
-    # }
-    return(spf) ######### TEMPORARY
-    # if(spf$isValid()){
-    #   return(spf)
-    # } else {
-    #   warning(paste0("warning in lcp_finder(): starting point (",y[1], ",", y[2], ") not valid (falls outside the quadtree). Returning NULL."))
-    #   return(NULL)
-    # }
+    spf <- new("LcpFinder")
+    spf@ptr <- x@ptr$getShortestPathFinder(y, xlim, ylim)
+
+    return(spf)
   }
 )
 
@@ -261,14 +274,14 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
 #' @details See \code{\link{lcp_finder}} for more information on how the LCP
 #'   is found
 #' @return \code{find_lcp} returns a five column matrix representing the
-#'   least cost path. It has the following columns: 
-#'   \itemize{ 
-#'      \item{\code{x}: }{x coordinate of this point} 
+#'   least cost path. It has the following columns:
+#'   \itemize{
+#'      \item{\code{x}: }{x coordinate of this point}
 #'      \item{\code{y}: }{y coordinate of this point}
 #'      \item{\code{cost_tot}: }{the cumulative cost up to this point}
 #'      \item{\code{dist_tot}: }{the cumulative distance up to this point - note
-#'      that this is not straight-line distance, but instead the distance along the
-#'      path} 
+#'      that this is not straight-line distance, but instead the distance along
+#'      the path}
 #'      \item{\code{cost_cell}: }{the cost of the cell that contains this point}
 #'    }
 #'
@@ -291,45 +304,53 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
 #'   outputs a summary matrix of all LCPs that have been calculated so far.
 #' @examples
 #' library(raster)
-#' 
+#'
 #' # create a quadtree
 #' data(habitat)
-#' rast = habitat
-#' qt = quadtree(rast, split_threshold = .1, adj_type="expand")
-#' plot(qt, crop=TRUE, na_col=NULL, border_lwd=.4)
-#' 
+#' rast <- habitat
+#' qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+#' plot(qt, crop = TRUE, na_col = NULL, border_lwd = .4)
+#'
 #' # define our start and end points
-#' start_pt = c(6989,34007)
-#' end_pt = c(33015,38162)
-#' 
+#' start_pt <- c(6989, 34007)
+#' end_pt <- c(33015, 38162)
+#'
 #' # create the LCP finder object and find the LCP
-#' lcpf = lcp_finder(qt, start_pt)
-#' path = find_lcp(lcpf, end_pt)
-#' 
+#' lcpf <- lcp_finder(qt, start_pt)
+#' path <- find_lcp(lcpf, end_pt)
+#'
 #' # plot the LCP
-#' plot(qt, crop=TRUE, na_col=NULL, border_col="gray30", border_lwd=.4)
-#' points(rbind(start_pt, end_pt), pch=16, col="red")
-#' lines(path[,1:2], col="black")
-#' 
+#' plot(qt, crop = TRUE, na_col = NULL, border_col = "gray30", border_lwd = .4)
+#' points(rbind(start_pt, end_pt), pch = 16, col = "red")
+#' lines(path[, 1:2], col = "black")
+#'
 #' # NOTE: see "Examples" in ?lcp_finder for more examples
 #' @export
 setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
-  function(x, y, use_original_end_points=FALSE){
-    if(!is.null(x)){
-      lims = x@ptr$getSearchLimits()
-      
-      if(y[1] < lims[1] || y[1] > lims[2] || y[2] < lims[3] || y[2] > lims[4]){
-        warning("'y' falls outside of the search limits of the LCP finder. No LCP will be found.")
+  function(x, y, use_original_end_points = FALSE) {
+    if (!is.null(x)) {
+      lims <- x@ptr$getSearchLimits()
+
+      if (y[1] < lims[1] ||
+          y[1] > lims[2] ||
+          y[2] < lims[3] ||
+          y[2] > lims[4]) {
+        warning("'y' falls outside of the search limits of the LCP finder. No
+                LCP will be found.")
       }
-      mat = x@ptr$getShortestPath(y)
-      if(use_original_end_points && nrow(mat) > 0){
-        mat[1,1:2] = x@ptr$getStartPoint()
-        mat[nrow(mat),1:2] = y
+      mat <- x@ptr$getShortestPath(y)
+      if (use_original_end_points && nrow(mat) > 0) {
+        mat[1, 1:2] <- x@ptr$getStartPoint()
+        mat[nrow(mat), 1:2] <- y
       }
       return(mat)
     } else {
-      warning("warning in find_lcp(): NULL passed to the 'x' parameter. Returning an empty matrix.")
-      mat = matrix(nrow=0,ncol=5, dimnames=list(NULL,c("x","y","cost_tot","dist_tot","cost_cell")))
+      warning("warning in find_lcp(): NULL passed to the 'x' parameter.
+              Returning an empty matrix.")
+      mat <- matrix(nrow = 0,
+                    ncol = 5,
+                    dimnames = list(NULL, c("x", "y", "cost_tot", "dist_tot",
+                                            "cost_cell")))
       return(mat)
     }
   }
@@ -338,8 +359,8 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #' @name find_lcps
 #' @aliases find_lcps,LcpFinder-method
 #' @title Find LCPs to surrounding points
-#' @description Calculates the LCPs to surrounding points. Constraints can be placed
-#'   on the LCPs, so that only LCPs that are less than some specified
+#' @description Calculates the LCPs to surrounding points. Constraints can be
+#'   placed on the LCPs, so that only LCPs that are less than some specified
 #'   cost-distance are returned. In addition to cost, LCPs can be constrained by
 #'   distance or cost-distance + distance (see Details).
 #' @param x the LcpFinder object returned from \code{\link{lcp_finder}}
@@ -350,10 +371,10 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #'   \code{limit_type}. If \code{limit_type} is "none", this parameter does not
 #'   need to be provided
 #' @details
-#' When \code{limit_type} is "none", least-cost paths are calculated to all 
-#' cells within the search area (as defined by \code{xlims} and \code{ylims} in
+#' When \code{limit_type} is "none", least-cost paths are calculated to all
+#' cells within the search area (as defined by \code{xlim} and \code{ylim} in
 #' \code{\link{lcp_finder}()}).
-#' 
+#'
 #' When \code{limit_type} is "costdistance", all paths found will have a
 #' cost-distance less than \code{limit}. As described in the documentation for
 #' \code{\link{lcp_finder}}, the cost-distance is the cost of the cell times
@@ -400,69 +421,81 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #'   matrix of all LCPs that have been calculated so far.
 #' @examples
 #' library(raster)
-#' 
+#'
 #' # create a quadtree
 #' data(habitat)
-#' rast = habitat
-#' qt = quadtree(rast, split_threshold=.1, adj_type="expand")
-#' 
-#' start_pt = c(19000,25000)
-#' 
+#' rast <- habitat
+#' qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+#'
+#' start_pt <- c(19000, 25000)
+#'
 #' #####################################
 #' # using the 'limit_type' parameter
 #' #####################################
-#' 
+#'
 #' # find all LCPs
-#' lcpf1 = lcp_finder(qt, start_pt)
-#' paths1 = find_lcps(lcpf1, limit_type="none")
-#' 
+#' lcpf1 <- lcp_finder(qt, start_pt)
+#' paths1 <- find_lcps(lcpf1, limit_type = "none")
+#'
 #' # limit LCPs by cost-distance
-#' lcpf2 = lcp_finder(qt, start_pt)
-#' paths2 = find_lcps(lcpf2, limit_type="cd", limit=5000)
-#' 
+#' lcpf2 <- lcp_finder(qt, start_pt)
+#' paths2 <- find_lcps(lcpf2, limit_type = "cd", limit = 5000)
+#'
 #' # limit LCPs by cost-distance + distance
-#' lcpf3 = lcp_finder(qt, start_pt)
-#' paths3 = find_lcps(lcpf3, limit_type="cd+d", limit=5000)
-#' 
-#' # Now plot the reachable cells, by method - we'll plot the centroids of the reachable cells
-#' plot(qt, crop=TRUE, na_col=NULL, border_col="gray60", col=c("white", "gray30"), 
-#'    main="reachable cells, by 'limit_type'")
-#' points((paths1$xmin + paths1$xmax)/2, (paths1$ymin + paths1$ymax)/2, pch=16, col="black", cex=1.4)
-#' points((paths2$xmin + paths2$xmax)/2, (paths2$ymin + paths2$ymax)/2, pch=16, col="red", cex=1.1)
-#' points((paths3$xmin + paths3$xmax)/2, (paths3$ymin + paths3$ymax)/2, pch=16, col="blue", cex=.8)
-#' points(start_pt[1], start_pt[2], bg="green", col="black", pch=24, cex=1.5)
-#' legend("topright", title="limit_type", legend=c("none", "cd", "cd+d"), pch=c(16,16,16), 
-#'    col=c("black", "red", "blue"), pt.cex=c(1.4,1.1,.8))
-#' legend("topleft", legend="start point", pch=24, pt.cex=1.5, pt.bg="green", col="black")
-#' 
+#' lcpf3 <- lcp_finder(qt, start_pt)
+#' paths3 <- find_lcps(lcpf3, limit_type = "cd+d", limit = 5000)
+#'
+#' # Now plot the reachable cells, by method - we'll plot the centroids of the
+#' # reachable cells
+#' plot(qt, crop = TRUE, na_col = NULL, border_col = "gray60",
+#'      col = c("white", "gray30"), main = "reachable cells, by 'limit_type'")
+#' points((paths1$xmin + paths1$xmax) / 2, (paths1$ymin + paths1$ymax) / 2,
+#'        pch = 16, col = "black", cex = 1.4)
+#' points((paths2$xmin + paths2$xmax) / 2, (paths2$ymin + paths2$ymax) / 2,
+#'        pch = 16, col = "red", cex = 1.1)
+#' points((paths3$xmin + paths3$xmax) / 2, (paths3$ymin + paths3$ymax) / 2,
+#'        pch = 16, col = "blue", cex = .8)
+#' points(start_pt[1], start_pt[2],
+#'        bg = "green", col = "black", pch = 24, cex = 1.5)
+#' legend("topright", title = "limit_type", legend = c("none", "cd", "cd+d"),
+#'        pch = c(16, 16, 16), col = c("black", "red", "blue"),
+#'        pt.cex = c(1.4, 1.1, .8))
+#' legend("topleft", legend = "start point", pch = 24, pt.cex = 1.5,
+#'        pt.bg = "green", col = "black")
+#'
 #' #####################################
 #' # An example of what NOT to do
 #' #####################################
-#' 
-#' lcpf4 = lcp_finder(qt, start_pt)
-#' paths4a = find_lcps(lcpf4, limit_type="cd", limit=5000)
-#' paths4b = find_lcps(lcpf4, limit_type="cd", limit=500)
-#' # ^^^ DON'T DO THIS! ^^^ (don't try to reuse the lcp finder to find *shorter* paths)
-#' 
-#' range(paths4b$lcp_cost) # returns paths with cost greater than 500 even though
-#'                         # we set the limit at 500!!!
-#' 
+#'
+#' lcpf4 <- lcp_finder(qt, start_pt)
+#' paths4a <- find_lcps(lcpf4, limit_type = "cd", limit = 5000)
+#' paths4b <- find_lcps(lcpf4, limit_type = "cd", limit = 500)
+#' # ^^^ DON'T DO THIS! ^^^ (don't try to reuse the lcp finder to find
+#' # *shorter* paths)
+#'
+#' range(paths4b$lcp_cost) # returns paths with cost greater than 500 even
+#'                         # though we set the limit at 500!!!
+#'
 #' # if we want to find shorter paths, we need to create a new LCP finder
-#' lcpf5 = lcp_finder(qt, start_pt)
-#' paths5 = find_lcps(lcpf5, limit_type="cd", limit=500)
+#' lcpf5 <- lcp_finder(qt, start_pt)
+#' paths5 <- find_lcps(lcpf5, limit_type = "cd", limit = 500)
 #' range(paths5$lcp_cost)
 #' @export
 setMethod("find_lcps", signature(x = "LcpFinder"),
-  function(x, limit_type="none", limit=NULL){
-    if(!(limit_type %in% c("cd","costdistance", "cd+d", "costdistance+distance", "n", "none"))){
-      stop("'limit_type' must be one of the following: 'none' or 'n', 'costdistance' or 'cd', 'costdistance+distance' or 'cd+d'.")
+  function(x, limit_type = "none", limit = NULL) {
+    if (!(limit_type %in% c("cd", "costdistance", "cd+d",
+                            "costdistance+distance", "n", "none"))) {
+      stop("'limit_type' must be one of the following: 'none' or 'n',
+           'costdistance' or 'cd', 'costdistance+distance' or 'cd+d'.")
     }
-    if(limit_type %in% c("costdistance", "costdistance+distance", "cd", "cd+d") && is.null(limit)){
-      stop("No value provided for 'limit'. When 'limit_type' is 'costdistance' or 'costdistance+distance', a value is required for 'limit'.")
+    if (limit_type %in% c("costdistance", "costdistance+distance", "cd", "cd+d")
+        && is.null(limit)) {
+      stop("No value provided for 'limit'. When 'limit_type' is 'costdistance
+           or 'costdistance+distance', a value is required for 'limit'.")
     }
-    if(limit_type == "costdistance" || limit_type == "cd"){
+    if (limit_type == "costdistance" || limit_type == "cd") {
       x@ptr$makeNetworkCost(limit)
-    } else if(limit_type == "costdistance+distance" || limit_type == "cd+d"){
+    } else if (limit_type == "costdistance+distance" || limit_type == "cd+d") {
       x@ptr$makeNetworkCostDist(limit)
     } else {
       x@ptr$makeNetworkAll()
@@ -485,15 +518,16 @@ setMethod("find_lcps", signature(x = "LcpFinder"),
 #'   others have most likely been calculated. This function returns all of the
 #'   LCPs that have been calculated so far.
 #' @return Returns a 9-column matrix with one row for each LCP (and therefore
-#'   one row per cell). The columns are as follows: 
-#'   \itemize{ 
+#'   one row per cell). The columns are as follows:
+#'   \itemize{
 #'      \item{\code{id}: }{the ID of the destination cell}
-#'      \item{\code{xmin, xmax, ymin, ymax}: }{the extent of the destination cell} 
+#'      \item{\code{xmin, xmax, ymin, ymax}: }{the extent of the destination
+#'      cell}
 #'      \item{\code{value}: }{the value of the destination cell}
 #'      \item{\code{area}: }{the area of the destination cell}
 #'      \item{\code{lcp_cost}: }{the cumulative cost of the LCP to this cell}
-#'      \item{\code{lcp_dist}: }{the cumulative distance of the LCP to this cell -
-#'      note that this is not straight-line distance, but instead the distance
+#'      \item{\code{lcp_dist}: }{the cumulative distance of the LCP to this cell
+#'      - note that this is not straight-line distance, but instead the distance
 #'      along the path} }
 #' @seealso \code{\link{lcp_finder}()} creates the \code{\link{LcpFinder}}
 #'   object used as input to this function. \code{\link{find_lcp}()} returns the
@@ -501,29 +535,30 @@ setMethod("find_lcps", signature(x = "LcpFinder"),
 #'   cost-distance is less than some value.
 #' @examples
 #' library(raster)
-#' 
+#'
 #' # create a quadtree
 #' data(habitat)
-#' rast = habitat
-#' qt = quadtree(rast, split_threshold=.1, adj_type="expand")
-#' 
-#' start_pt = c(19000,25000)
-#' end_pt = c(33015,38162)
-#' 
+#' rast <- habitat
+#' qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+#'
+#' start_pt <- c(19000, 25000)
+#' end_pt <- c(33015, 38162)
+#'
 #' # find LCP from 'start_pt' to 'end_pt'
-#' lcpf = lcp_finder(qt, start_pt)
-#' lcp = find_lcp(lcpf, end_pt)
-#' 
+#' lcpf <- lcp_finder(qt, start_pt)
+#' lcp <- find_lcp(lcpf, end_pt)
+#'
 #' # retrieve ALL the paths that have been calculated
-#' paths = lcp_summary(lcpf)
-#' 
-#' # put points in each of the cells to which an LCP has been calculated
-#' plot(qt, crop=TRUE, na_col=NULL, border_col="gray60")
-#' points((paths$xmin + paths$xmax)/2, (paths$ymin + paths$ymax)/2, pch=16, col="black", cex=.4)
-#' points(rbind(start_pt, end_pt), col=c("red", "blue"), pch=16)
+#' paths <- lcp_summary(lcpf)
+#'
+#' # plot - put points in each of the cells to which an LCP has been calculated
+#' plot(qt, crop = TRUE, na_col = NULL, border_col = "gray60")
+#' points((paths$xmin + paths$xmax) / 2, (paths$ymin + paths$ymax) / 2,
+#'    pch = 16, col = "black", cex = .4)
+#' points(rbind(start_pt, end_pt), col = c("red", "blue"), pch = 16)
 #' @export
 setMethod("lcp_summary", signature(x = "LcpFinder"),
-  function(x){
+  function(x) {
     return(data.frame(x@ptr$getAllPathsSummary()))
   }
 )

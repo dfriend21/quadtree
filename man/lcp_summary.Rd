@@ -12,15 +12,16 @@
 }
 \value{
 Returns a 9-column matrix with one row for each LCP (and therefore
-  one row per cell). The columns are as follows: 
-  \itemize{ 
+  one row per cell). The columns are as follows:
+  \itemize{
      \item{\code{id}: }{the ID of the destination cell}
-     \item{\code{xmin, xmax, ymin, ymax}: }{the extent of the destination cell} 
+     \item{\code{xmin, xmax, ymin, ymax}: }{the extent of the destination
+     cell}
      \item{\code{value}: }{the value of the destination cell}
      \item{\code{area}: }{the area of the destination cell}
      \item{\code{lcp_cost}: }{the cumulative cost of the LCP to this cell}
-     \item{\code{lcp_dist}: }{the cumulative distance of the LCP to this cell -
-     note that this is not straight-line distance, but instead the distance
+     \item{\code{lcp_dist}: }{the cumulative distance of the LCP to this cell
+     - note that this is not straight-line distance, but instead the distance
      along the path} }
 }
 \description{
@@ -41,23 +42,24 @@ library(raster)
 
 # create a quadtree
 data(habitat)
-rast = habitat
-qt = quadtree(rast, split_threshold=.1, adj_type="expand")
+rast <- habitat
+qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
 
-start_pt = c(19000,25000)
-end_pt = c(33015,38162)
+start_pt <- c(19000, 25000)
+end_pt <- c(33015, 38162)
 
 # find LCP from 'start_pt' to 'end_pt'
-lcpf = lcp_finder(qt, start_pt)
-lcp = find_lcp(lcpf, end_pt)
+lcpf <- lcp_finder(qt, start_pt)
+lcp <- find_lcp(lcpf, end_pt)
 
 # retrieve ALL the paths that have been calculated
-paths = lcp_summary(lcpf)
+paths <- lcp_summary(lcpf)
 
-# put points in each of the cells to which an LCP has been calculated
-plot(qt, crop=TRUE, na_col=NULL, border_col="gray60")
-points((paths$xmin + paths$xmax)/2, (paths$ymin + paths$ymax)/2, pch=16, col="black", cex=.4)
-points(rbind(start_pt, end_pt), col=c("red", "blue"), pch=16)
+# plot - put points in each of the cells to which an LCP has been calculated
+plot(qt, crop = TRUE, na_col = NULL, border_col = "gray60")
+points((paths$xmin + paths$xmax) / 2, (paths$ymin + paths$ymax) / 2,
+   pch = 16, col = "black", cex = .4)
+points(rbind(start_pt, end_pt), col = c("red", "blue"), pch = 16)
 }
 \seealso{
 \code{\link{lcp_finder}()} creates the \code{\link{LcpFinder}}

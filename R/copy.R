@@ -21,34 +21,35 @@
 #'
 #'   This function creates a deep copy by copying the entire quadtree, and
 #'   should be used whenever a copy of a quadtree is desired.
-#' @return 
+#' @return
 #' A Quadtree object
 #' @examples
 #' data(habitat)
-#' 
-#' # create quadtree - then create a shallow copy and a deep copy for demonstration
-#' qt1 = quadtree(habitat, split_threshold = .1)
+#'
+#' # create quadtree, then create a shallow copy and a deep copy for
+#' # demonstration
+#' qt1 <- quadtree(habitat, split_threshold = .1)
 #' plot(qt1)
-#' 
-#' qt2 = qt1 # SHALLOW copy
-#' qt3 = copy(qt1) # DEEP copy
-#' 
+#'
+#' qt2 <- qt1 # SHALLOW copy
+#' qt3 <- copy(qt1) # DEEP copy
+#'
 #' # change the values of qt1 so we can observe how this affects qt2 and qt3
-#' ext = extent(qt1)
-#' pts = cbind(runif(100,ext[1], ext[2]), runif(100,ext[3], ext[4]))
-#' set_values(qt1, pts, rep(10,100))
-#' 
+#' ext <- extent(qt1)
+#' pts <- cbind(runif(100, ext[1], ext[2]), runif(100, ext[3], ext[4]))
+#' set_values(qt1, pts, rep(10, 100))
+#'
 #' # plot it out to see what happened
-#' par(mfrow=c(1,3))
-#' plot(qt1, main="qt1")
-#' plot(qt2, main="qt2")
-#' plot(qt3, main="qt3")
+#' par(mfrow = c(1,3))
+#' plot(qt1, main = "qt1")
+#' plot(qt2, main = "qt2")
+#' plot(qt3, main = "qt3")
 #' # qt2 was modified but qt3 was not
 #' @export
-setMethod("copy",signature(x = "Quadtree"),
-  function(x){
-    qt_new = new("Quadtree")
-    qt_new@ptr = x@ptr$copy()
+setMethod("copy", signature(x = "Quadtree"),
+  function(x) {
+    qt_new <- new("Quadtree")
+    qt_new@ptr <- x@ptr$copy()
     return(qt_new)
   }
 )

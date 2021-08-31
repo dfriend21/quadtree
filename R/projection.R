@@ -8,7 +8,7 @@
 #' @return A character containing the proj4string
 #' @export
 setMethod("projection", signature(x = "Quadtree"),
-  function(x){
+  function(x) {
     return(x@ptr$projection())
   }
 )
@@ -17,8 +17,8 @@ setMethod("projection", signature(x = "Quadtree"),
 #' @param value character; the projection to assign to the quadtree
 #' @export
 setMethod("projection<-", signature(x = "Quadtree", value = "ANY"),
-  function(x, value){
+  function(x, value) {
     x@ptr$setProjection(value)
-    x
+    return(x)
   }
 )

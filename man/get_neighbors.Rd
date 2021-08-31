@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{\code{\link{Quadtree}} object}
 
-\item{y}{numeric vector of length 2; the x and y coordinates of a point - 
+\item{y}{numeric vector of length 2; the x and y coordinates of a point -
 this is used to identify which quadtree cell to find neighbors for.}
 }
 \value{
@@ -21,27 +21,28 @@ columns: \itemize{
     limits of the cell
     \item \code{value}: the value of the cell
   }
-  
+
 Note that this return matrix only includes terminal nodes/cells - that is,
 cells that have no children.
 }
 \description{
-Returns a matrix with information about the neighbors of a 
+Returns a matrix with information about the neighbors of a
 quadtree cell
 }
 \examples{
 data(habitat)
-rast = habitat
+rast <- habitat
 
 # create a quadtree
-qt = quadtree(rast, split_threshold=.1, adj_type="expand")
+qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
 
 # get the cell's neighbors
-pt = c(27000,10000)
-nbs = get_neighbors(qt,pt)
+pt <- c(27000, 10000)
+nbs <- get_neighbors(qt, pt)
 
 # plot the neighbors
-plot(qt,border_lwd=.3)
-points(pt[1],pt[2],col="black",bg="lightblue",pch=21)
-with(data.frame(nbs),rect(xmin,ymin,xmax,ymax,col="red",border="black",lwd=2))
+plot(qt, border_lwd = .3)
+points(pt[1], pt[2], col = "black", bg = "lightblue", pch = 21)
+with(data.frame(nbs),
+   rect(xmin, ymin, xmax, ymax, col = "red", border = "black", lwd = 2))
 }

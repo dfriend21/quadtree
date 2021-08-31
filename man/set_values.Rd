@@ -31,26 +31,26 @@ that all fall within the same cell. The values are changed in the order
 given, so in this case the cell will take on the \emph{last} value given for
 that cell.
 
-Also note that the structure of the quadtree will not be changed - only the 
+Also note that the structure of the quadtree will not be changed - only the
 cell values will change.
 }
 \examples{
 data(habitat)
-rast = habitat
+rast <- habitat
 
 # create a quadtree
-qt = quadtree(rast, split_threshold = .1)
+qt <- quadtree(rast, split_threshold = .1)
 
-par(mfrow=c(1,2))
-plot(qt, main="original")
+par(mfrow = c(1, 2))
+plot(qt, main = "original")
 
 # generate some random points, then change the values at those points
-ext = extent(qt)
-pts = cbind(runif(100,ext[1], ext[2]), runif(100,ext[3], ext[4]))
-set_values(qt, pts, rep(10,100))
+ext <- extent(qt)
+pts <- cbind(runif(100, ext[1], ext[2]), runif(100, ext[3], ext[4]))
+set_values(qt, pts, rep(10, 100))
 
 # plot it out to see what happened
-plot(qt, main="after modification")
+plot(qt, main = "after modification")
 }
 \seealso{
 \code{\link{transform_values}()} can be used to transform the

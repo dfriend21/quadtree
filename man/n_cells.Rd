@@ -19,7 +19,7 @@ Returns the total number of nodes/cells in the tree.
 }
 \examples{
 data(habitat)
-qt = quadtree(habitat,.1)
+qt <- quadtree(habitat, .1)
 n_cells(qt)
 n_cells(qt, terminal_only = FALSE)
 }

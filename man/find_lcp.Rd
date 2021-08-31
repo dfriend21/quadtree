@@ -24,14 +24,14 @@ algorithm.}
 }
 \value{
 \code{find_lcp} returns a five column matrix representing the
-  least cost path. It has the following columns: 
-  \itemize{ 
-     \item{\code{x}: }{x coordinate of this point} 
+  least cost path. It has the following columns:
+  \itemize{
+     \item{\code{x}: }{x coordinate of this point}
      \item{\code{y}: }{y coordinate of this point}
      \item{\code{cost_tot}: }{the cumulative cost up to this point}
      \item{\code{dist_tot}: }{the cumulative distance up to this point - note
-     that this is not straight-line distance, but instead the distance along the
-     path} 
+     that this is not straight-line distance, but instead the distance along
+     the path}
      \item{\code{cost_cell}: }{the cost of the cell that contains this point}
    }
 
@@ -62,22 +62,22 @@ library(raster)
 
 # create a quadtree
 data(habitat)
-rast = habitat
-qt = quadtree(rast, split_threshold = .1, adj_type="expand")
-plot(qt, crop=TRUE, na_col=NULL, border_lwd=.4)
+rast <- habitat
+qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+plot(qt, crop = TRUE, na_col = NULL, border_lwd = .4)
 
 # define our start and end points
-start_pt = c(6989,34007)
-end_pt = c(33015,38162)
+start_pt <- c(6989, 34007)
+end_pt <- c(33015, 38162)
 
 # create the LCP finder object and find the LCP
-lcpf = lcp_finder(qt, start_pt)
-path = find_lcp(lcpf, end_pt)
+lcpf <- lcp_finder(qt, start_pt)
+path <- find_lcp(lcpf, end_pt)
 
 # plot the LCP
-plot(qt, crop=TRUE, na_col=NULL, border_col="gray30", border_lwd=.4)
-points(rbind(start_pt, end_pt), pch=16, col="red")
-lines(path[,1:2], col="black")
+plot(qt, crop = TRUE, na_col = NULL, border_col = "gray30", border_lwd = .4)
+points(rbind(start_pt, end_pt), pch = 16, col = "red")
+lines(path[, 1:2], col = "black")
 
 # NOTE: see "Examples" in ?lcp_finder for more examples
 }

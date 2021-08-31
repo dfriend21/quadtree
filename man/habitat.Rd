@@ -13,12 +13,12 @@ data("habitat")
 data("habitat_roads")
 }
 \description{
-\code{habitat} is a raster containing habitat suitability values where each cell
-takes on a value between 0 and 1. 
+\code{habitat} is a raster containing habitat suitability values where each
+cell takes on a value between 0 and 1.
 
-\code{habitat_roads} has the exact same footprint as 'habitat', but the values
-represent the presence/absence of roads in that cell. 1 indicates presence,
-while 0 indicates absence.
+\code{habitat_roads} has the exact same footprint as 'habitat', but the
+values represent the presence/absence of roads in that cell. 1 indicates
+presence, while 0 indicates absence.
 }
 \details{
 These rasters are included for two reasons. First, they provide the datasets

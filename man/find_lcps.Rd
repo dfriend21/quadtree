@@ -28,14 +28,14 @@ Returns a matrix summarizing each LCP found.
   the path, since it's already been calculated).
 }
 \description{
-Calculates the LCPs to surrounding points. Constraints can be placed
-  on the LCPs, so that only LCPs that are less than some specified
+Calculates the LCPs to surrounding points. Constraints can be
+  placed on the LCPs, so that only LCPs that are less than some specified
   cost-distance are returned. In addition to cost, LCPs can be constrained by
   distance or cost-distance + distance (see Details).
 }
 \details{
-When \code{limit_type} is "none", least-cost paths are calculated to all 
-cells within the search area (as defined by \code{xlims} and \code{ylims} in
+When \code{limit_type} is "none", least-cost paths are calculated to all
+cells within the search area (as defined by \code{xlim} and \code{ylim} in
 \code{\link{lcp_finder}()}).
 
 When \code{limit_type} is "costdistance", all paths found will have a
@@ -77,53 +77,61 @@ library(raster)
 
 # create a quadtree
 data(habitat)
-rast = habitat
-qt = quadtree(rast, split_threshold=.1, adj_type="expand")
+rast <- habitat
+qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
 
-start_pt = c(19000,25000)
+start_pt <- c(19000, 25000)
 
 #####################################
 # using the 'limit_type' parameter
 #####################################
 
 # find all LCPs
-lcpf1 = lcp_finder(qt, start_pt)
-paths1 = find_lcps(lcpf1, limit_type="none")
+lcpf1 <- lcp_finder(qt, start_pt)
+paths1 <- find_lcps(lcpf1, limit_type = "none")
 
 # limit LCPs by cost-distance
-lcpf2 = lcp_finder(qt, start_pt)
-paths2 = find_lcps(lcpf2, limit_type="cd", limit=5000)
+lcpf2 <- lcp_finder(qt, start_pt)
+paths2 <- find_lcps(lcpf2, limit_type = "cd", limit = 5000)
 
 # limit LCPs by cost-distance + distance
-lcpf3 = lcp_finder(qt, start_pt)
-paths3 = find_lcps(lcpf3, limit_type="cd+d", limit=5000)
+lcpf3 <- lcp_finder(qt, start_pt)
+paths3 <- find_lcps(lcpf3, limit_type = "cd+d", limit = 5000)
 
-# Now plot the reachable cells, by method - we'll plot the centroids of the reachable cells
-plot(qt, crop=TRUE, na_col=NULL, border_col="gray60", col=c("white", "gray30"), 
-   main="reachable cells, by 'limit_type'")
-points((paths1$xmin + paths1$xmax)/2, (paths1$ymin + paths1$ymax)/2, pch=16, col="black", cex=1.4)
-points((paths2$xmin + paths2$xmax)/2, (paths2$ymin + paths2$ymax)/2, pch=16, col="red", cex=1.1)
-points((paths3$xmin + paths3$xmax)/2, (paths3$ymin + paths3$ymax)/2, pch=16, col="blue", cex=.8)
-points(start_pt[1], start_pt[2], bg="green", col="black", pch=24, cex=1.5)
-legend("topright", title="limit_type", legend=c("none", "cd", "cd+d"), pch=c(16,16,16), 
-   col=c("black", "red", "blue"), pt.cex=c(1.4,1.1,.8))
-legend("topleft", legend="start point", pch=24, pt.cex=1.5, pt.bg="green", col="black")
+# Now plot the reachable cells, by method - we'll plot the centroids of the
+# reachable cells
+plot(qt, crop = TRUE, na_col = NULL, border_col = "gray60",
+     col = c("white", "gray30"), main = "reachable cells, by 'limit_type'")
+points((paths1$xmin + paths1$xmax) / 2, (paths1$ymin + paths1$ymax) / 2,
+       pch = 16, col = "black", cex = 1.4)
+points((paths2$xmin + paths2$xmax) / 2, (paths2$ymin + paths2$ymax) / 2,
+       pch = 16, col = "red", cex = 1.1)
+points((paths3$xmin + paths3$xmax) / 2, (paths3$ymin + paths3$ymax) / 2,
+       pch = 16, col = "blue", cex = .8)
+points(start_pt[1], start_pt[2],
+       bg = "green", col = "black", pch = 24, cex = 1.5)
+legend("topright", title = "limit_type", legend = c("none", "cd", "cd+d"),
+       pch = c(16, 16, 16), col = c("black", "red", "blue"),
+       pt.cex = c(1.4, 1.1, .8))
+legend("topleft", legend = "start point", pch = 24, pt.cex = 1.5,
+       pt.bg = "green", col = "black")
 
 #####################################
 # An example of what NOT to do
 #####################################
 
-lcpf4 = lcp_finder(qt, start_pt)
-paths4a = find_lcps(lcpf4, limit_type="cd", limit=5000)
-paths4b = find_lcps(lcpf4, limit_type="cd", limit=500)
-# ^^^ DON'T DO THIS! ^^^ (don't try to reuse the lcp finder to find *shorter* paths)
+lcpf4 <- lcp_finder(qt, start_pt)
+paths4a <- find_lcps(lcpf4, limit_type = "cd", limit = 5000)
+paths4b <- find_lcps(lcpf4, limit_type = "cd", limit = 500)
+# ^^^ DON'T DO THIS! ^^^ (don't try to reuse the lcp finder to find
+# *shorter* paths)
 
-range(paths4b$lcp_cost) # returns paths with cost greater than 500 even though
-                        # we set the limit at 500!!!
+range(paths4b$lcp_cost) # returns paths with cost greater than 500 even
+                        # though we set the limit at 500!!!
 
 # if we want to find shorter paths, we need to create a new LCP finder
-lcpf5 = lcp_finder(qt, start_pt)
-paths5 = find_lcps(lcpf5, limit_type="cd", limit=500)
+lcpf5 <- lcp_finder(qt, start_pt)
+paths5 <- find_lcps(lcpf5, limit_type = "cd", limit = 500)
 range(paths5$lcp_cost)
 }
 \seealso{

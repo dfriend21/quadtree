@@ -30,6 +30,6 @@ Prints out information about the quadtree. Information shown is:
 }
 \examples{
 data(habitat)
-qt = quadtree(habitat,.1)
+qt <- quadtree(habitat, .1)
 summary(qt)
 }

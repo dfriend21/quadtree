@@ -31,12 +31,15 @@ a data frame with one row for each quadtree cell. The columns are as
 creates a data frame with information on each quadtree cell.
 }
 \examples{
-mat = rbind(c(1,1,0,1),c(1,1,1,0),c(1,0,1,1),c(0,1,1,1))
-qt = quadtree(mat,.1)
+mat <- rbind(c(1, 1, 0, 1),
+             c(1, 1, 1, 0),
+             c(1, 0, 1, 1),
+             c(0, 1, 1, 1))
+qt <- quadtree(mat, .1)
 plot(qt)
 as_data_frame(qt)
 }
 \seealso{
-\code{\link{as_vector}} returns all the cell values as a numeric 
+\code{\link{as_vector}} returns all the cell values as a numeric
 vector
 }

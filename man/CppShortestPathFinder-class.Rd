@@ -23,16 +23,16 @@ Note that there is no constructor made accessible to R. This is because a
 
 \describe{
 \item{\code{getAllPathsSummary}}{\itemize{
-  \item \strong{Description}: Returns a matrix summarizing all the LCPs 
+  \item \strong{Description}: Returns a matrix summarizing all the LCPs
   calculated so far. \code{\link{lcp_summary}()} is a wrapper for this
   function - see documentation of that function for more details.
   \item \strong{Parameters}: none
-  \item \strong{Returns}: a matrix with one row per LCP. See documentation of 
+  \item \strong{Returns}: a matrix with one row per LCP. See documentation of
   \code{\link{lcp_summary}()} for details.
 }}
 
 \item{\code{getSearchLimits}}{\itemize{
-  \item \strong{Description}: Returns the x and y limits of the search area. 
+  \item \strong{Description}: Returns the x and y limits of the search area.
   \item \strong{Parameters}: none
   \item \strong{Returns}:  4-element numeric vector, in this order: xMin,
   xMax, yMin, yMax
@@ -40,10 +40,10 @@ Note that there is no constructor made accessible to R. This is because a
 
 \item{\code{getShortestPath}}{\itemize{
   \item \strong{Description}: Finds the least-cost path from the starting
-  point to another point. \code{\link{find_lcp}} is a wrapper for this 
+  point to another point. \code{\link{find_lcp}} is a wrapper for this
   function - see its documentation for more details.
   \item \strong{Parameters}: \itemize{
-    \item \code{endPoint}: 2-element numeric vector - the point to find a 
+    \item \code{endPoint}: 2-element numeric vector - the point to find a
     shortest path to
   }
   \item \strong{Returns}: A matrix representing the least-cost path. See
@@ -51,7 +51,7 @@ Note that there is no constructor made accessible to R. This is because a
 }}
 
 \item{\code{getStartPoint}}{\itemize{
-  \item \strong{Description}: Returns the start point 
+  \item \strong{Description}: Returns the start point
   \item \strong{Parameters}: none
   \item \strong{Returns}: 2-element numeric vector (x,y)
 }}

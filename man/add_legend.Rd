@@ -96,14 +96,14 @@ I took an HTML/CSS-like approach to determining the positioning -
 }
 \examples{
 set.seed(23)
-mat = matrix(runif(64,0,1), nrow=8)
-qt = quadtree(mat, .75)
+mat <- matrix(runif(64, 0, 1), nrow = 8)
+qt <- quadtree(mat, .75)
 
-par(mar=c(5,4,4,5))
-plot(qt,legend=FALSE)
+par(mar = c(5, 4, 4, 5))
+plot(qt, legend = FALSE)
 add_legend(range(mat), rev(terrain.colors(100)))
 # this example simply illustrates how it COULD be used, but as stated in the
 # 'Details' section, it shouldn't be called separately from 'plot()' - if
 # customizations to the legend are desired, use the 'legend_args' parameter
-# of 'plot()'. 
+# of 'plot()'.
 }

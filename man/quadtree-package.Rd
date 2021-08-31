@@ -5,11 +5,11 @@
 \alias{quadtree-package}
 \title{Quadtree Representation of Rasters}
 \description{
-Provides a C++ implementation of a quadtree data 
- structure. Functions are provided for creating a quadtree 
+Provides a C++ implementation of a quadtree data
+ structure. Functions are provided for creating a quadtree
  from a raster, with the level of "coarseness" of the
  quadtree being determined by a user-supplied parameter. In
- addition, functions are provided to extract values of the 
+ addition, functions are provided to extract values of the
  quadtree at point locations. Functions for calculating
  least-cost paths between two points are also provided.
 }

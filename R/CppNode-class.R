@@ -2,7 +2,7 @@
 #' @aliases CppNode Rcpp_CppNode Rcpp_CppNode-class
 #' @title C++ Quadtree Node
 #' @description The 'CppNode' is a C++ class represents a single quadtree node.
-#' This is used internally - end users should have no need to use any of the 
+#' This is used internally - end users should have no need to use any of the
 #' methods listed here.
 #' @field asVector \itemize{
 #'   \item \strong{Description}: Returns a vector giving info about the node
@@ -33,7 +33,7 @@
 #'   \item \strong{Returns}: a numeric vector
 #' }
 #' @field getNeighborInfo \itemize{
-#'   \item \strong{Description}: Returns a matrix with info on each of the 
+#'   \item \strong{Description}: Returns a matrix with info on each of the
 #'   neighboring cells
 #'   \item \strong{Parameters}: none
 #'   \item \strong{Returns}: a matrix. \code{quadtree$getNbList()} makes

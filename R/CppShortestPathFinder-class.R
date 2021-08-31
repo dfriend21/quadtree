@@ -8,38 +8,38 @@
 #'   paths from the starting point to any other point on the quadtree. The
 #'   average user should not need to use any of the methods defined here, as
 #'   wrapper functions have been defined to perform these methods.
-#' @details 
+#' @details
 #'   Note that there is no constructor made accessible to R. This is because a
 #'   'shortestPathFinder' object is always used "on top of" a quadtree object -
 #'   to create a 'shortestPathFinder', therefore, use the
 #'   'getShortestPathFinder' member function from the 'quadtree' class.
 #' @field getAllPathsSummary \itemize{
-#'   \item \strong{Description}: Returns a matrix summarizing all the LCPs 
+#'   \item \strong{Description}: Returns a matrix summarizing all the LCPs
 #'   calculated so far. \code{\link{lcp_summary}()} is a wrapper for this
 #'   function - see documentation of that function for more details.
 #'   \item \strong{Parameters}: none
-#'   \item \strong{Returns}: a matrix with one row per LCP. See documentation of 
+#'   \item \strong{Returns}: a matrix with one row per LCP. See documentation of
 #'   \code{\link{lcp_summary}()} for details.
 #' }
 #' @field getSearchLimits \itemize{
-#'   \item \strong{Description}: Returns the x and y limits of the search area. 
+#'   \item \strong{Description}: Returns the x and y limits of the search area.
 #'   \item \strong{Parameters}: none
 #'   \item \strong{Returns}:  4-element numeric vector, in this order: xMin,
 #'   xMax, yMin, yMax
 #' }
 #' @field getShortestPath \itemize{
 #'   \item \strong{Description}: Finds the least-cost path from the starting
-#'   point to another point. \code{\link{find_lcp}} is a wrapper for this 
+#'   point to another point. \code{\link{find_lcp}} is a wrapper for this
 #'   function - see its documentation for more details.
 #'   \item \strong{Parameters}: \itemize{
-#'     \item \code{endPoint}: 2-element numeric vector - the point to find a 
+#'     \item \code{endPoint}: 2-element numeric vector - the point to find a
 #'     shortest path to
 #'   }
 #'   \item \strong{Returns}: A matrix representing the least-cost path. See
 #'   \code{\link{find_lcp}()} for details on the return matrix.
 #' }
 #' @field getStartPoint \itemize{
-#'   \item \strong{Description}: Returns the start point 
+#'   \item \strong{Description}: Returns the start point
 #'   \item \strong{Parameters}: none
 #'   \item \strong{Returns}: 2-element numeric vector (x,y)
 #' }

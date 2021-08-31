@@ -15,7 +15,7 @@ Returns all cell values as a numeric vector
 }
 \examples{
 data(habitat)
-qt = quadtree(habitat,.2)
+qt <- quadtree(habitat, .2)
 as_vector(qt)
 }
 \seealso{

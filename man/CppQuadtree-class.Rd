@@ -21,7 +21,7 @@ Note that the name of the class as it is defined is actually
   and Rcpp, and thus operates as a stand-alone C++ class. 'QuadtreeWrapper'
   contains an instance of a C++ 'Quadtree' object and contains the code
   necessary to interface between R and C++.
-  
+
   Each member function exposed to R is described below. Note that when a
   function directly corresponds with an R function, the user is referred to
   the documentation for that function for more details (in order to avoid
@@ -59,10 +59,10 @@ Note that the name of the class as it is defined is actually
 
 \item{\code{readQuadtree}}{\itemize{
   \item \strong{Description}: Reads a quadtree from a file. Note that this is
-  a static function, so does not require an instance of \code{CppQuadtree}
-  to be called. \code{\link{read_quadtree}()} is a wrapper for this function - see
-  its documentation for more details.
-  \item \strong{Parameters}: \itemize{ 
+  a static function, so does not require an instance of \code{CppQuadtree} to
+  be called. \code{\link{read_quadtree}()} is a wrapper for this function -
+  see its documentation for more details.
+  \item \strong{Parameters}: \itemize{
     \item \code{filePath}: string; the file to read from
   }
   \item \strong{Returns}: a \code{CppQuadtree} object
@@ -184,9 +184,9 @@ Note that the name of the class as it is defined is actually
     \item \code{pt}: numeric vector of length two giving the x and y
     coordinates of a point
   }
-  \item \strong{Returns}: a 6-column matrix with one row per neighboring cell.
-  It has the following columns: \itemize{
-    \item \code{id} 
+  \item \strong{Returns}: a 6-column matrix with one row per neighboring
+  cell. It has the following columns: \itemize{
+    \item \code{id}
     \item \code{xmin}
     \item \code{xmax}
     \item \code{ymin}
@@ -339,8 +339,8 @@ Note that the name of the class as it is defined is actually
 }}
 
 \item{\code{transformValues}}{\itemize{
-  \item \strong{Description}: Uses a function to transform the values of
-  all cells. \code{\link{transform_values}()} is a wrapper for this function - 
+  \item \strong{Description}: Uses a function to transform the values of all
+  cells. \code{\link{transform_values}()} is a wrapper for this function -
   see its documentation page for more details.
   \item \strong{Parameters}: \itemize{
     \item \code{trasform_fun}: function

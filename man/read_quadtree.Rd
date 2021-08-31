@@ -35,12 +35,15 @@ the value since the coordinates of the cell can be determined from the
 knowledge of the extent and the dimensions of the raster.
 
 It's entirely possible that a quadtree implemention could be written that
-is MUCH more space efficient. However, this was not the primary goal when 
+is MUCH more space efficient. However, this was not the primary goal when
 creating this package.
 }
 \examples{
 \dontrun{
-qt = read_quadtree("path/to/quadtree.qtree")
-write_quadtree(qt, "path/to/newQuadtree.qtree")
+data(habitat)
+
+qt1 <- quadtree(habitat, .1)
+write_quadtree(qt1, "path/to/quadtree.qtree")
+qt2 <- read_quadtree("path/to/quadtree.qtree")
 }
 }
