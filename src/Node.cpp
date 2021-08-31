@@ -14,17 +14,29 @@
 // constructors
 //-------------------------
 
-Node::Node() : Node{0,0,0,0,0,0,0} {}
-
-Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level)
-  : Node{_xMin, _xMax, _yMin ,_yMax, _value, _id, _level, 0, false} {}
-
-Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level, double _smallestChildSideLength, bool _hasChildren)
-  : xMin{_xMin}, xMax{_xMax}, yMin{_yMin}, yMax{_yMax}, value{_value}, id{_id}, level{_level}, smallestChildSideLength{_smallestChildSideLength}, hasChildren{_hasChildren}{
-  
-  smallestChildSideLength = xMax-xMin;
+Node::Node() {
   children = std::vector<std::shared_ptr<Node>>(4);
   neighbors = std::vector<std::weak_ptr<Node>>();
+}
+
+Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level)
+  : Node{} {
+    xMin = _xMin;
+    xMax = _xMax;
+    yMin = _yMin;
+    yMax = _yMax;
+    value = _value;
+    id = _id;
+    level = _level;
+
+    smallestChildSideLength = xMax-xMin;
+  }
+
+Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value, int _id, int _level, double _smallestChildSideLength, bool _hasChildren)
+  : Node{_xMin, _xMax, _yMin, _yMax, _value, _id, _level} {
+
+  smallestChildSideLength = _smallestChildSideLength;
+  hasChildren = _hasChildren;
 }
 
 //-------------------------
