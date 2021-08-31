@@ -1,7 +1,7 @@
 test_that("as_data_frame() runs without errors and produces expected output", {
   data(habitat)
   qt <- expect_error(quadtree(habitat, .4), NA)
-  df <- as_data_frame(qt)
+  df <- expect_error(as_data_frame(qt, FALSE), NA)
   expect_s3_class(df, "data.frame")
   expect_true(nrow(df) > 0)
   expect_true(qt@ptr$nNodes() == nrow(df))
@@ -12,8 +12,8 @@ test_that("copy() runs without errors and produces expected output", {
   qt1 <- quadtree(habitat, .3, split_method = "sd")
   qt2 <- expect_error(copy(qt1), NA)
   expect_s4_class(qt2, "Quadtree")
-  df1 <- as_data_frame(qt1)
-  df2 <- as_data_frame(qt2)
+  df1 <- as_data_frame(qt1, FALSE)
+  df2 <- as_data_frame(qt2, FALSE)
   # first test w/o the value column because NA columns mess up the equality check
   expect_true(all(df1[, -1 * which(names(df1) == "value")] ==
                   df2[, -1 * which(names(df2) == "value")]))
@@ -76,8 +76,8 @@ test_that("reading and writing quadtrees works", {
   qt1_nb[is.na(qt1_nb[, "val1"]), "val1"] <- -1
   qt2_nb[is.na(qt2_nb[, "val1"]), "val1"] <- -1
 
-  df1 <- as_data_frame(qt1)
-  df2 <- as_data_frame(qt2)
+  df1 <- as_data_frame(qt1, FALSE)
+  df2 <- as_data_frame(qt2, FALSE)
   # first test w/o the value column because NA columns mess up the equality check
   expect_true(all(df1[, -1 * which(names(df1) == "value")] ==
                   df2[, -1 * which(names(df2) == "value")]))
@@ -106,8 +106,8 @@ test_that("transforming quadtree values works", {
   qt2 <- copy(qt1)
 
   expect_error(transform_values(qt2, function(x) 2 * x), NA)
-  qt1df <- as_data_frame(qt1)
-  qt2df <- as_data_frame(qt2)
+  qt1df <- as_data_frame(qt1, FALSE)
+  qt2df <- as_data_frame(qt2, FALSE)
 
   qt1df$value[is.na(qt1df$value)] <- 0
   qt2df$value[is.na(qt2df$value)] <- 0

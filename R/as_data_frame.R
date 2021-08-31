@@ -5,6 +5,9 @@
 #' @title convert a quadtree to a data frame
 #' @description creates a data frame with information on each quadtree cell.
 #' @param x a \code{\link{Quadtree}} object
+#' @param terminal_only boolean; if \code{TRUE} (the default) only information
+#'   on terminal cells is returned. If \code{FALSE}, information on all cells is
+#'   returned.
 #' @return a data frame with one row for each quadtree cell. The columns are as
 #'   follows:
 #'   \itemize{
@@ -32,7 +35,11 @@
 #' as_data_frame(qt)
 #' @export
 setMethod("as_data_frame", signature(x = "Quadtree"),
-  function(x) {
-    return(data.frame(do.call(rbind, x@ptr$asList())))
+  function(x, terminal_only = TRUE) {
+    df <- data.frame(do.call(rbind, x@ptr$asList()))
+    if (terminal_only) {
+      df <- df[df$hasChdn == 0, ]
+    }
+    return(df)
   }
 )

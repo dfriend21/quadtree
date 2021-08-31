@@ -142,10 +142,8 @@ setMethod("plot", signature(x = "Quadtree", y = "missing"),
 
     if (is.null(args[["xlab"]])) args[["xlab"]] <- "x"
     if (is.null(args[["ylab"]])) args[["ylab"]] <- "y"
-
-    nodes <- dplyr::bind_rows(x@ptr$asList())
-    # we only want to plot the terminal nodes (i.e. nodes without children)
-    nodes <- nodes[nodes$hasChdn == 0, ]
+    
+    nodes <- as_data_frame(x, terminal_only = TRUE)
 
     if (is.null(col)) {
       col <- grDevices::terrain.colors(100, rev = TRUE)

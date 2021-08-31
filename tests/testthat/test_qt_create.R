@@ -18,8 +18,8 @@ test_that("quadtree creation with templates works", {
   data(habitat_roads)
   qt1 <- quadtree(habitat_roads, .1)
   qt2 <- quadtree(habitat, template_quadtree = qt1)
-  qt1_df <- as_data_frame(qt1)
-  qt2_df <- as_data_frame(qt2)
+  qt1_df <- as_data_frame(qt1, FALSE)
+  qt2_df <- as_data_frame(qt2, FALSE)
   expect_true(all(dim(qt1_df) == dim(qt2_df)))
   qt1_df2 <- qt1_df[, -1 * which(names(qt1_df) == "value")]
   qt2_df2 <- qt2_df[, -1 * which(names(qt2_df) == "value")]
@@ -99,8 +99,8 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
   qtsp <- lapply(paths, read_quadtree) #'p' in 'qtsp' stands for 'previous'
   expect_true(length(qts) == length(qtsp))
   for (i in seq_len(length(qtsp))) {
-    qts_df <- as_data_frame(qts[[i]])
-    qtsp_df <- as_data_frame(qtsp[[i]])
+    qts_df <- as_data_frame(qts[[i]], FALSE)
+    qtsp_df <- as_data_frame(qtsp[[i]], FALSE)
     qts_df$value[is.na(qts_df$value)] <- -1
     qtsp_df$value[is.na(qtsp_df$value)] <- -1
     expect_true(all(qts_df == qtsp_df))
