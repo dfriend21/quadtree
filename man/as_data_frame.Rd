@@ -5,10 +5,14 @@
 \alias{as_data_frame,Quadtree-method}
 \title{convert a quadtree to a data frame}
 \usage{
-\S4method{as_data_frame}{Quadtree}(x)
+\S4method{as_data_frame}{Quadtree}(x, terminal_only = TRUE)
 }
 \arguments{
 \item{x}{a \code{\link{Quadtree}} object}
+
+\item{terminal_only}{boolean; if \code{TRUE} (the default) only information
+on terminal cells is returned. If \code{FALSE}, information on all cells is
+returned.}
 }
 \value{
 a data frame with one row for each quadtree cell. The columns are as
