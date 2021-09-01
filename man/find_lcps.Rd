@@ -20,7 +20,7 @@ need to be provided}
 }
 \value{
 Returns a matrix summarizing each LCP found.
-  \code{\link{lcp_summary}} is used to generate this matrix - see the help
+  \code{\link{summarize_lcps}} is used to generate this matrix - see the help
   for that function for details on the return matrix. Note that this function
   does \strong{not} return the full paths to each point - however, each of
   the paths summarized in the output matrix has already been calculated, and
@@ -62,11 +62,11 @@ A very important note to make is that once the LCP tree is calculated, it
 never gets smaller. The implication of this is that great care is needed if
 using a \code{\link{LcpFinder}} more than once. For example, I could use
 \code{find_lcps(lcp_finder, limit_type="cd", limit=10)} to find all LCPs that
-have a cost-distance less than 10. I could then use \code{lcp_summary} to
+have a cost-distance less than 10. I could then use \code{summarize_lcps} to
 view all cells that are reachable within 10 cost units. However, if I then
 run \code{find_lcps(lcp_finder, limit_type="cd", limit=5)} to find all LCPs
 that have a cost-distance less than 5, the underlying LCP network
-\strong{will remain unchanged}. That is, if I run \code{lcp_summary} on
+\strong{will remain unchanged}. That is, if I run \code{summarize_lcps} on
 \code{lcp_finder}, it will \strong{return paths with a cost-distance greater
 than 5}, since we had previously used \code{lcp_finder} to find paths less
 than 10. As mentioned before, this happens because the underlying data
@@ -137,6 +137,6 @@ range(paths5$lcp_cost)
 \seealso{
 \code{\link{lcp_finder}()} creates the \code{\link{LcpFinder}}
   object used as input to this function. \code{\link{find_lcp}()} returns the
-  LCP between two points. \code{\link{lcp_summary}()} outputs a summary
+  LCP between two points. \code{\link{summarize_lcps}()} outputs a summary
   matrix of all LCPs that have been calculated so far.
 }

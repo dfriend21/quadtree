@@ -74,7 +74,7 @@
 #'   the quadtree extent, \code{NULL} is returned.
 #' @seealso \code{\link{find_lcp}()} returns the LCP between two points.
 #'   \code{\link{find_lcps}()} finds all LCPs whose cost-distance is less
-#'   than some value. \code{\link{lcp_summary}()} outputs a summary matrix of
+#'   than some value. \code{\link{summarize_lcps}()} outputs a summary matrix of
 #'   all LCPs that have been calculated so far.
 #' @examples
 #' library(raster)
@@ -238,15 +238,13 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
         xlim[1] > ext[2] ||
         ylim[2] < ext[3] ||
         ylim[1] > ext[4]) {
-      warning("the search area defined by 'xlim' and 'ylim' does not overlap
-              with the quadtree extent. No LCPs will be found.")
+      warning("the search area defined by 'xlim' and 'ylim' does not overlap with the quadtree extent. No LCPs will be found.")
     }
     if (y[1] < xlim[1] ||
         y[1] > xlim[2] ||
         y[2] < ylim[1] ||
         y[2] > ylim[2]) {
-      warning(paste0("starting point (", y[1], ",", y[2], ") not valid (falls
-                     outside the search area). No LCPs will be found."))
+      warning(paste0("starting point (", y[1], ",", y[2], ") not valid (falls outside the search area). No LCPs will be found."))
     }
     spf <- new("LcpFinder")
     spf@ptr <- x@ptr$getShortestPathFinder(y, xlim, ylim)
@@ -300,7 +298,7 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
 #'   the start and end cells.
 #' @seealso \code{\link{lcp_finder}()} creates the LCP finder object used as
 #'   input to this function. \code{\link{find_lcps}()} calculates all LCPs
-#'   whose cost-distance is less than some value. \code{\link{lcp_summary}()}
+#'   whose cost-distance is less than some value. \code{\link{summarize_lcps}()}
 #'   outputs a summary matrix of all LCPs that have been calculated so far.
 #' @examples
 #' library(raster)
@@ -328,6 +326,10 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
 #' @export
 setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
   function(x, y, use_original_end_points = FALSE) {
+    if (!is.numeric(y) || length(y) != 2)
+      stop("'y' must be a numeric vector with length 2")
+    if (any(is.na(y)))
+      stop("'y' contains NA values")
     if (!is.null(x)) {
       lims <- x@ptr$getSearchLimits()
 
@@ -335,8 +337,7 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
           y[1] > lims[2] ||
           y[2] < lims[3] ||
           y[2] > lims[4]) {
-        warning("'y' falls outside of the search limits of the LCP finder. No
-                LCP will be found.")
+        warning("'y' falls outside of the search limits of the LCP finder. No LCP will be found.")
       }
       mat <- x@ptr$getShortestPath(y)
       if (use_original_end_points && nrow(mat) > 0) {
@@ -345,8 +346,7 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
       }
       return(mat)
     } else {
-      warning("warning in find_lcp(): NULL passed to the 'x' parameter.
-              Returning an empty matrix.")
+      warning("NULL passed to the 'x' parameter. Returning an empty matrix.")
       mat <- matrix(nrow = 0,
                     ncol = 5,
                     dimnames = list(NULL, c("x", "y", "cost_tot", "dist_tot",
@@ -399,17 +399,17 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #' never gets smaller. The implication of this is that great care is needed if
 #' using a \code{\link{LcpFinder}} more than once. For example, I could use
 #' \code{find_lcps(lcp_finder, limit_type="cd", limit=10)} to find all LCPs that
-#' have a cost-distance less than 10. I could then use \code{lcp_summary} to
+#' have a cost-distance less than 10. I could then use \code{summarize_lcps} to
 #' view all cells that are reachable within 10 cost units. However, if I then
 #' run \code{find_lcps(lcp_finder, limit_type="cd", limit=5)} to find all LCPs
 #' that have a cost-distance less than 5, the underlying LCP network
-#' \strong{will remain unchanged}. That is, if I run \code{lcp_summary} on
+#' \strong{will remain unchanged}. That is, if I run \code{summarize_lcps} on
 #' \code{lcp_finder}, it will \strong{return paths with a cost-distance greater
 #' than 5}, since we had previously used \code{lcp_finder} to find paths less
 #' than 10. As mentioned before, this happens because the underlying data
 #' structure only ever adds nodes, and never removes nodes.
 #' @return Returns a matrix summarizing each LCP found.
-#'   \code{\link{lcp_summary}} is used to generate this matrix - see the help
+#'   \code{\link{summarize_lcps}} is used to generate this matrix - see the help
 #'   for that function for details on the return matrix. Note that this function
 #'   does \strong{not} return the full paths to each point - however, each of
 #'   the paths summarized in the output matrix has already been calculated, and
@@ -417,7 +417,7 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #'   the path, since it's already been calculated).
 #' @seealso \code{\link{lcp_finder}()} creates the \code{\link{LcpFinder}}
 #'   object used as input to this function. \code{\link{find_lcp}()} returns the
-#'   LCP between two points. \code{\link{lcp_summary}()} outputs a summary
+#'   LCP between two points. \code{\link{summarize_lcps}()} outputs a summary
 #'   matrix of all LCPs that have been calculated so far.
 #' @examples
 #' library(raster)
@@ -485,13 +485,11 @@ setMethod("find_lcps", signature(x = "LcpFinder"),
   function(x, limit_type = "none", limit = NULL) {
     if (!(limit_type %in% c("cd", "costdistance", "cd+d",
                             "costdistance+distance", "n", "none"))) {
-      stop("'limit_type' must be one of the following: 'none' or 'n',
-           'costdistance' or 'cd', 'costdistance+distance' or 'cd+d'.")
+      stop("'limit_type' must be one of the following: 'none' or 'n', 'costdistance' or 'cd', 'costdistance+distance' or 'cd+d'.")
     }
     if (limit_type %in% c("costdistance", "costdistance+distance", "cd", "cd+d")
         && is.null(limit)) {
-      stop("No value provided for 'limit'. When 'limit_type' is 'costdistance
-           or 'costdistance+distance', a value is required for 'limit'.")
+      stop("No value provided for 'limit'. When 'limit_type' is 'costdistance or 'costdistance+distance', a value is required for 'limit'.")
     }
     if (limit_type == "costdistance" || limit_type == "cd") {
       x@ptr$makeNetworkCost(limit)
@@ -500,12 +498,12 @@ setMethod("find_lcps", signature(x = "LcpFinder"),
     } else {
       x@ptr$makeNetworkAll()
     }
-    return(lcp_summary(x))
+    return(summarize_lcps(x))
   }
 )
 
-#' @name lcp_summary
-#' @aliases lcp_summary,LcpFinder-method
+#' @name summarize_lcps
+#' @aliases summarize_lcps,LcpFinder-method
 #' @title Show a summary matrix of all LCPs currently calculated
 #' @description Given an \code{\link{LcpFinder}} object, returns a matrix that
 #'   summarizes all of the LCPs that have already been calculated by the LCP
@@ -549,7 +547,7 @@ setMethod("find_lcps", signature(x = "LcpFinder"),
 #' lcp <- find_lcp(lcpf, end_pt)
 #'
 #' # retrieve ALL the paths that have been calculated
-#' paths <- lcp_summary(lcpf)
+#' paths <- summarize_lcps(lcpf)
 #'
 #' # plot - put points in each of the cells to which an LCP has been calculated
 #' plot(qt, crop = TRUE, na_col = NULL, border_col = "gray60")
@@ -557,7 +555,7 @@ setMethod("find_lcps", signature(x = "LcpFinder"),
 #'    pch = 16, col = "black", cex = .4)
 #' points(rbind(start_pt, end_pt), col = c("red", "blue"), pch = 16)
 #' @export
-setMethod("lcp_summary", signature(x = "LcpFinder"),
+setMethod("summarize_lcps", signature(x = "LcpFinder"),
   function(x) {
     return(data.frame(x@ptr$getAllPathsSummary()))
   }

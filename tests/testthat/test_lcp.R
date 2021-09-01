@@ -17,6 +17,24 @@ test_that("find_lcp() finds the correct path in a trivial example", {
   expect_true(all(lcp[, 1:2] == lcp_expected))
 })
 
+test_that("LcpFinder with search limits works as expected", {
+  data(habitat)
+
+  s_pt <- c(8488.439, 25842.65)
+  e_pt1 <- c(14750.149, 27929.89)
+  e_pt2 <- c(26925.696, 31176.70)
+  qt <- quadtree(habitat, .2)
+
+  dist <- 7000
+  lcpf <- lcp_finder(qt, s_pt, xlim = c(s_pt[1] - dist, s_pt[1] + dist),
+                     ylim = c(s_pt[2] - dist, s_pt[2] + dist))
+  lcp1 <- expect_error(find_lcp(lcpf, e_pt1), NA)
+  lcp2 <- expect_warning(find_lcp(lcpf, e_pt2))
+
+  expect_true(nrow(lcp1) > 0)
+  expect_true(nrow(lcp2) == 0)
+})
+
 test_that("find_lcps() works with all limit_types", {
   data(habitat)
 
@@ -44,19 +62,19 @@ test_that("find_lcps() works with all limit_types", {
   lcp <- expect_error(find_lcps(lcpf, "cd+d", 6000), NA)
 })
 
-test_that("lcp_summary() runs without errors and produces expected output", {
+test_that("summarize_lcps() runs without errors and produces expected output", {
   data(habitat)
   qt <- quadtree(habitat, .1, split_method = "sd")
   start_point <- c(19000, 27500)
   lcpf <- lcp_finder(qt, start_point)
   expect_error(find_lcps(lcpf, limit_type = "none"), NA)
-  lcp_sum <- expect_error(lcp_summary(lcpf), NA)
+  lcp_sum <- expect_error(summarize_lcps(lcpf), NA)
   expect_true("data.frame" %in% class(lcp_sum))
 })
 
 test_that("find_lcps() finds the same paths as in previous runs", {
-  # use qt_lcp_summary() to summarize all paths found by a 'lcpf', then check the
-  # results against previous runs
+  # use summarize_lcps() to summarize all paths found by a 'lcpf', then check
+  # the results against previous runs
   data(habitat)
   qt <- quadtree(habitat, 0, split_method = "sd", min_cell_length = 1000)
   start_point <- c(3900, 27500)

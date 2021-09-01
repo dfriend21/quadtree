@@ -24,11 +24,11 @@ Note that there is no constructor made accessible to R. This is because a
 \describe{
 \item{\code{getAllPathsSummary}}{\itemize{
   \item \strong{Description}: Returns a matrix summarizing all the LCPs
-  calculated so far. \code{\link{lcp_summary}()} is a wrapper for this
+  calculated so far. \code{\link{summarize_lcps}()} is a wrapper for this
   function - see documentation of that function for more details.
   \item \strong{Parameters}: none
   \item \strong{Returns}: a matrix with one row per LCP. See documentation of
-  \code{\link{lcp_summary}()} for details.
+  \code{\link{summarize_lcps}()} for details.
 }}
 
 \item{\code{getSearchLimits}}{\itemize{

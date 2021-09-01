@@ -225,6 +225,6 @@ lines(path3[, 1:2], col = "blue")
 \seealso{
 \code{\link{find_lcp}()} returns the LCP between two points.
   \code{\link{find_lcps}()} finds all LCPs whose cost-distance is less
-  than some value. \code{\link{lcp_summary}()} outputs a summary matrix of
+  than some value. \code{\link{summarize_lcps}()} outputs a summary matrix of
   all LCPs that have been calculated so far.
 }

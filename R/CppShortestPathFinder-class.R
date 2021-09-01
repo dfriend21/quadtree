@@ -15,11 +15,11 @@
 #'   'getShortestPathFinder' member function from the 'quadtree' class.
 #' @field getAllPathsSummary \itemize{
 #'   \item \strong{Description}: Returns a matrix summarizing all the LCPs
-#'   calculated so far. \code{\link{lcp_summary}()} is a wrapper for this
+#'   calculated so far. \code{\link{summarize_lcps}()} is a wrapper for this
 #'   function - see documentation of that function for more details.
 #'   \item \strong{Parameters}: none
 #'   \item \strong{Returns}: a matrix with one row per LCP. See documentation of
-#'   \code{\link{lcp_summary}()} for details.
+#'   \code{\link{summarize_lcps}()} for details.
 #' }
 #' @field getSearchLimits \itemize{
 #'   \item \strong{Description}: Returns the x and y limits of the search area.

@@ -84,6 +84,6 @@ lines(path[, 1:2], col = "black")
 \seealso{
 \code{\link{lcp_finder}()} creates the LCP finder object used as
   input to this function. \code{\link{find_lcps}()} calculates all LCPs
-  whose cost-distance is less than some value. \code{\link{lcp_summary}()}
+  whose cost-distance is less than some value. \code{\link{summarize_lcps}()}
   outputs a summary matrix of all LCPs that have been calculated so far.
 }
