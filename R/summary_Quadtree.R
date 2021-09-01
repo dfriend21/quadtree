@@ -1,7 +1,7 @@
 #' @include generics.R
 
-#' @name summary
-#' @aliases summary,Quadtree-method show show,Quadtree-method
+#' @name summary.Quadtree
+#' @aliases summary,Quadtree-method show.Quadtree show,Quadtree-method
 #' @title Show a Summary of a Quadtree Object
 #' @param object a \code{\link{Quadtree}} object
 #' @description Prints out information about the quadtree. Information shown is:
@@ -34,7 +34,7 @@ setMethod("summary", signature(object = "Quadtree"),
   }
 )
 
-#' @rdname summary
+#' @rdname summary.Quadtree
 #' @export
 setMethod("show", signature(object = "Quadtree"),
   function(object) {
