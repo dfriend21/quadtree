@@ -5,3 +5,4 @@ other_files/output/*
 *.Rhistory
 .Rproj.user
 raw_data
+inst/doc
