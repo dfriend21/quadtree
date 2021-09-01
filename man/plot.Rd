@@ -3,6 +3,7 @@
 \name{plot}
 \alias{plot}
 \alias{plot,Quadtree,missing-method}
+\alias{plot.Quadtree}
 \title{Plot a \code{\link{Quadtree}} object}
 \usage{
 \S4method{plot}{Quadtree,missing}(

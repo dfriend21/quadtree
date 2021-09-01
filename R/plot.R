@@ -1,7 +1,7 @@
 #' @include generics.R
 
 #' @name plot
-#' @aliases plot,Quadtree,missing-method
+#' @aliases plot,Quadtree,missing-method plot.Quadtree
 #' @title Plot a \code{\link{Quadtree}} object
 #' @param x a \code{\link{Quadtree}} object
 #' @param add boolean; if \code{TRUE}, the quadtree plot is added to the
@@ -142,7 +142,7 @@ setMethod("plot", signature(x = "Quadtree", y = "missing"),
 
     if (is.null(args[["xlab"]])) args[["xlab"]] <- "x"
     if (is.null(args[["ylab"]])) args[["ylab"]] <- "y"
-    
+
     nodes <- as_data_frame(x, terminal_only = TRUE)
 
     if (is.null(col)) {
