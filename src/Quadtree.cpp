@@ -364,26 +364,40 @@ double Quadtree::getValue(double x, double y) const{
 //-------------------------
 // getNodesInBox
 //-------------------------
-void Quadtree::getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_ptr<Node>> &returnNodes, double xMin, double xMax, double yMin, double yMax){
+// returns all nodes that fall within a box. If 'byCentroids' is TRUE, a node is considered "in" the 
+// box if the centroid is in the box. Otherwise a node is considered "in" the box if any part of it
+// overlaps with the box.
+void Quadtree::getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_ptr<Node>> &returnNodes, double xMin, double xMax, double yMin, double yMax, bool byCentroid){
     //if(node->children.size() > 0){
         for(size_t i = 0; i < node->children.size(); ++i){
             std::shared_ptr<Node> child = node->children.at(i);
             bool isXValid = !(xMax < child->xMin || xMin > child->xMax);
             bool isYValid = !(yMax < child->yMin || yMin > child->yMax);
+            
             if(isXValid && isYValid){
                 if(child->hasChildren){
-                    getNodesInBox(child, returnNodes, xMin, xMax, yMin, yMax);
+                    getNodesInBox(child, returnNodes, xMin, xMax, yMin, yMax, byCentroid);
                 } else {
-                    returnNodes.push_back(child);
+                    bool addNode = true;
+                    if(byCentroid){
+                        double xCentroid = (child->xMin + child->xMax) / 2;
+                        double yCentroid = (child->yMin + child->yMax) / 2;
+                        if(xCentroid < xMin || xCentroid > xMax || yCentroid < yMin || yCentroid > yMax){
+                            addNode = false;
+                        }
+                    } 
+                    if(addNode){
+                        returnNodes.push_back(child);
+                    }
                 }
             }
         }
     //}
 }
 
-std::list<std::shared_ptr<Node>> Quadtree::getNodesInBox(double xMin, double xMax, double yMin, double yMax){
+std::list<std::shared_ptr<Node>> Quadtree::getNodesInBox(double xMin, double xMax, double yMin, double yMax, bool byCentroid){
     std::list<std::shared_ptr<Node>> returnNodes;
-    getNodesInBox(root, returnNodes, xMin, xMax, yMin, yMax);
+    getNodesInBox(root, returnNodes, xMin, xMax, yMin, yMax, byCentroid);
     return returnNodes;
 }
 

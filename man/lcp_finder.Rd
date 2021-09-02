@@ -5,7 +5,7 @@
 \alias{lcp_finder,Quadtree,numeric-method}
 \title{Create an object for finding LCPs on a quadtree}
 \usage{
-\S4method{lcp_finder}{Quadtree,numeric}(x, y, xlim = NULL, ylim = NULL)
+\S4method{lcp_finder}{Quadtree,numeric}(x, y, xlim = NULL, ylim = NULL, search_by_centroid = FALSE)
 }
 \arguments{
 \item{x}{a \code{\link{Quadtree}} object to be used as a resistance surface}
@@ -13,11 +13,17 @@
 \item{y}{numeric vector with 2 elements - the x and y coordinates
 of the starting point of the path(s)}
 
-\item{xlim}{numeric vector with 2 elements - paths will be constrained so
-that all points fall within the min and max x coordinates specified in
+\item{xlim}{numeric vector with 2 elements - constrains the nodes included
+in the network to those whose extent overlaps with the range specified in
 \code{xlim}. If \code{NULL} the x limits of \code{x} are used}
 
 \item{ylim}{same as \code{xlim}, but for y}
+
+\item{search_by_centroid}{boolean; determines which cells are considered to
+be "in" the box specified by \code{xlim} and \code{ylim}. If \code{FALSE}
+(the default) any cell that overlaps with the box is included. If
+\code{TRUE}, a cell is only included if its *centroid* falls inside the
+box. See 'Details' for more.}
 }
 \value{
 returns an LCP finder object. If \code{start_point} falls outside of
@@ -31,8 +37,18 @@ This function creates an LcpFinder object that can then be used
 \details{
 This function creates an object that can then be used by
   \code{\link{find_lcp}} or \code{\link{find_lcps}} to calculate
-  least-cost paths.
-
+  least-cost paths on the quadtree.
+  
+  See the vignette 'quadtree-lcp' for more details.
+  
+  \code{search_by_centroid} is important because it defines what it means for
+  a cell to "in" the box defined by \code{xlim} and \code{ylim}. If
+  \code{search_by_centroid} is \code{FALSE}, it is possible for least-cost
+  paths to travel outside the specified box (since a cell may overlap with
+  the box but have its centroid outside the box.) If \code{TRUE}, all LCPs
+  are guaranteed to be fully contained within the box since cells are only
+  included if the centroid falls in the box.
+  
   Dijkstra's algorithm is used to find least-cost-paths (LCPs) on a network.
   The network used in this case consists of the cell centroids (nodes) and
   the neighbor connections (edges). The cost of each edge is taken as the

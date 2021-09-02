@@ -29,13 +29,13 @@ ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Poin
     }
 }
 
-ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID, double _xMin, double _xMax, double _yMin, double _yMax)
-    : quadtree{_quadtree}, xMin{_xMin}, xMax{_xMax}, yMin{_yMin}, yMax{_yMax} {
+ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid)
+    : quadtree{_quadtree}, xMin{_xMin}, xMax{_xMax}, yMin{_yMin}, yMax{_yMax}, includeNodesByCentroid{_includeNodesByCentroid} {
     init(startNodeID);
 }
 
-ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Point _startPoint, double _xMin, double _xMax, double _yMin, double _yMax)
-    : quadtree{_quadtree}, xMin{_xMin}, xMax{_xMax}, yMin{_yMin}, yMax{_yMax} {
+ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Point _startPoint, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid)
+    : quadtree{_quadtree}, xMin{_xMin}, xMax{_xMax}, yMin{_yMin}, yMax{_yMax}, includeNodesByCentroid{_includeNodesByCentroid} {
 
     std::shared_ptr<Node> startNode = quadtree->getNode(_startPoint.x, _startPoint.y);
     if(startNode){ //only continue if the point falls in the quadtree
@@ -48,7 +48,7 @@ ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Poin
 //-------------------------
 //sets up the empty network we'll use when finding LCPs
 void ShortestPathFinder::init(int startNodeID){
-    std::list<std::shared_ptr<Node>> nodes = quadtree->getNodesInBox(xMin, xMax, yMin, yMax); // get all nodes in the search area
+    std::list<std::shared_ptr<Node>> nodes = quadtree->getNodesInBox(xMin, xMax, yMin, yMax, includeNodesByCentroid); // get all nodes in the search area
     nodeEdges = std::vector<std::shared_ptr<NodeEdge>>(nodes.size());
     
     dict = std::map<int, int>(); //dictionary with Node ID's as the key and the index of the corresponding 'NodeEdge' in 'nodeEdges'

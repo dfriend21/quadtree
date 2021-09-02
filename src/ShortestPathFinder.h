@@ -44,11 +44,13 @@ class ShortestPathFinder{
             double yMin{0};
             double yMax{0};
 
+            bool includeNodesByCentroid{false};
+
             ShortestPathFinder();
             ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID);
             ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Point startPoint);
-            ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID, double _xMin, double _xMax, double _yMin, double _yMax);
-            ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Point startPoint, double _xMin, double _xMax, double _yMin, double _yMax);
+            ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid);
+            ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Point startPoint, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid);
 
             int doNextIteration();
 

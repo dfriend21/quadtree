@@ -9,14 +9,29 @@
 #' @param x a \code{\link{Quadtree}} object to be used as a resistance surface
 #' @param y numeric vector with 2 elements - the x and y coordinates
 #'   of the starting point of the path(s)
-#' @param xlim numeric vector with 2 elements - paths will be constrained so
-#'   that all points fall within the min and max x coordinates specified in
+#' @param xlim numeric vector with 2 elements - constrains the nodes included
+#'   in the network to those whose extent overlaps with the range specified in
 #'   \code{xlim}. If \code{NULL} the x limits of \code{x} are used
 #' @param ylim same as \code{xlim}, but for y
+#' @param search_by_centroid boolean; determines which cells are considered to
+#'   be "in" the box specified by \code{xlim} and \code{ylim}. If \code{FALSE}
+#'   (the default) any cell that overlaps with the box is included. If
+#'   \code{TRUE}, a cell is only included if its *centroid* falls inside the
+#'   box. See 'Details' for more.
 #' @details This function creates an object that can then be used by
 #'   \code{\link{find_lcp}} or \code{\link{find_lcps}} to calculate
-#'   least-cost paths.
-#'
+#'   least-cost paths on the quadtree.
+#'   
+#'   See the vignette 'quadtree-lcp' for more details.
+#'   
+#'   \code{search_by_centroid} is important because it defines what it means for
+#'   a cell to "in" the box defined by \code{xlim} and \code{ylim}. If
+#'   \code{search_by_centroid} is \code{FALSE}, it is possible for least-cost
+#'   paths to travel outside the specified box (since a cell may overlap with
+#'   the box but have its centroid outside the box.) If \code{TRUE}, all LCPs
+#'   are guaranteed to be fully contained within the box since cells are only
+#'   included if the centroid falls in the box.
+#'   
 #'   Dijkstra's algorithm is used to find least-cost-paths (LCPs) on a network.
 #'   The network used in this case consists of the cell centroids (nodes) and
 #'   the neighbor connections (edges). The cost of each edge is taken as the
@@ -212,7 +227,7 @@
 #' lines(path3[, 1:2], col = "blue")
 #' @export
 setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
-  function(x, y, xlim = NULL, ylim = NULL) {
+  function(x, y, xlim = NULL, ylim = NULL, search_by_centroid = FALSE) {
     if (!is.numeric(y) || length(y) != 2)
       stop("'y' must be a numeric vector with length 2")
     if (any(is.na(y)))
@@ -247,7 +262,7 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
       warning(paste0("starting point (", y[1], ",", y[2], ") not valid (falls outside the search area). No LCPs will be found."))
     }
     spf <- new("LcpFinder")
-    spf@ptr <- x@ptr$getShortestPathFinder(y, xlim, ylim)
+    spf@ptr <- x@ptr$getShortestPathFinder(y, xlim, ylim, search_by_centroid)
 
     return(spf)
   }
@@ -333,12 +348,6 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
     if (!is.null(x)) {
       lims <- x@ptr$getSearchLimits()
 
-      if (y[1] < lims[1] ||
-          y[1] > lims[2] ||
-          y[2] < lims[3] ||
-          y[2] > lims[4]) {
-        warning("'y' falls outside of the search limits of the LCP finder. No LCP will be found.")
-      }
       mat <- x@ptr$getShortestPath(y)
       if (use_original_end_points && nrow(mat) > 0) {
         mat[1, 1:2] <- x@ptr$getStartPoint()

@@ -58,9 +58,12 @@ public:
   std::shared_ptr<Node> getNode(double x, double y) const;
   double getValue(double x, double y, std::shared_ptr<Node> node) const;
   double getValue(double x, double y) const;
-  void getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_ptr<Node>> &returnNodes, double xMin, double xMax, double yMin, double yMax);
-  std::list<std::shared_ptr<Node>> getNodesInBox(double xMin, double xMax, double yMin, double yMax);
+  void getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_ptr<Node>> &returnNodes, double xMin, double xMax, double yMin, double yMax, bool byCentroid);
+  std::list<std::shared_ptr<Node>> getNodesInBox(double xMin, double xMax, double yMin, double yMax, bool byCentroid = false);
   
+  // void getNodesInBoxCentroid(std::shared_ptr<Node> node, std::list<std::shared_ptr<Node>> &returnNodes, double xMin, double xMax, double yMin, double yMax);
+  // std::list<std::shared_ptr<Node>> getNodesInBoxCentroid(double xMin, double xMax, double yMin, double yMax);
+
   void setValue(double x, double y, double newValue);
   void transformValues(std::shared_ptr<Node> node, std::function<double (const double)> &transformFun);
   void transformValues(std::function<double (const double)> &transformFun);

@@ -296,8 +296,8 @@ Rcpp::List QuadtreeWrapper::getNbList(){
   return nbList;
 }
 
-ShortestPathFinderWrapper QuadtreeWrapper::getShortestPathFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims) const{
-  return ShortestPathFinderWrapper(quadtree,startPoint,xlims,ylims);
+ShortestPathFinderWrapper QuadtreeWrapper::getShortestPathFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid) const{
+  return ShortestPathFinderWrapper(quadtree, startPoint, xlims, ylims, searchByCentroid);
 }
 
 QuadtreeWrapper QuadtreeWrapper::copy() const{

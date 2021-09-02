@@ -12,9 +12,9 @@ ShortestPathFinderWrapper::ShortestPathFinderWrapper(std::shared_ptr<Quadtree> q
   spf = ShortestPathFinder(quadtree,Point(startPoint[0], startPoint[1]));
 }
 
-ShortestPathFinderWrapper::ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims)
+ShortestPathFinderWrapper::ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid)
   : startPoint {_startPoint}{
-  spf = ShortestPathFinder(quadtree,Point(startPoint[0], startPoint[1]), xlims[0], xlims[1], ylims[0], ylims[1]);
+  spf = ShortestPathFinder(quadtree,Point(startPoint[0], startPoint[1]), xlims[0], xlims[1], ylims[0], ylims[1], searchByCentroid);
 }
 
 void ShortestPathFinderWrapper::makeNetworkAll(){
