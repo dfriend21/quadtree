@@ -240,38 +240,14 @@ void ShortestPathFinder::makeNetworkAll(){
 }
 
 //-------------------------
-// makeNetworkCost
-//-------------------------
-// This function finds all LCPs below a given cost-distance value
-void ShortestPathFinder::makeNetworkCost(double constraint){
-    while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
-        int currentID = doNextIteration();
-        int dictID = dict[currentID];
-        if(nodeEdges[dictID]->cost > constraint){ //check if we've exceed the max resistance value - if so, remove the most recently added edge (since it exceeds the limit) and then break out of the loop
-            
-            //reinsert the most recent edge that was just removed from 'possibleEdges'
-            possibleEdges.insert(std::make_tuple(nodeEdges[dictID]->parent.lock()->id, nodeEdges[dictID]->id,nodeEdges[dictID]->cost,nodeEdges[dictID]->dist));
-            
-            nodeEdges[dictID]->parent = std::weak_ptr<NodeEdge>();
-            nodeEdges[dictID]->dist = 0;
-            nodeEdges[dictID]->cost = 0;
-            nodeEdges[dictID]->nNodesFromOrigin = 0;
-            break;
-        }
-    }
-}
-
-//-------------------------
 // makeNetworkCostDist
 //-------------------------
-// This function finds all LCPs below a given costdistance + distance value.
-// I should probably combine this with 'makeNetworkCost()', since they're pretty much identical...
-// the only difference is the 'if' statement.
+// This function finds all LCPs below a given cost-distance value
 void ShortestPathFinder::makeNetworkCostDist(double constraint){
     while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
         int currentID = doNextIteration();
         int dictID = dict[currentID];
-        if((nodeEdges[dictID]->cost + nodeEdges[dictID]->dist) > constraint){ //check if we've exceed the max resistance value - if so, remove the most recently added edge (since it exceeds the limit) and then break out of the loop
+        if(nodeEdges[dictID]->cost > constraint){ //check if we've exceed the max resistance value - if so, remove the most recently added edge (since it exceeds the limit) and then break out of the loop
             
             //reinsert the most recent edge that was just removed from 'possibleEdges'
             possibleEdges.insert(std::make_tuple(nodeEdges[dictID]->parent.lock()->id, nodeEdges[dictID]->id,nodeEdges[dictID]->cost,nodeEdges[dictID]->dist));

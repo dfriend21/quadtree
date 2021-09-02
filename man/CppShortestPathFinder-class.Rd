@@ -58,24 +58,9 @@ Note that there is no constructor made accessible to R. This is because a
 
 \item{\code{makeNetworkAll}}{\itemize{
   \item \strong{Description}: Calculates least-cost paths to all cells in the
-  search area. This corresponds to
-  \code{\link{find_lcps}(lcp_finder,limit_type="none")}. See documentation
-  of that function for more details.
+  search area. This is used in \code{find_lcps} when \code{limit} is
+  \code{NULL}. See documentation of that function for more details.
   \item \strong{Parameters}: none
-  \item \strong{Returns}: void - no return value. Specific paths can be
-  retrieved using \code{getShortestPath}, and \code{getAllPathsSummary} can
-  be used to summarize all paths that have been found.
-}}
-
-\item{\code{makeNetworkCost}}{\itemize{
-  \item \strong{Description}: Calculates all least-cost paths whose
-  cost-distance is less than a given threshold. This correspnds to
-  \code{\link{find_lcps}(lcp_finder,limit_type="costdistance")}. See
-  documentation of that function for more details
-  \item \strong{Parameters}: \itemize{
-    \item \code{constraint}: double; the maximum value of cost-distance
-    allowed for a least-cost path
-  }
   \item \strong{Returns}: void - no return value. Specific paths can be
   retrieved using \code{getShortestPath}, and \code{getAllPathsSummary} can
   be used to summarize all paths that have been found.
@@ -83,13 +68,12 @@ Note that there is no constructor made accessible to R. This is because a
 
 \item{\code{makeNetworkCostDist}}{\itemize{
   \item \strong{Description}: Calculates all least-cost paths whose
-  "costdistance + distance" is less than a given threshold. This correspnds
-  to
-  \code{\link{find_lcps}(lcp_finder,limit_type="costdistance+distance")}.
-  See documentation of that function for more details.
+  cost-distance is less than a given threshold. This is used in
+  \code{find_lcps} when \code{limit} is not \code{NULL}. See documentation of
+  that function for more details.
   \item \strong{Parameters}: \itemize{
-    \item \code{constraint}: double; the maximum value of
-    costdistance+distance allowed for a least-cost path
+    \item \code{constraint}: double; the maximum value of cost-distance
+    allowed for a least-cost path
   }
   \item \strong{Returns}: void - no return value. Specific paths can be
   retrieved using \code{getShortestPath}, and \code{getAllPathsSummary} can

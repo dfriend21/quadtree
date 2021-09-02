@@ -35,7 +35,7 @@ test_that("LcpFinder with search limits works as expected", {
   expect_true(nrow(lcp2) == 0)
 })
 
-test_that("find_lcps() works with all limit_types", {
+test_that("find_lcps() works without errors", {
   data(habitat)
 
   start_point <- c(6989, 34007)
@@ -44,22 +44,10 @@ test_that("find_lcps() works with all limit_types", {
   qt <- quadtree(habitat, .2)
 
   lcpf <- expect_error(lcp_finder(qt, start_point), NA)
-  lcp <- expect_error(find_lcps(lcpf, "none"), NA)
+  lcp <- expect_error(find_lcps(lcpf, NULL), NA)
 
   lcpf <- expect_error(lcp_finder(qt, start_point), NA)
-  lcp <- expect_error(find_lcps(lcpf, "n"), NA)
-
-  lcpf <- expect_error(lcp_finder(qt, start_point), NA)
-  lcp <- expect_error(find_lcps(lcpf, "costdistance", 3000), NA)
-
-  lcpf <- expect_error(lcp_finder(qt, start_point), NA)
-  lcp <- expect_error(find_lcps(lcpf, "cd", 3000), NA)
-
-  lcpf <- expect_error(lcp_finder(qt, start_point), NA)
-  lcp <- expect_error(find_lcps(lcpf, "costdistance+distance", 6000), NA)
-
-  lcpf <- expect_error(lcp_finder(qt, start_point), NA)
-  lcp <- expect_error(find_lcps(lcpf, "cd+d", 6000), NA)
+  lcp <- expect_error(find_lcps(lcpf, 3000), NA)
 })
 
 test_that("summarize_lcps() runs without errors and produces expected output", {
@@ -67,7 +55,7 @@ test_that("summarize_lcps() runs without errors and produces expected output", {
   qt <- quadtree(habitat, .1, split_method = "sd")
   start_point <- c(19000, 27500)
   lcpf <- lcp_finder(qt, start_point)
-  expect_error(find_lcps(lcpf, limit_type = "none"), NA)
+  expect_error(find_lcps(lcpf, limit = NULL), NA)
   lcp_sum <- expect_error(summarize_lcps(lcpf), NA)
   expect_true("data.frame" %in% class(lcp_sum))
 })
@@ -79,7 +67,7 @@ test_that("find_lcps() finds the same paths as in previous runs", {
   qt <- quadtree(habitat, 0, split_method = "sd", min_cell_length = 1000)
   start_point <- c(3900, 27500)
   lcpf <- lcp_finder(qt, start_point)
-  lcp_sum <- expect_error(find_lcps(lcpf, limit_type = "none"), NA)
+  lcp_sum <- expect_error(find_lcps(lcpf, limit = NULL), NA)
   # write.csv(lcp_sum,"lcps/qt_find_lcps_data.csv", row.names=FALSE)
   lcp_sum_prev <- read.csv("lcps/qt_find_lcps_data.csv")
   expect_true(all(round(lcp_sum, 6) == round(lcp_sum_prev, 6)))

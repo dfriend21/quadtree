@@ -15,7 +15,7 @@ public:
   ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims);
   
   void makeNetworkAll();
-  void makeNetworkCost(double constraint);
+  // void makeNetworkCost(double constraint);
   void makeNetworkCostDist(double constraint);
   Rcpp::NumericMatrix getShortestPath(Rcpp::NumericVector endPoint);
   Rcpp::NumericMatrix getAllPathsSummary();

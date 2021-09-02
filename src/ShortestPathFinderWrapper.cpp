@@ -21,9 +21,9 @@ void ShortestPathFinderWrapper::makeNetworkAll(){
   spf.makeNetworkAll();
 }
 
-void ShortestPathFinderWrapper::makeNetworkCost(double constraint){
-  spf.makeNetworkCost(constraint);
-}
+// void ShortestPathFinderWrapper::makeNetworkCost(double constraint){
+//   spf.makeNetworkCost(constraint);
+// }
 
 void ShortestPathFinderWrapper::makeNetworkCostDist(double constraint){
   spf.makeNetworkCostDist(constraint);

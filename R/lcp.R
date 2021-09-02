@@ -359,55 +359,27 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #' @name find_lcps
 #' @aliases find_lcps,LcpFinder-method
 #' @title Find LCPs to surrounding points
-#' @description Calculates the LCPs to surrounding points. Constraints can be
+#' @description Calculates the LCPs to surrounding points. A constraint can be
 #'   placed on the LCPs, so that only LCPs that are less than some specified
-#'   cost-distance are returned. In addition to cost, LCPs can be constrained by
-#'   distance or cost-distance + distance (see Details).
-#' @param x the LcpFinder object returned from \code{\link{lcp_finder}}
-#' @param limit_type character; one of "none", "costdistance", or
-#'   "costdistance+distance". Abbreviations can also be used - "n", "cd",
-#'   "cd+d". Specifies what variable (if any) to constrain the paths on
-#' @param limit numeric; the maximum value allowed for the variable specified by
-#'   \code{limit_type}. If \code{limit_type} is "none", this parameter does not
-#'   need to be provided
+#'   cost-distance are returned. 
+#' @param x the \code{LcpFinder} object returned from \code{\link{lcp_finder}}
+#' @param limit numeric; the maximum cost-distance for the LCPs. If \code{NULL},
+#'   no limit is applied and all possible LCPs (within the \code{LcpFinder}'s 
+#'   serach area) are found
 #' @details
-#' When \code{limit_type} is "none", least-cost paths are calculated to all
-#' cells within the search area (as defined by \code{xlim} and \code{ylim} in
-#' \code{\link{lcp_finder}()}).
-#'
-#' When \code{limit_type} is "costdistance", all paths found will have a
-#' cost-distance less than \code{limit}. As described in the documentation for
-#' \code{\link{lcp_finder}}, the cost-distance is the cost of the cell times
-#' the length of the segment that falls within the cell. Because all edges
-#' connect two cells, the segments that fall in each cell are first calculated
-#' and then added.
-#'
-#' When \code{limit_type} is "costdistance+distance", the cost-distance and
-#' distance are added together. This is primarily for use when the quadtree
-#' contains "resistance" values between 0 and 1. When the resistance values are
-#' below 1, the cost-distance will always be lower than the distance - in fact,
-#' if there are resistance values of 0, the total cost of a path could be 0.
-#' Adding the cost-distance and the cost ensures that if there is no resistance,
-#' the cost of the path will be equal to the distance traveled. Thus, if the
-#' limit is set at 15, the longest possible path would be 15 (which would only
-#' occur if it travels over cells that all have a resistance of 0) and would
-#' decrease as the resistance of the underlying surface increases. Note that an
-#' equivalent method would be to simply add 1 to all the values so they fall
-#' between 1 and 2, and then use "costdistance" as the limiting variable.
-#'
 #' A very important note to make is that once the LCP tree is calculated, it
 #' never gets smaller. The implication of this is that great care is needed if
 #' using a \code{\link{LcpFinder}} more than once. For example, I could use
-#' \code{find_lcps(lcp_finder, limit_type="cd", limit=10)} to find all LCPs that
-#' have a cost-distance less than 10. I could then use \code{summarize_lcps} to
-#' view all cells that are reachable within 10 cost units. However, if I then
-#' run \code{find_lcps(lcp_finder, limit_type="cd", limit=5)} to find all LCPs
-#' that have a cost-distance less than 5, the underlying LCP network
-#' \strong{will remain unchanged}. That is, if I run \code{summarize_lcps} on
-#' \code{lcp_finder}, it will \strong{return paths with a cost-distance greater
-#' than 5}, since we had previously used \code{lcp_finder} to find paths less
-#' than 10. As mentioned before, this happens because the underlying data
-#' structure only ever adds nodes, and never removes nodes.
+#' \code{find_lcps(lcp_finder, limit=10)} to find all LCPs that have a
+#' cost-distance less than 10. I could then use \code{summarize_lcps} to view
+#' all cells that are reachable within 10 cost units. However, if I then run
+#' \code{find_lcps(lcp_finder, limit=5)} to find all LCPs that have a
+#' cost-distance less than 5, the underlying LCP network \strong{will remain
+#' unchanged}. That is, if I run \code{summarize_lcps} on \code{lcp_finder}, it
+#' will \strong{return paths with a cost-distance greater than 5}, since we had
+#' previously used \code{lcp_finder} to find paths less than 10. As mentioned
+#' before, this happens because the underlying data structure only ever adds
+#' nodes, and never removes nodes.
 #' @return Returns a matrix summarizing each LCP found.
 #'   \code{\link{summarize_lcps}} is used to generate this matrix - see the help
 #'   for that function for details on the return matrix. Note that this function
@@ -421,82 +393,35 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #'   matrix of all LCPs that have been calculated so far.
 #' @examples
 #' library(raster)
-#'
+#' 
 #' # create a quadtree
 #' data(habitat)
 #' rast <- habitat
 #' qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
-#'
+#' 
 #' start_pt <- c(19000, 25000)
-#'
-#' #####################################
-#' # using the 'limit_type' parameter
-#' #####################################
-#'
-#' # find all LCPs
+#' 
+#' # finds LCPs to all cells
 #' lcpf1 <- lcp_finder(qt, start_pt)
-#' paths1 <- find_lcps(lcpf1, limit_type = "none")
-#'
+#' paths1 <- find_lcps(lcpf1, limit = NULL)
+#' 
 #' # limit LCPs by cost-distance
 #' lcpf2 <- lcp_finder(qt, start_pt)
-#' paths2 <- find_lcps(lcpf2, limit_type = "cd", limit = 5000)
-#'
-#' # limit LCPs by cost-distance + distance
-#' lcpf3 <- lcp_finder(qt, start_pt)
-#' paths3 <- find_lcps(lcpf3, limit_type = "cd+d", limit = 5000)
-#'
-#' # Now plot the reachable cells, by method - we'll plot the centroids of the
-#' # reachable cells
-#' plot(qt, crop = TRUE, na_col = NULL, border_col = "gray60",
-#'      col = c("white", "gray30"), main = "reachable cells, by 'limit_type'")
-#' points((paths1$xmin + paths1$xmax) / 2, (paths1$ymin + paths1$ymax) / 2,
-#'        pch = 16, col = "black", cex = 1.4)
-#' points((paths2$xmin + paths2$xmax) / 2, (paths2$ymin + paths2$ymax) / 2,
-#'        pch = 16, col = "red", cex = 1.1)
-#' points((paths3$xmin + paths3$xmax) / 2, (paths3$ymin + paths3$ymax) / 2,
-#'        pch = 16, col = "blue", cex = .8)
-#' points(start_pt[1], start_pt[2],
-#'        bg = "green", col = "black", pch = 24, cex = 1.5)
-#' legend("topright", title = "limit_type", legend = c("none", "cd", "cd+d"),
-#'        pch = c(16, 16, 16), col = c("black", "red", "blue"),
-#'        pt.cex = c(1.4, 1.1, .8))
-#' legend("topleft", legend = "start point", pch = 24, pt.cex = 1.5,
-#'        pt.bg = "green", col = "black")
-#'
-#' #####################################
-#' # An example of what NOT to do
-#' #####################################
-#'
-#' lcpf4 <- lcp_finder(qt, start_pt)
-#' paths4a <- find_lcps(lcpf4, limit_type = "cd", limit = 5000)
-#' paths4b <- find_lcps(lcpf4, limit_type = "cd", limit = 500)
-#' # ^^^ DON'T DO THIS! ^^^ (don't try to reuse the lcp finder to find
-#' # *shorter* paths)
-#'
-#' range(paths4b$lcp_cost) # returns paths with cost greater than 500 even
-#'                         # though we set the limit at 500!!!
-#'
-#' # if we want to find shorter paths, we need to create a new LCP finder
-#' lcpf5 <- lcp_finder(qt, start_pt)
-#' paths5 <- find_lcps(lcpf5, limit_type = "cd", limit = 500)
-#' range(paths5$lcp_cost)
+#' paths2 <- find_lcps(lcpf2, limit = 5000)
+#' 
+#' # Now plot the reachable cells
+#' plot(qt, crop = TRUE, na_col = NULL, border_lwd = .3)
+#' points(lcpf1, col = "black", pch = 16, cex = 1)
+#' points(lcpf2, col = "red", pch = 16, cex = .7)
+#' points(start_pt[1], start_pt[2], bg = "skyblue", col = "black", pch = 24,
+#'        cex = 1.5)
 #' @export
 setMethod("find_lcps", signature(x = "LcpFinder"),
-  function(x, limit_type = "none", limit = NULL) {
-    if (!(limit_type %in% c("cd", "costdistance", "cd+d",
-                            "costdistance+distance", "n", "none"))) {
-      stop("'limit_type' must be one of the following: 'none' or 'n', 'costdistance' or 'cd', 'costdistance+distance' or 'cd+d'.")
-    }
-    if (limit_type %in% c("costdistance", "costdistance+distance", "cd", "cd+d")
-        && is.null(limit)) {
-      stop("No value provided for 'limit'. When 'limit_type' is 'costdistance or 'costdistance+distance', a value is required for 'limit'.")
-    }
-    if (limit_type == "costdistance" || limit_type == "cd") {
-      x@ptr$makeNetworkCost(limit)
-    } else if (limit_type == "costdistance+distance" || limit_type == "cd+d") {
-      x@ptr$makeNetworkCostDist(limit)
-    } else {
+  function(x, limit = NULL) {
+    if (is.null(limit)) {
       x@ptr$makeNetworkAll()
+    } else {
+      x@ptr$makeNetworkCostDist(limit)
     }
     return(summarize_lcps(x))
   }

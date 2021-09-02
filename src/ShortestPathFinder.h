@@ -56,6 +56,5 @@ class ShortestPathFinder{
             std::vector<std::tuple<std::shared_ptr<Node>,double,double>> getShortestPath(Point endPoint);
 
             void makeNetworkAll();
-            void makeNetworkCost(double constraint);
             void makeNetworkCostDist(double constraint);
     };
