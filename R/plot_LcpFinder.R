@@ -38,13 +38,15 @@ setMethod("points", signature(x = "LcpFinder"),
     if (is.null(args[["ylab"]])) args[["ylab"]] <- "y"
 
     lcp_sum <- summarize_lcps(x)
-    lcp_sum$x <- (lcp_sum$xmin + lcp_sum$xmax) / 2
-    lcp_sum$y <- (lcp_sum$ymin + lcp_sum$ymax) / 2
-    if (!add) {
-      do.call(graphics::plot, c(list(x = lcp_sum$x, y = lcp_sum$y, type = "p"),
-                                args))
-    } else {
-      do.call(graphics::points, c(list(x = lcp_sum$x, y = lcp_sum$y), args))
+    if(nrow(lcp_sum) > 0){
+      lcp_sum$x <- (lcp_sum$xmin + lcp_sum$xmax) / 2
+      lcp_sum$y <- (lcp_sum$ymin + lcp_sum$ymax) / 2
+      if (!add) {
+        do.call(graphics::plot, c(list(x = lcp_sum$x, y = lcp_sum$y,
+                                       type = "p"), args))
+      } else {
+        do.call(graphics::points, c(list(x = lcp_sum$x, y = lcp_sum$y), args))
+      }
     }
   }
 )
@@ -62,26 +64,28 @@ setMethod("lines", signature(x = "LcpFinder"),
     if (is.null(args[["col"]])) args[["col"]] <- "black"
 
     lcp_sum <- summarize_lcps(x)
-    lcp_sum$x <- (lcp_sum$xmin + lcp_sum$xmax) / 2
-    lcp_sum$y <- (lcp_sum$ymin + lcp_sum$ymax) / 2
-
-    # retrieve each individual LCP
-    paths_list <- lapply(seq_len(nrow(lcp_sum)), function(i) {
-      row_i <- lcp_sum[i, ]
-      lcp <- find_lcp(x, as.numeric(row_i[c("x", "y")]))
-      return(cbind(lcp[, c("x", "y"), drop = FALSE], id = i,
-                   step = seq_len(nrow(lcp))))
-    })
-    paths <- data.frame(do.call(rbind, paths_list))
-
-    x0 <- stats::reshape(paths[, c("id", "step", "x")], direction = "wide",
-                  idvar = "id", timevar = "step")
-    y0 <- stats::reshape(paths[, c("id", "step", "y")], direction = "wide",
-                  idvar = "id", timevar = "step")
-
-    x1 <- t(x0[, -1])
-    y1 <- t(y0[, -1])
-    do.call(graphics::matplot, c(list(x = x1, y = y1, add = add, type = "l"),
-                                 args))
+    if(nrow(lcp_sum) > 0){
+      lcp_sum$x <- (lcp_sum$xmin + lcp_sum$xmax) / 2
+      lcp_sum$y <- (lcp_sum$ymin + lcp_sum$ymax) / 2
+  
+      # retrieve each individual LCP
+      paths_list <- lapply(seq_len(nrow(lcp_sum)), function(i) {
+        row_i <- lcp_sum[i, ]
+        lcp <- find_lcp(x, as.numeric(row_i[c("x", "y")]))
+        return(cbind(lcp[, c("x", "y"), drop = FALSE], id = i,
+                     step = seq_len(nrow(lcp))))
+      })
+      paths <- data.frame(do.call(rbind, paths_list))
+  
+      x0 <- stats::reshape(paths[, c("id", "step", "x")], direction = "wide",
+                    idvar = "id", timevar = "step")
+      y0 <- stats::reshape(paths[, c("id", "step", "y")], direction = "wide",
+                    idvar = "id", timevar = "step")
+  
+      x1 <- t(x0[, -1])
+      y1 <- t(y0[, -1])
+      do.call(graphics::matplot, c(list(x = x1, y = y1, add = add, type = "l"),
+                                   args))
+    }
   }
 )
