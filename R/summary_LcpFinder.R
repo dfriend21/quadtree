@@ -28,7 +28,7 @@ setMethod("summary", signature(object = "LcpFinder"),
     ext <- object@ptr$getSearchLimits()
     sp <- object@ptr$getStartPoint()
     cat("class            : LcpFinder\n",
-        "start point      : ", sp[1], ", ", sp[2], "\n",
+        "start point      : (", sp[1], ", ", sp[2], ")\n",
         "search limits    : ", ext[1], ", ", ext[2], ", ", ext[3], ", ", ext[4], " (xmin, xmax, ymin, ymax)\n",
         "# of paths found : ", nrow(lcp_sum), sep = "")
   }
