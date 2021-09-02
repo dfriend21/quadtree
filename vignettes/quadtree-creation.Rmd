@@ -1,5 +1,7 @@
 ---
 title: "Quadtree creation"
+author: "Derek Friend"
+date: "Last compiled on `r format(Sys.time(), '%d %B, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{quadtree-creation}
@@ -11,8 +13,8 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.height = 5,
-  fig.width = 8
+  fig.height = 4.375,
+  fig.width = 7
 )
 ```
 
@@ -30,6 +32,115 @@ This vignette goes over the process of creating a quadtree, and covers all of th
 data(habitat)
 rast <- habitat
 plot(rast, main = "sample raster")
+```
+
+## Overview of the quadtree data structure
+
+Quadtrees are tree data structures where each node is allowed to have either 0 or 4 children, and are well-suited for representing 2-dimensional space. When used in this fashion, each node represents a rectangular cell. The root of the tree represents a single cell that encompasses the entire area. If a node has children, they represent the four cells created when the parent cell is divided into quadrants. Each node is associated with a value that represents the value of the variable for that cell. This creates a hierarchical data structure where any given point in space is contained within many different cells at different levels. To represent a space-exhausting surface similar to a raster, the terminal nodes can be treated as the only value for any given point, and the values at the higher levels can essentially be ignored. The end result is a variable-sized grid representing the value of some variable across space.
+
+
+The following figure shows a quadtree data structure (left), it's spatial representation (middle), and how the data structure and the spatial representation correspond.
+
+```{r echo = FALSE, fig.height = 2.625, fig.width = 7}
+#function for putting the quadtree data in the correct format for plotting - for use in fig:tree_example
+get_tree_df <- function(qt, xmin, xmax){
+   nodes <- as_data_frame(qt, terminal_only = FALSE)
+   p_ids <- unique(nodes$parentID)
+   
+   #get order of children (among their siblings)
+   child_order <- do.call(rbind,lapply(1:length(p_ids), function(i){
+      dat <- nodes[nodes$parentID == p_ids[i],c("id", "parentID")]
+      dat$childOrder <- 1:nrow(dat)
+      return(dat)
+   }))
+   tree_df <- merge(nodes, child_order[,c("id", "childOrder")], by="id")
+   
+   #get the x and y coordinates of the centroids
+   tree_df$x <- (tree_df$xMin + tree_df$xMax)/2
+   tree_df$y <- (tree_df$yMin + tree_df$yMax)/2
+   
+   #define a function that'll give all the possible x coords for a given "level" of the tree
+   get_tree_coords <- function(level, min, max){
+      pts <- seq(min,max,length.out=4^level+1)
+      x <- (pts[1:(length(pts)-1)] + pts[-1])/2
+      y <- rep(level,length(x))
+      return(cbind(x,y))
+   }
+   
+   #get the x and y coordinates for plotting the tree data structure
+   tree_df$x_pos <- 1
+   tree_df$tree_x <- NA
+   tree_df$tree_y <- NA
+   tree_df <- tree_df[order(tree_df$id),]
+   for(i in 1:nrow(tree_df)){
+      if(tree_df$parentID[i] != -1){
+         parent <- tree_df[tree_df$id == tree_df$parentID[i],]
+         num <- (parent$x_pos-1)*4 + tree_df$childOrder[i]
+         tree_df$x_pos[i] <- num
+      } else {
+         num <- 1
+      }
+      tree_df$tree_x[i] <- get_tree_coords(tree_df$level[i], xmin, xmax)[num]
+      tree_df$tree_y[i] <- max(tree_df$level)-tree_df$level[i]
+   }
+   
+   #now make a column for parent coordinates (for plotting the line between child and parent)
+   tree_df$parent_tree_x <- NA # the x and y TREE coords of the parents for plotting the tree
+   tree_df$parent_tree_y <- NA
+   tree_df$parent_x <- NA # the x and y CENTROID coords of the parents (needed for the 3D plot)
+   tree_df$parent_y <- NA
+   for(i in 1:nrow(tree_df)){
+      if(tree_df$parentID[i] != -1){
+         parent <- tree_df[tree_df$id == tree_df$parentID[i],]
+         tree_df$parent_tree_x[i] <- parent$tree_x
+         tree_df$parent_tree_y[i] <- parent$tree_y
+         tree_df$parent_x[i] <- parent$x
+         tree_df$parent_y[i] <- parent$y
+      }
+   }
+   return(tree_df)
+}
+
+library(plot3D)
+#create data for the sample quadtree
+mat = rbind(c(0,0,0,0,0,0,0,0),
+            c(0,0,0,0,0,0,0,0),
+            c(0,0,0,0,0,0,1,0),
+            c(0,0,0,0,0,0,0,1),
+            c(1,1,1,1,0,0,0,0),
+            c(1,1,1,1,0,0,0,0),
+            c(1,0,1,1,0,0,0,0),
+            c(0,1,1,1,0,0,0,0))
+# mat=rbind(c(1,1,0,1),
+#           c(1,1,1,0),
+#           c(1,0,0,0),
+#           c(0,1,0,0))
+qt_basic = quadtree(mat, split_method="range", split_threshold=0.1)
+
+#get the data frame for plotting the tree
+tree_df = get_tree_df(qt_basic, 0, 16)
+
+#we'll use a three-panel plot
+par(mfrow=c(1,3), mar=c(0,1,0,1))
+
+#plot the tree structure
+plot(tree_df$tree_x, tree_df$tree_y, axes = FALSE, xlab="", ylab="", type="n")
+with(tree_df, segments(tree_x,tree_y,parent_tree_x,parent_tree_y))
+with(tree_df, points(tree_x, tree_y, pch=16, xlab="", ylab="", cex=.8))
+
+#plot the quadtree
+plot(qt_basic, col="white", axes=FALSE, legend=FALSE, xlab="", ylab="")
+
+# with(tree_df[tree_df$hasChdn == 1,], points(tree_x, tree_y, pch=16, xlab="", ylab="", cex=.7))
+# with(tree_df[tree_df$hasChdn == 0,], points(tree_x, tree_y, col="black", bg="gray70", pch=21,cex=1.2))
+
+#make a 3D plot showing how the tree structure corresponds to its spatial representation
+with(tree_df, rect3D(x0=xMin,y0=yMin,z0=tree_y,x1=xMax,y1=yMax, 
+                     border="gray50", col="gray70",alpha=.2,axes=FALSE,box=FALSE,
+                     theta=25,phi=15,d=2))
+with(tree_df, scatter3D(x,y,tree_y, col="black",alpha=1,pch=16,add=TRUE))
+tree_df4 = rbind(tree_df, tree_df[nrow(tree_df),]) # The segments3D function wasn't plotting the last row of the data frame... so I just added another row to the end. Totally a hack, but it works.
+with(tree_df4, segments3D(x0=x, y0=y, z0=tree_y, x1=parent_x, y1=parent_y, z1=parent_tree_y,add=TRUE,lwd=1))
 ```
 
 ## Overview of quadtree creation
