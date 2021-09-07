@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
   fig.height = 4.375,
   fig.width = 7
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ```{r setup, message = FALSE, warning = FALSE}
@@ -195,7 +196,7 @@ The method used to determine whether or not to split a cell as well as the metho
 
 #### Splitting functions
 
-For splitting a cell, two methods are provided. `"range"` checks the difference between the minimum value and the maximum value within the quadrant - if this difference exceeds split_threshold, the quadrant is split. `"sd"` uses the standard deviation of the cell values within a quadrant - if the standard deviation exceeds split_threshold, the quadrant is split.
+For splitting a cell, two methods are provided. `"range"` checks the difference between the minimum value and the maximum value within the quadrant - if this difference exceeds `split_threshold`, the quadrant is split. `"sd"` uses the standard deviation of the cell values within a quadrant - if the standard deviation exceeds `split_threshold`, the quadrant is split.
 
 ```{r}
 qt_range <- quadtree(rast, .1, split_method = "range")

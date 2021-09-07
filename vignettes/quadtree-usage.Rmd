@@ -1,0 +1,204 @@
+---
+title: "Using Quadtrees"
+author: "Derek Friend"
+date: "Last compiled on `r format(Sys.time(), '%d %B, %Y')`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{quadtree-usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 4.375,
+  fig.width = 7
+)
+```
+
+## Vignette Contents
+
+This vignette covers ways of interacting with a `Quadtree` object after it has been created - for example, extracting values and modifying values.
+
+```{r message = FALSE}
+library(raster)
+library(quadtree)
+
+# retrieve the sample data
+data(habitat)
+rast <- habitat
+qt <- quadtree(rast, .15)
+par(mfrow = c(1, 2))
+plot(rast, main = "sample raster")
+plot(qt, crop = TRUE, border_lwd = .3, na_col = NULL, legend = FALSE, main = "sample quadtree")
+```
+
+## Retrieving basic info about a quadtree
+
+### Getting a summary of a quadtree
+
+A basic summary of a quadtree can be shown by just typing the variable name:
+
+```{r}
+qt
+```
+
+### Getting the projection of a quadtree
+
+There are also functions that can be used to retrieve basic info about a `Quadtree`. `projection` can be used to get and set the projection of the `Quadtree`. In this case there is no projection, so an empty string is returned.
+
+```{r}
+projection(qt)
+```
+
+### Getting the number of cells in a quadtree
+
+`n_cells` returns the number of cells in the quadtree. It has one optional parameter, `terminal_only` - if `TRUE`, the number of cells of the quadtree that are terminal (i.e. have no children) is returned. If `FALSE`, the total number of nodes in the quadtree is returned.
+
+```{r}
+n_cells(qt)
+n_cells(qt, terminal_only = FALSE)
+```
+
+### Getting the extent of a quadtree
+
+`extent()` can be used to return the extent of the quadtree. It has one optional parameter `original` - if `FALSE` (the default), it returns the total extent covered by the quadtree. If `TRUE`, the function returns the extent of the original raster used to create the quadtree, before `NA` rows/columns were added to pad the dimensions.
+
+```{r}
+extent(qt)
+extent(qt, original = TRUE)
+```
+
+## Retrieving cell-level data
+
+### Extracting values
+
+Values can be 'extracted' at point locations using the `extract()` function. This function has one optional parameter - `extents`. If `extents` is `FALSE` (the default), then only the values at the point locations are returned. If `extents` is `TRUE`, then a matrix is returned that also returns the x and y limits of each cell in addition to the cell value.
+
+```{r, fig.height = 7}
+pts <- cbind(x = c(5609, 3959, 20161, 27662, 32763),
+            y = c(10835, 29586, 31836, 10834, 36337))
+
+plot(qt, crop = TRUE, border_lwd = .3, na_col = NULL)
+points(pts, pch = 16)
+```
+
+```{r}
+extract(qt, pts)
+extract(qt, pts, extents = TRUE)
+```
+
+### Retrieving neighbor relationships
+
+In addition to extracting values from cells, it is possible to determine neighbor relationships between cells via the `get_neighbors()` function. Given a point, `get_neighbors` returns the cells that neighbor the cell that the point falls in. Note that cells that are diagonal from each either (i.e. only touch at the corner) are considered to be adjacent.
+
+```{r}
+get_neighbors(qt, as.numeric(pts[3,]))
+```
+
+## Copying a quadtree
+
+A key concept to understand is that `Quadtree` objects are *pointers* to C++ objects, and copying these objects simply by assigning them to a new variable makes a *shallow* copy rather than a *deep* copy. This is important to note because this differs from how R objects normally behave. For example, if I have a data frame named `df1`, I can make a copy of it by doing `df2 <- df1`. This makes a *deep* copy of `df1` - if I were to modify `df2`, `df1` would remain unchanged. This is not the case with `Quadtree` objects. The R object that users interact with is a pointer to a C++ object. If I were to attempt to make copy of a quadtree `qt1` by doing `qt2 <- qt1`, this simply copies the *pointer* to the C++ object, so `qt1` and `qt2` point to the same object. Thus, if `qt2` is modified (for example, by using a function like `set_values()` or `transform_values()`), `qt1` will also be modified. 
+
+The `copy()` function can be used to make a deep copy of a `Quadtree` object. This is useful if the user wishes to make changes to a quadtree without modifying the original.
+
+```{r}
+qt_copy <- copy(qt)
+qt
+qt_copy
+```
+
+In the next section ("Modifying cell values"), this function is used in the examples to create copies of a quadtree before modifying it so that the original remains unchanged.
+
+## Modifying cell values
+
+Two functions are provided for modifying cell values: `set_values` and `transform_values`. 
+
+### `set_values`
+
+`set_values` takes a matrix of points and associated values, and changes the values of the cells the points fall in. Note that only the values of the *terminal cells* that the point falls in are changed.
+
+```{r, fig.height = 7}
+qt2 <- copy(qt)
+set_values(qt2, pts, rep(2, nrow(pts)))
+plot(qt2, crop = TRUE, border_lwd = .3)
+```
+
+### `transform_values`
+
+`transform_values` uses a function to change all cell values. For example, we could use this function to cube all of the cell values:
+
+```{r}
+qt3 <- copy(qt)
+transform_values(qt3, function(x) x^3)
+
+par(mfrow = c(1,2))
+plot(qt, crop = TRUE, na_col = NULL, border_lwd = .3, zlim = c(0, 1),
+     legend = FALSE, main = "original quadtree")
+plot(qt3, crop = TRUE, na_col = NULL, border_lwd = .3, zlim = c(0, 1),
+     legend = FALSE, main = "values cubed")
+```
+
+## Reading and writing quadtrees
+
+One of the disadvantages of using C++ classes via Rcpp is that the objects are not preserved between sessions. For example, we could save a `Quadtree` to a `RData` file using `save()`, but when we loaded it back in we would get an error.
+
+```{r, error = TRUE}
+qt_temp <- copy(qt)
+filepath <- tempfile()
+save(qt_temp, file = filepath)
+load(filepath)
+qt_temp
+```
+
+The `quadtree` package provides read and write functionality via the `cereal` C++ library, which is used to serialize C++ objects. `read_quadtree()` and `write_quadtree()` can be used to read and write `Quadtree` objects.
+
+```{r}
+filepath <- tempfile()
+write_quadtree(filepath, qt)
+qt_read <- read_quadtree(filepath)
+qt_read
+```
+
+## Converting quadtrees to other data types
+
+Functions are also provided for converting a `Quadtree` to different data types
+
+### Get all cell values as a vector
+
+`as_vector()` returns the cell values as a numeric vector. It has one optional parameter - `terminal_only`. If `TRUE` (the default), only the values of the terminal cells are returned. If `FALSE`, the values of all cells (including those with children) are returned.
+
+```{r}
+vec1 <- as_vector(qt)
+length(vec1)
+summary(vec1)
+
+vec2 <- as_vector(qt, FALSE)
+length(vec2)
+summary(vec2)
+```
+
+### Convert to a data frame
+
+`as_data_frame()` converts the quadtree to a data frame. In the resulting data frame, each row represents a single cell, and has columns describing the cell ID, x and y limits, value, level (i.e. node depth), the size of its smallest child, the ID of its parent, and whether it has children. As with `as_vector()`, there is one optional parameter called `terminal_only` - when `TRUE` (the default) only the terminal cells are returned, and when `FALSE`, all cells are returned.
+
+```{r}
+df1 <- as_data_frame(qt)
+dim(df1)
+head(df1)
+
+df2 <- as_data_frame(qt, FALSE)
+dim(df2)
+head(df2)
+```
+
+### Convert to a `raster`
+
+A `Quadtree` can also be converted back to a raster using the `as_raster()` function. This function has one optional parameter named `rast`, which is used as the template for the output raster. If `NULL` (the default), a raster is automatically created, where the quadtree extent is used as the raster extent, and the smallest cell in the quadtree is used to determine the resolution of the raster. Note that the value of a raster cell is determined by the value of the quadtree cell located at the centroid of the raster cell - thus, if a raster cell overlaps several quadtree cells, whichever quadtree cell the centroid of the raster cell falls in will determine the raster cell's value. If the default value for `rast` is used, the raster cells will never overlap with more than one quadtree cell.
+
+```{r}
+rast <- as_raster(qt)
+plot(rast)
+```

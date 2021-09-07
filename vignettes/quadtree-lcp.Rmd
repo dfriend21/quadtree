@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
   fig.height = 4.375,
   fig.width = 7
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ## The content of this vignette
