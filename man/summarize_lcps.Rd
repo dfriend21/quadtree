@@ -38,12 +38,11 @@ Note that this function returns \strong{all} of the paths that have
   LCPs that have been calculated so far.
 }
 \examples{
-library(raster)
+library(quadtree)
 
 # create a quadtree
 data(habitat)
-rast <- habitat
-qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 
 start_pt <- c(19000, 25000)
 end_pt <- c(33015, 38162)

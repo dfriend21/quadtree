@@ -26,8 +26,8 @@ algorithm.}
 \code{find_lcp} returns a five column matrix representing the
   least cost path. It has the following columns:
   \itemize{
-     \item{\code{x}: }{x coordinate of this point}
-     \item{\code{y}: }{y coordinate of this point}
+     \item{\code{x}: }{x coordinate of this point (centroid of the cell)}
+     \item{\code{y}: }{y coordinate of this point (centroid of the cell)}
      \item{\code{cost_tot}: }{the cumulative cost up to this point}
      \item{\code{dist_tot}: }{the cumulative distance up to this point - note
      that this is not straight-line distance, but instead the distance along
@@ -36,11 +36,7 @@ algorithm.}
    }
 
   If no path is possible between the two points, a 0-row matrix with the
-  previously described columns is returned. Also, note that when creating the
-  \code{\link{LcpFinder}} object using \code{lcp_finder}, \code{NULL} will be
-  returned if \code{start_point} falls outside of the quadtree. If
-  \code{NULL} is passed to the \code{lcp_finder} parameter, a 0-row matrix is
-  returned.
+  previously described columns is returned. 
 
   IMPORTANT NOTE: the \code{use_original_end_points} options ONLY changes the
   x and y coordinates of the first and last points - it doesn't change the
@@ -54,16 +50,20 @@ Finds the least cost path (LCP) between two points, using a
   quadtree as a resistance surface
 }
 \details{
-See \code{\link{lcp_finder}} for more information on how the LCP
-  is found
+See the vignette 'quadtree-lcp' for more details and examples (i.e. run
+  \code{vignette("quadtree-lcp", package = "quadtree")})
 }
 \examples{
-library(raster)
+####### NOTE ####### 
+# see the "quadtree-lcp" vignette for more details and examples:
+# vignette("quadtree-lcp", package = "quadtree")
+####################
+
+library(quadtree)
 
 # create a quadtree
 data(habitat)
-rast <- habitat
-qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 plot(qt, crop = TRUE, na_col = NULL, border_lwd = .4)
 
 # define our start and end points
@@ -78,8 +78,6 @@ path <- find_lcp(lcpf, end_pt)
 plot(qt, crop = TRUE, na_col = NULL, border_col = "gray30", border_lwd = .4)
 points(rbind(start_pt, end_pt), pch = 16, col = "red")
 lines(path[, 1:2], col = "black")
-
-# NOTE: see "Examples" in ?lcp_finder for more examples
 }
 \seealso{
 \code{\link{lcp_finder}()} creates the LCP finder object used as

@@ -10,9 +10,9 @@
 \arguments{
 \item{x}{the \code{LcpFinder} object returned from \code{\link{lcp_finder}}}
 
-\item{limit}{numeric; the maximum cost-distance for the LCPs. If \code{NULL},
-no limit is applied and all possible LCPs (within the \code{LcpFinder}'s 
-serach area) are found}
+\item{limit}{numeric; the maximum cost-distance for the LCPs. If \code{NULL}
+(the default), no limit is applied and all possible LCPs (within the
+\code{LcpFinder}'s search area) are found}
 }
 \value{
 Returns a matrix summarizing each LCP found.
@@ -29,27 +29,24 @@ Calculates the LCPs to surrounding points. A constraint can be
   cost-distance are returned.
 }
 \details{
-A very important note to make is that once the LCP tree is calculated, it
-never gets smaller. The implication of this is that great care is needed if
-using a \code{\link{LcpFinder}} more than once. For example, I could use
-\code{find_lcps(lcp_finder, limit=10)} to find all LCPs that have a
-cost-distance less than 10. I could then use \code{summarize_lcps} to view
-all cells that are reachable within 10 cost units. However, if I then run
-\code{find_lcps(lcp_finder, limit=5)} to find all LCPs that have a
-cost-distance less than 5, the underlying LCP network \strong{will remain
-unchanged}. That is, if I run \code{summarize_lcps} on \code{lcp_finder}, it
-will \strong{return paths with a cost-distance greater than 5}, since we had
-previously used \code{lcp_finder} to find paths less than 10. As mentioned
-before, this happens because the underlying data structure only ever adds
-nodes, and never removes nodes.
+A very important note to make is that once the LCP tree is
+calculated, it never gets smaller. For example, we could use
+\code{find_lcps()} with \code{limit = NULL} to calculate all LCPS. If we then
+used \code{find_lcps()} on the same \code{LcpFinder} but this time used a
+limit, it would still return \emph{all} of the LCPs - even those that are
+greater than the specified limit, since the tree never shrinks.
 }
 \examples{
-library(raster)
+####### NOTE ####### 
+# see the "quadtree-lcp" vignette  for more details and examples:
+# vignette("quadtree-lcp", package = "quadtree")
+####################
+
+library(quadtree)
 
 # create a quadtree
 data(habitat)
-rast <- habitat
-qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 
 start_pt <- c(19000, 25000)
 
