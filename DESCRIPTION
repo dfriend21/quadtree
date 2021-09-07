@@ -4,18 +4,9 @@ Title: Quadtree Representation of Rasters
 Version: 0.0.0.9000
 Date: 2021-01-26
 Authors@R:
-    c(person(given = "Derek", 
-             family = "Friend",
-             role = c("aut","cre"),
-             email = "dafriend.R@gmail.com"),
-      person(given = "Randolph",
-             family = "Voorhies",
-             role = "cph",
-             comment = "Author of included cereal library"),
-      person(given = "Shane",
-             family = "Grant",
-             role = "cph",
-             comment = "Author of included cereal library")
+    c(person("Derek", "Friend", role = c("aut","cre"), email = "dafriend.R@gmail.com"),
+      person("Randolph", "Voorhies", role = "cph", comment = "Author of included cereal library"),
+      person(given = "Shane", family = "Grant", role = "cph", comment = "Author of included cereal library"))
 Description: Provides a C++ implementation of a quadtree data structure. Functions are
   provided for creating a quadtree from a raster, with the level of 'coarseness' of the
   quadtree being determined by a user-supplied parameter. In addition, functions are 
