@@ -58,7 +58,7 @@ class QuadtreeWrapper{
     void makeList(std::shared_ptr<Node> node, Rcpp::List &list, int parentID) const;
     Rcpp::List asList();
     
-    std::vector<double> asVector() const;
+    std::vector<double> asVector(bool terminalOnly) const;
     void makeNbList(std::shared_ptr<Node> node, Rcpp::List &list) const;
     Rcpp::List getNbList();
     

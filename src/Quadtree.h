@@ -71,8 +71,8 @@ public:
   int copyNode(std::shared_ptr<Node> nodeCopy, const std::shared_ptr<Node> nodeOrig) const;
   std::shared_ptr<Quadtree> copy() const;
 
-  int toVector(std::shared_ptr<Node> node, std::vector<double> &vals, int i) const;
-  std::vector<double> toVector() const;
+  int toVector(std::shared_ptr<Node> node, std::vector<double> &vals, int i, bool terminalOnly) const;
+  std::vector<double> toVector(bool terminalOnly) const;
 
   std::string toString(const std::shared_ptr<Node> node, const std::string prefix) const;
   std::string toString() const;

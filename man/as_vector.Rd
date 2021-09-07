@@ -5,7 +5,7 @@
 \alias{as_vector,Quadtree-method}
 \title{Get All Cell Values in a Vector}
 \usage{
-\S4method{as_vector}{Quadtree}(x)
+\S4method{as_vector}{Quadtree}(x, terminal_only = TRUE)
 }
 \arguments{
 \item{x}{a \code{\link{Quadtree}} object}

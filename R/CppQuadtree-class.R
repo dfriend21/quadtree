@@ -65,6 +65,15 @@
 #'   are the same as the columns described in the documentation for
 #'   \code{\link{as_data_frame}()} - see that help page for details.
 #' }
+#' @field asVector \itemize{
+#'   \item \strong{Description}: returns cell values as a vector. \code{\link{as_vector}()}
+#'   is a wrapper for this function.
+#'   \item \strong{Parameters}: \itemize{
+#'     \item \code{terminalOnly}: boolean; if \code{TRUE}, returns only the
+#'     values of the terminal cells. If \code{FALSE}, returns all cell values
+#'   }
+#'   \item \strong{Returns}: a numeric vector
+#' }
 #' @field copy \itemize{
 #'   \item \strong{Description}: returns a deep copy of a quadtree.
 #'   \code{\link{copy}()} is a wrapper for this function - see the
@@ -183,6 +192,7 @@
 #'     \item \code{startPoint}: two element numeric vector
 #'     \item \code{xlims}: two element numeric vector
 #'     \item \code{ylims}: two element numeric vector
+#'     \item \code{searchByCentroid} : boolean
 #'   }
 #'   \item \strong{Returns}: an object with class \code{CppShortestPathFinder}
 #' }

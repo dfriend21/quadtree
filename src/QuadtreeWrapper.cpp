@@ -242,8 +242,8 @@ Rcpp::List QuadtreeWrapper::asList(){
   return list;
 }
 
-std::vector<double> QuadtreeWrapper::asVector() const{
-  return quadtree->toVector();
+std::vector<double> QuadtreeWrapper::asVector(bool terminalOnly) const{
+  return quadtree->toVector(terminalOnly);
 }
 
 

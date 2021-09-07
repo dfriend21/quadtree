@@ -14,7 +14,7 @@
 #' as_vector(qt)
 #' @export
 setMethod("as_vector", signature(x = "Quadtree"),
-  function(x) {
-    return(x@ptr$asVector())
+  function(x, terminal_only = TRUE) {
+    return(x@ptr$asVector(terminal_only))
   }
 )
