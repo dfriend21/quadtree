@@ -98,9 +98,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/quadtree-architecture.html">Vignette Title</a>
-    </li>
-    <li>
       <a href="../articles/quadtree-creation.html">Quadtree creation</a>
     </li>
     <li>
@@ -212,6 +209,16 @@
   numeric vector provides information on a single cell. The elements returned
   are the same as the columns described in the documentation for
   <code><a href='as_data_frame.html'>as_data_frame</a>()</code> - see that help page for details.</p></li>
+</ul></p></dd>
+
+<dt><code>asVector</code></dt><dd><p><ul>
+<li><p><strong>Description</strong>: returns cell values as a vector. <code><a href='as_vector.html'>as_vector</a>()</code>
+  is a wrapper for this function.</p></li>
+<li><p><strong>Parameters</strong>:</p><ul>
+<li><p><code>terminalOnly</code>: boolean; if <code>TRUE</code>, returns only the
+    values of the terminal cells. If <code>FALSE</code>, returns all cell values</p></li>
+</ul></li>
+<li><p><strong>Returns</strong>: a numeric vector</p></li>
 </ul></p></dd>
 
 <dt><code>copy</code></dt><dd><p><ul>
@@ -339,6 +346,7 @@
 <li><p><code>startPoint</code>: two element numeric vector</p></li>
 <li><p><code>xlims</code>: two element numeric vector</p></li>
 <li><p><code>ylims</code>: two element numeric vector</p></li>
+<li><p><code>searchByCentroid</code> : boolean</p></li>
 </ul></li>
 <li><p><strong>Returns</strong>: an object with class <code>CppShortestPathFinder</code></p></li>
 </ul></p></dd>

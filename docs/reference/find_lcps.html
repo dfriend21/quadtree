@@ -97,9 +97,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/quadtree-architecture.html">Vignette Title</a>
-    </li>
-    <li>
       <a href="../articles/quadtree-creation.html">Quadtree creation</a>
     </li>
     <li>
@@ -154,9 +151,9 @@
     </tr>
     <tr>
       <th>limit</th>
-      <td><p>numeric; the maximum cost-distance for the LCPs. If <code>NULL</code>,
-no limit is applied and all possible LCPs (within the <code>LcpFinder</code>'s 
-serach area) are found</p></td>
+      <td><p>numeric; the maximum cost-distance for the LCPs. If <code>NULL</code>
+(the default), no limit is applied and all possible LCPs (within the
+<code>LcpFinder</code>'s search area) are found</p></td>
     </tr>
     </table>
 
@@ -171,19 +168,12 @@ serach area) are found</p></td>
   the path, since it's already been calculated).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A very important note to make is that once the LCP tree is calculated, it
-never gets smaller. The implication of this is that great care is needed if
-using a <code><a href='LcpFinder-class.html'>LcpFinder</a></code> more than once. For example, I could use
-<code>find_lcps(lcp_finder, limit=10)</code> to find all LCPs that have a
-cost-distance less than 10. I could then use <code>summarize_lcps</code> to view
-all cells that are reachable within 10 cost units. However, if I then run
-<code>find_lcps(lcp_finder, limit=5)</code> to find all LCPs that have a
-cost-distance less than 5, the underlying LCP network <strong>will remain
-unchanged</strong>. That is, if I run <code>summarize_lcps</code> on <code>lcp_finder</code>, it
-will <strong>return paths with a cost-distance greater than 5</strong>, since we had
-previously used <code>lcp_finder</code> to find paths less than 10. As mentioned
-before, this happens because the underlying data structure only ever adds
-nodes, and never removes nodes.</p>
+    <p>A very important note to make is that once the LCP tree is
+calculated, it never gets smaller. For example, we could use
+<code>find_lcps()</code> with <code>limit = NULL</code> to calculate all LCPS. If we then
+used <code>find_lcps()</code> on the same <code>LcpFinder</code> but this time used a
+limit, it would still return <em>all</em> of the LCPs - even those that are
+greater than the specified limit, since the tree never shrinks.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='lcp_finder.html'>lcp_finder</a>()</code> creates the <code><a href='LcpFinder-class.html'>LcpFinder</a></code>
@@ -192,12 +182,16 @@ nodes, and never removes nodes.</p>
   matrix of all LCPs that have been calculated so far.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rspatial.org/raster'>raster</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'>####### NOTE ####### </span>
+<span class='co'># see the "quadtree-lcp" vignette  for more details and examples:</span>
+<span class='co'># vignette("quadtree-lcp", package = "quadtree")</span>
+<span class='co'>####################</span>
+
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://gitlab.com/dafriend/quadtree'>quadtree</a></span><span class='op'>)</span>
 
 <span class='co'># create a quadtree</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
-<span class='va'>rast</span> <span class='op'>&lt;-</span> <span class='va'>habitat</span>
-<span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>rast</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, adj_type <span class='op'>=</span> <span class='st'>"expand"</span><span class='op'>)</span>
+<span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, adj_type <span class='op'>=</span> <span class='st'>"expand"</span><span class='op'>)</span>
 
 <span class='va'>start_pt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>19000</span>, <span class='fl'>25000</span><span class='op'>)</span>
 
