@@ -6,3 +6,5 @@ other_files/output/*
 .Rproj.user
 raw_data
 inst/doc
+/doc/
+/Meta/
