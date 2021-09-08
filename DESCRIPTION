@@ -21,7 +21,7 @@ Imports:
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 NeedsCompilation: yes
-URL: https://gitlab.com/dafriend/quadtree
+URL: https://github.com/dfriend21/quadtree
 Depends: 
     R (>= 2.10)
 Suggests: 
