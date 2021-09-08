@@ -58,6 +58,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/quadtree-code.html">Code Details</a>
+    </li>
+    <li>
       <a href="articles/quadtree-creation.html">Quadtree creation</a>
     </li>
     <li>
@@ -88,17 +91,21 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="quadtree" class="section level1">
+<div id="quadtree-an-r-package-for-raster-like-quadtrees" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#quadtree" class="anchor"></a>quadtree</h1></div>
-<p>This package provides functionality for working with raster-like quadtrees, which allow for variable-sized cells.</p>
+<a href="#quadtree-an-r-package-for-raster-like-quadtrees" class="anchor"></a><code>quadtree</code>: An R-package for raster-like quadtrees</h1></div>
+<p>This package provides functionality for working with raster-like quadtrees (also called “region quadtrees”), which allow for variable-sized cells.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>The package can be installed with the following R command:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_gitlab</a></span><span class="op">(</span><span class="st">"dafriend/quadtree"</span><span class="op">)</span></code></pre></div>
-<p>For documentation of all the functions, see the PDF file stored at the root directory.</p>
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"dafriend/quadtree"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="documentation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#documentation" class="anchor"></a>Documentation</h2>
+<p>Visit the <a href="https://dfriend21.github.io/quadtree/index.html">package website</a> for more information.</p>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
@@ -106,95 +113,18 @@
 <p>A quadtree object is created from a raster or matrix:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gitlab.com/dafriend/quadtree">quadtree</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/">sp</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'raster'</span>
-<span class="co">#&gt; The following objects are masked from 'package:quadtree':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     projection, projection&lt;-</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">habitat</span>, package<span class="op">=</span><span class="st">"quadtree"</span><span class="op">)</span> <span class="co">#load sample data</span>
-<span class="va">qt</span> <span class="op">=</span> <span class="fu"><a href="reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, split_threshold<span class="op">=</span><span class="fl">.03</span>, split_method<span class="op">=</span><span class="st">"sd"</span><span class="op">)</span> <span class="co">#create a quadtree</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span><span class="va">habitat</span>, zlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, main<span class="op">=</span><span class="st">"raster representation"</span>, axes<span class="op">=</span><span class="cn">FALSE</span>, box<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop<span class="op">=</span><span class="cn">TRUE</span>, na_col<span class="op">=</span><span class="cn">NULL</span>, border_lwd<span class="op">=</span><span class="fl">.2</span>,xlab<span class="op">=</span><span class="st">""</span>, ylab<span class="op">=</span><span class="st">""</span>, legend<span class="op">=</span><span class="cn">FALSE</span>, zlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, main<span class="op">=</span><span class="st">"quadtree representation"</span>, axes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-example_create-1.png" width="100%"></p>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">habitat</span>, package <span class="op">=</span> <span class="st">"quadtree"</span><span class="op">)</span> <span class="co">#load sample data</span>
+<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, <span class="fl">.03</span>, <span class="st">"sd"</span><span class="op">)</span> <span class="co">#create a quadtree</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
 <p>The package allows for flexibility in the quadtree creation process. Several functions defining how to split and aggregate cells are provided, and custom functions can be written for both of these processes. In addition, quadtrees can be created using other quadtrees as “templates”, so that the new quadtree has the identical structure as the template quadtree.</p>
-<p>Once created, cell values can be extracted, as with a raster:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pts</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20000</span>,<span class="fl">32000</span>,<span class="fl">5000</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10000</span>,<span class="fl">30000</span>,<span class="fl">27000</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>,<span class="va">pts</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.9692383 0.5340000 0.1364531</span></code></pre></div>
-<p>In addition, functions are provided for calculating least-cost paths using the quadtree as a resistance surface.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">start_point</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6989</span>,<span class="fl">34007</span><span class="op">)</span>
-<span class="va">end_point</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">33015</span>,<span class="fl">38162</span><span class="op">)</span>
-<span class="va">lcp_finder</span> <span class="op">=</span> <span class="fu"><a href="reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_point</span><span class="op">)</span>
-<span class="va">lcp</span> <span class="op">=</span> <span class="fu"><a href="reference/find_lcp.html">find_lcp</a></span><span class="op">(</span><span class="va">lcp_finder</span>, <span class="va">end_point</span>, use_original_end_points <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, border_col<span class="op">=</span><span class="st">"gray70"</span>, crop<span class="op">=</span><span class="cn">TRUE</span>, na_col<span class="op">=</span><span class="cn">NULL</span>, border_lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">lcp</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">start_point</span>, <span class="va">end_point</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"red"</span>, pch<span class="op">=</span><span class="fl">16</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-example_lcp-1.png" width="70%" height="70%"></p>
+<p>The package also includes functionality for modifying quadtrees, querying values, saving quadtrees to a file, and calculating least-cost paths using the quadtree as a resistance surface.</p>
 </div>
 <div id="learning-how-to-use-the-quadtree-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#learning-how-to-use-the-quadtree-package" class="anchor"></a>Learning how to use the <code>quadtree</code> package</h2>
-<p>Currently there are no vignettes, as this package is still in development, although in the future I hope to add some. However, all of the functions in the package are well documented and have extensive examples that the user can run. To understand the basics of the library, I’d recommend first reading the documentation for <code>quadtree</code> (i.e. run <code><a href="reference/quadtree.html">?quadtree</a></code> in the console) first - this help file contains all the basic info on what a quadtree is and how it is constructed. To learn more about the least-cost path functionality, start with the documentation for <code><a href="reference/lcp_finder.html">?lcp_finder</a></code> and also take a look at <code><a href="reference/find_lcp.html">?find_lcp</a></code> and <code><a href="reference/find_lcps.html">?find_lcps</a></code>.</p>
-<p>Most of the other functions are quite simple - take a look at the PDF manual included in the repository for information on how to use them.</p>
-</div>
-<div id="file-structure" class="section level2">
-<h2 class="hasAnchor">
-<a href="#file-structure" class="anchor"></a>File structure</h2>
-<p>The code here <em>mostly</em> conforms to the standard R package structure. The exception is the ‘other_files’ folder.</p>
-<ul>
-<li>/R - contains the R files</li>
-<li>/data - contains Rdata files (.rda) containing sample data</li>
-<li>/man - contains the documentation files</li>
-<li>/other_files - contains ‘scratchwork’ scripts that I use to test the package functionality. This folder is ignored when the package is built.</li>
-<li>/src - contains the C++ code</li>
-<li>/tests - contains unit tests</li>
-</ul>
-</div>
-<div id="implementation-details" class="section level2">
-<h2 class="hasAnchor">
-<a href="#implementation-details" class="anchor"></a>Implementation Details</h2>
-<p>The bulk of the code is written in C++ and interfaced with R via Rcpp.</p>
-<p>The overall design philosophy was to keep the core C++ code completely independent from the R code (i.e. no Rcpp-related code in the core C++ files.) This results in a three-tiered organization of the code - core C++ code, Rcpp C++ code, and R code.</p>
-<div id="core-c-code" class="section level3">
-<h3 class="hasAnchor">
-<a href="#core-c-code" class="anchor"></a>Core C++ code</h3>
-<p>This consists of the following files (only the .h files are listed to avoid redundancy, but each of these files has a corresponding .cpp file):</p>
-<ul>
-<li>Matrix.h - Defines the Matrix class implementing basic matrix funcitonality</li>
-<li>Node.h - Defines the Node class, which are the ‘nodes’ of the quadtree</li>
-<li>Point.h - Defines a simple Point class</li>
-<li>PointUtilities.h - Defines a namespace containing functions for performing calculations with Point objects</li>
-<li>Quadtree.h - Defines the Quadtree class, which can be seen as a wrapper that provides a link to the interconnected nodes that make up the quadtree</li>
-<li>ShortestPathFinder.h - Defines a class for finding the least-cost paths using a quadtree as a cost surface</li>
-</ul>
-<p>As mentioned before, these files are completely independent of R and can be built and run independently of R.</p>
-</div>
-<div id="rcpp-c-code" class="section level3">
-<h3 class="hasAnchor">
-<a href="#rcpp-c-code" class="anchor"></a>Rcpp C++ code</h3>
-<p>These files are called ‘wrappers’ - essentially they each contain an instance of the relevant object and provide additional Rcpp-related functions that can be accessed from R. These essentially provide the “bridge” that allows the functionality in the core C++ files to be accessed from R.</p>
-<ul>
-<li>NodeWrapper.h - wrapper class for ‘Node’. This class is exposed to R as ‘CppNode’.</li>
-<li>QuadtreeWrapper.h - wrapper class for ‘Quadtree’. This class is exposed to R as ‘CppQuadtree’.</li>
-<li>ShortestPathFinderWrapper.h - wrapper class for ‘ShortestPathFinder’. This class is exposed to R as ‘CppShortestPathFinder’.</li>
-<li>R_Interface.h - defines a namespace that currently contains only a single function, which converts an Rcpp matrix to the Matrix class I created. This function is separate from the other files because it is a general-purpose function and thus didn’t fit in any of the wrapper classes.</li>
-<li>load_modules.cpp - contains code that exposes the wrapper classes to R using Rcpp modules.</li>
-</ul>
-</div>
-<div id="r-code" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-code" class="anchor"></a>R code</h3>
-<p>Almost all of the core functionality of the quadtree package is contained in the C++ code, and the R code serves primarily as an interface for working with the C++ quadtree data structure. A Quadtree S4 class is defined which consists only of one slot, which contains a ‘CppQuadtree’ object. The methods for this class are often quite simple, merely consisting of calling one of the methods on the CppQuadtree object. Using this approach has a few benefits. First, wrapping the C++ class in an S4 class allows the quadtree functionality to be accessed in a way that is much more consistent with typical R syntax, which will hopefully be more intuitive to R users. Second, it allows for me to add R code to validate and make any necessary modifications to parameters before calling the C++ methods - this helps make the functions more robust. This also allows me to take advantage of existing R functionality (for example, resampling a raster from the ‘raster’ package).</p>
-<p>I won’t discuss each R file/function here - see the documentation PDF for details on each R function.</p>
-</div>
+<p>Three vignettes are included in this package - these are intended to serve as an introduction to using the <code>quadtree</code> package. They can be accessed online by visiting the <a href="https://dfriend21.github.io/quadtree/index.html">website</a> and selecting the “Articles” tab on the top navigation bar. If you have installed the package, you can see the available vignettes by running <code><a href="https://rdrr.io/r/utils/vignette.html">vignettes(package = "quadtree")</a></code> and view the vignettes using <code><a href="https://rdrr.io/r/utils/vignette.html">vignettes("vignette-name", package = "quadtree")</a></code>.</p>
+<p>I’d recommend beginning with “Quadtree Creation” - this covers the process of creating quadtrees. Next, I’d suggest reading “Using Quadtrees”, which covers methods for interacting and using a quadtree. If you plan on using the least-cost path functionality, check out “Finding Least-cost Paths on a Quadtree”.</p>
 </div>
 </div>
   </div>
