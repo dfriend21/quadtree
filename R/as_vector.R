@@ -5,6 +5,8 @@
 #' @title Get All Cell Values in a Vector
 #' @description Returns all cell values as a numeric vector
 #' @param x a \code{\link{Quadtree}} object
+#' @param terminal_only boolean; if TRUE (the default) only values of terminal
+#'   cells are returned. If FALSE, all cell values are returned.
 #' @seealso \code{\link{as_data_frame}} creates a data frame from a quadtree
 #'   that has all the cell values as well as details about each cell's size and
 #'   extent.

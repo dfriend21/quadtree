@@ -9,6 +9,9 @@
 }
 \arguments{
 \item{x}{a \code{\link{Quadtree}} object}
+
+\item{terminal_only}{boolean; if TRUE (the default) only values of terminal
+cells are returned. If FALSE, all cell values are returned.}
 }
 \description{
 Returns all cell values as a numeric vector
