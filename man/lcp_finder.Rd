@@ -38,7 +38,7 @@ See the vignette 'quadtree-lcp' for more details and examples (i.e. run
   \code{vignette("quadtree-lcp", package = "quadtree")})
 }
 \examples{
-####### NOTE ####### 
+####### NOTE #######
 # see the "quadtree-lcp" vignette for more details and examples:
 # vignette("quadtree-lcp", package = "quadtree")
 ####################

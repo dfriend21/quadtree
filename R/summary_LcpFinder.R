@@ -15,7 +15,7 @@
 #' @examples
 #' data(habitat)
 #' qt <- quadtree(habitat, .1)
-#' 
+#'
 #' start_point <- c(6989, 34007)
 #' end_point <- c(33015, 38162)
 #' lcpf <- lcp_finder(qt, start_point)

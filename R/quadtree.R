@@ -26,7 +26,7 @@
 #'   in a quadrant) and \code{args} (a named list of arguments used within the
 #'   function), and must output \code{TRUE} if the quadrant is to be split and
 #'   \code{FALSE} otherwise. It must be able to handle \code{NA} values - if
-#'   \code{NA} is ever returned, an error will occur. 
+#'   \code{NA} is ever returned, an error will occur.
 #' @param split_args list; named list that contains the arguments needed by
 #'   \code{split_fun}. This list is given to the \code{args} parameter of
 #'   \code{split_fun}
@@ -89,7 +89,7 @@
 #'   The 'quadtree-creation' vignette contains detailed explanations and
 #'   examples for all of the various creation options - run
 #'   \code{vignettes("quadtree-creation")} to view the vignette.
-#' 
+#'
 #'   If \code{adj_type} is "expand", NA cells are added to the raster in order
 #'   to create an expanded raster whose dimensions are a power of 2. The
 #'   smallest number that is a power of two but greater than the larger
@@ -98,36 +98,36 @@
 #'   \code{resample_n_side} rows and columns. If \code{resample_pad_NAs} is
 #'   \code{TRUE}, \code{NA} rows and columns are are added to the raster before
 #'   resampling so that the cells remain square.
-#'   
+#'
 #'   When \code{split_method} is "range", the difference between the maximum and
 #'   minimum cell values in a quadrant is calculated - if this value is greater
 #'   than \code{split_threshold}, the quadrant is split. When
 #'   \code{split_method} is "sd", the standard deviation of the cell values in a
 #'   quadrant is calculated - if this value is greater than
 #'   \code{split_threshold}, the quadrant is split.
-#'   
+#' @return a \code{\link{Quadtree}} object
 #' @examples
-#' ####### NOTE ####### 
-#' # see the "quadtree-creation" vignette (run 'vignette("quadtree-creation")') 
+#' ####### NOTE #######
+#' # see the "quadtree-creation" vignette (run 'vignette("quadtree-creation")')
 #' # to see examples for all of the different parameter options.
 #' ####################
-#' 
+#'
 #' library(quadtree)
 #'
 #' # retrieve the sample data
 #' data(habitat)
-#' 
+#'
 #' qt <- quadtree(habitat, .15)
 #' plot(qt)
 #' # we can make it look nicer by customizing the plotting parameters
 #' plot(qt, crop = TRUE, na_col = NULL, border_lwd = .3)
-#' 
+#'
 #' # try a different splitting method
 #' qt <- quadtree(habitat, .05, "sd")
 #' plot(qt)
-#' 
+#'
 #' #---- using a custom split function ----
-#' 
+#'
 #' # split a cell if any of the values are below a given value
 #' split_fun = function(vals, args) {
 #'   if (any(is.na(vals))) { # check for NAs first

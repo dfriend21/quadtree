@@ -12,6 +12,30 @@
 #' available methods can be found on the \code{\link{CppQuadtree}} documentation
 #' page.
 #' @slot ptr a C++ object of class \code{CppQuadtree}
+#' @details
+#' Functions for creating a \code{Quadtree} object: \itemize{
+#'   \item \code{\link{quadtree}()}
+#'   \item \code{\link{read_quadtree}()}
+#' }
+#' Methods:
+#' \itemize{
+#'   \item \code{\link{as_data_frame}()}
+#'   \item \code{\link{as_raster}()}
+#'   \item \code{\link{as_vector}()}
+#'   \item \code{\link{copy}()}
+#'   \item \code{\link{extent}()}
+#'   \item \code{\link{extract}()}
+#'   \item \code{\link{get_neighbors}()}
+#'   \item \code{\link{lcp_finder}()}
+#'   \item \code{\link{n_cells}()}
+#'   \item \code{\link{projection}()}
+#'   \item \code{\link[=plot.Quadtree]{plot}()}
+#'   \item \code{\link{set_values}()}
+#'   \item \code{\link[=show.Quadtree]{show}()}
+#'   \item \code{\link[=summary.Quadtree]{summary}()}
+#'   \item \code{\link{transform_values}()}
+#'   \item \code{\link{write_quadtree}()}
+#' }
 #' @export
 setClass("Quadtree",
    slots = c(
@@ -44,6 +68,18 @@ setClass("Quadtree",
 #' the available methods can be found on the \code{\link{CppShortestPathFinder}}
 #' documentation page.
 #' @slot ptr a C++ object of class \code{CppShortestPathFinder}
+#' @details
+#' Functions for creating a \code{LcpFinder} object: \itemize{
+#'   \item \code{\link{lcp_finder}()}
+#' }
+#' Methods: \itemize{
+#'   \item \code{\link{find_lcp}()}
+#'   \item \code{\link{find_lcps}()}
+#'   \item \code{\link[=plot.LcpFinder]{plot}()}
+#'   \item \code{\link[=show.LcpFinder]{show}()}
+#'   \item \code{\link{summarize_lcps()}}
+#'   \item \code{\link[=summary.LcpFinder]{summary}()}
+#' }
 #' @export
 setClass("LcpFinder",
   slots = c(

@@ -80,8 +80,8 @@ Note that the name of the class as it is defined is actually
 }}
 
 \item{\code{asVector}}{\itemize{
-  \item \strong{Description}: returns cell values as a vector. \code{\link{as_vector}()}
-  is a wrapper for this function.
+  \item \strong{Description}: returns cell values as a vector.
+  \code{\link{as_vector}()} is a wrapper for this function.
   \item \strong{Parameters}: \itemize{
     \item \code{terminalOnly}: boolean; if \code{TRUE}, returns only the
     values of the terminal cells. If \code{FALSE}, returns all cell values

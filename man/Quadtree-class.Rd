@@ -16,6 +16,31 @@ they are meant for internal use. That being said, descriptions of the
 available methods can be found on the \code{\link{CppQuadtree}} documentation
 page.
 }
+\details{
+Functions for creating a \code{Quadtree} object: \itemize{
+  \item \code{\link{quadtree}()}
+  \item \code{\link{read_quadtree}()}
+}
+Methods:
+\itemize{
+  \item \code{\link{as_data_frame}()}
+  \item \code{\link{as_raster}()}
+  \item \code{\link{as_vector}()}
+  \item \code{\link{copy}()}
+  \item \code{\link{extent}()}
+  \item \code{\link{extract}()}
+  \item \code{\link{get_neighbors}()}
+  \item \code{\link{lcp_finder}()}
+  \item \code{\link{n_cells}()}
+  \item \code{\link{projection}()}
+  \item \code{\link[=plot.Quadtree]{plot}()}
+  \item \code{\link{set_values}()}
+  \item \code{\link[=show.Quadtree]{show}()}
+  \item \code{\link[=summary.Quadtree]{summary}()}
+  \item \code{\link{transform_values}()}
+  \item \code{\link{write_quadtree}()}
+}
+}
 \section{Slots}{
 
 \describe{

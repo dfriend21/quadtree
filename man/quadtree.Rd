@@ -127,6 +127,9 @@ extent and dimensions as \code{x}. If \code{template_quadtree} is
 non-\code{NULL}, all \code{split_}* parameters are disregarded, as are
 \code{max_cell_length} and \code{min_cell_length}}
 }
+\value{
+a \code{\link{Quadtree}} object
+}
 \description{
 Create a \code{\link{Quadtree}} from gridded data
 }
@@ -143,7 +146,7 @@ The 'quadtree-creation' vignette contains detailed explanations and
   \code{resample_n_side} rows and columns. If \code{resample_pad_NAs} is
   \code{TRUE}, \code{NA} rows and columns are are added to the raster before
   resampling so that the cells remain square.
-  
+
   When \code{split_method} is "range", the difference between the maximum and
   minimum cell values in a quadrant is calculated - if this value is greater
   than \code{split_threshold}, the quadrant is split. When
@@ -152,8 +155,8 @@ The 'quadtree-creation' vignette contains detailed explanations and
   \code{split_threshold}, the quadrant is split.
 }
 \examples{
-####### NOTE ####### 
-# see the "quadtree-creation" vignette (run 'vignette("quadtree-creation")') 
+####### NOTE #######
+# see the "quadtree-creation" vignette (run 'vignette("quadtree-creation")')
 # to see examples for all of the different parameter options.
 ####################
 

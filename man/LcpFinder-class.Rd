@@ -17,6 +17,19 @@ methods - they are meant for internal use. That being said, descriptions of
 the available methods can be found on the \code{\link{CppShortestPathFinder}}
 documentation page.
 }
+\details{
+Functions for creating a \code{LcpFinder} object: \itemize{
+  \item \code{\link{lcp_finder}()}
+}
+Methods: \itemize{
+  \item \code{\link{find_lcp}()}
+  \item \code{\link{find_lcps}()}
+  \item \code{\link[=plot.LcpFinder]{plot}()}
+  \item \code{\link[=show.LcpFinder]{show}()}
+  \item \code{\link{summarize_lcps()}}
+  \item \code{\link[=summary.LcpFinder]{summary}()}
+}
+}
 \section{Slots}{
 
 \describe{

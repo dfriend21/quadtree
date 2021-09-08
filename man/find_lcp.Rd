@@ -36,7 +36,7 @@ algorithm.}
    }
 
   If no path is possible between the two points, a 0-row matrix with the
-  previously described columns is returned. 
+  previously described columns is returned.
 
   IMPORTANT NOTE: the \code{use_original_end_points} options ONLY changes the
   x and y coordinates of the first and last points - it doesn't change the
@@ -54,7 +54,7 @@ See the vignette 'quadtree-lcp' for more details and examples (i.e. run
   \code{vignette("quadtree-lcp", package = "quadtree")})
 }
 \examples{
-####### NOTE ####### 
+####### NOTE #######
 # see the "quadtree-lcp" vignette for more details and examples:
 # vignette("quadtree-lcp", package = "quadtree")
 ####################

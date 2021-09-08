@@ -27,9 +27,9 @@ no return value
 Plots a LcpFinder object
 }
 \details{
-\code{points()} plots points at the centroids of the cells to which a
-  path has been found. \code{lines()} plots all of the LCPs found so far by the
-  LcpFinder object.
+\code{points()} plots points at the centroids of the cells to which
+  a path has been found. \code{lines()} plots all of the LCPs found so far by
+  the LcpFinder object.
 }
 \examples{
 data(habitat)

@@ -37,7 +37,7 @@ limit, it would still return \emph{all} of the LCPs - even those that are
 greater than the specified limit, since the tree never shrinks.
 }
 \examples{
-####### NOTE ####### 
+####### NOTE #######
 # see the "quadtree-lcp" vignette  for more details and examples:
 # vignette("quadtree-lcp", package = "quadtree")
 ####################

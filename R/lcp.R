@@ -18,7 +18,7 @@
 #'   (the default) any cell that overlaps with the box is included. If
 #'   \code{TRUE}, a cell is only included if its *centroid* falls inside the
 #'   box.
-#' @details 
+#' @details
 #'   See the vignette 'quadtree-lcp' for more details and examples (i.e. run
 #'   \code{vignette("quadtree-lcp", package = "quadtree")})
 #' @return returns an \code{LcpFinder} object
@@ -27,18 +27,18 @@
 #'   than some value. \code{\link{summarize_lcps}()} outputs a summary matrix of
 #'   all LCPs that have been calculated so far.
 #' @examples
-#' ####### NOTE ####### 
+#' ####### NOTE #######
 #' # see the "quadtree-lcp" vignette for more details and examples:
 #' # vignette("quadtree-lcp", package = "quadtree")
 #' ####################
-#' 
+#'
 #' library(quadtree)
 #'
 #' data(habitat)
 #' qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 #'
 #' #---- find the LCP to a single point ----
-#' 
+#'
 #' start_pt <- c(6989, 34007)
 #' end_pt <- c(33015, 38162)
 #'
@@ -109,7 +109,7 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
 #'   are replaced with the actual points specified by the user. Note that this
 #'   is done after the calculation and has no effect on the path found by the
 #'   algorithm.
-#' @details 
+#' @details
 #'   See the vignette 'quadtree-lcp' for more details and examples (i.e. run
 #'   \code{vignette("quadtree-lcp", package = "quadtree")})
 #' @return \code{find_lcp} returns a five column matrix representing the
@@ -125,7 +125,7 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
 #'    }
 #'
 #'   If no path is possible between the two points, a 0-row matrix with the
-#'   previously described columns is returned. 
+#'   previously described columns is returned.
 #'
 #'   IMPORTANT NOTE: the \code{use_original_end_points} options ONLY changes the
 #'   x and y coordinates of the first and last points - it doesn't change the
@@ -138,11 +138,11 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
 #'   whose cost-distance is less than some value. \code{\link{summarize_lcps}()}
 #'   outputs a summary matrix of all LCPs that have been calculated so far.
 #' @examples
-#' ####### NOTE ####### 
+#' ####### NOTE #######
 #' # see the "quadtree-lcp" vignette for more details and examples:
 #' # vignette("quadtree-lcp", package = "quadtree")
 #' ####################
-#' 
+#'
 #' library(quadtree)
 #'
 #' # create a quadtree
@@ -169,7 +169,7 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
       stop("'y' must be a numeric vector with length 2")
     if (any(is.na(y)))
       stop("'y' contains NA values")
-    
+
     mat <- x@ptr$getShortestPath(y)
     if (use_original_end_points && nrow(mat) > 0) {
       mat[1, 1:2] <- x@ptr$getStartPoint()
@@ -184,7 +184,7 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #' @title Find LCPs to surrounding points
 #' @description Calculates the LCPs to surrounding points. A constraint can be
 #'   placed on the LCPs, so that only LCPs that are less than some specified
-#'   cost-distance are returned. 
+#'   cost-distance are returned.
 #' @param x the \code{LcpFinder} object returned from \code{\link{lcp_finder}}
 #' @param limit numeric; the maximum cost-distance for the LCPs. If \code{NULL}
 #'   (the default), no limit is applied and all possible LCPs (within the
@@ -207,27 +207,27 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #'   LCP between two points. \code{\link{summarize_lcps}()} outputs a summary
 #'   matrix of all LCPs that have been calculated so far.
 #' @examples
-#' ####### NOTE ####### 
+#' ####### NOTE #######
 #' # see the "quadtree-lcp" vignette  for more details and examples:
 #' # vignette("quadtree-lcp", package = "quadtree")
 #' ####################
-#' 
+#'
 #' library(quadtree)
-#' 
+#'
 #' # create a quadtree
 #' data(habitat)
 #' qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
-#' 
+#'
 #' start_pt <- c(19000, 25000)
-#' 
+#'
 #' # finds LCPs to all cells
 #' lcpf1 <- lcp_finder(qt, start_pt)
 #' paths1 <- find_lcps(lcpf1, limit = NULL)
-#' 
+#'
 #' # limit LCPs by cost-distance
 #' lcpf2 <- lcp_finder(qt, start_pt)
 #' paths2 <- find_lcps(lcpf2, limit = 5000)
-#' 
+#'
 #' # Now plot the reachable cells
 #' plot(qt, crop = TRUE, na_col = NULL, border_lwd = .3)
 #' points(lcpf1, col = "black", pch = 16, cex = 1)
