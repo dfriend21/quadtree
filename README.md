@@ -12,7 +12,7 @@ variable-sized cells.
 The package can be installed with the following R command:
 
 ``` r
-devtools::install_github("dafriend/quadtree")
+devtools::install_github("dfriend21/quadtree")
 ```
 
 ## Documentation
@@ -28,11 +28,11 @@ A quadtree object is created from a raster or matrix:
 ``` r
 library(quadtree)
 
-data(habitat, package = "quadtree") #load sample data
-qt <- quadtree(habitat, .03, "sd") #create a quadtree
+data(habitat, package = "quadtree") # load sample data
+qt <- quadtree(habitat, .03, "sd") # create a quadtree
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-example_plot-1.png" width="100%" />
 
 The package allows for flexibility in the quadtree creation process.
 Several functions defining how to split and aggregate cells are

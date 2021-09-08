@@ -22,7 +22,7 @@ This package provides functionality for working with raster-like quadtrees (also
 The package can be installed with the following R command:
 
 ``` r
-devtools::install_github("dafriend/quadtree")
+devtools::install_github("dfriend21/quadtree")
 ```
 
 ## Documentation
@@ -33,14 +33,14 @@ Visit the [package website](https://dfriend21.github.io/quadtree/index.html) for
 
 A quadtree object is created from a raster or matrix:
 
-```{r example_create, fig.width=10, fig.height=5, out.width="100%"}
+```{r example_create}
 library(quadtree)
 
-data(habitat, package = "quadtree") #load sample data
-qt <- quadtree(habitat, .03, "sd") #create a quadtree
+data(habitat, package = "quadtree") # load sample data
+qt <- quadtree(habitat, .03, "sd") # create a quadtree
 ```
 
-```{r echo=FALSE}
+```{r example_plot, echo=FALSE, fig.width=10, fig.height=5, out.width="100%", dev="png"}
 par(mfrow = c(1, 2), mar = c(3, 2, 2, 2))
 plot(habitat, zlim = c(0, 1), main = "raster representation", axes=FALSE,
      box = FALSE)
