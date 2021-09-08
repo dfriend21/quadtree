@@ -1,10 +1,8 @@
 src/*.o
 src/*.so
-other_files/output/*
 *.DS_store
 *.Rhistory
 .Rproj.user
-raw_data
 inst/doc
 /doc/
 /Meta/
