@@ -1,7 +1,7 @@
 Package: quadtree
 Type: Package
 Title: Quadtree Representation of Rasters
-Version: 0.0.0.9000
+Version: 0.0.1
 Date: 2021-01-26
 Authors@R:
     c(person("Derek", "Friend", role = c("aut","cre"), email = "dafriend.R@gmail.com"),
@@ -21,7 +21,7 @@ Imports:
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 NeedsCompilation: yes
-URL: https://github.com/dfriend21/quadtree
+URL: https://dfriend21.github.io/quadtree
 Depends: 
     R (>= 2.10)
 Suggests: 
@@ -31,9 +31,9 @@ Suggests:
 Config/testthat/edition: 3
 Encoding: UTF-8
 Collate: 
+    'CppLcpFinder-class.R'
     'CppNode-class.R'
     'CppQuadtree-class.R'
-    'CppShortestPathFinder-class.R'
     'classes.R'
     'generics.R'
     'as_data_frame.R'
@@ -46,8 +46,8 @@ Collate:
     'get_neighbors.R'
     'lcp.R'
     'n_cells.R'
-    'plot.R'
     'plot_LcpFinder.R'
+    'plot_Quadtree.R'
     'projection.R'
     'qtree-exports.R'
     'quadtree-package.R'
