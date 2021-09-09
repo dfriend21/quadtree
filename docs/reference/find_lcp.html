@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Find the LCP between two points on a quadtree — find_lcp • quadtree</title>
+<title>Find the LCP between two points on a Quadtree — find_lcp • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,10 @@
 
 
 
-<meta property="og:title" content="Find the LCP between two points on a quadtree — find_lcp" />
-<meta property="og:description" content="Finds the least cost path (LCP) between two points, using a
-  quadtree as a resistance surface" />
+<meta property="og:title" content="Find the LCP between two points on a Quadtree — find_lcp" />
+<meta property="og:description" content="Finds the least-cost path (LCP) from the start point (the point
+  used to create the LcpFinder) to another point, using a
+  Quadtree as a resistance surface" />
 
 
 
@@ -73,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -111,12 +112,7 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -130,14 +126,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Find the LCP between two points on a quadtree</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/lcp.R'><code>R/lcp.R</code></a></small>
+    <h1>Find the LCP between two points on a <code><a href='Quadtree-class.html'>Quadtree</a></code></h1>
+    
     <div class="hidden name"><code>find_lcp.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Finds the least cost path (LCP) between two points, using a
-  quadtree as a resistance surface</p>
+    <p>Finds the least-cost path (LCP) from the start point (the point
+  used to create the <code><a href='LcpFinder-class.html'>LcpFinder</a></code>) to another point, using a
+  <code><a href='Quadtree-class.html'>Quadtree</a></code> as a resistance surface</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for LcpFinder,numeric</span>
@@ -148,8 +145,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>the <code><a href='LcpFinder-class.html'>LcpFinder</a></code> object returned from
-<code>lcp_finder</code></p></td>
+      <td><p>a <code><a href='LcpFinder-class.html'>LcpFinder</a></code></p></td>
     </tr>
     <tr>
       <th>y</th>
@@ -183,12 +179,12 @@ algorithm.</p></td>
 
 <p>If no path is possible between the two points, a 0-row matrix with the
   previously described columns is returned.</p>
-<p>IMPORTANT NOTE: the <code>use_original_end_points</code> options ONLY changes the
-  x and y coordinates of the first and last points - it doesn't change the
-  <code>cost_tot</code> or <code>dist_tot</code> columns. This means that even though the
-  start and end points have changed, the <code>cost_tot</code> and <code>dist_tot</code>
-  columns still represent the cost and distance using the cell centroids of
-  the start and end cells.</p>
+<p><strong>Important note:</strong> the <code>use_original_end_points</code> option
+  <strong>only</strong> changes the x and y coordinates of the first and last points
+  - it doesn't change the <code>cost_tot</code> or <code>dist_tot</code> columns. This
+  means that even though the start and end points have changed, the
+  <code>cost_tot</code> and <code>dist_tot</code> columns still represent the cost and
+  distance using the cell centroids of the start and end cells.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>See the vignette 'quadtree-lcp' for more details and examples (i.e. run
@@ -201,15 +197,15 @@ algorithm.</p></td>
   outputs a summary matrix of all LCPs that have been calculated so far.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>####### NOTE ####### </span>
+    <pre class="examples"><div class='input'><span class='co'>####### NOTE #######</span>
 <span class='co'># see the "quadtree-lcp" vignette for more details and examples:</span>
 <span class='co'># vignette("quadtree-lcp", package = "quadtree")</span>
 <span class='co'>####################</span>
 
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dfriend21/quadtree'>quadtree</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dfriend21.github.io/quadtree'>quadtree</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
 
 <span class='co'># create a quadtree</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
 <span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, adj_type <span class='op'>=</span> <span class='st'>"expand"</span><span class='op'>)</span>
 <span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt</span>, crop <span class='op'>=</span> <span class='cn'>TRUE</span>, na_col <span class='op'>=</span> <span class='cn'>NULL</span>, border_lwd <span class='op'>=</span> <span class='fl'>.4</span><span class='op'>)</span>
 </div><div class='img'><img src='find_lcp-1.png' alt='' width='700' height='433' /></div><div class='input'>

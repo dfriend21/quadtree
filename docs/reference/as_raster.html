@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a Raster from a Quadtree — as_raster • quadtree</title>
+<title>Create a raster from a Quadtree — as_raster • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Create a Raster from a Quadtree — as_raster" />
-<meta property="og:description" content="Creates a raster from a quadtree" />
+<meta property="og:title" content="Create a raster from a Quadtree — as_raster" />
+<meta property="og:description" content="Creates a RasterLayer
+  from a Quadtree." />
 
 
 
@@ -72,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -110,12 +111,7 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -129,13 +125,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a Raster from a Quadtree</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/as_raster.R'><code>R/as_raster.R</code></a></small>
+    <h1>Create a raster from a <code><a href='Quadtree-class.html'>Quadtree</a></code></h1>
+    
     <div class="hidden name"><code>as_raster.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Creates a raster from a quadtree</p>
+    <p>Creates a <code><a href='https://rdrr.io/pkg/raster/man/Raster-classes.html'>RasterLayer</a></code>
+  from a <code><a href='Quadtree-class.html'>Quadtree</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for Quadtree</span>
@@ -146,11 +143,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>The <code><a href='Quadtree-class.html'>Quadtree</a></code> object to create the raster from</p></td>
+      <td><p>a <code><a href='Quadtree-class.html'>Quadtree</a></code></p></td>
     </tr>
     <tr>
       <th>rast</th>
-      <td><p>A <code>RasterLayer</code> object; optional; this will be used as a
+      <td><p>a <code><a href='https://rdrr.io/pkg/raster/man/Raster-classes.html'>RasterLayer</a></code> object; optional; this will be used as a
 template - the output raster will have the same extent and dimensions as
 this raster. If <code>NULL</code> (the default), a raster is automatically
 created, where the quadtree extent is used as the raster extent, and the
@@ -161,7 +158,7 @@ raster.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>RasterLayer</code> object</p>
+    <p>a <code><a href='https://rdrr.io/pkg/raster/man/Raster-classes.html'>RasterLayer</a></code> object</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Note that the value of a raster cell is determined by the value of the
@@ -179,10 +176,9 @@ the issue.</p>
 #&gt; <span class='message'>Attaching package: ‘raster’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:quadtree’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    projection, projection&lt;-</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
-<span class='va'>rast</span> <span class='op'>&lt;-</span> <span class='va'>habitat</span>
 
 <span class='co'># create a quadtree</span>
-<span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>rast</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, split_method <span class='op'>=</span> <span class='st'>"sd"</span><span class='op'>)</span>
+<span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, split_method <span class='op'>=</span> <span class='st'>"sd"</span><span class='op'>)</span>
 
 <span class='va'>rst1</span> <span class='op'>&lt;-</span> <span class='fu'>as_raster</span><span class='op'>(</span><span class='va'>qt</span><span class='op'>)</span> <span class='co'># use the default raster</span>
 <span class='va'>rst2</span> <span class='op'>&lt;-</span> <span class='fu'>as_raster</span><span class='op'>(</span><span class='va'>qt</span>, <span class='va'>habitat</span><span class='op'>)</span> <span class='co'># use another raster as a template</span>

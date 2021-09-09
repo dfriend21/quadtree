@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot a Quadtree object — plot • quadtree</title>
+<title>Plot a Quadtree — plot • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Plot a Quadtree object — plot" />
-<meta property="og:description" content="Plot a Quadtree object" />
+<meta property="og:title" content="Plot a Quadtree — plot" />
+<meta property="og:description" content="Plot a Quadtree" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -110,12 +110,7 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -129,13 +124,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot a <code><a href='Quadtree-class.html'>Quadtree</a></code> object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/plot.R'><code>R/plot.R</code></a></small>
+    <h1>Plot a <code><a href='Quadtree-class.html'>Quadtree</a></code></h1>
+    
     <div class="hidden name"><code>plot.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot a <code><a href='Quadtree-class.html'>Quadtree</a></code> object</p>
+    <p>Plot a <code><a href='Quadtree-class.html'>Quadtree</a></code></p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for Quadtree,missing</span>
@@ -163,23 +158,23 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code><a href='Quadtree-class.html'>Quadtree</a></code> object</p></td>
+      <td><p>a <code><a href='Quadtree-class.html'>Quadtree</a></code></p></td>
     </tr>
     <tr>
       <th>add</th>
-      <td><p>boolean; if <code>TRUE</code>, the quadtree plot is added to the
-existing plot</p></td>
+      <td><p>boolean; if <code>FALSE</code> (the default) a new plot is created. If
+<code>TRUE</code>, the plot is added to the existing plot</p></td>
     </tr>
     <tr>
       <th>col</th>
       <td><p>character vector; the colors that will be used to create the
 color ramp used in the plot. If no argument is provided,
-<code><a href='https://rdrr.io/r/grDevices/palettes.html'>terrain.colors(100,rev=TRUE)</a></code> is used.</p></td>
+<code><a href='https://rdrr.io/r/grDevices/palettes.html'>terrain.colors(100, rev = TRUE)</a></code> is used.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
       <td><p>numeric; transparency of the cell colors. Must be in the range
-0-1, where 0 is fully transparent and 1 is fully opaque.</p></td>
+0-1, where 0 is fully transparent and 1 (the default) is fully opaque.</p></td>
     </tr>
     <tr>
       <th>nb_line_col</th>
@@ -190,44 +185,45 @@ plotted</p></td>
     <tr>
       <th>border_col</th>
       <td><p>character; the color to use for the cell borders. Use
-'transparent' if you don't want borders to be shown</p></td>
+'transparent' if you don't want borders to be shown. Default is "black".</p></td>
     </tr>
     <tr>
       <th>border_lwd</th>
-      <td><p>numeric; the line width of the cell borders - passed to the
-'lwd' parameter of the 'rect' function</p></td>
+      <td><p>numeric; the line width of the cell borders. Default is 1.</p></td>
     </tr>
     <tr>
       <th>xlim</th>
       <td><p>two element numeric vector; optional; defines the minimum and
-maximum values of the x axis.</p></td>
+maximum values of the x axis. Note that this overrides the <code>crop</code>
+parameter.</p></td>
     </tr>
     <tr>
       <th>ylim</th>
       <td><p>two element numeric vector; optional; defines the minimum and
-maximum values of the y axis.</p></td>
+maximum values of the y axis. Note that this overrides the <code>crop</code>
+parameter.</p></td>
     </tr>
     <tr>
       <th>zlim</th>
       <td><p>two element numeric vector; optional; defines how the colors are
-assigned to the cell values. If this value is <code>NULL</code> (the default), it
-uses the min and max cell values. In this case, the first color in
-<code>col</code> corresponds to the lowest cell value and the last color is
-<code>col</code> corresponds to the highest cell value. If <code>zlim</code> does not
-encompass the entire range of cell values, cells that have values outside
-of the range specified by <code>zlim</code> will be treated as NA cells.</p></td>
+assigned to the cell values.  The first color in <code>col</code> will correspond
+to <code>zlim[1]</code> and the last color in <code>col</code> will correspond to
+<code>zlim[2]</code>. If <code>zlim</code> does not encompass the entire range of cell
+values, cells that have values outside of the range specified by
+<code>zlim</code> will be treated as <code>NA</code> cells. If this value is
+<code>NULL</code> (the default), it uses the min and max cell values.</p></td>
     </tr>
     <tr>
       <th>crop</th>
       <td><p>boolean; if <code>TRUE</code>, only displays the extent of the original
-raster, thus ignoring any of the NA cells that were added to pad the raster
-before making the quadtree. Ignored if either <code>xlim</code> or <code>ylim</code>
-are non-<code>NULL</code></p></td>
+raster, thus ignoring any of the <code>NA</code> cells that were added to pad the
+raster before making the quadtree. Ignored if either <code>xlim</code> or
+<code>ylim</code> are non-<code>NULL</code></p></td>
     </tr>
     <tr>
       <th>na_col</th>
-      <td><p>character; the color to use for NA cells. If <code>NULL</code>, NA
-cells are not plotted</p></td>
+      <td><p>character; the color to use for <code>NA</code> cells. If
+<code>NULL</code>, <code>NA</code> cells are not plotted. Default is "white"</p></td>
     </tr>
     <tr>
       <th>adj_mar_auto</th>
@@ -245,18 +241,22 @@ the right margin</p></td>
     <tr>
       <th>legend_args</th>
       <td><p>named list; contains arguments that are sent to the
-<code><a href='add_legend.html'>add_legend</a></code> function. See the help page for <code>add_legend</code>
-for the parameters. Note that <code>zlim</code>, <code>cols</code>, and <code>alpha</code>
-are supplied automatically, so if the list contains elements named
-<code>zlim</code>, <code>cols</code>, or <code>alpha</code> the user-provided values will be
-ignored.</p></td>
+<code><a href='add_legend.html'>add_legend</a>()</code> function. See the help page for
+<code><a href='add_legend.html'>add_legend</a>()</code> for the parameters. Note that <code>zlim</code>,
+<code>cols</code>, and <code>alpha</code> are supplied automatically, so if the list
+contains elements named <code>zlim</code>, <code>cols</code>, or <code>alpha</code> the
+user-provided values will be ignored.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>arguments passed to the default <code>plot</code> function</p></td>
+      <td><p>arguments passed to the default
+<code><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a>()</code> function</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>no return value</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>See 'Examples' for demonstrations of how the various options can be
@@ -265,16 +265,16 @@ used.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rspatial.org/raster'>raster</a></span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
-<span class='va'>rast</span> <span class='op'>&lt;-</span> <span class='va'>habitat</span>
+
 <span class='co'># create quadtree</span>
-<span class='va'>qt1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>rast</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, adj_type <span class='op'>=</span> <span class='st'>"expand"</span><span class='op'>)</span>
+<span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, adj_type <span class='op'>=</span> <span class='st'>"expand"</span><span class='op'>)</span>
 
 <span class='co'>#####################################</span>
 <span class='co'># DEFAULT</span>
 <span class='co'>#####################################</span>
 
 <span class='co'># default - no additional parameters provided</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#####################################</span>
 <span class='co'># CHANGE PLOT EXTENT</span>
@@ -284,64 +284,64 @@ used.</p>
 <span class='co'># passed to the default 'plot()' function</span>
 
 <span class='co'># crop extent to the original extent of the raster</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, crop <span class='op'>=</span> <span class='cn'>TRUE</span>, main <span class='op'>=</span> <span class='st'>"cropped"</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, crop <span class='op'>=</span> <span class='cn'>TRUE</span>, main <span class='op'>=</span> <span class='st'>"cropped"</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># crop and don't plot NA cells</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, crop <span class='op'>=</span> <span class='cn'>TRUE</span>, na_col <span class='op'>=</span> <span class='cn'>NULL</span>, main <span class='op'>=</span> <span class='st'>"cropped"</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, crop <span class='op'>=</span> <span class='cn'>TRUE</span>, na_col <span class='op'>=</span> <span class='cn'>NULL</span>, main <span class='op'>=</span> <span class='st'>"cropped"</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># use 'xlim' and 'ylim' to zoom in on an area</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10000</span>, <span class='fl'>20000</span><span class='op'>)</span>, ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>20000</span>, <span class='fl'>30000</span><span class='op'>)</span>, main <span class='op'>=</span> <span class='st'>"zoomed in"</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10000</span>, <span class='fl'>20000</span><span class='op'>)</span>, ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>20000</span>, <span class='fl'>30000</span><span class='op'>)</span>, main <span class='op'>=</span> <span class='st'>"zoomed in"</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#####################################</span>
-<span class='co'># COLORS</span>
+<span class='co'># COLORS AND BORDERS</span>
 <span class='co'>#####################################</span>
 
 <span class='co'># change border color and width</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, border_col <span class='op'>=</span> <span class='st'>"transparent"</span><span class='op'>)</span> <span class='co'>#no borders</span>
-</div><div class='img'><img src='plot-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, border_col <span class='op'>=</span> <span class='st'>"gray60"</span><span class='op'>)</span> <span class='co'>#gray borders</span>
-</div><div class='img'><img src='plot-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, border_lwd <span class='op'>=</span> <span class='fl'>.3</span><span class='op'>)</span> <span class='co'>#change line thickness of borders</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, border_col <span class='op'>=</span> <span class='st'>"transparent"</span><span class='op'>)</span> <span class='co'># no borders</span>
+</div><div class='img'><img src='plot-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, border_col <span class='op'>=</span> <span class='st'>"gray60"</span><span class='op'>)</span> <span class='co'># gray borders</span>
+</div><div class='img'><img src='plot-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, border_lwd <span class='op'>=</span> <span class='fl'>.3</span><span class='op'>)</span> <span class='co'># change line thickness of borders</span>
 </div><div class='img'><img src='plot-7.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># change color palette</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"blue"</span>, <span class='st'>"yellow"</span>, <span class='st'>"red"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-8.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>hcl.colors</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-9.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"black"</span>, <span class='st'>"white"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"blue"</span>, <span class='st'>"yellow"</span>, <span class='st'>"red"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='plot-8.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>hcl.colors</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='plot-9.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"black"</span>, <span class='st'>"white"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-10.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># change color transparency</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, alpha <span class='op'>=</span> <span class='fl'>.5</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"blue"</span>, <span class='st'>"yellow"</span>, <span class='st'>"red"</span><span class='op'>)</span>, alpha <span class='op'>=</span> <span class='fl'>.5</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, alpha <span class='op'>=</span> <span class='fl'>.5</span><span class='op'>)</span>
+</div><div class='img'><img src='plot-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"blue"</span>, <span class='st'>"yellow"</span>, <span class='st'>"red"</span><span class='op'>)</span>, alpha <span class='op'>=</span> <span class='fl'>.5</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-12.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># change color of NA cells</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, na_col <span class='op'>=</span> <span class='st'>"lavender"</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, na_col <span class='op'>=</span> <span class='st'>"lavender"</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-13.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># don't plot NA cells at all</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, na_col <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, na_col <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-14.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># change 'zlim'</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, zlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-15.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, zlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.2</span>, <span class='fl'>.7</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, zlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='plot-15.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, zlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>.2</span>, <span class='fl'>.7</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-16.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#####################################</span>
 <span class='co'># SHOW NEIGHBOR CONNECTIONS</span>
 <span class='co'>#####################################</span>
 
 <span class='co'># plot all neighbor connections</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, nb_line_col <span class='op'>=</span> <span class='st'>"black"</span>, border_col <span class='op'>=</span> <span class='st'>"gray60"</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, nb_line_col <span class='op'>=</span> <span class='st'>"black"</span>, border_col <span class='op'>=</span> <span class='st'>"gray60"</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-17.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># don't plot connections to NA cells</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, nb_line_col <span class='op'>=</span> <span class='st'>"black"</span>, border_col <span class='op'>=</span> <span class='st'>"gray60"</span>, na_col <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, nb_line_col <span class='op'>=</span> <span class='st'>"black"</span>, border_col <span class='op'>=</span> <span class='st'>"gray60"</span>, na_col <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-18.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#####################################</span>
 <span class='co'># LEGEND</span>
 <span class='co'>#####################################</span>
 
 <span class='co'># no legend</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, legend <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, legend <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='input'>
 <span class='co'># increase right margin size</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, adj_mar_auto <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, adj_mar_auto <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-19.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># use 'legend_args' to customize the legend</span>
-<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt1</span>, adj_mar_auto <span class='op'>=</span> <span class='fl'>10</span>,
+<span class='fu'>plot</span><span class='op'>(</span><span class='va'>qt</span>, adj_mar_auto <span class='op'>=</span> <span class='fl'>10</span>,
      legend_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>lgd_ht_pct <span class='op'>=</span> <span class='fl'>.8</span>, bar_wd_pct <span class='op'>=</span> <span class='fl'>.4</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-20.png' alt='' width='700' height='433' /></div></pre>
   </div>

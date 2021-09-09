@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Change values of quadtree cells — set_values • quadtree</title>
+<title>Change values of Quadtree cells — set_values • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="Change values of quadtree cells — set_values" />
-<meta property="og:description" content="Given a quadtree, a set of points and a vector of new values,
-  changes the value of the quadtree cells containing the points to the
-  corresponding value" />
+<meta property="og:title" content="Change values of Quadtree cells — set_values" />
+<meta property="og:description" content="Given a Quadtree a set of points and a vector of
+  new values, changes the value of the quadtree cells containing the points
+  to the corresponding value" />
 
 
 
@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -112,12 +112,7 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -131,15 +126,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Change values of quadtree cells</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/set_values.R'><code>R/set_values.R</code></a></small>
+    <h1>Change values of <code><a href='Quadtree-class.html'>Quadtree</a></code> cells</h1>
+    
     <div class="hidden name"><code>set_values.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Given a quadtree, a set of points and a vector of new values,
-  changes the value of the quadtree cells containing the points to the
-  corresponding value</p>
+    <p>Given a <code><a href='Quadtree-class.html'>Quadtree</a></code> a set of points and a vector of
+  new values, changes the value of the quadtree cells containing the points
+  to the corresponding value</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for Quadtree,ANY,numeric</span>
@@ -150,7 +145,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A <code><a href='Quadtree-class.html'>Quadtree</a></code> object</p></td>
+      <td><p>A <code><a href='Quadtree-class.html'>Quadtree</a></code></p></td>
     </tr>
     <tr>
       <th>y</th>
@@ -160,8 +155,8 @@ contains the x-coordinates, second column contains the y-coordinates</p></td>
     <tr>
       <th>z</th>
       <td><p>A numeric vector the same length as the number of rows of
-<code>pts</code>. The values of the cells containing <code>pts</code> will be changed
-to the corresponding number in <code>vals</code>.</p></td>
+<code>y</code>. The values of the cells containing <code>y</code> will be changed
+to the corresponding value in <code>z</code>.</p></td>
     </tr>
     </table>
 
@@ -170,7 +165,7 @@ to the corresponding number in <code>vals</code>.</p></td>
     <p>No return value</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Note that it is entirely possible for <code>pts</code> to contain multiple points
+    <p>Note that it is entirely possible for <code>y</code> to contain multiple points
 that all fall within the same cell. The values are changed in the order
 given, so in this case the cell will take on the <em>last</em> value given for
 that cell.</p>
@@ -183,10 +178,9 @@ cell values will change.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
-<span class='va'>rast</span> <span class='op'>&lt;-</span> <span class='va'>habitat</span>
 
 <span class='co'># create a quadtree</span>
-<span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>rast</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span><span class='op'>)</span>
+<span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span><span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt</span>, main <span class='op'>=</span> <span class='st'>"original"</span><span class='op'>)</span>

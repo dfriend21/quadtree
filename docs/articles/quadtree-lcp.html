@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -68,14 +68,7 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -91,9 +84,9 @@
       <h1 data-toc-skip>Finding Least-Cost Paths on a Quadtree</h1>
                         <h4 class="author">Derek Friend</h4>
             
-            <h4 class="date">Last compiled on 07 September, 2021</h4>
+            <h4 class="date">Last compiled on 09 September, 2021</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/master/vignettes/quadtree-lcp.Rmd"><code>vignettes/quadtree-lcp.Rmd</code></a></small>
+      
       <div class="hidden name"><code>quadtree-lcp.Rmd</code></div>
 
     </div>
@@ -105,18 +98,12 @@
 <a href="#the-content-of-this-vignette" class="anchor"></a>The content of this vignette</h2>
 <p>This vignette goes over the process of finding least-cost paths (LCPs) using a quadtree as a resistance surface. Sample data provided with the <code>quadtree</code> package is used to construct the quadtree used as a resistance surface in the examples.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree">quadtree</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dfriend21.github.io/quadtree">quadtree</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span>
 <span class="va">rast</span> <span class="op">&lt;-</span> <span class="va">habitat</span>
-<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.04</span>, split_method <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rast</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"sample data: raster"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>,
-     zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"sample data: quadtree"</span><span class="op">)</span></code></pre></div>
-<p><img src="quadtree-lcp_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
+<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.04</span>, split_method <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="overview-of-least-cost-paths" class="section level2">
 <h2 class="hasAnchor">

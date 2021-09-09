@@ -40,14 +40,23 @@
 
 
 <meta property="og:title" content="Quadtree class — Quadtree-class" />
-<meta property="og:description" content="This S4 class is a wrapper around a CppQuadtree C++ object that is
-made available to R via the 'Rcpp' package. Instances of this class can be
-created through the quadtree() function.
-The methods of the C++ object (CppQuadtree) can be accessed
-from R, but the typical end-user should have no need of these methods -
-they are meant for internal use. That being said, descriptions of the
-available methods can be found on the CppQuadtree documentation
-page." />
+<meta property="og:description" content="This S4 class is essentially a wrapper around a CppQuadtree C++
+object. Quadtree has one slot, which is named ptr and contains
+a CppQuadtree object. Instances of this class can be created
+through the quadtree() function.
+An important note to make is that functions that modify a Quadtree
+modify the existing object. For example, running
+transform_values(qt, function(x) x+1) modifies qt. This
+differs from the way R objects usually function - most functions that modify
+R objects return a modified copy of the object, thus preserving the original
+object. Note that the copy() function, which makes a deep copy
+of a Quadtree, can be used to preserve a copy of a Quadtree
+before modifying it.
+The methods of the C++ object (CppQuadtree) stored in the
+ptr slot can be accessed from R, but the typical end-user should have
+no need of these methods - they are meant for internal use. That being said,
+descriptions of the available methods can be found on the
+CppQuadtree documentation page." />
 
 
 
@@ -79,7 +88,7 @@ page." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -117,12 +126,7 @@ page." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -137,22 +141,55 @@ page." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Quadtree class</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/classes.R'><code>R/classes.R</code></a></small>
+    
     <div class="hidden name"><code>Quadtree-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This S4 class is a wrapper around a <code>CppQuadtree</code> C++ object that is
-made available to R via the 'Rcpp' package. Instances of this class can be
-created through the <code><a href='quadtree.html'>quadtree</a>()</code> function.</p>
-<p>The methods of the C++ object (<code><a href='CppQuadtree-class.html'>CppQuadtree</a></code>) can be accessed
-from R, but the typical end-user should have no need of these methods -
-they are meant for internal use. That being said, descriptions of the
-available methods can be found on the <code><a href='CppQuadtree-class.html'>CppQuadtree</a></code> documentation
-page.</p>
+    <p>This S4 class is essentially a wrapper around a <code><a href='CppQuadtree-class.html'>CppQuadtree</a></code> C++
+object. <code>Quadtree</code> has one slot, which is named <code>ptr</code> and contains
+a <code><a href='CppQuadtree-class.html'>CppQuadtree</a></code> object. Instances of this class can be created
+through the <code><a href='quadtree.html'>quadtree</a>()</code> function.</p>
+<p>An important note to make is that functions that modify a <code>Quadtree</code>
+modify the existing object. For example, running
+<code><a href='transform_values.html'>transform_values</a>(qt, function(x) x+1)</code> modifies <code>qt</code>. This
+differs from the way R objects usually function - most functions that modify
+R objects return a modified copy of the object, thus preserving the original
+object. Note that the <code><a href='copy.html'>copy</a>()</code> function, which makes a deep copy
+of a <code>Quadtree</code>, can be used to preserve a copy of a <code>Quadtree</code>
+before modifying it.</p>
+<p>The methods of the C++ object (<code><a href='CppQuadtree-class.html'>CppQuadtree</a></code>) stored in the
+<code>ptr</code> slot can be accessed from R, but the typical end-user should have
+no need of these methods - they are meant for internal use. That being said,
+descriptions of the available methods can be found on the
+<code><a href='CppQuadtree-class.html'>CppQuadtree</a></code> documentation page.</p>
     </div>
 
 
+
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Functions for creating a <code>Quadtree</code> object:</p><ul>
+<li><p><code><a href='quadtree.html'>quadtree</a>()</code></p></li>
+<li><p><code><a href='read_quadtree.html'>read_quadtree</a>()</code></p></li>
+</ul><p>Methods:</p><ul>
+<li><p><code><a href='as_data_frame.html'>as_data_frame</a>()</code></p></li>
+<li><p><code><a href='as_raster.html'>as_raster</a>()</code></p></li>
+<li><p><code><a href='as_vector.html'>as_vector</a>()</code></p></li>
+<li><p><code><a href='copy.html'>copy</a>()</code></p></li>
+<li><p><code><a href='extent.html'>extent</a>()</code></p></li>
+<li><p><code><a href='extract.html'>extract</a>()</code></p></li>
+<li><p><code><a href='get_neighbors.html'>get_neighbors</a>()</code></p></li>
+<li><p><code><a href='lcp_finder.html'>lcp_finder</a>()</code></p></li>
+<li><p><code><a href='n_cells.html'>n_cells</a>()</code></p></li>
+<li><p><code><a href='projection.html'>projection</a>()</code></p></li>
+<li><p><code><a href='plot.html'>plot</a>()</code></p></li>
+<li><p><code><a href='set_values.html'>set_values</a>()</code></p></li>
+<li><p><code><a href='summary.Quadtree.html'>show</a>()</code></p></li>
+<li><p><code><a href='summary.Quadtree.html'>summary</a>()</code></p></li>
+<li><p><code><a href='transform_values.html'>transform_values</a>()</code></p></li>
+<li><p><code><a href='read_quadtree.html'>write_quadtree</a>()</code></p></li>
+</ul>
 
     <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
 

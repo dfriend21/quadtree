@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Show a Summary of a Quadtree Object — summary.Quadtree • quadtree</title>
+<title>Show a summary of a Quadtree — summary.Quadtree • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Show a Summary of a Quadtree Object — summary.Quadtree" />
-<meta property="og:description" content="Prints out information about the quadtree. Information shown is:
+<meta property="og:title" content="Show a summary of a Quadtree — summary.Quadtree" />
+<meta property="og:description" content="Prints out information about a Quadtree.
+  Information shown is:
 class of object
 number of cells
 minimum cell size
@@ -80,7 +81,7 @@ minimum and maximum values
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -118,12 +119,7 @@ minimum and maximum values
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -137,13 +133,14 @@ minimum and maximum values
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Show a Summary of a Quadtree Object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/summary_Quadtree.R'><code>R/summary_Quadtree.R</code></a></small>
+    <h1>Show a summary of a <code><a href='Quadtree-class.html'>Quadtree</a></code></h1>
+    
     <div class="hidden name"><code>summary.Quadtree.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Prints out information about the quadtree. Information shown is:</p><ul>
+    <p>Prints out information about a <code><a href='Quadtree-class.html'>Quadtree</a></code>.
+  Information shown is:</p><ul>
 <li><p>class of object</p></li>
 <li><p>number of cells</p></li>
 <li><p>minimum cell size</p></li>
@@ -174,7 +171,9 @@ minimum and maximum values
     <p>no return value</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dfriend21.github.io/quadtree'>quadtree</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
+
 <span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, <span class='fl'>.1</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>qt</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; class         : Quadtree

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract the values of a quadtree at the given locations — extract • quadtree</title>
+<title>Extract Quadtree values — extract • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Extract the values of a quadtree at the given locations — extract" />
-<meta property="og:description" content="Extract the cell values and optionally the cell extents" />
+<meta property="og:title" content="Extract Quadtree values — extract" />
+<meta property="og:description" content="Extracts the cell values and optionally the cell extents at the
+  given points" />
 
 
 
@@ -72,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -110,12 +111,7 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -129,13 +125,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract the values of a quadtree at the given locations</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/extract.R'><code>R/extract.R</code></a></small>
+    <h1>Extract <code><a href='Quadtree-class.html'>Quadtree</a></code> values</h1>
+    
     <div class="hidden name"><code>extract.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Extract the cell values and optionally the cell extents</p>
+    <p>Extracts the cell values and optionally the cell extents at the
+  given points</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for Quadtree,ANY</span>
@@ -146,11 +143,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A <code><a href='Quadtree-class.html'>Quadtree</a></code> object</p></td>
+      <td><p>a <code><a href='Quadtree-class.html'>Quadtree</a></code></p></td>
     </tr>
     <tr>
       <th>y</th>
-      <td><p>A two-column matrix representing point coordinates. First column
+      <td><p>a two-column matrix representing point coordinates. First column
 contains the x-coordinates, second column contains the y-coordinates</p></td>
     </tr>
     <tr>
@@ -163,25 +160,19 @@ each cell's extent in addition to its value</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The return type depends on the value of <code>extents</code>.</p>
-<p>If <code>extents = FALSE</code>, the function returns a numeric vector
-corresponding to the values at the points represented by <code>pts</code>. If a
-point falls within the quadtree extent and the corresponding cell is
-<code>NA</code>, or if the point falls outside of the extent, <code>NaN</code> is
-returned.</p>
-<p>If <code>extents = TRUE</code>, the function returns a 6-column numeric matrix
-providing the extent of each cell along with the cell's value and ID. The 6
-columns are, in this order: <code>id</code>, <code>xmin</code>, <code>xmax</code>, <code>ymin</code>,
-<code>ymax</code>, <code>value</code>. If a point falls in a <code>NA</code> cell, the cell
-extent is still returned but <code>value</code> will be <code>NaN</code>. If a point
-falls outside of the quadtree, all values will be <code>NaN</code>.</p>
+    <p>If <code>extents = FALSE</code>, returns a numeric vector corresponding to the
+values at the points represented by <code>pts</code>.</p>
+<p>If <code>extents = TRUE</code>, returns a 6-column numeric matrix providing the
+extent of each cell along with the cell's value and ID. The 6 columns are, in
+this order: <code>id</code>, <code>xmin</code>, <code>xmax</code>, <code>ymin</code>, <code>ymax</code>,
+<code>value</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
-<span class='va'>rast</span> <span class='op'>&lt;-</span> <span class='va'>habitat</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dfriend21.github.io/quadtree'>quadtree</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
 
 <span class='co'># create quadtree</span>
-<span class='va'>qt1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>rast</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, adj_type <span class='op'>=</span> <span class='st'>"expand"</span><span class='op'>)</span>
+<span class='va'>qt1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, adj_type <span class='op'>=</span> <span class='st'>"expand"</span><span class='op'>)</span>
 <span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt1</span><span class='op'>)</span>
 </div><div class='img'><img src='extract-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># create points at which we'll extract values</span>

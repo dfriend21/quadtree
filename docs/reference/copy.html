@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a deep copy of a quadtree object — copy • quadtree</title>
+<title>Create a deep copy of a Quadtree — copy • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Create a deep copy of a quadtree object — copy" />
-<meta property="og:description" content="Creates a deep copy of a quadtree object" />
+<meta property="og:title" content="Create a deep copy of a Quadtree — copy" />
+<meta property="og:description" content="Creates a deep copy of a Quadtree." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -110,12 +110,7 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -129,13 +124,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a deep copy of a quadtree object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/copy.R'><code>R/copy.R</code></a></small>
+    <h1>Create a deep copy of a <code><a href='Quadtree-class.html'>Quadtree</a></code></h1>
+    
     <div class="hidden name"><code>copy.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Creates a <em>deep</em> copy of a quadtree object</p>
+    <p>Creates a <em>deep</em> copy of a <code><a href='Quadtree-class.html'>Quadtree</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for Quadtree</span>
@@ -146,26 +141,22 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>The <code><a href='Quadtree-class.html'>Quadtree</a></code> object to copy</p></td>
+      <td><p>a <code><a href='Quadtree-class.html'>Quadtree</a></code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A Quadtree object</p>
+    <p>A <code><a href='Quadtree-class.html'>Quadtree</a></code> object</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function creates  <em>deep</em> copy of a quadtree object. The
-  quadtree class accessible from R uses pointers to a CppQuadtree C++ object.
-  Thus, if a copy is attempted by simply assigning the quadtree to a new
-  variable, it will only make a <em>shallow</em> copy, and both variables will
-  refer to the same object. Thus, changes made to one will also change the
-  other. For example, take the following code - assume that we already have a
-  quadtree object in memory called <code>qt</code>, and that we have a matrix of
-  points (<code>pts</code>) and values (<code>vals</code>):</p>
-<p><code>qt_copy = qt</code> <br /> <code><a href='set_values.html'>set_values(qt, pts, vals)</a></code></p>
-<p>Both <code>qt</code> <strong>and</strong> <code>qt_copy</code> will be changed by this
-  operation.</p>
+    <p>This function creates a <em>deep</em> copy of a <code><a href='Quadtree-class.html'>Quadtree</a></code>
+  object. The <code><a href='Quadtree-class.html'>Quadtree</a></code> class contains a pointer to a
+  <code><a href='CppQuadtree-class.html'>CppQuadtree</a></code> C++ object. If a copy is attempted by simply
+  assigning the quadtree to a new variable, it will simply make a copy of the
+  <em>pointer</em> - both variables will point to the same
+  <code><a href='CppQuadtree-class.html'>CppQuadtree</a></code>. Thus, changes made to one will also change the
+  other. See "Examples" for a demonstration of this.</p>
 <p>This function creates a deep copy by copying the entire quadtree, and
   should be used whenever a copy of a quadtree is desired.</p>
 
@@ -181,15 +172,13 @@
 <span class='va'>qt3</span> <span class='op'>&lt;-</span> <span class='fu'>copy</span><span class='op'>(</span><span class='va'>qt1</span><span class='op'>)</span> <span class='co'># DEEP copy</span>
 
 <span class='co'># change the values of qt1 so we can observe how this affects qt2 and qt3</span>
-<span class='va'>ext</span> <span class='op'>&lt;-</span> <span class='fu'><a href='extent.html'>extent</a></span><span class='op'>(</span><span class='va'>qt1</span><span class='op'>)</span>
-<span class='va'>pts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='va'>ext</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>ext</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='va'>ext</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>]</span>, <span class='va'>ext</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='set_values.html'>set_values</a></span><span class='op'>(</span><span class='va'>qt1</span>, <span class='va'>pts</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='transform_values.html'>transform_values</a></span><span class='op'>(</span><span class='va'>qt1</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='fl'>1</span><span class='op'>-</span><span class='va'>x</span><span class='op'>)</span>
 
 <span class='co'># plot it out to see what happened</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt1</span>, main <span class='op'>=</span> <span class='st'>"qt1"</span><span class='op'>)</span>
-<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt2</span>, main <span class='op'>=</span> <span class='st'>"qt2"</span><span class='op'>)</span>
-<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt3</span>, main <span class='op'>=</span> <span class='st'>"qt3"</span><span class='op'>)</span>
+<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt1</span>, main <span class='op'>=</span> <span class='st'>"qt1"</span>, border_col <span class='op'>=</span> <span class='st'>"transparent"</span><span class='op'>)</span>
+<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt2</span>, main <span class='op'>=</span> <span class='st'>"qt2"</span>, border_col <span class='op'>=</span> <span class='st'>"transparent"</span><span class='op'>)</span>
+<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt3</span>, main <span class='op'>=</span> <span class='st'>"qt3"</span>, border_col <span class='op'>=</span> <span class='st'>"transparent"</span><span class='op'>)</span>
 </div><div class='img'><img src='copy-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># qt2 was modified but qt3 was not</span>
 </div></pre>
   </div>

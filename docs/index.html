@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -72,14 +72,7 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -100,7 +93,7 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>The package can be installed with the following R command:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"dafriend/quadtree"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"dfriend21/quadtree"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="documentation" class="section level2">
 <h2 class="hasAnchor">
@@ -112,11 +105,11 @@
 <a href="#example" class="anchor"></a>Example</h2>
 <p>A quadtree object is created from a raster or matrix:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree">quadtree</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dfriend21.github.io/quadtree">quadtree</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">habitat</span>, package <span class="op">=</span> <span class="st">"quadtree"</span><span class="op">)</span> <span class="co">#load sample data</span>
-<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, <span class="fl">.03</span>, <span class="st">"sd"</span><span class="op">)</span> <span class="co">#create a quadtree</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">habitat</span>, package <span class="op">=</span> <span class="st">"quadtree"</span><span class="op">)</span> <span class="co"># load sample data</span>
+<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, <span class="fl">.03</span>, <span class="st">"sd"</span><span class="op">)</span> <span class="co"># create a quadtree</span></code></pre></div>
+<p><img src="reference/figures/README-example_plot-1.png" width="100%"></p>
 <p>The package allows for flexibility in the quadtree creation process. Several functions defining how to split and aggregate cells are provided, and custom functions can be written for both of these processes. In addition, quadtrees can be created using other quadtrees as “templates”, so that the new quadtree has the identical structure as the template quadtree.</p>
 <p>The package also includes functionality for modifying quadtrees, querying values, saving quadtrees to a file, and calculating least-cost paths using the quadtree as a resistance surface.</p>
 </div>
@@ -130,14 +123,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="links">
-<h2>Links</h2>
-<ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/dfriend21/quadtree/">https://​github.com/​dfriend21/​quadtree/​</a>
-</li>
-</ul>
-</div>
-<div class="license">
+    <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>C++ Quadtree Node — CppNode-class • quadtree</title>
+<title>CppNode: C++ quadtree node — CppNode-class • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="C++ Quadtree Node — CppNode-class" />
-<meta property="og:description" content="The 'CppNode' is a C++ class represents a single quadtree node.
-This is used internally - end users should have no need to use any of the
-methods listed here." />
+<meta property="og:title" content="CppNode: C++ quadtree node — CppNode-class" />
+<meta property="og:description" content="The CppNode class defines objects that represent a single
+  node of a quadtree. This is used internally - end users should have no need
+  to use any of the methods listed here." />
 
 
 
@@ -74,7 +74,7 @@ methods listed here." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -112,12 +112,7 @@ methods listed here." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -131,19 +126,28 @@ methods listed here." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>C++ Quadtree Node</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/CppNode-class.R'><code>R/CppNode-class.R</code></a></small>
+    <h1><code>CppNode</code>: C++ quadtree node</h1>
+    
     <div class="hidden name"><code>CppNode-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The 'CppNode' is a C++ class represents a single quadtree node.
-This is used internally - end users should have no need to use any of the
-methods listed here.</p>
+    <p>The <code>CppNode</code> class defines objects that represent a single
+  node of a quadtree. This is used internally - end users should have no need
+  to use any of the methods listed here.</p>
     </div>
 
 
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This class is defined in 'src/NodeWrapper.h' and
+  'src/NodeWrapper.cpp'. When made available to R, it is exposed as
+  <code>CppNode</code> instead of <code>NodeWrapper</code>. <code>NodeWrapper</code> contains a
+  pointer to a <code>Node</code> object (defined in 'src/Node.h' and
+  'src/Node.cpp'). All of the core functionality is in the <code>Node</code> class
+  - <code>NodeWrapper</code> is a wrapper class that adds the Rcpp code required
+  for it to be accessible from R.</p>
     <h2 class="hasAnchor" id="fields"><a class="anchor" href="#fields"></a>Fields</h2>
 
     
@@ -162,29 +166,29 @@ methods listed here.</p>
 <li><p><code>yMax</code></p></li>
 <li><p><code>smSide</code></p></li>
 </ul><p><code><a href='as_data_frame.html'>as_data_frame</a></code> makes use of this function to output info on
-  each node - see the documentation of that function for details on the
-  output</p></li>
+  each node - see the documentation of that function for details on what each
+  column represents</p></li>
 </ul></p></dd>
 
 <dt><code>getChildren</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Returns a <code>list</code> of the child nodes</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: a <code>list</code> of <code>Rcpp_node</code> objects</p></li>
+<li><p><strong>Returns</strong>: a <code>list</code> of <code>CppNode</code> objects</p></li>
 </ul></p></dd>
 
 <dt><code>getNeighborIds</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Returns the IDs of the neighboring cells</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: a numeric vector</p></li>
+<li><p><strong>Returns</strong>: a numeric vector containing the neighbor IDs</p></li>
 </ul></p></dd>
 
 <dt><code>getNeighborInfo</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Returns a matrix with info on each of the
   neighboring cells</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: a matrix. <code>quadtree$getNbList()</code> makes
-  use of this function - see documentation of that function (by running
-  <code>?'quadtree-class'</code>) for details on the return matrix.</p></li>
+<li><p><strong>Returns</strong>: a matrix. The <code>getNbList()</code> member function
+  of <code><a href='CppQuadtree-class.html'>CppQuadtree</a></code> makes use of this function - see documentation
+  of that function for details on the return matrix.</p></li>
 </ul></p></dd>
 
 <dt><code>getNeighborVals</code></dt><dd><p><ul>
@@ -196,7 +200,7 @@ methods listed here.</p>
 <dt><code>getNeighbors</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Returns a <code>list</code> of the neighboring nodes</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: a <code>list</code> of <code>Rcpp_node</code> objects</p></li>
+<li><p><strong>Returns</strong>: a <code>list</code> of <code>CppNode</code> objects</p></li>
 </ul></p></dd>
 
 <dt><code>hasChildren</code></dt><dd><p><ul>

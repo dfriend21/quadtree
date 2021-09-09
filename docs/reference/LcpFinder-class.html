@@ -40,14 +40,14 @@
 
 
 <meta property="og:title" content="LcpFinder Class — LcpFinder-class" />
-<meta property="og:description" content="This S4 class is a wrapper around a CppShortestPathFinder C++ object
+<meta property="og:description" content="This S4 class is a wrapper around a CppLcpFinder C++ object
 that is made available to R via the 'Rcpp' package. Instances of this class
 can be created from a Quadtree object using the
 lcp_finder function.
-The methods of the C++ object (CppShortestPathFinder) can be
+The methods of the C++ object (CppLcpFinder) can be
 accessed from R, but the typical end-user should have no need of these
 methods - they are meant for internal use. That being said, descriptions of
-the available methods can be found on the CppShortestPathFinder
+the available methods can be found on the CppLcpFinder
 documentation page." />
 
 
@@ -80,7 +80,7 @@ documentation page." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -118,12 +118,7 @@ documentation page." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -138,30 +133,43 @@ documentation page." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>LcpFinder Class</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/classes.R'><code>R/classes.R</code></a></small>
+    
     <div class="hidden name"><code>LcpFinder-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This S4 class is a wrapper around a <code>CppShortestPathFinder</code> C++ object
+    <p>This S4 class is a wrapper around a <code>CppLcpFinder</code> C++ object
 that is made available to R via the 'Rcpp' package. Instances of this class
 can be created from a <code><a href='Quadtree-class.html'>Quadtree</a></code> object using the
 <code><a href='lcp_finder.html'>lcp_finder</a></code> function.</p>
-<p>The methods of the C++ object (<code><a href='CppShortestPathFinder-class.html'>CppShortestPathFinder</a></code>) can be
+<p>The methods of the C++ object (<code><a href='CppLcpFinder-class.html'>CppLcpFinder</a></code>) can be
 accessed from R, but the typical end-user should have no need of these
 methods - they are meant for internal use. That being said, descriptions of
-the available methods can be found on the <code><a href='CppShortestPathFinder-class.html'>CppShortestPathFinder</a></code>
+the available methods can be found on the <code><a href='CppLcpFinder-class.html'>CppLcpFinder</a></code>
 documentation page.</p>
     </div>
 
 
+
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Functions for creating a <code>LcpFinder</code> object:</p><ul>
+<li><p><code><a href='lcp_finder.html'>lcp_finder</a>()</code></p></li>
+</ul><p>Methods:</p><ul>
+<li><p><code><a href='find_lcp.html'>find_lcp</a>()</code></p></li>
+<li><p><code><a href='find_lcps.html'>find_lcps</a>()</code></p></li>
+<li><p><code><a href='plot.LcpFinder.html'>plot</a>()</code></p></li>
+<li><p><code><a href='summary.LcpFinder.html'>show</a>()</code></p></li>
+<li><p><code><a href='summarize_lcps.html'>summarize_lcps</a>()</code></p></li>
+<li><p><code><a href='summary.LcpFinder.html'>summary</a>()</code></p></li>
+</ul>
 
     <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
 
     
 
 <dl>
-<dt><code>ptr</code></dt><dd><p>a C++ object of class <code>CppShortestPathFinder</code></p></dd>
+<dt><code>ptr</code></dt><dd><p>a C++ object of class <code>CppLcpFinder</code></p></dd>
 
 </dl>
 

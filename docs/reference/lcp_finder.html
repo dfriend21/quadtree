@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create an object for finding LCPs on a quadtree — lcp_finder • quadtree</title>
+<title>Create a LcpFinder — lcp_finder • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="Create an object for finding LCPs on a quadtree — lcp_finder" />
-<meta property="og:description" content="This function creates an LcpFinder object that can then be used
-  by find_lcp and find_lcps to find
-  least-cost paths (LCPs)." />
+<meta property="og:title" content="Create a LcpFinder — lcp_finder" />
+<meta property="og:description" content="Creates a LcpFinder object that can then be used
+  by find_lcp and find_lcps to find least-cost
+  paths (LCPs)." />
 
 
 
@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -112,12 +112,7 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -131,15 +126,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create an object for finding LCPs on a quadtree</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/lcp.R'><code>R/lcp.R</code></a></small>
+    <h1>Create a <code><a href='LcpFinder-class.html'>LcpFinder</a></code></h1>
+    
     <div class="hidden name"><code>lcp_finder.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function creates an LcpFinder object that can then be used
-  by <code><a href='find_lcp.html'>find_lcp</a></code> and <code><a href='find_lcps.html'>find_lcps</a></code> to find
-  least-cost paths (LCPs).</p>
+    <p>Creates a <code><a href='LcpFinder-class.html'>LcpFinder</a></code> object that can then be used
+  by <code><a href='find_lcp.html'>find_lcp</a></code> and <code><a href='find_lcps.html'>find_lcps</a></code> to find least-cost
+  paths (LCPs).</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for Quadtree,numeric</span>
@@ -150,7 +145,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code><a href='Quadtree-class.html'>Quadtree</a></code> object to be used as a resistance surface</p></td>
+      <td><p>a <code><a href='Quadtree-class.html'>Quadtree</a></code> to be used as a resistance surface</p></td>
     </tr>
     <tr>
       <th>y</th>
@@ -160,7 +155,7 @@ of the starting point of the path(s)</p></td>
     <tr>
       <th>xlim</th>
       <td><p>numeric vector with 2 elements - constrains the nodes included
-in the network to those who x limits fall in the range specified in
+in the network to those whose x limits fall in the range specified in
 <code>xlim</code>. If <code>NULL</code> the x limits of <code>x</code> are used</p></td>
     </tr>
     <tr>
@@ -172,32 +167,35 @@ in the network to those who x limits fall in the range specified in
       <td><p>boolean; determines which cells are considered to
 be "in" the box specified by <code>xlim</code> and <code>ylim</code>. If <code>FALSE</code>
 (the default) any cell that overlaps with the box is included. If
-<code>TRUE</code>, a cell is only included if its *centroid* falls inside the
+<code>TRUE</code>, a cell is only included if its <strong>centroid</strong> falls inside the
 box.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>returns an <code>LcpFinder</code> object</p>
+    <p>a <code>LcpFinder</code></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>See the vignette 'quadtree-lcp' for more details and examples (i.e. run
   <code><a href='../articles/quadtree-lcp.html'>vignette("quadtree-lcp", package = "quadtree")</a></code>)</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='find_lcp.html'>find_lcp</a>()</code> returns the LCP between two points.
-  <code><a href='find_lcps.html'>find_lcps</a>()</code> finds all LCPs whose cost-distance is less
-  than some value. <code><a href='summarize_lcps.html'>summarize_lcps</a>()</code> outputs a summary matrix of
-  all LCPs that have been calculated so far.</p></div>
+    <div class='dont-index'><p><code><a href='find_lcp.html'>find_lcp</a>()</code> returns the LCP between the start point and
+  another point. <code><a href='find_lcps.html'>find_lcps</a>()</code> finds all LCPs whose cost-distance
+  is less than some value. <code><a href='summarize_lcps.html'>summarize_lcps</a>()</code> outputs a summary
+  matrix of all LCPs that have been calculated so far.
+  <code><a href='plot.LcpFinder.html'>points</a>()</code> and
+  <code><a href='plot.LcpFinder.html'>lines</a>()</code> can be used to plot a
+  <code><a href='LcpFinder-class.html'>LcpFinder</a></code>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>####### NOTE ####### </span>
+    <pre class="examples"><div class='input'><span class='co'>####### NOTE #######</span>
 <span class='co'># see the "quadtree-lcp" vignette for more details and examples:</span>
 <span class='co'># vignette("quadtree-lcp", package = "quadtree")</span>
 <span class='co'>####################</span>
 
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dfriend21/quadtree'>quadtree</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dfriend21.github.io/quadtree'>quadtree</a></span><span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
 <span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, adj_type <span class='op'>=</span> <span class='st'>"expand"</span><span class='op'>)</span>

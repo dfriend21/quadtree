@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -68,14 +68,7 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -91,9 +84,9 @@
       <h1 data-toc-skip>Code Details</h1>
                         <h4 class="author">Derek Friend</h4>
             
-            <h4 class="date">Last compiled on 07 September, 2021</h4>
+            <h4 class="date">Last compiled on 09 September, 2021</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/master/vignettes/quadtree-code.Rmd"><code>vignettes/quadtree-code.Rmd</code></a></small>
+      
       <div class="hidden name"><code>quadtree-code.Rmd</code></div>
 
     </div>
@@ -115,7 +108,7 @@
 <li>Point.h - Defines a simple Point class</li>
 <li>PointUtilities.h - Defines a namespace containing functions for performing calculations with Point objects</li>
 <li>Quadtree.h - Defines the Quadtree class, which can be seen as a wrapper that provides a link to the interconnected nodes that make up the quadtree</li>
-<li>ShortestPathFinder.h - Defines a class for finding the least-cost paths using a quadtree as a cost surface</li>
+<li>LcpFinder.h - Defines a class for finding the least-cost paths using a quadtree as a cost surface</li>
 </ul>
 <p>As mentioned before, these files are completely independent of R and can be built and run independently of R.</p>
 </div>
@@ -126,7 +119,7 @@
 <ul>
 <li>NodeWrapper.h - wrapper class for ‘Node’. This class is exposed to R as ‘CppNode’.</li>
 <li>QuadtreeWrapper.h - wrapper class for ‘Quadtree’. This class is exposed to R as ‘CppQuadtree’.</li>
-<li>ShortestPathFinderWrapper.h - wrapper class for ‘ShortestPathFinder’. This class is exposed to R as ‘CppShortestPathFinder’.</li>
+<li>LcpFinderWrapper.h - wrapper class for ‘LcpFinder’. This class is exposed to R as ‘CppLcpFinder’.</li>
 <li>R_Interface.h - defines a namespace that currently contains only a single function, which converts an Rcpp matrix to the Matrix class I created. This function is separate from the other files because it is a general-purpose function and thus didn’t fit in any of the wrapper classes.</li>
 <li>load_modules.cpp - contains code that exposes the wrapper classes to R using Rcpp modules.</li>
 </ul>

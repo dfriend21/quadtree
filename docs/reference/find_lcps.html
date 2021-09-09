@@ -40,9 +40,10 @@
 
 
 <meta property="og:title" content="Find LCPs to surrounding points — find_lcps" />
-<meta property="og:description" content="Calculates the LCPs to surrounding points. A constraint can be
-  placed on the LCPs, so that only LCPs that are less than some specified
-  cost-distance are returned." />
+<meta property="og:description" content="Calculates least-cost paths (LCPs) from the start point (the
+  point used to create the LcpFinder) to surrounding points. A
+  constraint can be placed on the LCPs, so that only LCPs that are less than
+  some specified cost-distance are returned." />
 
 
 
@@ -74,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -112,12 +113,7 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/dfriend21/quadtree/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -132,25 +128,26 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Find LCPs to surrounding points</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/lcp.R'><code>R/lcp.R</code></a></small>
+    
     <div class="hidden name"><code>find_lcps.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculates the LCPs to surrounding points. A constraint can be
-  placed on the LCPs, so that only LCPs that are less than some specified
-  cost-distance are returned.</p>
+    <p>Calculates least-cost paths (LCPs) from the start point (the
+  point used to create the <code><a href='LcpFinder-class.html'>LcpFinder</a></code>) to surrounding points. A
+  constraint can be placed on the LCPs, so that only LCPs that are less than
+  some specified cost-distance are returned.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for LcpFinder</span>
-<span class='fu'>find_lcps</span><span class='op'>(</span><span class='va'>x</span>, limit <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+<span class='fu'>find_lcps</span><span class='op'>(</span><span class='va'>x</span>, limit <span class='op'>=</span> <span class='cn'>NULL</span>, return_summary <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>the <code>LcpFinder</code> object returned from <code><a href='lcp_finder.html'>lcp_finder</a></code></p></td>
+      <td><p>a <code>LcpFinder</code></p></td>
     </tr>
     <tr>
       <th>limit</th>
@@ -158,39 +155,47 @@
 (the default), no limit is applied and all possible LCPs (within the
 <code>LcpFinder</code>'s search area) are found</p></td>
     </tr>
+    <tr>
+      <th>return_summary</th>
+      <td><p>boolean; if <code>TRUE</code> (the default),
+<code><a href='summarize_lcps.html'>summarize_lcps</a>()</code> is used to return a summary matrix of all
+paths found. If <code>FALSE</code>, no value is returned.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a matrix summarizing each LCP found.
-  <code><a href='summarize_lcps.html'>summarize_lcps</a></code> is used to generate this matrix - see the help
-  for that function for details on the return matrix. Note that this function
-  does <strong>not</strong> return the full paths to each point - however, each of
-  the paths summarized in the output matrix has already been calculated, and
-  can be retrieved using <code><a href='find_lcp.html'>find_lcp()</a></code> (without having to recalculate
-  the path, since it's already been calculated).</p>
+    <p>If <code>return_summary</code> is <code>TRUE</code>,
+  <code><a href='summarize_lcps.html'>summarize_lcps</a>()</code> is used to return a matrix summarizing each
+  LCP found. See the help page of that function for details on the return
+  matrix.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A very important note to make is that once the LCP tree is
-calculated, it never gets smaller. For example, we could use
-<code>find_lcps()</code> with <code>limit = NULL</code> to calculate all LCPS. If we then
-used <code>find_lcps()</code> on the same <code>LcpFinder</code> but this time used a
-limit, it would still return <em>all</em> of the LCPs - even those that are
-greater than the specified limit, since the tree never shrinks.</p>
+    <p>Once the LCPs have been calculated, <code><a href='find_lcp.html'>find_lcp</a>()</code> can be
+  used to extract paths to individual points. No further calculation will be
+  required to retrieve these paths so long as they were calculated when
+  <code>find_lcps()</code> was run.</p>
+<p>A very important note to make is that once the LCP tree is calculated, it
+  never gets smaller. For example, we could use <code>find_lcps()</code>
+  with <code>limit = NULL</code> to calculate all LCPS. If we then used
+  <code>find_lcps()</code> on the same <code>LcpFinder</code> but this time used a
+  limit, it would still return <em>all</em> of the LCPs - even those that are
+  greater than the specified limit, since the tree never shrinks.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='lcp_finder.html'>lcp_finder</a>()</code> creates the <code><a href='LcpFinder-class.html'>LcpFinder</a></code>
   object used as input to this function. <code><a href='find_lcp.html'>find_lcp</a>()</code> returns the
-  LCP between two points. <code><a href='summarize_lcps.html'>summarize_lcps</a>()</code> outputs a summary
-  matrix of all LCPs that have been calculated so far.</p></div>
+  LCP between the start point and another point.
+  <code><a href='summarize_lcps.html'>summarize_lcps</a>()</code> outputs a summary matrix of all LCPs that
+  have been calculated so far.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>####### NOTE ####### </span>
+    <pre class="examples"><div class='input'><span class='co'>####### NOTE #######</span>
 <span class='co'># see the "quadtree-lcp" vignette  for more details and examples:</span>
 <span class='co'># vignette("quadtree-lcp", package = "quadtree")</span>
 <span class='co'>####################</span>
 
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dfriend21/quadtree'>quadtree</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dfriend21.github.io/quadtree'>quadtree</a></span><span class='op'>)</span>
 
 <span class='co'># create a quadtree</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>

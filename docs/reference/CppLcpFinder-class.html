@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Show a summary of a LcpFinder — summary.LcpFinder • quadtree</title>
+<title>CppLcpFinder: C++ LCP finder — CppLcpFinder-class • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,15 +39,12 @@
 
 
 
-<meta property="og:title" content="Show a summary of a LcpFinder — summary.LcpFinder" />
-<meta property="og:description" content="Prints out information about the LcpFinder.
-  Information shown is:
-class of object
-start point
-search limits
-number of paths found
-
-" />
+<meta property="og:title" content="CppLcpFinder: C++ LCP finder — CppLcpFinder-class" />
+<meta property="og:description" content="The CppLcpFinder class is a C++ data structure
+  used to find least-cost paths using a quadtree as a resistance surface. The
+  average user should not need to interact with this class at all - all of 
+  the LCP functionality is made available through the LcpFinder
+  S4 class." />
 
 
 
@@ -131,58 +128,100 @@ number of paths found
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Show a summary of a <code><a href='LcpFinder-class.html'>LcpFinder</a></code></h1>
+    <h1><code>CppLcpFinder</code>: C++ LCP finder</h1>
     
-    <div class="hidden name"><code>summary.LcpFinder.Rd</code></div>
+    <div class="hidden name"><code>CppLcpFinder-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Prints out information about the <code><a href='LcpFinder-class.html'>LcpFinder</a></code>.
-  Information shown is:</p><ul>
-<li><p>class of object</p></li>
-<li><p>start point</p></li>
-<li><p>search limits</p></li>
-<li><p>number of paths found</p></li>
-</ul>
-
+    <p>The <code>CppLcpFinder</code> class is a C++ data structure
+  used to find least-cost paths using a quadtree as a resistance surface. The
+  average user should not need to interact with this class at all - all of 
+  the LCP functionality is made available through the <code><a href='LcpFinder-class.html'>LcpFinder</a></code>
+  S4 class.</p>
     </div>
 
-    <pre class="usage"><span class='co'># S4 method for LcpFinder</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
 
-<span class='co'># S4 method for LcpFinder</span>
-<span class='fu'>show</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>object</th>
-      <td><p>a <code><a href='LcpFinder-class.html'>LcpFinder</a></code></p></td>
-    </tr>
-    </table>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <p>This class is defined in 'src/LcpFinderWrapper.h' and
+  'src/LcpFinderWrapper.cpp'. When made available to R, it is
+  exposed as <code>CppLcpFinder</code> rather than
+  <code>LcpFinderWrapper</code>. <code>LcpFinderWrapper</code> contains
+  a pointer to a <code>LcpFinder</code> C++ object (defined in
+  'src/LcpFinder.h' and 'src/LcpFinder.cpp'). All of the
+  core functionality is in the <code>LcpFinder</code> C++ class.
+  <code>LcpFinderWrapper</code> is a wrapper class that adds the Rcpp code
+  required for it to be accessible from R.</p>  
+<p>Note that there is no constructor made accessible to R - a
+  <code>CppLcpFinder</code> is created by using the
+  <code>getLcpFinder</code> method of the <code><a href='CppQuadtree-class.html'>CppQuadtree</a></code> class.</p>
+    <h2 class="hasAnchor" id="fields"><a class="anchor" href="#fields"></a>Fields</h2>
 
-    <p>no return value</p>
+    
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dfriend21.github.io/quadtree'>quadtree</a></span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
+<dl>
+<dt><code>getAllPathsSummary</code></dt><dd><p><ul>
+<li><p><strong>Description</strong>: Returns a matrix summarizing all the LCPs
+  calculated so far. <code><a href='summarize_lcps.html'>summarize_lcps</a>()</code> is a wrapper for this
+  function - see documentation of that function for more details.</p></li>
+<li><p><strong>Parameters</strong>: none</p></li>
+<li><p><strong>Returns</strong>: a matrix with one row per LCP. See documentation of
+  <code><a href='summarize_lcps.html'>summarize_lcps</a>()</code> for details.</p></li>
+</ul></p></dd>
 
-<span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, <span class='fl'>.1</span><span class='op'>)</span>
+<dt><code>getSearchLimits</code></dt><dd><p><ul>
+<li><p><strong>Description</strong>: Returns the x and y limits of the search area.</p></li>
+<li><p><strong>Parameters</strong>: none</p></li>
+<li><p><strong>Returns</strong>:  4-element numeric vector, in this order: xMin,
+  xMax, yMin, yMax</p></li>
+</ul></p></dd>
 
-<span class='va'>start_point</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>6989</span>, <span class='fl'>34007</span><span class='op'>)</span>
-<span class='va'>end_point</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>33015</span>, <span class='fl'>38162</span><span class='op'>)</span>
+<dt><code>getLcp</code></dt><dd><p><ul>
+<li><p><strong>Description</strong>: Finds the least-cost path from the starting
+  point to another point. <code><a href='find_lcp.html'>find_lcp</a></code> is a wrapper for this
+  function - see its documentation for more details.</p></li>
+<li><p><strong>Parameters</strong>:</p><ul>
+<li><p><code>endPoint</code>: 2-element numeric vector - the point to find a
+    shortest path to</p></li>
+</ul></li>
+<li><p><strong>Returns</strong>: A matrix representing the least-cost path. See
+  <code><a href='find_lcp.html'>find_lcp</a>()</code> for details on the return matrix.</p></li>
+</ul></p></dd>
 
-<span class='va'>lcpf</span> <span class='op'>&lt;-</span> <span class='fu'><a href='lcp_finder.html'>lcp_finder</a></span><span class='op'>(</span><span class='va'>qt</span>, <span class='va'>start_point</span><span class='op'>)</span>
-<span class='va'>lcp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='find_lcp.html'>find_lcp</a></span><span class='op'>(</span><span class='va'>lcpf</span>, <span class='va'>end_point</span><span class='op'>)</span>
+<dt><code>getStartPoint</code></dt><dd><p><ul>
+<li><p><strong>Description</strong>: Returns the start point</p></li>
+<li><p><strong>Parameters</strong>: none</p></li>
+<li><p><strong>Returns</strong>: 2-element numeric vector (x,y)</p></li>
+</ul></p></dd>
 
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>lcpf</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; class            : LcpFinder
-#&gt; start point      : (6989, 34007)
-#&gt; search limits    : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)
-#&gt; # of paths found : 4352</div></pre>
+<dt><code>makeNetworkAll</code></dt><dd><p><ul>
+<li><p><strong>Description</strong>: Calculates least-cost paths to all cells in the
+  search area. This is used by <code><a href='find_lcps.html'>find_lcps</a></code> when <code>limit</code> is
+  <code>NULL</code>. See documentation of that function for more details.</p></li>
+<li><p><strong>Parameters</strong>: none</p></li>
+<li><p><strong>Returns</strong>: void - no return value. Specific paths can be
+  retrieved using <code>getLcp</code>, and <code>getAllPathsSummary</code> can
+  be used to summarize all paths that have been found.</p></li>
+</ul></p></dd>
+
+<dt><code>makeNetworkCostDist</code></dt><dd><p><ul>
+<li><p><strong>Description</strong>: Calculates all least-cost paths whose
+  cost-distance is less than a given threshold. This is used in
+  <code><a href='find_lcps.html'>find_lcps</a></code> when <code>limit</code> is not <code>NULL</code>. See
+  documentation of that function for more details.</p></li>
+<li><p><strong>Parameters</strong>:</p><ul>
+<li><p><code>constraint</code>: double; the maximum cost-distance allowed for a
+    least-cost path</p></li>
+</ul></li>
+<li><p><strong>Returns</strong>: void - no return value. Specific paths can be
+  retrieved using <code>getLcp</code>, and <code>getAllPathsSummary</code> can
+  be used to summarize all paths that have been found.</p></li>
+</ul></p></dd>
+
+</dl>
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
