@@ -1,18 +1,18 @@
 test_that("as_data_frame() runs without errors and produces expected output", {
   data(habitat)
   qt <- expect_error(quadtree(habitat, .4), NA)
-  
+
   df_term <- expect_error(as_data_frame(qt, TRUE), NA)
   df_all <- expect_error(as_data_frame(qt, FALSE), NA)
-  
+
   expect_s3_class(df_term, "data.frame")
   expect_s3_class(df_all, "data.frame")
-  
+
   expect_true(nrow(df_term) > 0)
   expect_true(nrow(df_all) > 0)
-  
+
   expect_true(qt@ptr$nNodes() == nrow(df_all))
-  
+
   expect_true(nrow(df_term) < nrow(df_all))
 })
 
@@ -21,15 +21,15 @@ test_that("as_raster() works", {
   qt <- quadtree(habitat, .1, split_method = "sd")
   rst1 <- expect_error(as_raster(qt), NA)
   rst2 <- expect_error(as_raster(qt, habitat), NA)
-  
+
   rst_template <- raster::raster(nrows = 189, ncols = 204,
                                  xmn = 0, xmx = 30000, ymn = 10000, ymx = 45000)
   rst3 <- expect_error(as_raster(qt, rst_template), NA)
-  
+
   pts1 <- raster::rasterToPoints(rst1, spatial = FALSE)
   pts2 <- raster::rasterToPoints(rst2, spatial = FALSE)
   pts3 <- raster::rasterToPoints(rst3, spatial = FALSE)
-  
+
   expect_true(all(extract(qt, pts1[, 1:2]) == extract(rst1, pts1[, 1:2])))
   expect_true(all(extract(qt, pts2[, 1:2]) == extract(rst2, pts2[, 1:2])))
   expect_true(all(extract(qt, pts3[, 1:2]) == extract(rst3, pts3[, 1:2])))
@@ -40,12 +40,12 @@ test_that("as_vector() works", {
   qt <- quadtree(mat, 0) # force it to split to the smallest cell size
   vec_term <- expect_error(as_vector(qt, TRUE), NA)
   vec_all <- expect_error(as_vector(qt, FALSE), NA)
-  
+
   expect_true(inherits(vec_term, "numeric"))
   expect_true(inherits(vec_all, "numeric"))
-  
+
   expect_true(length(vec_all) > length(vec_term))
-  
+
   vec_term2 <- vec_term[!is.na(vec_term)]
   expect_true(length(vec_term2) == length(mat))
   expect_true(all(sort(as.numeric(mat)) == sort(vec_term2)))
@@ -58,7 +58,7 @@ test_that("copy() runs without errors and produces expected output", {
   expect_s4_class(qt2, "Quadtree")
   df1 <- as_data_frame(qt1, FALSE)
   df2 <- as_data_frame(qt2, FALSE)
-  # first test w/o the value column because NA columns mess up the equality check
+  # first test w/o the value column since NA columns mess up the equality check
   expect_true(all(df1[, -1 * which(names(df1) == "value")] ==
                   df2[, -1 * which(names(df2) == "value")]))
   # now do the 'value' column separately
@@ -101,10 +101,10 @@ test_that("extract runs without errors and returns correct values", {
 test_that("get_neighbors() works", {
   mat <- as.matrix(read.table("sample_data/8by8_01_matrix.txt", sep = ","))
   qt <- quadtree(mat, .1)
-  
+
   pt <- c(5, 5)
   nbs <- expect_error(get_neighbors(qt, pt), NA)
-  
+
   nb_centroids <- rbind(c(2.0, 6.0),
                         c(4.5, 6.5),
                         c(5.5, 6.5),
@@ -115,7 +115,7 @@ test_that("get_neighbors() works", {
                         c(4.5, 3.5),
                         c(3.5, 3.5))
   expect_true(nrow(nbs) == nrow(nb_centroids))
-  
+
   nb_ids <- extract(qt, nb_centroids, extents = TRUE)[, "id"]
   expect_true(all(sort(nbs[, "id"]) == sort(nb_ids)))
 })
@@ -125,24 +125,24 @@ test_that("n_cells() works", {
   qt <- quadtree(habitat, .15)
   nc1 <- expect_error(n_cells(qt, TRUE), NA)
   nc2 <- expect_error(n_cells(qt, FALSE), NA)
-  
+
   expect_true(nc2 > nc1)
 })
 
-test_that("n_cells(), as_vector(), and as_data_frame() agree on the number of 
+test_that("n_cells(), as_vector(), and as_data_frame() agree on the number of
           nodes", {
   data(habitat)
   qt <- quadtree(habitat, .15)
-  
+
   nc_term <- n_cells(qt, TRUE)
   nc_all <- n_cells(qt, FALSE)
-  
+
   vec_term <- as_vector(qt, TRUE)
   vec_all <- as_vector(qt, FALSE)
-  
+
   df_term <- as_data_frame(qt, TRUE)
   df_all <- as_data_frame(qt, FALSE)
-  
+
   expect_true(nc_term == length(vec_term) && nc_term == nrow(df_term))
   expect_true(nc_all == length(vec_all) && nc_all == nrow(df_all))
 })
@@ -171,7 +171,7 @@ test_that("read_quadtree() and write_quadtree() work", {
 
   df1 <- as_data_frame(qt1, FALSE)
   df2 <- as_data_frame(qt2, FALSE)
-  # first test w/o the value column because NA columns mess up the equality check
+  # first test w/o the value column since NA columns mess up the equality check
   expect_true(all(df1[, -1 * which(names(df1) == "value")] ==
                   df2[, -1 * which(names(df2) == "value")]))
 

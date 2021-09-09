@@ -1,11 +1,12 @@
 test_that("plot output runs without errors and looks right", {
+  skip("these tests should be manually run and visually inspected")
   library(raster)
   data(habitat)
   rast <- habitat
   # create quadtree
   qt1 <- quadtree(rast, split_threshold = .1, adj_type = "expand")
 
-  png("plots/plots1.png", height = 1200, width = 1600)
+  # png("plots/plots1.png", height = 1200, width = 1600)
   par(mfrow = c(3, 4))
   expect_error(plot(qt1, main = "default - no additional parameters provided"), NA)
   expect_error(plot(qt1, crop = TRUE, main = "crop extent to the original extent of the raster"), NA)
@@ -19,9 +20,9 @@ test_that("plot output runs without errors and looks right", {
   expect_error(plot(qt1, alpha = .5, main = "change color transparency: alpha=.5"), NA)
   expect_error(plot(qt1, na_col = "lavender", main = "change color of NA cells"), NA)
   expect_error(plot(qt1, na_col = NULL, main = "don't plot NA cells at all (na_col=NULL)"), NA)
-  dev.off()
+  # dev.off()
 
-  png("plots/plots2.png", height = 1200, width = 1600)
+  # png("plots/plots2.png", height = 1200, width = 1600)
   par(mfrow = c(3, 4))
   expect_error(plot(qt1, zlim = c(0, 5), main = "change zlim: c(0,5)"), NA)
   expect_error(plot(qt1, zlim = c(.2, .7), main = "change zlim: c(.2,.7)"), NA)
@@ -30,5 +31,5 @@ test_that("plot output runs without errors and looks right", {
   expect_error(plot(qt1, legend = FALSE, main = "no legend"), NA)
   expect_error(plot(qt1, adj_mar_auto = 10, main = "increase right margin size"), NA)
   expect_error(plot(qt1, adj_mar_auto = 10, legend_args = list(lgd_ht_pct = .8, bar_wd_pct = .4), main = "'legend_args': lgd_ht_pct=.8, bar_wd_pct=.4"), NA)
-  dev.off()
+  # dev.off()
 })

@@ -61,7 +61,7 @@ test_that("summarize_lcps() runs without errors and produces expected output", {
 })
 
 test_that("find_lcps() finds the same paths as in previous runs", {
-  # use summarize_lcps() to summarize all paths found by a 'LcpFinder', then 
+  # use summarize_lcps() to summarize all paths found by a 'LcpFinder', then
   # check the results against previous runs
   data(habitat)
   qt <- quadtree(habitat, 0, split_method = "sd", min_cell_length = 1000)
