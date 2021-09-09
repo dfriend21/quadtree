@@ -4,7 +4,7 @@ author: "Derek Friend"
 date: "Last compiled on `r format(Sys.time(), '%d %B, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{quadtree-code}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -32,7 +32,7 @@ This consists of the following files (only the .h files are listed to avoid redu
 * Point.h - Defines a simple Point class
 * PointUtilities.h - Defines a namespace containing functions for performing  calculations with Point objects
 * Quadtree.h - Defines the Quadtree class, which can be seen as a wrapper that provides a link to the interconnected nodes that make up the quadtree
-* ShortestPathFinder.h - Defines a class for finding the least-cost paths using a quadtree as a cost surface
+* LcpFinder.h - Defines a class for finding the least-cost paths using a quadtree as a cost surface
 
 As mentioned before, these files are completely independent of R and can be built and run independently of R.
 
@@ -42,7 +42,7 @@ These files are called 'wrappers' - essentially they each contain an instance of
 
 * NodeWrapper.h - wrapper class for 'Node'. This class is exposed to R as 'CppNode'.
 * QuadtreeWrapper.h - wrapper class for 'Quadtree'. This class is exposed to R as 'CppQuadtree'.
-* ShortestPathFinderWrapper.h - wrapper class for 'ShortestPathFinder'. This class is exposed to R as 'CppShortestPathFinder'.
+* LcpFinderWrapper.h - wrapper class for 'LcpFinder'. This class is exposed to R as 'CppLcpFinder'.
 * R_Interface.h - defines a namespace that currently contains only a single function, which converts an Rcpp matrix to the Matrix class I created. This function is separate from the other files because it is a general-purpose function and thus didn't fit in any of the wrapper classes.
 * load_modules.cpp - contains code that exposes the wrapper classes to R using Rcpp modules.
 

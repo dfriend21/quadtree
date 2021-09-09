@@ -13,8 +13,11 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  dev = "jpeg",
   fig.height = 4.375,
   fig.width = 7
+  # fig.height = 3.125,
+  # fig.width = 5
 )
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
@@ -30,11 +33,6 @@ library(raster)
 data(habitat)
 rast <- habitat
 qt <- quadtree(rast, .04, split_method = "sd")
-
-par(mfrow = c(1, 2))
-plot(rast, zlim = c(0, 1), main = "sample data: raster")
-plot(qt, crop = TRUE, na_col = NULL, border_lwd = .3, legend = FALSE,
-     zlim = c(0, 1), main = "sample data: quadtree")
 ```
 
 ## Overview of Least-Cost Paths
@@ -79,7 +77,7 @@ Two slightly different ways of calculating LCPs are provided that differ in thei
 
 `find_lcp()` finds a path to a specific point. First, it checks whether a LCP to that point has been calculated. If so, it returns the path. If not, it performs Dijkstra's algorithm, and as soon as that node has been added to the tree, the algorithm stops and the LCP is returned. 
 
-```{r fig.height = 7}
+```{r}
 start_pt <- c(6989, 34007)
 end_pt <- c(33015, 38162)
 
@@ -132,7 +130,7 @@ __*Finding all paths*__
 
 The following example uses `find_lcps` to generate all LCPs from the starting point.
 
-```{r fig.height = 7}
+```{r}
 start_pt <- c(16715, 25634)
 lcpf <- lcp_finder(qt, start_pt)
 paths <- find_lcps(lcpf)
@@ -182,7 +180,7 @@ __*Finding all paths under a given cost-distance threshold*__
 
 As stated before, a value can be passed to the `limit` parameter, which will restrict the `LcpFinder` to only finding paths less than that value. In the following example, all LCPs with a total cost less than 3000 are found.
 
-```{r, fig.height = 7}
+```{r}
 lcpf <- lcp_finder(qt, start_pt)
 paths <- find_lcps(lcpf, limit = 3000)
 

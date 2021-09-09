@@ -14,7 +14,10 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.height = 4.375,
-  fig.width = 7
+  fig.width = 7,
+  # fig.height = 3.125,
+  # fig.width = 5,
+  dev = "jpeg"
 )
 ```
 
@@ -77,7 +80,7 @@ extent(qt, original = TRUE)
 
 Values can be 'extracted' at point locations using the `extract()` function. This function has one optional parameter - `extents`. If `extents` is `FALSE` (the default), then only the values at the point locations are returned. If `extents` is `TRUE`, then a matrix is returned that also returns the x and y limits of each cell in addition to the cell value.
 
-```{r, fig.height = 7}
+```{r}
 pts <- cbind(x = c(5609, 3959, 20161, 27662, 32763),
             y = c(10835, 29586, 31836, 10834, 36337))
 
@@ -120,7 +123,7 @@ Two functions are provided for modifying cell values: `set_values` and `transfor
 
 `set_values` takes a matrix of points and associated values, and changes the values of the cells the points fall in. Note that only the values of the *terminal cells* that the point falls in are changed.
 
-```{r, fig.height = 7}
+```{r}
 qt2 <- copy(qt)
 set_values(qt2, pts, rep(2, nrow(pts)))
 plot(qt2, crop = TRUE, border_lwd = .3)

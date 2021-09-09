@@ -14,7 +14,13 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.height = 4.375,
-  fig.width = 7
+  fig.width = 7,
+  # fig.height = 3.125,
+  # fig.width = 5,
+  dev = "jpeg",
+  #fig.height = 6.25,
+  #fig.width = 10,
+  out.width = "100%"
 )
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
@@ -42,106 +48,8 @@ Quadtrees are tree data structures where each node is allowed to have either 0 o
 
 The following figure shows a quadtree data structure (left), it's spatial representation (middle), and how the data structure and the spatial representation correspond.
 
-```{r echo = FALSE, fig.height = 2.625, fig.width = 7}
-#function for putting the quadtree data in the correct format for plotting - for use in fig:tree_example
-get_tree_df <- function(qt, xmin, xmax){
-   nodes <- as_data_frame(qt, terminal_only = FALSE)
-   p_ids <- unique(nodes$parentID)
-   
-   #get order of children (among their siblings)
-   child_order <- do.call(rbind,lapply(1:length(p_ids), function(i){
-      dat <- nodes[nodes$parentID == p_ids[i],c("id", "parentID")]
-      dat$childOrder <- 1:nrow(dat)
-      return(dat)
-   }))
-   tree_df <- merge(nodes, child_order[,c("id", "childOrder")], by="id")
-   
-   #get the x and y coordinates of the centroids
-   tree_df$x <- (tree_df$xMin + tree_df$xMax)/2
-   tree_df$y <- (tree_df$yMin + tree_df$yMax)/2
-   
-   #define a function that'll give all the possible x coords for a given "level" of the tree
-   get_tree_coords <- function(level, min, max){
-      pts <- seq(min,max,length.out=4^level+1)
-      x <- (pts[1:(length(pts)-1)] + pts[-1])/2
-      y <- rep(level,length(x))
-      return(cbind(x,y))
-   }
-   
-   #get the x and y coordinates for plotting the tree data structure
-   tree_df$x_pos <- 1
-   tree_df$tree_x <- NA
-   tree_df$tree_y <- NA
-   tree_df <- tree_df[order(tree_df$id),]
-   for(i in 1:nrow(tree_df)){
-      if(tree_df$parentID[i] != -1){
-         parent <- tree_df[tree_df$id == tree_df$parentID[i],]
-         num <- (parent$x_pos-1)*4 + tree_df$childOrder[i]
-         tree_df$x_pos[i] <- num
-      } else {
-         num <- 1
-      }
-      tree_df$tree_x[i] <- get_tree_coords(tree_df$level[i], xmin, xmax)[num]
-      tree_df$tree_y[i] <- max(tree_df$level)-tree_df$level[i]
-   }
-   
-   #now make a column for parent coordinates (for plotting the line between child and parent)
-   tree_df$parent_tree_x <- NA # the x and y TREE coords of the parents for plotting the tree
-   tree_df$parent_tree_y <- NA
-   tree_df$parent_x <- NA # the x and y CENTROID coords of the parents (needed for the 3D plot)
-   tree_df$parent_y <- NA
-   for(i in 1:nrow(tree_df)){
-      if(tree_df$parentID[i] != -1){
-         parent <- tree_df[tree_df$id == tree_df$parentID[i],]
-         tree_df$parent_tree_x[i] <- parent$tree_x
-         tree_df$parent_tree_y[i] <- parent$tree_y
-         tree_df$parent_x[i] <- parent$x
-         tree_df$parent_y[i] <- parent$y
-      }
-   }
-   return(tree_df)
-}
-
-library(plot3D)
-#create data for the sample quadtree
-mat = rbind(c(0,0,0,0,0,0,0,0),
-            c(0,0,0,0,0,0,0,0),
-            c(0,0,0,0,0,0,1,0),
-            c(0,0,0,0,0,0,0,1),
-            c(1,1,1,1,0,0,0,0),
-            c(1,1,1,1,0,0,0,0),
-            c(1,0,1,1,0,0,0,0),
-            c(0,1,1,1,0,0,0,0))
-# mat=rbind(c(1,1,0,1),
-#           c(1,1,1,0),
-#           c(1,0,0,0),
-#           c(0,1,0,0))
-qt_basic = quadtree(mat, split_method="range", split_threshold=0.1)
-
-#get the data frame for plotting the tree
-tree_df = get_tree_df(qt_basic, 0, 16)
-
-#we'll use a three-panel plot
-par(mfrow=c(1,3), mar=c(0,1,0,1))
-
-#plot the tree structure
-plot(tree_df$tree_x, tree_df$tree_y, axes = FALSE, xlab="", ylab="", type="n")
-with(tree_df, segments(tree_x,tree_y,parent_tree_x,parent_tree_y))
-with(tree_df, points(tree_x, tree_y, pch=16, xlab="", ylab="", cex=.8))
-
-#plot the quadtree
-plot(qt_basic, col="white", axes=FALSE, legend=FALSE, xlab="", ylab="")
-
-# with(tree_df[tree_df$hasChdn == 1,], points(tree_x, tree_y, pch=16, xlab="", ylab="", cex=.7))
-# with(tree_df[tree_df$hasChdn == 0,], points(tree_x, tree_y, col="black", bg="gray70", pch=21,cex=1.2))
-
-#make a 3D plot showing how the tree structure corresponds to its spatial representation
-with(tree_df, rect3D(x0=xMin,y0=yMin,z0=tree_y,x1=xMax,y1=yMax, 
-                     border="gray50", col="gray70",alpha=.2,axes=FALSE,box=FALSE,
-                     theta=25,phi=15,d=2))
-with(tree_df, scatter3D(x,y,tree_y, col="black",alpha=1,pch=16,add=TRUE))
-tree_df4 = rbind(tree_df, tree_df[nrow(tree_df),]) # The segments3D function wasn't plotting the last row of the data frame... so I just added another row to the end. Totally a hack, but it works.
-with(tree_df4, segments3D(x0=x, y0=y, z0=tree_y, x1=parent_x, y1=parent_y, z1=parent_tree_y,add=TRUE,lwd=1))
+```{r, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("figures/quadtree-structure-illustration.png")
 ```
 
 ## Overview of quadtree creation
@@ -168,11 +76,11 @@ In the `"resample"` method, the raster is resampled in order to create a square 
 
 ```{r}
 qt <- quadtree(rast, .15, adj_type = "resample", resample_n_side = 128,
-               resample_pad_NAs = FALSE)
+               resample_pad_nas = FALSE)
 plot(qt, border_lwd = .3, main = "resample (without NA padding)")
 ```
 
-If square cells are desired, an additional step is added to make the raster square by setting `resample_pad_NAs` to be `TRUE` (the default). This is done in a way similar to the method described above. The smaller dimension is padded with `NA` cells in order to equal the larger dimension. As stated previously, our sample raster has dimensions 178 x 161, so `NA` columns are added in order to create a raster with dimensions 178 x 178. Then, the raster is resampled to a user-specified dimension (determined by the `resample_n_side` parameter). For example, the user could set `resample_n_side` to be 128, which will resample the 178 x 178 raster to 128 x 128. This raster can then be used to create a quadtree. 
+If square cells are desired, an additional step is added to make the raster square by setting `resample_pad_nas` to be `TRUE` (the default). This is done in a way similar to the method described above. The smaller dimension is padded with `NA` cells in order to equal the larger dimension. As stated previously, our sample raster has dimensions 178 x 161, so `NA` columns are added in order to create a raster with dimensions 178 x 178. Then, the raster is resampled to a user-specified dimension (determined by the `resample_n_side` parameter). For example, the user could set `resample_n_side` to be 128, which will resample the 178 x 178 raster to 128 x 128. This raster can then be used to create a quadtree. 
 
 ```{r}
 qt <- quadtree(rast, .15, adj_type = "resample", resample_n_side = 128)
@@ -329,15 +237,15 @@ plot(qt_min_cell, crop = TRUE, na_col = NULL, border_lwd = .3, legend = FALSE,
      main = "min_cell_length = 1000")
 ```
 
-### `split_if_any_NA` and `split_if_all_NA`
+### `split_if_any_na` and `split_if_all_na`
 
-The `split_if_any_NA` and `split_if_all_NA` parameters control how `NA` values are handled. If `split_if_any_NA` is `TRUE` (the default), a quadrant will be split if any of the values are `NA`. This ensures that rasters with irregular shapes maintain their shape in the resulting quadtree representation. If `FALSE`, quadrants with `NA`s are not automatically split - note that this can produce unexpected results if the raster is irregularly shaped. `split_if_all_NA` controls what happens when a quadrant consists entirely of `NA` values. If `FALSE` (the default), these quadrants are not split. If `TRUE`, these quadrants are automatically split, which results in quadrants with all `NA` values being split to the smallest possible cell size.
+The `split_if_any_na` and `split_if_all_na` parameters control how `NA` values are handled. If `split_if_any_na` is `TRUE` (the default), a quadrant will be split if any of the values are `NA`. This ensures that rasters with irregular shapes maintain their shape in the resulting quadtree representation. If `FALSE`, quadrants with `NA`s are not automatically split - note that this can produce unexpected results if the raster is irregularly shaped. `split_if_all_na` controls what happens when a quadrant consists entirely of `NA` values. If `FALSE` (the default), these quadrants are not split. If `TRUE`, these quadrants are automatically split, which results in quadrants with all `NA` values being split to the smallest possible cell size.
 
 ```{r}
-qt_any <- quadtree(rast, .15, split_if_any_NA = FALSE)
-qt_all <- quadtree(rast, .15, split_if_all_NA = TRUE)
+qt_any <- quadtree(rast, .15, split_if_any_na = FALSE)
+qt_all <- quadtree(rast, .15, split_if_all_na = TRUE)
 
 par(mfrow = c(1, 2))
-plot(qt_any, border_lwd = .3, legend = FALSE, main = "split_if_any_NA = FALSE")
-plot(qt_all, border_lwd = .3, legend = FALSE, main = "split_if_all_NA = TRUE")
+plot(qt_any, border_lwd = .3, legend = FALSE, main = "split_if_any_na = FALSE")
+plot(qt_all, border_lwd = .3, legend = FALSE, main = "split_if_all_na = TRUE")
 ```
