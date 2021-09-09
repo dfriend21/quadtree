@@ -1,6 +1,6 @@
 #include "NodeWrapper.h"
 #include "QuadtreeWrapper.h"
-#include "ShortestPathFinderWrapper.h"
+#include "LcpFinderWrapper.h"
 #include "R_Interface.h"
 
 RCPP_MODULE(qt) {
@@ -38,7 +38,7 @@ RCPP_MODULE(qt) {
     .method("asList", &QuadtreeWrapper::asList)
     .method("print", &QuadtreeWrapper::print)
     .method("getNbList", &QuadtreeWrapper::getNbList)
-    .method("getShortestPathFinder", &QuadtreeWrapper::getShortestPathFinder)
+    .method("getLcpFinder", &QuadtreeWrapper::getLcpFinder)
     .method("copy", &QuadtreeWrapper::copy)
     .method("setProjection", &QuadtreeWrapper::setProjection)
     .method("setOriginalValues", &QuadtreeWrapper::setOriginalValues)
@@ -50,13 +50,13 @@ RCPP_MODULE(qt) {
     .method("maxCellDims", &QuadtreeWrapper::maxCellDims)
     .method("projection", &QuadtreeWrapper::projection);
   
-  class_<ShortestPathFinderWrapper>("CppShortestPathFinder")
-    .method("makeNetworkAll", &ShortestPathFinderWrapper::makeNetworkAll)
-    .method("makeNetworkCostDist", &ShortestPathFinderWrapper::makeNetworkCostDist)
-    .method("getShortestPath", &ShortestPathFinderWrapper::getShortestPath)
-    .method("getAllPathsSummary", &ShortestPathFinderWrapper::getAllPathsSummary)
-    .method("getStartPoint", &ShortestPathFinderWrapper::getStartPoint)
-    .method("getSearchLimits", &ShortestPathFinderWrapper::getSearchLimits);
+  class_<LcpFinderWrapper>("CppLcpFinder")
+    .method("makeNetworkAll", &LcpFinderWrapper::makeNetworkAll)
+    .method("makeNetworkCostDist", &LcpFinderWrapper::makeNetworkCostDist)
+    .method("getLcp", &LcpFinderWrapper::getLcp)
+    .method("getAllPathsSummary", &LcpFinderWrapper::getAllPathsSummary)
+    .method("getStartPoint", &LcpFinderWrapper::getStartPoint)
+    .method("getSearchLimits", &LcpFinderWrapper::getSearchLimits);
 
   function("readQuadtreeCpp", &QuadtreeWrapper::readQuadtree);
   function("writeQuadtreeCpp", &QuadtreeWrapper::writeQuadtree);

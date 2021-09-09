@@ -7,7 +7,7 @@
 #include <set>
 #include <tuple>
 
-class ShortestPathFinder{
+class LcpFinder{
         
         //defines a connection between two nodes
         struct NodeEdge{
@@ -28,11 +28,11 @@ class ShortestPathFinder{
         };
 
         void init(int startNodeID);
-        std::vector<std::tuple<std::shared_ptr<Node>,double,double>> findShortestPath(int endNodeID);
+        std::vector<std::tuple<std::shared_ptr<Node>,double,double>> findLcp(int endNodeID);
 
         public:
             
-            std::shared_ptr<Quadtree> quadtree; //the quadtree the ShortestPathFinder operates 'on top' of
+            std::shared_ptr<Quadtree> quadtree; //the quadtree the LcpFinder operates 'on top' of
             std::shared_ptr<Node> startNode; //the start node - the node from which all LCPs will be found
             std::vector<std::shared_ptr<NodeEdge>> nodeEdges;
             std::map<int, int> dict; //dictionary with Node ID's as the key and the index of the corresponding 'NodeEdge' in 'nodeEdges'
@@ -46,16 +46,16 @@ class ShortestPathFinder{
 
             bool includeNodesByCentroid{false};
 
-            ShortestPathFinder();
-            ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID);
-            ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Point startPoint);
-            ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid);
-            ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Point startPoint, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid);
+            LcpFinder();
+            LcpFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID);
+            LcpFinder(std::shared_ptr<Quadtree> _quadtree, Point startPoint);
+            LcpFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid);
+            LcpFinder(std::shared_ptr<Quadtree> _quadtree, Point startPoint, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid);
 
             int doNextIteration();
 
-            std::vector<std::tuple<std::shared_ptr<Node>,double,double>> getShortestPath(int endNodeID);
-            std::vector<std::tuple<std::shared_ptr<Node>,double,double>> getShortestPath(Point endPoint);
+            std::vector<std::tuple<std::shared_ptr<Node>,double,double>> getLcp(int endNodeID);
+            std::vector<std::tuple<std::shared_ptr<Node>,double,double>> getLcp(Point endPoint);
 
             void makeNetworkAll();
             void makeNetworkCostDist(double constraint);

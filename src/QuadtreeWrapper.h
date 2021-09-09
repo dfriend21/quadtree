@@ -5,7 +5,7 @@
 #include "Quadtree.h"
 
 #include "NodeWrapper.h"
-#include "ShortestPathFinderWrapper.h"
+#include "LcpFinderWrapper.h"
 
 #include <memory>
 #include <vector>
@@ -62,7 +62,7 @@ class QuadtreeWrapper{
     void makeNbList(std::shared_ptr<Node> node, Rcpp::List &list) const;
     Rcpp::List getNbList();
     
-    ShortestPathFinderWrapper getShortestPathFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid) const;
+    LcpFinderWrapper getLcpFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid) const;
     
     QuadtreeWrapper copy() const;
     

@@ -5,33 +5,33 @@
 //' @field spf
 //' @field startPoint
 
-#include "ShortestPathFinderWrapper.h"
+#include "LcpFinderWrapper.h"
 
-ShortestPathFinderWrapper::ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint)
+LcpFinderWrapper::LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint)
     : startPoint{_startPoint}{
-  spf = ShortestPathFinder(quadtree,Point(startPoint[0], startPoint[1]));
+  spf = LcpFinder(quadtree,Point(startPoint[0], startPoint[1]));
 }
 
-ShortestPathFinderWrapper::ShortestPathFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid)
+LcpFinderWrapper::LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid)
   : startPoint {_startPoint}{
-  spf = ShortestPathFinder(quadtree,Point(startPoint[0], startPoint[1]), xlims[0], xlims[1], ylims[0], ylims[1], searchByCentroid);
+  spf = LcpFinder(quadtree,Point(startPoint[0], startPoint[1]), xlims[0], xlims[1], ylims[0], ylims[1], searchByCentroid);
 }
 
-void ShortestPathFinderWrapper::makeNetworkAll(){
+void LcpFinderWrapper::makeNetworkAll(){
   spf.makeNetworkAll();
 }
 
-// void ShortestPathFinderWrapper::makeNetworkCost(double constraint){
+// void LcpFinderWrapper::makeNetworkCost(double constraint){
 //   spf.makeNetworkCost(constraint);
 // }
 
-void ShortestPathFinderWrapper::makeNetworkCostDist(double constraint){
+void LcpFinderWrapper::makeNetworkCostDist(double constraint){
   spf.makeNetworkCostDist(constraint);
 }
 
 
-Rcpp::NumericMatrix ShortestPathFinderWrapper::getShortestPath(Rcpp::NumericVector endPoint){
-  std::vector<std::tuple<std::shared_ptr<Node>,double,double>> path = spf.getShortestPath(Point(endPoint[0], endPoint[1]));
+Rcpp::NumericMatrix LcpFinderWrapper::getLcp(Rcpp::NumericVector endPoint){
+  std::vector<std::tuple<std::shared_ptr<Node>,double,double>> path = spf.getLcp(Point(endPoint[0], endPoint[1]));
   Rcpp::NumericMatrix mat(path.size(),5);
   colnames(mat) = Rcpp::CharacterVector({"x","y","cost_tot","dist_tot", "cost_cell"}); //name the columns
   for(size_t i = 0; i < path.size(); ++i){  
@@ -44,7 +44,7 @@ Rcpp::NumericMatrix ShortestPathFinderWrapper::getShortestPath(Rcpp::NumericVect
   return mat;
 }
 
-Rcpp::NumericMatrix ShortestPathFinderWrapper::getAllPathsSummary(){
+Rcpp::NumericMatrix LcpFinderWrapper::getAllPathsSummary(){
   //first we need to know how many "found" paths are currently in the network
   int nPaths{0};
   for(size_t i = 0; i < spf.nodeEdges.size(); ++i){
@@ -75,14 +75,14 @@ Rcpp::NumericMatrix ShortestPathFinderWrapper::getAllPathsSummary(){
   return mat;
 }
 
-Rcpp::NumericVector ShortestPathFinderWrapper::getStartPoint(){
+Rcpp::NumericVector LcpFinderWrapper::getStartPoint(){
   Rcpp::NumericVector vec(2);
   vec[0] = startPoint[0];
   vec[1] = startPoint[1];
   return vec;
 }
 
-Rcpp::NumericVector ShortestPathFinderWrapper::getSearchLimits(){
+Rcpp::NumericVector LcpFinderWrapper::getSearchLimits(){
   Rcpp::NumericVector vec(4);
   vec[0] = spf.xMin;
   vec[1] = spf.xMax;

@@ -1,14 +1,14 @@
-#include "ShortestPathFinder.h"
+#include "LcpFinder.h"
 #include "PointUtilities.h"
 
 //-------------------------
 // constructors
 //-------------------------
 
-ShortestPathFinder::ShortestPathFinder()
+LcpFinder::LcpFinder()
     : quadtree{nullptr}, startNode{nullptr}{}//, isValid{false} {}//, startPoint{-1,-1}{}
 
-ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID)
+LcpFinder::LcpFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID)
     : quadtree{_quadtree} {
     xMin = quadtree->root->xMin;
     xMax = quadtree->root->xMax;
@@ -17,7 +17,7 @@ ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int 
     init(startNodeID);
 }
 
-ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Point _startPoint)
+LcpFinder::LcpFinder(std::shared_ptr<Quadtree> _quadtree, Point _startPoint)
     : quadtree{_quadtree} {
     xMin = quadtree->root->xMin;
     xMax = quadtree->root->xMax;
@@ -29,12 +29,12 @@ ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Poin
     }
 }
 
-ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid)
+LcpFinder::LcpFinder(std::shared_ptr<Quadtree> _quadtree, int startNodeID, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid)
     : quadtree{_quadtree}, xMin{_xMin}, xMax{_xMax}, yMin{_yMin}, yMax{_yMax}, includeNodesByCentroid{_includeNodesByCentroid} {
     init(startNodeID);
 }
 
-ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Point _startPoint, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid)
+LcpFinder::LcpFinder(std::shared_ptr<Quadtree> _quadtree, Point _startPoint, double _xMin, double _xMax, double _yMin, double _yMax, bool _includeNodesByCentroid)
     : quadtree{_quadtree}, xMin{_xMin}, xMax{_xMax}, yMin{_yMin}, yMax{_yMax}, includeNodesByCentroid{_includeNodesByCentroid} {
 
     std::shared_ptr<Node> startNode = quadtree->getNode(_startPoint.x, _startPoint.y);
@@ -47,7 +47,7 @@ ShortestPathFinder::ShortestPathFinder(std::shared_ptr<Quadtree> _quadtree, Poin
 // init
 //-------------------------
 //sets up the empty network we'll use when finding LCPs
-void ShortestPathFinder::init(int startNodeID){
+void LcpFinder::init(int startNodeID){
     std::list<std::shared_ptr<Node>> nodes = quadtree->getNodesInBox(xMin, xMax, yMin, yMax, includeNodesByCentroid); // get all nodes in the search area
     nodeEdges = std::vector<std::shared_ptr<NodeEdge>>(nodes.size());
     
@@ -85,7 +85,7 @@ void ShortestPathFinder::init(int startNodeID){
 //performs one iteration of the shortest path algorithm
 //returns the ID of the most recently added Node (note that it returns the ID of the Node, NOT the NodeEdge)
 //returns -1 if no edge was added
-int ShortestPathFinder::doNextIteration(){
+int LcpFinder::doNextIteration(){
     auto beginItr = possibleEdges.begin();
     std::shared_ptr<NodeEdge> nodeEdge = nodeEdges.at(std::get<1>(*beginItr)); //get the edge that's at the front of the set
     auto parent = nodeEdge->parent.lock();
@@ -157,10 +157,10 @@ int ShortestPathFinder::doNextIteration(){
 
 
 //-------------------------
-// findShortestPath
+// findLcp
 //-------------------------
 // --DESCRIPTION: after the network as been fully or partially constructed using 
-// 'getShortestPath()' or  'makeNetwork*()', finds the path from start node to the end node
+// 'getLcp()' or  'makeNetwork*()', finds the path from start node to the end node
 // --PAREMTERS:
 //   endNodeID: the ID of the node we want to find a path to
 // --RETURNS:
@@ -169,7 +169,7 @@ int ShortestPathFinder::doNextIteration(){
 //      0 - pointer to the node  
 //      1 - cumulative cost to reach this node
 //      2 - cumulative distance to reach this node
-std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::findShortestPath(int endNodeID){
+std::vector<std::tuple<std::shared_ptr<Node>,double,double>> LcpFinder::findLcp(int endNodeID){
     std::map<int,int>::iterator itr = dict.find(endNodeID); //see if this node is included in our dictionary - if not, then it must fall outside our search extent
     if(itr != dict.end()){
         std::shared_ptr<NodeEdge> currentNodeEdge = nodeEdges.at(itr->second); //get the pointer to the nodeEdge that corresponds with the ID provided by the user
@@ -189,14 +189,14 @@ std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder:
 }
 
 //-------------------------
-// getShortestPath
+// getLcp
 //-------------------------
 //this function finds the shortest path to a specific node. As mentioned in the
 //comments for 'makeNetworkAll()', the two functions are designed to work together. If the full network
 //has already been calculated, then this function doesn't do any further calculation - it simply calls 
-//'findShortestPath()' to get the shortest path. If the full path hasn't been calculated, however, then it 
+//'findLcp()' to get the shortest path. If the full path hasn't been calculated, however, then it 
 //runs the algorithm until it finds the desired shortest path.
-std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::getShortestPath(int endNodeID){
+std::vector<std::tuple<std::shared_ptr<Node>,double,double>> LcpFinder::getLcp(int endNodeID){
     std::map<int,int>::iterator itr = dict.find(endNodeID); //see if this node is included in our dictionary - if not, then it must fall outside our search extent
     if(itr != dict.end()){
         // if(!nodeEdges.at(dict[endNodeID])->parent.lock()){ // check if we've already found the path to this node
@@ -208,17 +208,17 @@ std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder:
                 }
             }
         }
-        return findShortestPath(endNodeID);
+        return findLcp(endNodeID);
     } else {
         return std::vector<std::tuple<std::shared_ptr<Node>,double,double>>();
     }
 }
 
-//this is just a wrapper around getShortestPath(int) that accepts a point instead of a node ID
-std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder::getShortestPath(Point endPoint){
+//this is just a wrapper around getLcp(int) that accepts a point instead of a node ID
+std::vector<std::tuple<std::shared_ptr<Node>,double,double>> LcpFinder::getLcp(Point endPoint){
     std::shared_ptr<Node> node = quadtree->getNode(endPoint.x, endPoint.y);
     if(node && !std::isnan(node->value)){ //only try to find the shortest path if the point falls in the quadtree and the value of the node isn't NA
-        return getShortestPath(node->id);
+        return getLcp(node->id);
     } else {
         return std::vector<std::tuple<std::shared_ptr<Node>,double,double>>();
     }
@@ -228,12 +228,12 @@ std::vector<std::tuple<std::shared_ptr<Node>,double,double>> ShortestPathFinder:
 // makeNetworkAll
 //-------------------------
 //This function runs the shortest path algorithm exhaustively, meaning it finds all shortest paths to all nodes.
-//This creates a 'network' of NodeEdges, which we can query with 'getShortestPath()' to get any single shortest
-//path. This function and 'getShortestPath()' are designed to work together. 'getShortestPath()' stops when it reaches
+//This creates a 'network' of NodeEdges, which we can query with 'getLcp()' to get any single shortest
+//path. This function and 'getLcp()' are designed to work together. 'getLcp()' stops when it reaches
 //a certain node. But because the state of the algorithm is saved in 'possibleEdges', this algorithm can simply pick 
-//up where 'getShortestPath()' left off, rather than recalculating everything. This is why I implemented the shortest
+//up where 'getLcp()' left off, rather than recalculating everything. This is why I implemented the shortest
 //functionality as a class - it lets me save the state of the algorithm in a way that I couldn't do with just a function.
-void ShortestPathFinder::makeNetworkAll(){
+void LcpFinder::makeNetworkAll(){
     while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
         doNextIteration();
     }
@@ -243,7 +243,7 @@ void ShortestPathFinder::makeNetworkAll(){
 // makeNetworkCostDist
 //-------------------------
 // This function finds all LCPs below a given cost-distance value
-void ShortestPathFinder::makeNetworkCostDist(double constraint){
+void LcpFinder::makeNetworkCostDist(double constraint){
     while(possibleEdges.size() != 0){ //if possibleEdges is 0 then we've added all the edges possible and we're done
         int currentID = doNextIteration();
         int dictID = dict[currentID];

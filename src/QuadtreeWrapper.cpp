@@ -5,7 +5,7 @@
 #include "R_Interface.h"
 #include "NodeWrapper.h"
 #include "QuadtreeWrapper.h"
-#include "ShortestPathFinderWrapper.h"
+#include "LcpFinderWrapper.h"
 
 #include <Rcpp.h>
 #include <cassert>
@@ -296,8 +296,8 @@ Rcpp::List QuadtreeWrapper::getNbList(){
   return nbList;
 }
 
-ShortestPathFinderWrapper QuadtreeWrapper::getShortestPathFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid) const{
-  return ShortestPathFinderWrapper(quadtree, startPoint, xlims, ylims, searchByCentroid);
+LcpFinderWrapper QuadtreeWrapper::getLcpFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid) const{
+  return LcpFinderWrapper(quadtree, startPoint, xlims, ylims, searchByCentroid);
 }
 
 QuadtreeWrapper QuadtreeWrapper::copy() const{
