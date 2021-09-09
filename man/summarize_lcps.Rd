@@ -3,16 +3,16 @@
 \name{summarize_lcps}
 \alias{summarize_lcps}
 \alias{summarize_lcps,LcpFinder-method}
-\title{Show a summary matrix of all LCPs currently calculated}
+\title{Show a summary of all LCPs found by a \code{\link{LcpFinder}}}
 \usage{
 \S4method{summarize_lcps}{LcpFinder}(x)
 }
 \arguments{
-\item{x}{an LCP finder object created using \code{\link{lcp_finder}()}}
+\item{x}{a \code{\link{LcpFinder}}}
 }
 \value{
 Returns a 9-column matrix with one row for each LCP (and therefore
-  one row per cell). The columns are as follows:
+  one row per destination cell). The columns are as follows:
   \itemize{
      \item{\code{id}: }{the ID of the destination cell}
      \item{\code{xmin, xmax, ymin, ymax}: }{the extent of the destination
@@ -25,17 +25,16 @@ Returns a 9-column matrix with one row for each LCP (and therefore
      along the path} }
 }
 \description{
-Given an \code{\link{LcpFinder}} object, returns a matrix that
-  summarizes all of the LCPs that have already been calculated by the LCP
-  finder.
+Given a \code{\link{LcpFinder}} object, returns a matrix that
+  summarizes all of the LCPs that have already been calculated by the
+  \code{\link{LcpFinder}}.
 }
 \details{
 Note that this function returns \strong{all} of the paths that have
-  been calculated. As explained in the documentation for
-  \code{\link{lcp_finder}()}, finding one LCP likely involves finding other
-  LCPs as well. Thus, even if the LCP finder has been used to find one LCP,
-  others have most likely been calculated. This function returns all of the
-  LCPs that have been calculated so far.
+  been calculated. Finding one LCP likely involves finding other LCPs as
+  well. Thus, even if the \code{\link{LcpFinder}} has been used to find one
+  LCP, others have most likely been calculated. This function returns all of
+  the LCPs that have been calculated so far.
 }
 \examples{
 library(quadtree)
@@ -63,6 +62,6 @@ points(rbind(start_pt, end_pt), col = c("red", "blue"), pch = 16)
 \seealso{
 \code{\link{lcp_finder}()} creates the \code{\link{LcpFinder}}
   object used as input to this function. \code{\link{find_lcp}()} returns the
-  LCP between two points. \code{\link{find_lcps}()} calculates all LCPs whose
-  cost-distance is less than some value.
+  LCP between the start point and another point. \code{\link{find_lcps}()}
+  calculates all LCPs whose cost-distance is less than some value.
 }

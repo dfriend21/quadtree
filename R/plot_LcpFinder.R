@@ -3,15 +3,15 @@
 #' @name plot.LcpFinder
 #' @aliases points.LcpFinder points,LcpFinder-method lines.LcpFinder
 #'   lines,LcpFinder-method
-#' @title Plot a LcpFinder object
-#' @description Plots a LcpFinder object
-#' @param x a \code{\link{LcpFinder}} object
-#' @param add boolean; if \code{TRUE}, the LcpFinder plot is added to the
-#'   existing plot
+#' @title Plot a \code{\link{LcpFinder}} object
+#' @description Plots a \code{\link{LcpFinder}} object
+#' @param x a \code{\link{LcpFinder}}
+#' @param add boolean; if \code{TRUE} (the default), the plot is added to the
+#'   existing plot. If \code{FALSE}, a new plot is created.
 #' @param ... arguments passed to the default plotting functions
 #' @details \code{points()} plots points at the centroids of the cells to which
 #'   a path has been found. \code{lines()} plots all of the LCPs found so far by
-#'   the LcpFinder object.
+#'   the \code{\link{LcpFinder}} object.
 #' @return no return value
 #' @examples
 #' data(habitat)

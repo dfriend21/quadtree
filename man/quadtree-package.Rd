@@ -5,21 +5,27 @@
 \alias{quadtree-package}
 \title{Quadtree Representation of Rasters}
 \description{
-Provides a C++ implementation of a quadtree data
- structure. Functions are provided for creating a quadtree
- from a raster, with the level of "coarseness" of the
- quadtree being determined by a user-supplied parameter. In
- addition, functions are provided to extract values of the
- quadtree at point locations. Functions for calculating
- least-cost paths between two points are also provided.
+This package provides functionality for working with raster-like quadtrees
+ (also called "region quadtrees"), which allow for variable-sized cells. The
+ package allows for flexibility in the quadtree creation process. Several
+ functions defining how to split and aggregate cells are provided, and custom
+ functions can be written for both of these processes. In addition, quadtrees
+ can be created using other quadtrees as "templates", so that the new
+ quadtree has the identical structure as the template quadtree.
+
+The package also includes functionality for modifying quadtrees, querying
+values, saving quadtrees to a file, and calculating least-cost paths using
+the quadtree as a resistance surface.
+
+Vignettes are included that demonstrate the functionality contained in the
+package - these are intended to serve as an introduction to using the
+\code{quadtree} package. You can see the available vignettes by running
+\code{vignettes(package = "quadtree")} and view individual vignettes using
+\code{vignettes("vignette-name", package = "quadtree")}.
+
+I'd recommend reading the vignettes in the following order: \enumerate{
+  \item \code{"quadtree-creation"}
+  \item \code{"quadtree-usage"}
+  \item \code{"quadtree-lcp"}
 }
-\details{
-To get an understanding of the most important aspects of the package, read
- the following:
-   \enumerate{
-     \item For details on how a quadtree is constructed, see
-     \code{\link{quadtree}}.
-     \item  For details on the least-cost path functionality, see
-     \code{\link{lcp_finder}}.
-   }
 }

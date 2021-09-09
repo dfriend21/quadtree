@@ -3,13 +3,12 @@
 \name{find_lcp}
 \alias{find_lcp}
 \alias{find_lcp,LcpFinder,numeric-method}
-\title{Find the LCP between two points on a quadtree}
+\title{Find the LCP between two points on a \code{\link{Quadtree}}}
 \usage{
 \S4method{find_lcp}{LcpFinder,numeric}(x, y, use_original_end_points = FALSE)
 }
 \arguments{
-\item{x}{the \code{\link{LcpFinder}} object returned from
-\code{lcp_finder}}
+\item{x}{a \code{\link{LcpFinder}}}
 
 \item{y}{numeric vector with two elements - the x and y coordinates
 of the the destination point}
@@ -38,16 +37,17 @@ algorithm.}
   If no path is possible between the two points, a 0-row matrix with the
   previously described columns is returned.
 
-  IMPORTANT NOTE: the \code{use_original_end_points} options ONLY changes the
-  x and y coordinates of the first and last points - it doesn't change the
-  \code{cost_tot} or \code{dist_tot} columns. This means that even though the
-  start and end points have changed, the \code{cost_tot} and \code{dist_tot}
-  columns still represent the cost and distance using the cell centroids of
-  the start and end cells.
+  \strong{Important note:} the \code{use_original_end_points} option
+  \strong{only} changes the x and y coordinates of the first and last points
+  - it doesn't change the \code{cost_tot} or \code{dist_tot} columns. This
+  means that even though the start and end points have changed, the
+  \code{cost_tot} and \code{dist_tot} columns still represent the cost and
+  distance using the cell centroids of the start and end cells.
 }
 \description{
-Finds the least cost path (LCP) between two points, using a
-  quadtree as a resistance surface
+Finds the least-cost path (LCP) from the start point (the point
+  used to create the \code{\link{LcpFinder}}) to another point, using a
+  \code{\link{Quadtree}} as a resistance surface
 }
 \details{
 See the vignette 'quadtree-lcp' for more details and examples (i.e. run
@@ -60,9 +60,9 @@ See the vignette 'quadtree-lcp' for more details and examples (i.e. run
 ####################
 
 library(quadtree)
+data(habitat)
 
 # create a quadtree
-data(habitat)
 qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 plot(qt, crop = TRUE, na_col = NULL, border_lwd = .4)
 

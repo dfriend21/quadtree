@@ -5,34 +5,39 @@
 \alias{summary,LcpFinder-method}
 \alias{show.LcpFinder}
 \alias{show,LcpFinder-method}
-\title{Show a Summary of a LcpFinder object}
+\title{Show a summary of a \code{\link{LcpFinder}}}
 \usage{
 \S4method{summary}{LcpFinder}(object)
 
 \S4method{show}{LcpFinder}(object)
 }
 \arguments{
-\item{object}{a \code{\link{LcpFinder}} object}
+\item{object}{a \code{\link{LcpFinder}}}
 }
 \value{
 no return value
 }
 \description{
-Prints out information about the LcpFinder. Information shown is:
+Prints out information about the \code{\link{LcpFinder}}.
+  Information shown is:
 \itemize{
   \item class of object
   \item start point
   \item search limits
-  \item number of paths found (so far)
+  \item number of paths found
 }
 }
 \examples{
+library(quadtree)
 data(habitat)
+
 qt <- quadtree(habitat, .1)
 
 start_point <- c(6989, 34007)
 end_point <- c(33015, 38162)
+
 lcpf <- lcp_finder(qt, start_point)
 lcp <- find_lcp(lcpf, end_point)
+
 summary(lcpf)
 }

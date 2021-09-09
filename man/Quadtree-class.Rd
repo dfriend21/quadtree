@@ -6,15 +6,25 @@
 \alias{Quadtree}
 \title{Quadtree class}
 \description{
-This S4 class is a wrapper around a \code{CppQuadtree} C++ object that is
-made available to R via the 'Rcpp' package. Instances of this class can be
-created through the \code{\link{quadtree}()} function.
+This S4 class is essentially a wrapper around a \code{\link{CppQuadtree}} C++
+object. \code{Quadtree} has one slot, which is named \code{ptr} and contains
+a \code{\link{CppQuadtree}} object. Instances of this class can be created
+through the \code{\link{quadtree}()} function.
 
-The methods of the C++ object (\code{\link{CppQuadtree}}) can be accessed
-from R, but the typical end-user should have no need of these methods -
-they are meant for internal use. That being said, descriptions of the
-available methods can be found on the \code{\link{CppQuadtree}} documentation
-page.
+An important note to make is that functions that modify a \code{Quadtree}
+modify the existing object. For example, running
+\code{\link{transform_values}(qt, function(x) x+1)} modifies \code{qt}. This
+differs from the way R objects usually function - most functions that modify
+R objects return a modified copy of the object, thus preserving the original
+object. Note that the \code{\link{copy}()} function, which makes a deep copy
+of a \code{Quadtree}, can be used to preserve a copy of a \code{Quadtree}
+before modifying it.
+
+The methods of the C++ object (\code{\link{CppQuadtree}}) stored in the
+\code{ptr} slot can be accessed from R, but the typical end-user should have
+no need of these methods - they are meant for internal use. That being said,
+descriptions of the available methods can be found on the
+\code{\link{CppQuadtree}} documentation page.
 }
 \details{
 Functions for creating a \code{Quadtree} object: \itemize{

@@ -3,14 +3,15 @@
 \name{extract}
 \alias{extract}
 \alias{extract,Quadtree,ANY-method}
-\title{Extract the values of a quadtree at the given locations}
+\alias{extract.Quadtree}
+\title{Extract \code{\link{Quadtree}} values}
 \usage{
 \S4method{extract}{Quadtree,ANY}(x, y, extents = FALSE)
 }
 \arguments{
-\item{x}{A \code{\link{Quadtree}} object}
+\item{x}{a \code{\link{Quadtree}}}
 
-\item{y}{A two-column matrix representing point coordinates. First column
+\item{y}{a two-column matrix representing point coordinates. First column
 contains the x-coordinates, second column contains the y-coordinates}
 
 \item{extents}{boolean; if \code{FALSE} (the default), a vector containing
@@ -18,30 +19,24 @@ cell values is returned. If \code{TRUE}, a matrix is returned providing
 each cell's extent in addition to its value}
 }
 \value{
-The return type depends on the value of \code{extents}.
+If \code{extents = FALSE}, returns a numeric vector corresponding to the
+values at the points represented by \code{pts}.
 
-If \code{extents = FALSE}, the function returns a numeric vector
-corresponding to the values at the points represented by \code{pts}. If a
-point falls within the quadtree extent and the corresponding cell is
-\code{NA}, or if the point falls outside of the extent, \code{NaN} is
-returned.
-
-If \code{extents = TRUE}, the function returns a 6-column numeric matrix
-providing the extent of each cell along with the cell's value and ID. The 6
-columns are, in this order: \code{id}, \code{xmin}, \code{xmax}, \code{ymin},
-\code{ymax}, \code{value}. If a point falls in a \code{NA} cell, the cell
-extent is still returned but \code{value} will be \code{NaN}. If a point
-falls outside of the quadtree, all values will be \code{NaN}.
+If \code{extents = TRUE}, returns a 6-column numeric matrix providing the
+extent of each cell along with the cell's value and ID. The 6 columns are, in
+this order: \code{id}, \code{xmin}, \code{xmax}, \code{ymin}, \code{ymax},
+\code{value}.
 }
 \description{
-Extract the cell values and optionally the cell extents
+Extracts the cell values and optionally the cell extents at the
+  given points
 }
 \examples{
+library(quadtree)
 data(habitat)
-rast <- habitat
 
 # create quadtree
-qt1 <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+qt1 <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 plot(qt1)
 
 # create points at which we'll extract values

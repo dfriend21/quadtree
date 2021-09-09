@@ -87,11 +87,11 @@ I took an HTML/CSS-like approach to determining the positioning -
   I obviously wrote this for plotting the quadtree, but there's nothing
   quadtree-specific about this particular function.
 
-  This function is used within \code{\link{plot}}, so the user shouldn't
+  This function is used within \code{\link[=plot.Quadtree]{plot}()}, so the user shouldn't
   call this function to manually create the legend. Customizations to the
   legend can be done via the \code{legend_args} parameter of
-  \code{plot()}. Using this function to plot the legend after using
-  \code{plot()} raises the possibility of the legend not corresponding
+  \code{\link[=plot.Quadtree]{plot}()}. Using this function to plot the legend after using
+  \code{\link[=plot.Quadtree]{plot}()} raises the possibility of the legend not corresponding
   correctly with the plot, and thus should be avoided.
 }
 \examples{

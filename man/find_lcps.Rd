@@ -5,36 +5,43 @@
 \alias{find_lcps,LcpFinder-method}
 \title{Find LCPs to surrounding points}
 \usage{
-\S4method{find_lcps}{LcpFinder}(x, limit = NULL)
+\S4method{find_lcps}{LcpFinder}(x, limit = NULL, return_summary = TRUE)
 }
 \arguments{
-\item{x}{the \code{LcpFinder} object returned from \code{\link{lcp_finder}}}
+\item{x}{a \code{LcpFinder}}
 
 \item{limit}{numeric; the maximum cost-distance for the LCPs. If \code{NULL}
 (the default), no limit is applied and all possible LCPs (within the
 \code{LcpFinder}'s search area) are found}
+
+\item{return_summary}{boolean; if \code{TRUE} (the default),
+\code{\link{summarize_lcps}()} is used to return a summary matrix of all
+paths found. If \code{FALSE}, no value is returned.}
 }
 \value{
-Returns a matrix summarizing each LCP found.
-  \code{\link{summarize_lcps}} is used to generate this matrix - see the help
-  for that function for details on the return matrix. Note that this function
-  does \strong{not} return the full paths to each point - however, each of
-  the paths summarized in the output matrix has already been calculated, and
-  can be retrieved using \code{find_lcp()} (without having to recalculate
-  the path, since it's already been calculated).
+If \code{return_summary} is \code{TRUE},
+  \code{\link{summarize_lcps}()} is used to return a matrix summarizing each
+  LCP found. See the help page of that function for details on the return
+  matrix.
 }
 \description{
-Calculates the LCPs to surrounding points. A constraint can be
-  placed on the LCPs, so that only LCPs that are less than some specified
-  cost-distance are returned.
+Calculates least-cost paths (LCPs) from the start point (the
+  point used to create the \code{\link{LcpFinder}}) to surrounding points. A
+  constraint can be placed on the LCPs, so that only LCPs that are less than
+  some specified cost-distance are returned.
 }
 \details{
-A very important note to make is that once the LCP tree is
-calculated, it never gets smaller. For example, we could use
-\code{find_lcps()} with \code{limit = NULL} to calculate all LCPS. If we then
-used \code{find_lcps()} on the same \code{LcpFinder} but this time used a
-limit, it would still return \emph{all} of the LCPs - even those that are
-greater than the specified limit, since the tree never shrinks.
+Once the LCPs have been calculated, \code{\link{find_lcp}()} can be
+  used to extract paths to individual points. No further calculation will be
+  required to retrieve these paths so long as they were calculated when
+  \code{find_lcps()} was run.
+
+  A very important note to make is that once the LCP tree is calculated, it
+  never gets smaller. For example, we could use \code{\link{find_lcps}()}
+  with \code{limit = NULL} to calculate all LCPS. If we then used
+  \code{\link{find_lcps}()} on the same \code{LcpFinder} but this time used a
+  limit, it would still return \emph{all} of the LCPs - even those that are
+  greater than the specified limit, since the tree never shrinks.
 }
 \examples{
 ####### NOTE #######
@@ -68,6 +75,7 @@ points(start_pt[1], start_pt[2], bg = "skyblue", col = "black", pch = 24,
 \seealso{
 \code{\link{lcp_finder}()} creates the \code{\link{LcpFinder}}
   object used as input to this function. \code{\link{find_lcp}()} returns the
-  LCP between two points. \code{\link{summarize_lcps}()} outputs a summary
-  matrix of all LCPs that have been calculated so far.
+  LCP between the start point and another point.
+  \code{\link{summarize_lcps}()} outputs a summary matrix of all LCPs that
+  have been calculated so far.
 }

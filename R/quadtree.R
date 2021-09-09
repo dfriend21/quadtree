@@ -2,46 +2,53 @@
 #'
 #' @name quadtree
 #' @aliases quadtree,ANY-method
-#' @title Create a \code{\link{Quadtree}} from gridded data
-#' @param x a \code{raster} or a \code{matrix}. If \code{x} is a \code{matrix},
-#'   the \code{extent} and \code{proj4string} parameters can be used to set the
-#'   extent and projection of the quadtree. If \code{x} is a \code{raster}, the
-#'   extent and projection are derived from the raster.
+#' @title Create a \code{\link{Quadtree}} from a raster or matrix
+#' @description Create a \code{\link{Quadtree}} from a
+#' \code{\link[raster:RasterLayer-class]{RasterLayer}} or a matrix
+#' @param x a \code{\link[raster:RasterLayer-class]{RasterLayer}} or a
+#'   \code{matrix}. If \code{x} is a \code{matrix}, the \code{extent} and
+#'   \code{proj4string} parameters can be used to set the extent and projection
+#'   of the quadtree. If \code{x} is a
+#'   \code{\link[raster:RasterLayer-class]{RasterLayer}}, the extent and
+#'   projection are derived from the raster.
 #' @param split_threshold numeric; the threshold value used by the split method
-#'   (specified by \code{split_method}) to decide whether to split a cell. If
-#'   the value for a quadrant is greater than this value, the cell is split. If
-#'   \code{split_method} is "custom", this parameter is ignored.
-#' @param split_method character; one of \code{"range"}, \code{"sd"} (standard
-#'   deviation), or \code{"custom"}. Determines the method used for calculating
-#'   the value used to determine whether or not to split a cell (this calculated
-#'   value is compared with \code{split_threshold} to decide whether to split a
-#'   cell). See 'Details' for more.
-#' @param combine_method character; one of \code{"mean"}, \code{"median"},
-#'   \code{"min"}, \code{"max"}, or \code{"custom"}. Determines the method used
-#'   for aggregating the values of multiple cells into a single value for a
-#'   larger, aggregated cell. Default is \code{"mean"}.
+#'   (specified by \code{split_method}) to decide whether to split a quadrant.
+#'   If the value for a quadrant is greater than this value, it is split into
+#'   its four child cells. If \code{split_method} is "custom", this parameter is
+#'   ignored.
+#' @param split_method character; one of \code{"range"} (the default),
+#'   \code{"sd"} (standard deviation), or \code{"custom"}. Determines the method
+#'   used for calculating the value used to determine whether or not to split a
+#'   quadrant (this calculated value is compared with \code{split_threshold} to
+#'   decide whether to split a cell). If \code{"custom"}, a function must be
+#'   supplied to \code{split_fun}. See 'Details' for more.
 #' @param split_fun function; function used on each quadrant to decide whether
-#'   or not to split the cell. Only used when \code{split_method} is "custom".
-#'   Must take two arguments, \code{vals} (a numeric vector of the cell values
-#'   in a quadrant) and \code{args} (a named list of arguments used within the
-#'   function), and must output \code{TRUE} if the quadrant is to be split and
-#'   \code{FALSE} otherwise. It must be able to handle \code{NA} values - if
-#'   \code{NA} is ever returned, an error will occur.
+#'   or not to split the cell. Only used when \code{split_method} is
+#'   \code{"custom"}. Must take two arguments, \code{vals} (a numeric vector of
+#'   the cell values in a quadrant) and \code{args} (a named list of arguments
+#'   used within the function), and must output \code{TRUE} if the quadrant is
+#'   to be split and \code{FALSE} otherwise. It must be able to handle \code{NA}
+#'   values - if \code{NA} is ever returned, an error will occur.
 #' @param split_args list; named list that contains the arguments needed by
 #'   \code{split_fun}. This list is given to the \code{args} parameter of
 #'   \code{split_fun}
-#' @param split_if_any_NA boolean; if \code{TRUE} (the default), a quadrant is
+#' @param split_if_any_na boolean; if \code{TRUE} (the default), a quadrant is
 #'   automatically split if any of the values within the quadrant are NA
-#' @param split_if_all_NA boolean; if \code{FALSE} (the default), a quadrant
+#' @param split_if_all_na boolean; if \code{FALSE} (the default), a quadrant
 #'   that contains only \code{NA} values is not split. If \code{TRUE}, quadrants
 #'   that contain all \code{NA} values are split to the smallest possible cell
 #'   size.
+#' @param combine_method character; one of \code{"mean"}, \code{"median"},
+#'   \code{"min"}, \code{"max"}, or \code{"custom"}. Determines the method used
+#'   for aggregating the values of multiple cells into a single value for a
+#'   larger, aggregated cell. Default is \code{"mean"}. If \code{"custom"}, a 
+#'   function must be supplied to \code{combine_fun}.
 #' @param combine_fun function; function used to calculate the value of a
 #'   quadrant that consists of multiple cells. Only used when
-#'   \code{combine_method} is "custom" Must take two arguments, \code{vals} (a
-#'   numeric vector of the cell values in a quadrant) and \code{args} (a named
-#'   list of arguments used within the function), and must output a single
-#'   numeric value, which will be used as the cell value.
+#'   \code{combine_method} is \code{"custom"}. Must take two arguments,
+#'   \code{vals} (a numeric vector of the cell values in a quadrant) and
+#'   \code{args} (a named list of arguments used within the function), and must
+#'   output a single numeric value, which will be used as the cell value.
 #' @param combine_args list; named list that contains the arguments needed by
 #'   \code{combine_fun}. This list is given to the \code{args} parameter of
 #'   \code{combine_fun}
@@ -60,23 +67,23 @@
 #'   See 'Details' for more on the two methods of adjustment.
 #' @param resample_n_side integer; if \code{adj_type} is \code{'resample'}, this
 #'   number is used to determine the dimensions to resample the raster to
-#' @param resample_pad_NAs boolean; only applicable if \code{adj_type} is
+#' @param resample_pad_nas boolean; only applicable if \code{adj_type} is
 #'   \code{'resample'}. If \code{TRUE} (the default), \code{NA}s are added to
 #'   the shorter side of the raster to make it square before resampling. This
 #'   ensures that the cells of the resulting quadtree will be square. If
 #'   \code{FALSE}, no \code{NA}s are added - the cells in the quadtree will not
 #'   be square.
-#' @param extent \code{Extent} object or else a four-element numeric vector
-#'   describing the extent of the data (in this order: xmin, xmax, ymin, ymax).
-#'   Only used when \code{x} is a matrix - this parameter is ignored if \code{x}
-#'   is a raster since the extent is derived directly from the raster. If no
-#'   value is provided and \code{x} is a matrix, the extent is assumed to be
-#'   \code{c(0,ncol(x),0,nrow(x))}.
+#' @param extent \code{\link[raster:Extent-class]{Extent}} object or else a
+#'   four-element numeric vector describing the extent of the data (in this
+#'   order: xmin, xmax, ymin, ymax). Only used when \code{x} is a matrix - this
+#'   parameter is ignored if \code{x} is a raster since the extent is derived
+#'   directly from the raster. If no value is provided and \code{x} is a matrix,
+#'   the extent is assumed to be \code{c(0,ncol(x),0,nrow(x))}.
 #' @param proj4string character; proj4string describing the projection of the
 #'   data. Only used when \code{x} is a matrix - this parameter is ignored if
 #'   \code{x} is a raster since the proj4string of the raster is automatically
-#'   used. If no value is provided and \code{x} is a matrix, the 'proj4string'
-#'   of the quadtree is set to \code{NA}.
+#'   used. If no value is provided and \code{x} is a matrix, the proj4string of
+#'   the quadtree is set to \code{NA}.
 #' @param template_quadtree \code{\link{Quadtree}} object; if provided, the new
 #'   quadtree will be created so that it has the exact same structure as the
 #'   template quadtree. Thus, no split function is used because the decision
@@ -84,32 +91,36 @@
 #'   raster used to create the template quadtree should have the exact same
 #'   extent and dimensions as \code{x}. If \code{template_quadtree} is
 #'   non-\code{NULL}, all \code{split_}* parameters are disregarded, as are
-#'   \code{max_cell_length} and \code{min_cell_length}
+#'   \code{max_cell_length} and \code{min_cell_length}.
 #' @details
 #'   The 'quadtree-creation' vignette contains detailed explanations and
 #'   examples for all of the various creation options - run
-#'   \code{vignettes("quadtree-creation")} to view the vignette.
+#'   \code{vignettes("quadtree-creation", package = "quadtree")} to view the
+#'   vignette.
 #'
-#'   If \code{adj_type} is "expand", NA cells are added to the raster in order
-#'   to create an expanded raster whose dimensions are a power of 2. The
-#'   smallest number that is a power of two but greater than the larger
-#'   dimension is used as the dimensions of the expanded raster. If
-#'   \code{adj_type} is "resample", the raster is resampled to a raster with
-#'   \code{resample_n_side} rows and columns. If \code{resample_pad_NAs} is
-#'   \code{TRUE}, \code{NA} rows and columns are are added to the raster before
-#'   resampling so that the cells remain square.
+#'   If \code{adj_type} is \code{"expand"}, \code{NA} cells are added to the
+#'   raster in order to create an expanded raster whose dimensions are a power
+#'   of 2. The smallest number that is a power of two but greater than the
+#'   larger dimension is used as the dimensions of the expanded raster. If
+#'   \code{adj_type} is \code{"resample"}, the raster is resampled to a raster
+#'   with \code{resample_n_side} rows and columns. If \code{resample_pad_nas} is
+#'   \code{TRUE}, \code{NA} rows or columns are are added to the shorter
+#'   dimension before resampling to make the raster square. This ensures that
+#'   the quadtree cells will be square (assuming the original raster cells were
+#'   square).
 #'
-#'   When \code{split_method} is "range", the difference between the maximum and
-#'   minimum cell values in a quadrant is calculated - if this value is greater
-#'   than \code{split_threshold}, the quadrant is split. When
-#'   \code{split_method} is "sd", the standard deviation of the cell values in a
-#'   quadrant is calculated - if this value is greater than
+#'   When \code{split_method} is \code{"range"}, the difference between the
+#'   maximum and minimum cell values in a quadrant is calculated - if this value
+#'   is greater than \code{split_threshold}, the quadrant is split. When
+#'   \code{split_method} is \code{"sd"}, the standard deviation of the cell
+#'   values in a quadrant is calculated - if this value is greater than
 #'   \code{split_threshold}, the quadrant is split.
 #' @return a \code{\link{Quadtree}} object
 #' @examples
 #' ####### NOTE #######
-#' # see the "quadtree-creation" vignette (run 'vignette("quadtree-creation")')
-#' # to see examples for all of the different parameter options.
+#' # see the "quadtree-creation" vignette for more details and examples of all
+#' # the different parameter options:
+#' # vignette("quadtree-creation", package = "quadtree")
 #' ####################
 #'
 #' library(quadtree)
@@ -143,10 +154,10 @@
 #' @export
 setMethod("quadtree", signature(x = "ANY"),
   function(x, split_threshold = NULL, split_method = "range", split_fun = NULL,
-           split_args = list(), split_if_any_NA = TRUE, split_if_all_NA = FALSE,
+           split_args = list(), split_if_any_na = TRUE, split_if_all_na = FALSE,
            combine_method = "mean", combine_fun = NULL, combine_args = list(),
            max_cell_length = NULL, min_cell_length = NULL, adj_type = "expand",
-           resample_n_side = NULL, resample_pad_NAs = TRUE, extent = NULL,
+           resample_n_side = NULL, resample_pad_nas = TRUE, extent = NULL,
            proj4string = NULL, template_quadtree = NULL) {
     # validate inputs - this may be over the top, but many of these values get passed to C++ functionality, and if they're the wrong type the errors that are thrown are totally unhelpful - by type-checking them right away, I can provide easy-to-interpret error messages rather than messages that provide zero help
     # also, this is a complex function with a ton of options, and this function is basically the entryway into the entire package, so I want the errors to clearly point the user to the problem
@@ -154,8 +165,8 @@ setMethod("quadtree", signature(x = "ANY"),
     if (is.null(template_quadtree) && split_method != "custom" && ((!is.numeric(split_threshold) && !is.null(split_threshold)) || length(split_threshold) != 1)) stop(paste0("'split_threshold' must be a 'numeric' vector of length 1"))
     if (!is.function(split_fun) && !is.null(split_fun)) stop(paste0("'split_fun' must be a function"))
     if (!is.list(split_args) && !is.null(split_args)) stop(paste0("'split_args' must be a list"))
-    if (!is.logical(split_if_any_NA) || length(split_if_any_NA) != 1) stop("'split_if_any_NA' must be a 'logical' vector of length 1")
-    if (!is.logical(split_if_all_NA) || length(split_if_all_NA) != 1) stop("'split_if_all_NA' must be a 'logical' vector of length 1")
+    if (!is.logical(split_if_any_na) || length(split_if_any_na) != 1) stop("'split_if_any_na' must be a 'logical' vector of length 1")
+    if (!is.logical(split_if_all_na) || length(split_if_all_na) != 1) stop("'split_if_all_na' must be a 'logical' vector of length 1")
     if ((!is.null(max_cell_length)) && (!is.numeric(max_cell_length) || length(max_cell_length) != 1)) stop("'max_cell_length' must be a 'numeric' vector with length 1")
     if ((!is.null(min_cell_length)) && (!is.numeric(min_cell_length) || length(min_cell_length) != 1)) stop("'min_cell_length' must be a 'numeric' vector with length 1")
     if (!is.character(split_method) || length(split_method) != 1) stop("'split_method' must be a character vector with length 1")
@@ -180,7 +191,7 @@ setMethod("quadtree", signature(x = "ANY"),
     if (!is.character(adj_type) || length(adj_type) != 1) stop("'adj_type' must be a character vector with length 1")
     if (!(adj_type %in% c("expand", "resample", "none"))) stop("Invalid value given for 'adj_type'. Valid values are 'expand', 'resample', or 'none'.")
     if (adj_type == "resample" && (!is.numeric(resample_n_side) || length(resample_n_side) != 1)) stop("'resample_n_side' must be an integer vector with length 1.")
-    if (adj_type == "resample" && (!is.logical(resample_pad_NAs) || length(resample_pad_NAs) != 1)) stop("'resample_pad_NAs' must be an logical vector with length 1.")
+    if (adj_type == "resample" && (!is.logical(resample_pad_nas) || length(resample_pad_nas) != 1)) stop("'resample_pad_nas' must be an logical vector with length 1.")
     if (!is.null(extent) && ((!inherits(extent, "Extent") && !is.numeric(extent)) || (is.numeric(extent) && length(extent) != 4))) stop("'extent' must either be an 'Extent' object or a numeric vector with 4 elements (xmin, xmax, ymin, ymax)")
     if (!is.null(extent) && "RasterLayer" %in% (class(x))) warning("a value for 'extent' was provided, but it will be ignored since 'x' is a raster (the extent will be derived from the raster itself)")
     if (!is.null(proj4string) && "RasterLayer" %in% (class(x))) warning("a value for 'proj4string' was provided, but it will be ignored since 'x' is a raster (the proj4string will be derived from the raster itself)")
@@ -228,7 +239,7 @@ setMethod("quadtree", signature(x = "ANY"),
       if (log2(resample_n_side) %% 1 != 0) warning(paste0("'resample_n_side' was given as ", resample_n_side, ", which is not a power of 2. Are you sure these are the dimensions you want? This will result in the smallest possible resolution of the quadtree being larger than the resolution of the raster"))
 
       new_ext <- raster::extent(x)
-      if (resample_pad_NAs) {
+      if (resample_pad_nas) {
         # first we need to make it square
         new_n <- max(c(raster::nrow(x), raster::ncol(x))) #get the larger dimension
         # now expand the extent
@@ -250,8 +261,8 @@ setMethod("quadtree", signature(x = "ANY"),
                            raster::extent(x)[3:4],
                            c(max_cell_length, max_cell_length),
                            c(min_cell_length, min_cell_length),
-                           split_if_all_NA,
-                           split_if_any_NA)
+                           split_if_all_na,
+                           split_if_any_na)
 
     # deal with any NULL parameters
     blank_fun <- function() {}

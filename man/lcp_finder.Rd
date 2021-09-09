@@ -3,18 +3,18 @@
 \name{lcp_finder}
 \alias{lcp_finder}
 \alias{lcp_finder,Quadtree,numeric-method}
-\title{Create an object for finding LCPs on a quadtree}
+\title{Create a \code{\link{LcpFinder}}}
 \usage{
 \S4method{lcp_finder}{Quadtree,numeric}(x, y, xlim = NULL, ylim = NULL, search_by_centroid = FALSE)
 }
 \arguments{
-\item{x}{a \code{\link{Quadtree}} object to be used as a resistance surface}
+\item{x}{a \code{\link{Quadtree}} to be used as a resistance surface}
 
 \item{y}{numeric vector with 2 elements - the x and y coordinates
 of the starting point of the path(s)}
 
 \item{xlim}{numeric vector with 2 elements - constrains the nodes included
-in the network to those who x limits fall in the range specified in
+in the network to those whose x limits fall in the range specified in
 \code{xlim}. If \code{NULL} the x limits of \code{x} are used}
 
 \item{ylim}{same as \code{xlim}, but for y}
@@ -22,16 +22,16 @@ in the network to those who x limits fall in the range specified in
 \item{search_by_centroid}{boolean; determines which cells are considered to
 be "in" the box specified by \code{xlim} and \code{ylim}. If \code{FALSE}
 (the default) any cell that overlaps with the box is included. If
-\code{TRUE}, a cell is only included if its *centroid* falls inside the
+\code{TRUE}, a cell is only included if its \strong{centroid} falls inside the
 box.}
 }
 \value{
-returns an \code{LcpFinder} object
+a \code{LcpFinder}
 }
 \description{
-This function creates an LcpFinder object that can then be used
-  by \code{\link{find_lcp}} and \code{\link{find_lcps}} to find
-  least-cost paths (LCPs).
+Creates a \code{\link{LcpFinder}} object that can then be used
+  by \code{\link{find_lcp}} and \code{\link{find_lcps}} to find least-cost
+  paths (LCPs).
 }
 \details{
 See the vignette 'quadtree-lcp' for more details and examples (i.e. run
@@ -63,8 +63,11 @@ points(rbind(start_pt, end_pt), pch = 16, col = "red")
 lines(path[, 1:2], col = "black")
 }
 \seealso{
-\code{\link{find_lcp}()} returns the LCP between two points.
-  \code{\link{find_lcps}()} finds all LCPs whose cost-distance is less
-  than some value. \code{\link{summarize_lcps}()} outputs a summary matrix of
-  all LCPs that have been calculated so far.
+\code{\link{find_lcp}()} returns the LCP between the start point and
+  another point. \code{\link{find_lcps}()} finds all LCPs whose cost-distance
+  is less than some value. \code{\link{summarize_lcps}()} outputs a summary
+  matrix of all LCPs that have been calculated so far.
+  \code{\link[=plot.LcpFinder]{points}()} and
+  \code{\link[=plot.LcpFinder]{lines}()} can be used to plot a
+  \code{\link{LcpFinder}}.
 }

@@ -3,12 +3,12 @@
 \name{get_neighbors}
 \alias{get_neighbors}
 \alias{get_neighbors,Quadtree,numeric-method}
-\title{Get the Neighbors of a Quadtree Cell}
+\title{Get the neighbors of a \code{\link{Quadtree}} cell}
 \usage{
 \S4method{get_neighbors}{Quadtree,numeric}(x, y)
 }
 \arguments{
-\item{x}{\code{\link{Quadtree}} object}
+\item{x}{\code{\link{Quadtree}}}
 
 \item{y}{numeric vector of length 2; the x and y coordinates of a point -
 this is used to identify which quadtree cell to find neighbors for.}
@@ -23,18 +23,19 @@ columns: \itemize{
   }
 
 Note that this return matrix only includes terminal nodes/cells - that is,
-cells that have no children.
+cells that have no children. Also note that cells that are diagonal from each
+other are considered to be neighbors.
 }
 \description{
 Returns a matrix with information about the neighbors of a
-quadtree cell
+quadtree cell.
 }
 \examples{
+library(quadtree)
 data(habitat)
-rast <- habitat
 
 # create a quadtree
-qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 
 # get the cell's neighbors
 pt <- c(27000, 10000)

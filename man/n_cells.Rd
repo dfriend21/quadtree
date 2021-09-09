@@ -3,22 +3,27 @@
 \name{n_cells}
 \alias{n_cells}
 \alias{n_cells,Quadtree-method}
-\title{Get the Number of Cells in a Quadtree}
+\title{Get the number of cells in a \code{\link{Quadtree}}}
 \usage{
 \S4method{n_cells}{Quadtree}(x, terminal_only = TRUE)
 }
 \arguments{
-\item{x}{a \code{\link{Quadtree}} object}
+\item{x}{a \code{\link{Quadtree}}}
 
 \item{terminal_only}{boolean; if \code{TRUE} (the default) only the terminal
 nodes are counted. If \code{FALSE}, all nodes are counted, thereby giving the
 total number of nodes in the tree.}
 }
+\value{
+a numeric
+}
 \description{
-Returns the total number of nodes/cells in the tree.
+Returns the number of nodes/cells in the quadtree.
 }
 \examples{
+library(quadtree)
 data(habitat)
+
 qt <- quadtree(habitat, .1)
 n_cells(qt)
 n_cells(qt, terminal_only = FALSE)

@@ -6,17 +6,17 @@
 \alias{points,LcpFinder-method}
 \alias{lines.LcpFinder}
 \alias{lines,LcpFinder-method}
-\title{Plot a LcpFinder object}
+\title{Plot a \code{\link{LcpFinder}} object}
 \usage{
 \S4method{points}{LcpFinder}(x, add = TRUE, ...)
 
 \S4method{lines}{LcpFinder}(x, add = TRUE, ...)
 }
 \arguments{
-\item{x}{a \code{\link{LcpFinder}} object}
+\item{x}{a \code{\link{LcpFinder}}}
 
-\item{add}{boolean; if \code{TRUE}, the LcpFinder plot is added to the
-existing plot}
+\item{add}{boolean; if \code{TRUE} (the default), the plot is added to the
+existing plot. If \code{FALSE}, a new plot is created.}
 
 \item{...}{arguments passed to the default plotting functions}
 }
@@ -24,12 +24,12 @@ existing plot}
 no return value
 }
 \description{
-Plots a LcpFinder object
+Plots a \code{\link{LcpFinder}} object
 }
 \details{
 \code{points()} plots points at the centroids of the cells to which
   a path has been found. \code{lines()} plots all of the LCPs found so far by
-  the LcpFinder object.
+  the \code{\link{LcpFinder}} object.
 }
 \examples{
 data(habitat)

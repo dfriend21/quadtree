@@ -10,9 +10,9 @@
 #'   'src/LcpFinderWrapper.cpp'. When made available to R, it is
 #'   exposed as \code{CppLcpFinder} rather than
 #'   \code{LcpFinderWrapper}. \code{LcpFinderWrapper} contains
-#'   a pointer to a \code{LcpFinder} object (defined in
+#'   a pointer to a \code{LcpFinder} C++ object (defined in
 #'   'src/LcpFinder.h' and 'src/LcpFinder.cpp'). All of the
-#'   core functionality is in the \code{LcpFinder} class.
+#'   core functionality is in the \code{LcpFinder} C++ class.
 #'   \code{LcpFinderWrapper} is a wrapper class that adds the Rcpp code
 #'   required for it to be accessible from R.
 #'   

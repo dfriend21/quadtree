@@ -3,7 +3,7 @@
 \name{quadtree}
 \alias{quadtree}
 \alias{quadtree,ANY-method}
-\title{Create a \code{\link{Quadtree}} from gridded data}
+\title{Create a \code{\link{Quadtree}} from a raster or matrix}
 \usage{
 \S4method{quadtree}{ANY}(
   x,
@@ -11,8 +11,8 @@
   split_method = "range",
   split_fun = NULL,
   split_args = list(),
-  split_if_any_NA = TRUE,
-  split_if_all_NA = FALSE,
+  split_if_any_na = TRUE,
+  split_if_all_na = FALSE,
   combine_method = "mean",
   combine_fun = NULL,
   combine_args = list(),
@@ -20,45 +20,49 @@
   min_cell_length = NULL,
   adj_type = "expand",
   resample_n_side = NULL,
-  resample_pad_NAs = TRUE,
+  resample_pad_nas = TRUE,
   extent = NULL,
   proj4string = NULL,
   template_quadtree = NULL
 )
 }
 \arguments{
-\item{x}{a \code{raster} or a \code{matrix}. If \code{x} is a \code{matrix},
-the \code{extent} and \code{proj4string} parameters can be used to set the
-extent and projection of the quadtree. If \code{x} is a \code{raster}, the
-extent and projection are derived from the raster.}
+\item{x}{a \code{\link[raster:RasterLayer-class]{RasterLayer}} or a
+\code{matrix}. If \code{x} is a \code{matrix}, the \code{extent} and
+\code{proj4string} parameters can be used to set the extent and projection
+of the quadtree. If \code{x} is a
+\code{\link[raster:RasterLayer-class]{RasterLayer}}, the extent and
+projection are derived from the raster.}
 
 \item{split_threshold}{numeric; the threshold value used by the split method
-(specified by \code{split_method}) to decide whether to split a cell. If
-the value for a quadrant is greater than this value, the cell is split. If
-\code{split_method} is "custom", this parameter is ignored.}
+(specified by \code{split_method}) to decide whether to split a quadrant.
+If the value for a quadrant is greater than this value, it is split into
+its four child cells. If \code{split_method} is "custom", this parameter is
+ignored.}
 
-\item{split_method}{character; one of \code{"range"}, \code{"sd"} (standard
-deviation), or \code{"custom"}. Determines the method used for calculating
-the value used to determine whether or not to split a cell (this calculated
-value is compared with \code{split_threshold} to decide whether to split a
-cell). See 'Details' for more.}
+\item{split_method}{character; one of \code{"range"} (the default),
+\code{"sd"} (standard deviation), or \code{"custom"}. Determines the method
+used for calculating the value used to determine whether or not to split a
+quadrant (this calculated value is compared with \code{split_threshold} to
+decide whether to split a cell). If \code{"custom"}, a function must be
+supplied to \code{split_fun}. See 'Details' for more.}
 
 \item{split_fun}{function; function used on each quadrant to decide whether
-or not to split the cell. Only used when \code{split_method} is "custom".
-Must take two arguments, \code{vals} (a numeric vector of the cell values
-in a quadrant) and \code{args} (a named list of arguments used within the
-function), and must output \code{TRUE} if the quadrant is to be split and
-\code{FALSE} otherwise. It must be able to handle \code{NA} values - if
-\code{NA} is ever returned, an error will occur.}
+or not to split the cell. Only used when \code{split_method} is
+\code{"custom"}. Must take two arguments, \code{vals} (a numeric vector of
+the cell values in a quadrant) and \code{args} (a named list of arguments
+used within the function), and must output \code{TRUE} if the quadrant is
+to be split and \code{FALSE} otherwise. It must be able to handle \code{NA}
+values - if \code{NA} is ever returned, an error will occur.}
 
 \item{split_args}{list; named list that contains the arguments needed by
 \code{split_fun}. This list is given to the \code{args} parameter of
 \code{split_fun}}
 
-\item{split_if_any_NA}{boolean; if \code{TRUE} (the default), a quadrant is
+\item{split_if_any_na}{boolean; if \code{TRUE} (the default), a quadrant is
 automatically split if any of the values within the quadrant are NA}
 
-\item{split_if_all_NA}{boolean; if \code{FALSE} (the default), a quadrant
+\item{split_if_all_na}{boolean; if \code{FALSE} (the default), a quadrant
 that contains only \code{NA} values is not split. If \code{TRUE}, quadrants
 that contain all \code{NA} values are split to the smallest possible cell
 size.}
@@ -66,14 +70,15 @@ size.}
 \item{combine_method}{character; one of \code{"mean"}, \code{"median"},
 \code{"min"}, \code{"max"}, or \code{"custom"}. Determines the method used
 for aggregating the values of multiple cells into a single value for a
-larger, aggregated cell. Default is \code{"mean"}.}
+larger, aggregated cell. Default is \code{"mean"}. If \code{"custom"}, a 
+function must be supplied to \code{combine_fun}.}
 
 \item{combine_fun}{function; function used to calculate the value of a
 quadrant that consists of multiple cells. Only used when
-\code{combine_method} is "custom" Must take two arguments, \code{vals} (a
-numeric vector of the cell values in a quadrant) and \code{args} (a named
-list of arguments used within the function), and must output a single
-numeric value, which will be used as the cell value.}
+\code{combine_method} is \code{"custom"}. Must take two arguments,
+\code{vals} (a numeric vector of the cell values in a quadrant) and
+\code{args} (a named list of arguments used within the function), and must
+output a single numeric value, which will be used as the cell value.}
 
 \item{combine_args}{list; named list that contains the arguments needed by
 \code{combine_fun}. This list is given to the \code{args} parameter of
@@ -98,25 +103,25 @@ See 'Details' for more on the two methods of adjustment.}
 \item{resample_n_side}{integer; if \code{adj_type} is \code{'resample'}, this
 number is used to determine the dimensions to resample the raster to}
 
-\item{resample_pad_NAs}{boolean; only applicable if \code{adj_type} is
+\item{resample_pad_nas}{boolean; only applicable if \code{adj_type} is
 \code{'resample'}. If \code{TRUE} (the default), \code{NA}s are added to
 the shorter side of the raster to make it square before resampling. This
 ensures that the cells of the resulting quadtree will be square. If
 \code{FALSE}, no \code{NA}s are added - the cells in the quadtree will not
 be square.}
 
-\item{extent}{\code{Extent} object or else a four-element numeric vector
-describing the extent of the data (in this order: xmin, xmax, ymin, ymax).
-Only used when \code{x} is a matrix - this parameter is ignored if \code{x}
-is a raster since the extent is derived directly from the raster. If no
-value is provided and \code{x} is a matrix, the extent is assumed to be
-\code{c(0,ncol(x),0,nrow(x))}.}
+\item{extent}{\code{\link[raster:Extent-class]{Extent}} object or else a
+four-element numeric vector describing the extent of the data (in this
+order: xmin, xmax, ymin, ymax). Only used when \code{x} is a matrix - this
+parameter is ignored if \code{x} is a raster since the extent is derived
+directly from the raster. If no value is provided and \code{x} is a matrix,
+the extent is assumed to be \code{c(0,ncol(x),0,nrow(x))}.}
 
 \item{proj4string}{character; proj4string describing the projection of the
 data. Only used when \code{x} is a matrix - this parameter is ignored if
 \code{x} is a raster since the proj4string of the raster is automatically
-used. If no value is provided and \code{x} is a matrix, the 'proj4string'
-of the quadtree is set to \code{NA}.}
+used. If no value is provided and \code{x} is a matrix, the proj4string of
+the quadtree is set to \code{NA}.}
 
 \item{template_quadtree}{\code{\link{Quadtree}} object; if provided, the new
 quadtree will be created so that it has the exact same structure as the
@@ -125,39 +130,44 @@ about whether to split is pre-determined by the template quadtree. The
 raster used to create the template quadtree should have the exact same
 extent and dimensions as \code{x}. If \code{template_quadtree} is
 non-\code{NULL}, all \code{split_}* parameters are disregarded, as are
-\code{max_cell_length} and \code{min_cell_length}}
+\code{max_cell_length} and \code{min_cell_length}.}
 }
 \value{
 a \code{\link{Quadtree}} object
 }
 \description{
-Create a \code{\link{Quadtree}} from gridded data
+Create a \code{\link{Quadtree}} from a
+\code{\link[raster:RasterLayer-class]{RasterLayer}} or a matrix
 }
 \details{
 The 'quadtree-creation' vignette contains detailed explanations and
   examples for all of the various creation options - run
-  \code{vignettes("quadtree-creation")} to view the vignette.
+  \code{vignettes("quadtree-creation", package = "quadtree")} to view the
+  vignette.
 
-  If \code{adj_type} is "expand", NA cells are added to the raster in order
-  to create an expanded raster whose dimensions are a power of 2. The
-  smallest number that is a power of two but greater than the larger
-  dimension is used as the dimensions of the expanded raster. If
-  \code{adj_type} is "resample", the raster is resampled to a raster with
-  \code{resample_n_side} rows and columns. If \code{resample_pad_NAs} is
-  \code{TRUE}, \code{NA} rows and columns are are added to the raster before
-  resampling so that the cells remain square.
+  If \code{adj_type} is \code{"expand"}, \code{NA} cells are added to the
+  raster in order to create an expanded raster whose dimensions are a power
+  of 2. The smallest number that is a power of two but greater than the
+  larger dimension is used as the dimensions of the expanded raster. If
+  \code{adj_type} is \code{"resample"}, the raster is resampled to a raster
+  with \code{resample_n_side} rows and columns. If \code{resample_pad_nas} is
+  \code{TRUE}, \code{NA} rows or columns are are added to the shorter
+  dimension before resampling to make the raster square. This ensures that
+  the quadtree cells will be square (assuming the original raster cells were
+  square).
 
-  When \code{split_method} is "range", the difference between the maximum and
-  minimum cell values in a quadrant is calculated - if this value is greater
-  than \code{split_threshold}, the quadrant is split. When
-  \code{split_method} is "sd", the standard deviation of the cell values in a
-  quadrant is calculated - if this value is greater than
+  When \code{split_method} is \code{"range"}, the difference between the
+  maximum and minimum cell values in a quadrant is calculated - if this value
+  is greater than \code{split_threshold}, the quadrant is split. When
+  \code{split_method} is \code{"sd"}, the standard deviation of the cell
+  values in a quadrant is calculated - if this value is greater than
   \code{split_threshold}, the quadrant is split.
 }
 \examples{
 ####### NOTE #######
-# see the "quadtree-creation" vignette (run 'vignette("quadtree-creation")')
-# to see examples for all of the different parameter options.
+# see the "quadtree-creation" vignette for more details and examples of all
+# the different parameter options:
+# vignette("quadtree-creation", package = "quadtree")
 ####################
 
 library(quadtree)

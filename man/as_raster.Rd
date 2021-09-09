@@ -3,14 +3,14 @@
 \name{as_raster}
 \alias{as_raster}
 \alias{as_raster,Quadtree-method}
-\title{Create a Raster from a Quadtree}
+\title{Create a raster from a \code{\link{Quadtree}}}
 \usage{
 \S4method{as_raster}{Quadtree}(x, rast = NULL)
 }
 \arguments{
-\item{x}{The \code{\link{Quadtree}} object to create the raster from}
+\item{x}{a \code{\link{Quadtree}}}
 
-\item{rast}{A \code{RasterLayer} object; optional; this will be used as a
+\item{rast}{a \code{\link[raster:RasterLayer-class]{RasterLayer}} object; optional; this will be used as a
 template - the output raster will have the same extent and dimensions as
 this raster. If \code{NULL} (the default), a raster is automatically
 created, where the quadtree extent is used as the raster extent, and the
@@ -18,10 +18,11 @@ smallest cell in the quadtree is used to determine the resolution of the
 raster.}
 }
 \value{
-a \code{RasterLayer} object
+a \code{\link[raster:RasterLayer-class]{RasterLayer}} object
 }
 \description{
-Creates a raster from a quadtree
+Creates a \code{\link[raster:RasterLayer-class]{RasterLayer}}
+  from a \code{\link{Quadtree}}.
 }
 \details{
 Note that the value of a raster cell is determined by the value of the
@@ -36,10 +37,9 @@ the issue.
 \examples{
 library(raster)
 data(habitat)
-rast <- habitat
 
 # create a quadtree
-qt <- quadtree(rast, split_threshold = .1, split_method = "sd")
+qt <- quadtree(habitat, split_threshold = .1, split_method = "sd")
 
 rst1 <- as_raster(qt) # use the default raster
 rst2 <- as_raster(qt, habitat) # use another raster as a template

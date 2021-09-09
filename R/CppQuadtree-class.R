@@ -23,7 +23,7 @@
 #'   \item \strong{Description}: default constructor. Can be used as follows:
 #'   \code{qt <- new(CppQuadtree)}
 #'   \item \strong{Parameters}: none
-#'   \item \strong{Returns}: an empty CppQuadtree object
+#'   \item \strong{Returns}: an empty \code{CppQuadtree} object
 #' }
 #' @field constructor \itemize{
 #'   \item \strong{Description}: constructor. Can be used as follows: \code{qt

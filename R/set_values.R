@@ -2,18 +2,18 @@
 
 #' @name set_values
 #' @aliases set_values,Quadtree,ANY,numeric-method
-#' @title Change values of quadtree cells
-#' @description Given a quadtree, a set of points and a vector of new values,
-#'   changes the value of the quadtree cells containing the points to the
-#'   corresponding value
-#' @param x A \code{\link{Quadtree}} object
+#' @title Change values of \code{\link{Quadtree}} cells
+#' @description Given a \code{\link{Quadtree}} a set of points and a vector of
+#'   new values, changes the value of the quadtree cells containing the points
+#'   to the corresponding value
+#' @param x A \code{\link{Quadtree}}
 #' @param y A two-column matrix representing point coordinates. First column
 #'   contains the x-coordinates, second column contains the y-coordinates
 #' @param z A numeric vector the same length as the number of rows of
-#'   \code{pts}. The values of the cells containing \code{pts} will be changed
-#'   to the corresponding number in \code{vals}.
+#'   \code{y}. The values of the cells containing \code{y} will be changed
+#'   to the corresponding value in \code{z}.
 #' @details
-#' Note that it is entirely possible for \code{pts} to contain multiple points
+#' Note that it is entirely possible for \code{y} to contain multiple points
 #' that all fall within the same cell. The values are changed in the order
 #' given, so in this case the cell will take on the \emph{last} value given for
 #' that cell.
@@ -26,10 +26,9 @@
 #'   existing values of all cells using a function
 #' @examples
 #' data(habitat)
-#' rast <- habitat
 #'
 #' # create a quadtree
-#' qt <- quadtree(rast, split_threshold = .1)
+#' qt <- quadtree(habitat, split_threshold = .1)
 #'
 #' par(mfrow = c(1, 2))
 #' plot(qt, main = "original")

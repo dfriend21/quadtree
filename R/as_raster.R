@@ -2,10 +2,11 @@
 
 #' @name as_raster
 #' @aliases as_raster,Quadtree-method
-#' @title Create a Raster from a Quadtree
-#' @description Creates a raster from a quadtree
-#' @param x The \code{\link{Quadtree}} object to create the raster from
-#' @param rast A \code{RasterLayer} object; optional; this will be used as a
+#' @title Create a raster from a \code{\link{Quadtree}}
+#' @description Creates a \code{\link[raster:RasterLayer-class]{RasterLayer}}
+#'   from a \code{\link{Quadtree}}.
+#' @param x a \code{\link{Quadtree}}
+#' @param rast a \code{\link[raster:RasterLayer-class]{RasterLayer}} object; optional; this will be used as a
 #'   template - the output raster will have the same extent and dimensions as
 #'   this raster. If \code{NULL} (the default), a raster is automatically
 #'   created, where the quadtree extent is used as the raster extent, and the
@@ -20,14 +21,13 @@
 #' automatically determined from the quadtree in such a way that the cells are
 #' guaranteed to line up with the quadtree cells with no overlap, thus avoiding
 #' the issue.
-#' @return a \code{RasterLayer} object
+#' @return a \code{\link[raster:RasterLayer-class]{RasterLayer}} object
 #' @examples
 #' library(raster)
 #' data(habitat)
-#' rast <- habitat
-#'
+#' 
 #' # create a quadtree
-#' qt <- quadtree(rast, split_threshold = .1, split_method = "sd")
+#' qt <- quadtree(habitat, split_threshold = .1, split_method = "sd")
 #'
 #' rst1 <- as_raster(qt) # use the default raster
 #' rst2 <- as_raster(qt, habitat) # use another raster as a template

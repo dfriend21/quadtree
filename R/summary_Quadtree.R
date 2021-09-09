@@ -2,9 +2,10 @@
 
 #' @name summary.Quadtree
 #' @aliases summary,Quadtree-method show.Quadtree show,Quadtree-method
-#' @title Show a Summary of a Quadtree Object
+#' @title Show a summary of a \code{\link{Quadtree}}
 #' @param object a \code{\link{Quadtree}} object
-#' @description Prints out information about the quadtree. Information shown is:
+#' @description Prints out information about a \code{\link{Quadtree}}.
+#'   Information shown is:
 #' \itemize{
 #'   \item class of object
 #'   \item number of cells
@@ -15,7 +16,9 @@
 #' }
 #' @return no return value
 #' @examples
+#' library(quadtree)
 #' data(habitat)
+#' 
 #' qt <- quadtree(habitat, .1)
 #' summary(qt)
 #' @export

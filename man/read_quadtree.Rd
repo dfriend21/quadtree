@@ -6,7 +6,7 @@
 \alias{read_quadtree,character-method}
 \alias{write_quadtree,character-method}
 \alias{write_quadtree,character,Quadtree-method}
-\title{Read/write a quadtree}
+\title{Read/write a \code{\link{Quadtree}}}
 \usage{
 \S4method{read_quadtree}{character}(x)
 
@@ -15,31 +15,24 @@
 \arguments{
 \item{x}{character; the filepath to read from or write to}
 
-\item{y}{quadtree object; the quadtree to write}
+\item{y}{a \code{\link{Quadtree}}}
+}
+\value{
+\code{read_quadtree()} - returns a \code{\link{Quadtree}}
+
+\code{write_quadtree()} - no return value
 }
 \description{
-Read/write a quadtree
+Read/write a \code{\link{Quadtree}}
 }
 \details{
 To read/write a quadtree object, the C++ library \code{cereal} is used to
 serialize the quadtree and save it to a file. The file extension is
 unimportant - it can be anything (I've been using the extension '.qtree').
-
-Note that typically the quadtree isn't particularly space-efficient - it's
-not uncommon for a quadtree file to be larger than the original raster file
-(although, of course, this depends on how 'coarse' the quadtree is in
-relation to the original raster). This is likely because the quadtree has to
-store much more information about each cell (the x and y limits, its value,
-pointers to its neighbors, among other things) while a raster can store only
-the value since the coordinates of the cell can be determined from the
-knowledge of the extent and the dimensions of the raster.
-
-It's entirely possible that a quadtree implemention could be written that
-is MUCH more space efficient. However, this was not the primary goal when
-creating this package.
 }
 \examples{
 \dontrun{
+library(quadtree)
 data(habitat)
 
 qt1 <- quadtree(habitat, .1)

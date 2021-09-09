@@ -3,31 +3,32 @@
 \name{extent}
 \alias{extent}
 \alias{extent,Quadtree-method}
-\title{Get the extent of a quadtree}
+\alias{extent.Quadtree}
+\title{Get the extent of a \code{\link{Quadtree}}}
 \usage{
 \S4method{extent}{Quadtree}(x, original = FALSE)
 }
 \arguments{
-\item{x}{\code{\link{Quadtree}} object}
+\item{x}{a \code{\link{Quadtree}}}
 
 \item{original}{boolean; if \code{FALSE} (the default), it returns the total
 extent covered by the quadtree. If \code{TRUE}, the function returns the
-extent of the original raster used to create the quadtree, before NA
+extent of the original raster used to create the quadtree, before \code{NA}
 rows/columns were added to pad the dimensions.}
 }
 \value{
-Returns an 'extent' object (from the 'raster' package)
+an \code{\link[raster:Extent-class]{Extent}} object
 }
 \description{
-Gets the extent of the quadtree as an 'extent' object (from the
-raster package)
+Gets the extent of the \code{\link{Quadtree}} as an
+  \code{\link[raster:Extent-class]{Extent}} object (from the raster package)
 }
 \examples{
+library(quadtree)
 data(habitat)
-rast <- habitat
 
 # create a quadtree
-qt <- quadtree(rast, split_threshold = .1, adj_type = "expand")
+qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 
 # retrieve the extent and the original extent
 ext <- extent(qt)

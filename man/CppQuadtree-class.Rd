@@ -34,7 +34,7 @@ This class is defined in 'src/QuadtreeWrapper.h' and
   \item \strong{Description}: default constructor. Can be used as follows:
   \code{qt <- new(CppQuadtree)}
   \item \strong{Parameters}: none
-  \item \strong{Returns}: an empty CppQuadtree object
+  \item \strong{Returns}: an empty \code{CppQuadtree} object
 }}
 
 \item{\code{constructor}}{\itemize{

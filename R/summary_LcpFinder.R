@@ -2,24 +2,29 @@
 
 #' @name summary.LcpFinder
 #' @aliases summary,LcpFinder-method show.LcpFinder show,LcpFinder-method
-#' @title Show a Summary of a LcpFinder object
-#' @param object a \code{\link{LcpFinder}} object
-#' @description Prints out information about the LcpFinder. Information shown is:
+#' @title Show a summary of a \code{\link{LcpFinder}}
+#' @param object a \code{\link{LcpFinder}}
+#' @description Prints out information about the \code{\link{LcpFinder}}.
+#'   Information shown is:
 #' \itemize{
 #'   \item class of object
 #'   \item start point
 #'   \item search limits
-#'   \item number of paths found (so far)
+#'   \item number of paths found
 #' }
 #' @return no return value
 #' @examples
+#' library(quadtree)
 #' data(habitat)
+#' 
 #' qt <- quadtree(habitat, .1)
 #'
 #' start_point <- c(6989, 34007)
 #' end_point <- c(33015, 38162)
+#'
 #' lcpf <- lcp_finder(qt, start_point)
 #' lcp <- find_lcp(lcpf, end_point)
+#'
 #' summary(lcpf)
 #' @export
 setMethod("summary", signature(object = "LcpFinder"),

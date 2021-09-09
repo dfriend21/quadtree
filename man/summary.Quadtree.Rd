@@ -5,7 +5,7 @@
 \alias{summary,Quadtree-method}
 \alias{show.Quadtree}
 \alias{show,Quadtree-method}
-\title{Show a Summary of a Quadtree Object}
+\title{Show a summary of a \code{\link{Quadtree}}}
 \usage{
 \S4method{summary}{Quadtree}(object)
 
@@ -18,7 +18,8 @@
 no return value
 }
 \description{
-Prints out information about the quadtree. Information shown is:
+Prints out information about a \code{\link{Quadtree}}.
+  Information shown is:
 \itemize{
   \item class of object
   \item number of cells
@@ -29,7 +30,9 @@ Prints out information about the quadtree. Information shown is:
 }
 }
 \examples{
+library(quadtree)
 data(habitat)
+
 qt <- quadtree(habitat, .1)
 summary(qt)
 }

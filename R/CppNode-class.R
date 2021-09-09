@@ -1,9 +1,16 @@
 #' @name CppNode-class
 #' @aliases CppNode Rcpp_CppNode Rcpp_CppNode-class
-#' @title C++ Quadtree Node
-#' @description The 'CppNode' is a C++ class represents a single quadtree node.
-#' This is used internally - end users should have no need to use any of the
-#' methods listed here.
+#' @title \code{CppNode}: C++ quadtree node
+#' @description The \code{CppNode} class defines objects that represent a single
+#'   node of a quadtree. This is used internally - end users should have no need
+#'   to use any of the methods listed here.
+#' @details This class is defined in 'src/NodeWrapper.h' and
+#'   'src/NodeWrapper.cpp'. When made available to R, it is exposed as
+#'   \code{CppNode} instead of \code{NodeWrapper}. \code{NodeWrapper} contains a
+#'   pointer to a \code{Node} object (defined in 'src/Node.h' and
+#'   'src/Node.cpp'). All of the core functionality is in the \code{Node} class
+#'   - \code{NodeWrapper} is a wrapper class that adds the Rcpp code required
+#'   for it to be accessible from R.
 #' @field asVector \itemize{
 #'   \item \strong{Description}: Returns a vector giving info about the node
 #'   \item \strong{Parameters}: none
@@ -19,26 +26,26 @@
 #'     \item{\code{smSide}}
 #'   }
 #'   \code{\link{as_data_frame}} makes use of this function to output info on
-#'   each node - see the documentation of that function for details on the
-#'   output
+#'   each node - see the documentation of that function for details on what each
+#'   column represents
 #' }
 #' @field getChildren \itemize{
 #'   \item \strong{Description}: Returns a \code{list} of the child nodes
 #'   \item \strong{Parameters}: none
-#'   \item \strong{Returns}: a \code{list} of \code{Rcpp_node} objects
+#'   \item \strong{Returns}: a \code{list} of \code{CppNode} objects
 #' }
 #' @field getNeighborIds \itemize{
 #'   \item \strong{Description}: Returns the IDs of the neighboring cells
 #'   \item \strong{Parameters}: none
-#'   \item \strong{Returns}: a numeric vector
+#'   \item \strong{Returns}: a numeric vector containing the neighbor IDs
 #' }
 #' @field getNeighborInfo \itemize{
 #'   \item \strong{Description}: Returns a matrix with info on each of the
 #'   neighboring cells
 #'   \item \strong{Parameters}: none
-#'   \item \strong{Returns}: a matrix. \code{quadtree$getNbList()} makes
-#'   use of this function - see documentation of that function (by running
-#'   \code{?'quadtree-class'}) for details on the return matrix.
+#'   \item \strong{Returns}: a matrix. The \code{getNbList()} member function
+#'   of \code{\link{CppQuadtree}} makes use of this function - see documentation
+#'   of that function for details on the return matrix.
 #' }
 #' @field getNeighborVals \itemize{
 #'   \item \strong{Description}: Returns the values of all neighboring cells
@@ -48,7 +55,7 @@
 #' @field getNeighbors \itemize{
 #'   \item \strong{Description}: Returns a \code{list} of the neighboring nodes
 #'   \item \strong{Parameters}: none
-#'   \item \strong{Returns}: a \code{list} of \code{Rcpp_node} objects
+#'   \item \strong{Returns}: a \code{list} of \code{CppNode} objects
 #' }
 #' @field hasChildren \itemize{
 #'   \item \strong{Description}: Returns a boolean representing whether the node

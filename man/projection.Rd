@@ -6,20 +6,29 @@
 \alias{projection<-}
 \alias{projection<-,Quadtree,ANY-method}
 \alias{projection<-,Quadtree-method}
-\title{Retrieve the proj4string of a quadtree}
+\title{Retrieve the proj4string of a \code{\link{Quadtree}}}
 \usage{
 \S4method{projection}{Quadtree}(x)
 
 \S4method{projection}{Quadtree}(x) <- value
 }
 \arguments{
-\item{x}{a \code{\link{Quadtree}} object}
+\item{x}{a \code{\link{Quadtree}}}
 
-\item{value}{character; the projection to assign to the quadtree}
+\item{value}{character; the projection to assign to the
+\code{\link{Quadtree}}}
 }
 \value{
-A character containing the proj4string
+\code{projection()} returns a string
 }
 \description{
-Retrieve the proj4string of a quadtree
+Retrieves the proj4string of a \code{\link{Quadtree}}
+}
+\examples{
+library(quadtree)
+data(habitat)
+
+qt <- quadtree(habitat, .1)
+projection(qt) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+projection(qt) 
 }

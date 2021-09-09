@@ -3,26 +3,31 @@
 \name{as_vector}
 \alias{as_vector}
 \alias{as_vector,Quadtree-method}
-\title{Get All Cell Values in a Vector}
+\title{Get all \code{\link{Quadtree}} cell values as a vector}
 \usage{
 \S4method{as_vector}{Quadtree}(x, terminal_only = TRUE)
 }
 \arguments{
-\item{x}{a \code{\link{Quadtree}} object}
+\item{x}{a \code{\link{Quadtree}}}
 
-\item{terminal_only}{boolean; if TRUE (the default) only values of terminal
-cells are returned. If FALSE, all cell values are returned.}
+\item{terminal_only}{boolean; if \code{TRUE} (the default) only values of
+terminal cells are returned. If \code{FALSE}, all cell values are returned.}
+}
+\value{
+a numeric vector
 }
 \description{
-Returns all cell values as a numeric vector
+Returns all cell values  of a \code{\link{Quadtree}} as a
+  numeric vector.
 }
 \examples{
 data(habitat)
 qt <- quadtree(habitat, .2)
 as_vector(qt)
+as_vector(qt, FALSE)
 }
 \seealso{
-\code{\link{as_data_frame}} creates a data frame from a quadtree
-  that has all the cell values as well as details about each cell's size and
-  extent.
+\code{\link{as_data_frame}} creates a data frame from a
+  \code{\link{Quadtree}} that has all the cell values as well as details
+  about each cell's size and extent.
 }

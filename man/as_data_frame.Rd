@@ -3,19 +3,19 @@
 \name{as_data_frame}
 \alias{as_data_frame}
 \alias{as_data_frame,Quadtree-method}
-\title{convert a quadtree to a data frame}
+\title{Convert a \code{\link{Quadtree}} to a data frame}
 \usage{
 \S4method{as_data_frame}{Quadtree}(x, terminal_only = TRUE)
 }
 \arguments{
-\item{x}{a \code{\link{Quadtree}} object}
+\item{x}{a \code{\link{Quadtree}}}
 
 \item{terminal_only}{boolean; if \code{TRUE} (the default) only information
 on terminal cells is returned. If \code{FALSE}, information on all cells is
 returned.}
 }
 \value{
-a data frame with one row for each quadtree cell. The columns are as
+A data frame with one row for each quadtree cell. The columns are as
   follows:
   \itemize{
     \item \code{id}: the id of the cell
@@ -25,14 +25,14 @@ a data frame with one row for each quadtree cell. The columns are as
     \item \code{xMin}, \code{xMax}, \code{yMin}, \code{yMax}: the x and y
     limits of the cell
     \item \code{value}: the value of the cell
-    \item \code{smSide}: the smallest cell length among all of this cells
+    \item \code{smSide}: the smallest cell length among all of this cell's
     descendants
     \item \code{parentID}: the ID of the cell's parent. The root, which has
-    no parent, has a value of -1 for this element
+    no parent, has a value of -1 for this column
   }
 }
 \description{
-creates a data frame with information on each quadtree cell.
+Creates a data frame with information on each quadtree cell.
 }
 \examples{
 mat <- rbind(c(1, 1, 0, 1),
@@ -44,6 +44,6 @@ plot(qt)
 as_data_frame(qt)
 }
 \seealso{
-\code{\link{as_vector}} returns all the cell values as a numeric
+\code{\link{as_vector}()} returns all the cell values as a numeric
 vector
 }

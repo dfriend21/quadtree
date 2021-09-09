@@ -3,12 +3,12 @@
 \name{transform_values}
 \alias{transform_values}
 \alias{transform_values,Quadtree,function-method}
-\title{Transform the Values of All Cells}
+\title{Transform the values of all \code{\link{Quadtree}} cells}
 \usage{
 \S4method{transform_values}{Quadtree,`function`}(x, y)
 }
 \arguments{
-\item{x}{A \code{\link{Quadtree}} object}
+\item{x}{A \code{\link{Quadtree}}}
 
 \item{y}{function; function used on each cell to transform the
 value. Must accept a single numeric value and return a single numeric
@@ -18,7 +18,8 @@ value. The function must also be able to handle NA values.}
 No return value
 }
 \description{
-Uses a function to change all cell values
+Uses a function to change all cell values of a
+  \code{\link{Quadtree}}
 }
 \details{
 This function applies a function to every single cell, which allows the user
@@ -37,10 +38,9 @@ beforehand to make a copy of the quadtree (see 'Examples').
 }
 \examples{
 data(habitat)
-rast <- habitat
 
 # create a quadtree
-qt1 <- quadtree(rast, split_threshold = .1)
+qt1 <- quadtree(habitat, split_threshold = .1)
 
 # copy the quadtree so that we have a copy of the original (since using
 #'transform_values' modifies the quadtree object)
@@ -49,10 +49,10 @@ qt3 <- copy(qt1)
 qt4 <- copy(qt1)
 
 transform_values(qt2, function(x) 1 - x)
-transform_values(qt3, function(x) x^3 )
+transform_values(qt3, function(x) x^3)
 transform_values(qt4, function(x) {
-  if(is.na(x)) return(NA) # make sure to handle NA's
-  if(x < .7) return(0)
+  if (is.na(x)) return(NA) # make sure to handle NA's
+  if (x < .7) return(0)
   return(1)
 })
 
