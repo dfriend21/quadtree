@@ -25,10 +25,10 @@
 #ifndef CEREAL_EXTERNAL_BASE64_HPP_
 #define CEREAL_EXTERNAL_BASE64_HPP_
 
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
+// #ifdef __GNUC__
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wconversion"
+// #endif
 
 #include <string>
 
@@ -128,7 +128,7 @@ namespace cereal
     }
   } // namespace base64
 } // namespace cereal
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
+// #ifdef __GNUC__
+// #pragma GCC diagnostic pop
+// #endif
 #endif // CEREAL_EXTERNAL_BASE64_HPP_
