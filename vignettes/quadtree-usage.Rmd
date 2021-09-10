@@ -197,7 +197,7 @@ head(df2)
 
 ### Convert to a `raster`
 
-A `Quadtree` can also be converted back to a raster using the `as_raster()` function. This function has one optional parameter named `rast`, which is used as the template for the output raster. If `NULL` (the default), a raster is automatically created, where the quadtree extent is used as the raster extent, and the smallest cell in the quadtree is used to determine the resolution of the raster. Note that the value of a raster cell is determined by the value of the quadtree cell located at the centroid of the raster cell - thus, if a raster cell overlaps several quadtree cells, whichever quadtree cell the centroid of the raster cell falls in will determine the raster cell's value. If the default value for `rast` is used, the raster cells will never overlap with more than one quadtree cell.
+A `Quadtree` can also be converted to a raster using the `as_raster()` function. This function has one optional parameter named `rast`, which is used as the template for the output raster. If `NULL` (the default), a raster is automatically created, where the quadtree extent is used as the raster extent, and the smallest cell in the quadtree is used to determine the resolution of the raster. Note that the value of a raster cell is determined by the value of the quadtree cell located at the centroid of the raster cell - thus, if a raster cell overlaps several quadtree cells, whichever quadtree cell the centroid of the raster cell falls in will determine the raster cell's value. If the default value for `rast` is used, the raster cells will never overlap with more than one quadtree cell.
 
 ```{r}
 rast <- as_raster(qt)
