@@ -134,7 +134,7 @@ Matrix Matrix::getMinorsMatrix() const {
             int currentIndex{0};
             for(int jRow = 0; jRow < nRow(); ++jRow){
                 for(int jCol = 0; jCol < nCol(); ++jCol){
-                    if(jRow != iRow & jCol != iCol){
+                    if(jRow != iRow && jCol != iCol){
                         subVec.at(currentIndex) = getValue(jRow, jCol);
                         currentIndex++;
                     }
@@ -201,7 +201,7 @@ double Matrix::mean(bool removeNA) const{
 
 double Matrix::median(bool removeNA) const{
     int nNans = countNans();
-    if((!removeNA && nNans > 0) || nNans == vec.size()){
+    if((!removeNA && nNans > 0) || (size_t)nNans == vec.size()){
         return std::numeric_limits<double>::quiet_NaN();
     }
     std::vector<double> vecSort(vec.size()-nNans);

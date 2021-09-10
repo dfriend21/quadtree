@@ -141,7 +141,7 @@ std::vector<double> QuadtreeWrapper::getValues(const std::vector<double> &x, con
   assert(x.size() == y.size());
   
   std::vector<double> vals(x.size());
-  for(int i = 0; i < x.size(); ++i){
+  for(size_t i = 0; i < x.size(); ++i){
     vals[i] = quadtree->getValue(x[i], y[i]);
   }
   return(vals);
@@ -229,7 +229,7 @@ void QuadtreeWrapper::makeList(std::shared_ptr<Node> node, Rcpp::List &list, int
   vec.push_back(parentID, "parentID");
   list[node->id] = vec;
   if(node->hasChildren){
-    for(int i = 0; i < node->children.size(); ++i){
+    for(size_t i = 0; i < node->children.size(); ++i){
       makeList(node->children[i], list, node->id);
     }
   }
@@ -245,8 +245,6 @@ Rcpp::List QuadtreeWrapper::asList(){
 std::vector<double> QuadtreeWrapper::asVector(bool terminalOnly) const{
   return quadtree->toVector(terminalOnly);
 }
-
-
 
 //not directly callable from R - called by 'getNbList()'
 //recursively creates a matrix of that represents all the neighbors of a node
@@ -266,7 +264,7 @@ void QuadtreeWrapper::makeNbList(std::shared_ptr<Node> node, Rcpp::List &list) c
   colnames(nbMat) = Rcpp::CharacterVector({"id0", "x0", "y0", "val0", "id1", "x1", "y1", "val1", "isLowest"}); //name the columns
   
   //loop through the neighbors and create an entry in the matrix for each neighbor
-  for(int i = 0; i < neighbors.size(); ++i){
+  for(size_t i = 0; i < neighbors.size(); ++i){
     nbMat(i,0) = node->id;
     nbMat(i,1) = (node->xMin+node->xMax)/2;
     nbMat(i,2) = (node->yMin+node->yMax)/2;
@@ -279,7 +277,7 @@ void QuadtreeWrapper::makeNbList(std::shared_ptr<Node> node, Rcpp::List &list) c
   }
   list[node->id] = nbMat;
   if(node->hasChildren){
-    for(int i = 0; i < node->children.size(); ++i){
+    for(size_t i = 0; i < node->children.size(); ++i){
       makeNbList(node->children[i], list);
     }
   }
@@ -313,17 +311,8 @@ QuadtreeWrapper QuadtreeWrapper::copy() const{
   qtw.quadtree = quadtree->copy();
   return(qtw);
 }
-// 
-// void QuadtreeWrapper::writeQuadtree(std::string filePath){
-//   Quadtree::writeQuadtree(quadtree, filePath);
-// }
-
-// QuadtreeWrapper QuadtreeWrapper::readQuadtree(std::string filePath){
-//   return(QuadtreeWrapper(Quadtree::readQuadtree(filePath)));
-// }
 
 void QuadtreeWrapper::writeQuadtree(QuadtreeWrapper qw, std::string filePath){
-  //Quadtree::writeQuadtree(quadtree, filePath);
   std::ofstream os(filePath, std::ios::binary);
   cereal::PortableBinaryOutputArchive oarchive(os);
   oarchive(qw);
@@ -336,13 +325,3 @@ QuadtreeWrapper QuadtreeWrapper::readQuadtree(std::string filePath){
   iarchive(qw);
   return qw;
 }
-
-
-// void QuadtreeWrapper::writeQuadtree(QuadtreeWrapper qw, std::string filePath){
-//   int x = 0;
-// }
-// 
-// QuadtreeWrapper QuadtreeWrapper::readQuadtree(std::string filePath){
-//   QuadtreeWrapper qw;
-//   return qw;
-// }

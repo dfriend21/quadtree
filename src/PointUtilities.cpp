@@ -1,5 +1,5 @@
 #include "PointUtilities.h"
-#include <math.h>
+#include <cmath>
 #include <list>
 #include <memory>
 #include <vector>

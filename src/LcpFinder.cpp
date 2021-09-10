@@ -62,7 +62,6 @@ void LcpFinder::init(int startNodeID){
             }
             NodeEdge *ne = new NodeEdge{counter, std::weak_ptr<Node>(iNode), std::weak_ptr<NodeEdge>(),0,0,0};
             nodeEdges.at(counter) = std::shared_ptr<NodeEdge>(ne);
-            // nodeEdges.at(counter) = std::make_shared<NodeEdge>(counter, std::weak_ptr<Node>(iNode), std::weak_ptr<NodeEdge>(),0,0,0);
             counter++;
         }
         if(hasStartNode){ //only continue if 'nodes' includes the start node - otherwise that means the start node falls outside of the specified search area

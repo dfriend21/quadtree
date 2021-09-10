@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <math.h>
+#include <cmath>
 #include <tuple>
 #include <vector>
 #include <limits>

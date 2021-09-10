@@ -44,10 +44,10 @@ Node::Node(double _xMin, double _xMax, double _yMin, double _yMax, double _value
 //-------------------------
 //given an x and a y coordinate, returns the index of the child that contains
 //the point. Based on the assumption that the first element is lower left corner. 
-//Indexing then proceeds by row
+//Indexing then proceeds by row. Returns -1 if point is outside the node.
 int Node::getChildIndex(double x, double y) const {
   if( (x < xMin) | (x > xMax) | (y < yMin) | (y > yMax) ){ //check to make sure the point falls within our extent
-    return std::numeric_limits<double>::quiet_NaN(); //if not, return Nan
+    return -1; //if not, return -1
   }
   int col = (x < (xMin + xMax)/2) ? 0 : 1; 
   int row = (y < (yMin + yMax)/2) ? 0 : 1;

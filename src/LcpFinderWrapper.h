@@ -15,7 +15,6 @@ public:
   LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid);
   
   void makeNetworkAll();
-  // void makeNetworkCost(double constraint);
   void makeNetworkCostDist(double constraint);
   Rcpp::NumericMatrix getLcp(Rcpp::NumericVector endPoint);
   Rcpp::NumericMatrix getAllPathsSummary();

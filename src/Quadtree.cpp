@@ -181,7 +181,6 @@ void Quadtree::makeTree(const Matrix &mat, std::function<bool (const Matrix&)> s
     assignNeighbors(); //assign neighbors for the cells    
 }
 
-
 //-------------------------
 // makeTreeWithTemplate
 //-------------------------
@@ -218,7 +217,7 @@ int Quadtree::makeTreeWithTemplate(const Matrix &mat, const std::shared_ptr<Node
     return newid;
 }
 
-//entry-point into the 'makeTreeWithTemplate' - calls the other 'makeTreeWithTemplate' function on the root node
+//entry-point into 'makeTreeWithTemplate' - calls the other 'makeTreeWithTemplate' function on the root node
 void Quadtree::makeTreeWithTemplate(const Matrix &mat, const std::shared_ptr<Quadtree> templateQuadtree, std::function<double (const Matrix&)> combineFun){
     if(mat.nCol() != templateQuadtree->matNX || mat.nRow() != templateQuadtree->matNY){
         throw std::runtime_error("The dimensions of 'mat' (" + std::to_string(mat.nRow()) + " rows, " + std::to_string(mat.nCol()) + " cols) must be identical to the dimensions of the original matrix used to create 'templateQuadtree' (" + std::to_string(templateQuadtree->matNY) + " rows, " + std::to_string(templateQuadtree->matNX) + " cols)");
@@ -312,9 +311,9 @@ void Quadtree::assignNeighbors(){
 // set of two functions for retrieving a node - one is a recursive algorithm that searches the
 // the tree, the other is essentially the 'entry point' into that function
 
-//returns the node at a given (x,y) location
-//works exactly the same as 'getValue' except returns a pointer to the node
-//instead of the value of the node
+// returns the node at a given (x,y) location
+// works exactly the same as 'getValue' except returns a pointer to the node
+// instead of the value of the node
 std::shared_ptr<Node> Quadtree::getNode(double x, double y, const std::shared_ptr<Node> node) const{
     if( (x < node->xMin) | (x > node->xMax) | (y < node->yMin) | (y > node->yMax) | std::isnan(x) | std::isnan(y)){ //check to make sure the point falls within our extent
         return nullptr; //if not, return NULL
@@ -336,7 +335,6 @@ std::shared_ptr<Node> Quadtree::getNode(double x, double y) const{
 // getValue
 //-------------------------
 //THOUGHT: Use getNode, and then just return the value? Then I don't have two nearly identical functions.
-
 //recursively finds the value at a given (x,y) location. Checks if this point falls
 //within it's boundaries - if it does, and it doesn't have children, returns the
 //value of this node. If it does have children, it calls the function on the 
@@ -368,31 +366,29 @@ double Quadtree::getValue(double x, double y) const{
 // box if the centroid is in the box. Otherwise a node is considered "in" the box if any part of it
 // overlaps with the box.
 void Quadtree::getNodesInBox(std::shared_ptr<Node> node, std::list<std::shared_ptr<Node>> &returnNodes, double xMin, double xMax, double yMin, double yMax, bool byCentroid){
-    //if(node->children.size() > 0){
-        for(size_t i = 0; i < node->children.size(); ++i){
-            std::shared_ptr<Node> child = node->children.at(i);
-            bool isXValid = !(xMax < child->xMin || xMin > child->xMax);
-            bool isYValid = !(yMax < child->yMin || yMin > child->yMax);
-            
-            if(isXValid && isYValid){
-                if(child->hasChildren){
-                    getNodesInBox(child, returnNodes, xMin, xMax, yMin, yMax, byCentroid);
-                } else {
-                    bool addNode = true;
-                    if(byCentroid){
-                        double xCentroid = (child->xMin + child->xMax) / 2;
-                        double yCentroid = (child->yMin + child->yMax) / 2;
-                        if(xCentroid < xMin || xCentroid > xMax || yCentroid < yMin || yCentroid > yMax){
-                            addNode = false;
-                        }
-                    } 
-                    if(addNode){
-                        returnNodes.push_back(child);
+    for(size_t i = 0; i < node->children.size(); ++i){
+        std::shared_ptr<Node> child = node->children.at(i);
+        bool isXValid = !(xMax < child->xMin || xMin > child->xMax);
+        bool isYValid = !(yMax < child->yMin || yMin > child->yMax);
+        
+        if(isXValid && isYValid){
+            if(child->hasChildren){
+                getNodesInBox(child, returnNodes, xMin, xMax, yMin, yMax, byCentroid);
+            } else {
+                bool addNode = true;
+                if(byCentroid){
+                    double xCentroid = (child->xMin + child->xMax) / 2;
+                    double yCentroid = (child->yMin + child->yMax) / 2;
+                    if(xCentroid < xMin || xCentroid > xMax || yCentroid < yMin || yCentroid > yMax){
+                        addNode = false;
                     }
+                } 
+                if(addNode){
+                    returnNodes.push_back(child);
                 }
             }
         }
-    //}
+    }
 }
 
 std::list<std::shared_ptr<Node>> Quadtree::getNodesInBox(double xMin, double xMax, double yMin, double yMax, bool byCentroid){

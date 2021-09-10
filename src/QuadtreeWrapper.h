@@ -66,8 +66,6 @@ class QuadtreeWrapper{
     
     QuadtreeWrapper copy() const;
     
-    //void writeQuadtree(std::string filePath);
-    //static QuadtreeWrapper readQuadtree(std::string filePath);
     static void writeQuadtree(QuadtreeWrapper qw, std::string filePath);
     static QuadtreeWrapper readQuadtree(std::string filePath);
     

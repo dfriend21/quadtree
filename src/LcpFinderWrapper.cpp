@@ -1,10 +1,3 @@
-//' @name shortestPathFinder
-//' @rdname shortestPathFinder
-//' @title stuff
-//' @description more stuff
-//' @field spf
-//' @field startPoint
-
 #include "LcpFinderWrapper.h"
 
 LcpFinderWrapper::LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint)
@@ -21,14 +14,9 @@ void LcpFinderWrapper::makeNetworkAll(){
   spf.makeNetworkAll();
 }
 
-// void LcpFinderWrapper::makeNetworkCost(double constraint){
-//   spf.makeNetworkCost(constraint);
-// }
-
 void LcpFinderWrapper::makeNetworkCostDist(double constraint){
   spf.makeNetworkCostDist(constraint);
 }
-
 
 Rcpp::NumericMatrix LcpFinderWrapper::getLcp(Rcpp::NumericVector endPoint){
   std::vector<std::tuple<std::shared_ptr<Node>,double,double>> path = spf.getLcp(Point(endPoint[0], endPoint[1]));

@@ -48,7 +48,7 @@ Rcpp::List NodeWrapper::getChildren() const{
   Rcpp::List list;
   if(node->hasChildren){
     list = Rcpp::List(node->children.size());
-    for(int i = 0; i < node->children.size(); i++){
+    for(size_t i = 0; i < node->children.size(); i++){
       list[i] = NodeWrapper(node->children[i]);
     }
   } else {
@@ -60,7 +60,7 @@ Rcpp::List NodeWrapper::getChildren() const{
 Rcpp::List NodeWrapper::getNeighbors() const{
   Rcpp::List list;
   list = Rcpp::List(node->neighbors.size());
-  for(int i = 0; i < node->neighbors.size(); i++){
+  for(size_t i = 0; i < node->neighbors.size(); i++){
     auto node_i = node->neighbors[i].lock();
     list[i] = NodeWrapper(node_i);
   }
@@ -82,11 +82,11 @@ Rcpp::NumericVector getOverlapInfo(std::shared_ptr<Node> node, std::shared_ptr<N
   double xOverlap = std::min(node->xMax, nb->xMax) - std::max(node->xMin, nb->xMin);
   double yOverlap = std::min(node->yMax, nb->yMax) - std::max(node->yMin, nb->yMin);
   double nCorn = 0;
-  if(xOverlap != 0 & yOverlap == 0){
+  if(xOverlap != 0 && yOverlap == 0){
     nCorn = nCorners(node->xMin, node->xMax, nb->xMin, nb->xMax);
-  } else if(xOverlap == 0 & yOverlap != 0){
+  } else if(xOverlap == 0 && yOverlap != 0){
     nCorn = nCorners(node->yMin, node->yMax, nb->yMin, nb->yMax);
-  } else if(xOverlap == 0 & yOverlap == 0){
+  } else if(xOverlap == 0 && yOverlap == 0){
     nCorn = 1;
   }
   Rcpp::NumericVector vals = {xOverlap, yOverlap, nCorn};
@@ -96,7 +96,7 @@ Rcpp::NumericVector getOverlapInfo(std::shared_ptr<Node> node, std::shared_ptr<N
 Rcpp::NumericMatrix NodeWrapper::getNeighborInfo() const{
   Rcpp::NumericMatrix mat(node->neighbors.size(), 13);
   colnames(mat) = Rcpp::CharacterVector({"id", "xMin", "xMax", "yMin", "yMax", "xMean", "yMean", "value", "hasChdn", "xOverlap", "yOverlap", "totOverlap", "nCorners"});
-  for(int i = 0; i < node->neighbors.size(); i++){
+  for(size_t i = 0; i < node->neighbors.size(); i++){
     auto node_i = node->neighbors[i].lock();
     mat(i,0) = node_i->id;
     mat(i,1) = node_i->xMin;
@@ -118,7 +118,7 @@ Rcpp::NumericMatrix NodeWrapper::getNeighborInfo() const{
 
 Rcpp::NumericVector NodeWrapper::getNeighborIds() const{
   Rcpp::NumericVector vec(node->neighbors.size());
-  for(int i = 0; i < node->neighbors.size(); i++){
+  for(size_t i = 0; i < node->neighbors.size(); i++){
     auto node_i = node->neighbors[i].lock();
     vec[i] = node_i->id;
   }
@@ -127,7 +127,7 @@ Rcpp::NumericVector NodeWrapper::getNeighborIds() const{
 
 Rcpp::NumericVector NodeWrapper::getNeighborVals() const{
   Rcpp::NumericVector vec(node->neighbors.size());
-  for(int i = 0; i < node->neighbors.size(); i++){
+  for(size_t i = 0; i < node->neighbors.size(); i++){
     auto node_i = node->neighbors[i].lock();
     vec[i] = node_i->value;
   }
