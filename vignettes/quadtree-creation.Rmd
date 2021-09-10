@@ -185,7 +185,7 @@ cmb_fun <- function(vals, args) {
 }
 
 qt <- quadtree(rast, .1, combine_method = "custom", combine_fun = cmb_fun,
-                combine_args = list(threshold = .5))
+               combine_args = list(threshold = .5))
 plot(qt, crop = TRUE, na_col = NULL, border_lwd = .3,
      main = "custom combine function")
 ```
@@ -206,7 +206,7 @@ split_if_one <- function(vals, args) {
   return(FALSE)
 }
 qt_template <- quadtree(template, split_method = "custom",
-                       split_fun = split_if_one, split_threshold = .01)
+                        split_fun = split_if_one)
 
 # now use the template to create a quadtree from 'rast'
 qt <- quadtree(rast, template_quadtree = qt_template)
