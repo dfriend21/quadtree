@@ -29,7 +29,8 @@ Description: Provides functionality for working with raster-like quadtrees
     calculating least-cost paths using the quadtree as a resistance
     surface.
 License: MIT + file LICENSE
-URL: https://github.com/dfriend21/quadtree/
+URL: https://github.com/dfriend21/quadtree/, https://dfriend21.github.io/quadtree/
+BugReports: https://github.com/dfriend21/quadtree/issues/
 Depends: 
     R (>= 2.10)
 Imports: 
