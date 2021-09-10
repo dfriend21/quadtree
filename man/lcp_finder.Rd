@@ -26,7 +26,7 @@ be "in" the box specified by \code{xlim} and \code{ylim}. If \code{FALSE}
 box.}
 }
 \value{
-a \code{LcpFinder}
+a \code{\link{LcpFinder}}
 }
 \description{
 Creates a \code{\link{LcpFinder}} object that can then be used

@@ -13,7 +13,7 @@
 #'   a pointer to a \code{LcpFinder} C++ object (defined in
 #'   'src/LcpFinder.h' and 'src/LcpFinder.cpp'). All of the
 #'   core functionality is in the \code{LcpFinder} C++ class.
-#'   \code{LcpFinderWrapper} is a wrapper class that adds the Rcpp code
+#'   \code{LcpFinderWrapper} is a wrapper class that adds the 'Rcpp' code
 #'   required for it to be accessible from R.
 #'   
 #'   Note that there is no constructor made accessible to R - a

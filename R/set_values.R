@@ -21,7 +21,7 @@
 #' Also note that the structure of the quadtree will not be changed - only the
 #' cell values will change.
 #' @return
-#' No return value
+#' no return value
 #' @seealso \code{\link{transform_values}()} can be used to transform the
 #'   existing values of all cells using a function
 #' @examples

@@ -21,7 +21,7 @@
 #' @details
 #'   See the vignette 'quadtree-lcp' for more details and examples (i.e. run
 #'   \code{vignette("quadtree-lcp", package = "quadtree")})
-#' @return a \code{LcpFinder}
+#' @return a \code{\link{LcpFinder}}
 #' @seealso \code{\link{find_lcp}()} returns the LCP between the start point and
 #'   another point. \code{\link{find_lcps}()} finds all LCPs whose cost-distance
 #'   is less than some value. \code{\link{summarize_lcps}()} outputs a summary
@@ -115,7 +115,7 @@ setMethod("lcp_finder", signature(x = "Quadtree", y = "numeric"),
 #' @details
 #'   See the vignette 'quadtree-lcp' for more details and examples (i.e. run
 #'   \code{vignette("quadtree-lcp", package = "quadtree")})
-#' @return \code{find_lcp} returns a five column matrix representing the
+#' @return Returns a five column matrix representing the
 #'   least cost path. It has the following columns:
 #'   \itemize{
 #'      \item{\code{x}: }{x coordinate of this point (centroid of the cell)}
@@ -203,7 +203,7 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #'
 #'   A very important note to make is that once the LCP tree is calculated, it
 #'   never gets smaller. For example, we could use \code{\link{find_lcps}()}
-#'   with \code{limit = NULL} to calculate all LCPS. If we then used
+#'   with \code{limit = NULL} to calculate all LCPs. If we then used
 #'   \code{\link{find_lcps}()} on the same \code{LcpFinder} but this time used a
 #'   limit, it would still return \emph{all} of the LCPs - even those that are
 #'   greater than the specified limit, since the tree never shrinks.
@@ -211,7 +211,7 @@ setMethod("find_lcp", signature(x = "LcpFinder", y = "numeric"),
 #' @return If \code{return_summary} is \code{TRUE},
 #'   \code{\link{summarize_lcps}()} is used to return a matrix summarizing each
 #'   LCP found. See the help page of that function for details on the return
-#'   matrix.
+#'   matrix. If \code{return_summary} is \code{FALSE}, no value is returned.
 #' @seealso \code{\link{lcp_finder}()} creates the \code{\link{LcpFinder}}
 #'   object used as input to this function. \code{\link{find_lcp}()} returns the
 #'   LCP between the start point and another point.

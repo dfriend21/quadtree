@@ -72,8 +72,11 @@ height)}
 \emph{right-most} part of the text - i.e. a value of 1 means the text will
 end exactly at the right border of the legend area}
 }
+\value{
+no return value
+}
 \description{
-Adds a gradient legent to a plot
+Adds a gradient legend to a plot
 }
 \details{
 I took an HTML/CSS-like approach to determining the positioning -

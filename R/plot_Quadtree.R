@@ -245,58 +245,60 @@ setMethod("plot", signature(x = "Quadtree", y = "missing"),
   }
 )
 
-# @name .get_coords
-# @rdname .get_coords
-# @title Get the extent of the figure area in plot units (for one dimension)
-# @description Given the coordinate range of a single dimension in user units
-#   (\code{par("usr")}) and the coordinates of that same coordinate range as a
-#   fraction of the current figure region (\code{par("plt")}), calculates the
-#   extent of the entire figure area in user units.
-# @param usr two-element (\code{.get_coords_axis}) or four-element
-#   (\code{.get_coords}) numeric vector; specifies the user coordinates of the
-#   plot region. Can be retrieved using \code{par("usr")}, and subscripts can
-#   be used to get only one dimension (for \code{.get_coords_axis} - i.e
-#   \code{par("usr")[1:2]})
-# @param plt two-element (\code{.get_coords_axis}) or four-element
-#   (\code{.get_coords}) numeric vector; specifies the coordinates of the plot
-#   region as fractions of the figure region. Can be retrieved using
-#   \code{par("plt")}, and subscripts can be used to get only one dimension
-#   (for \code{.get_coords_axis} - i.e \code{par("plt")[1:2]})
-# @details \code{.get_coords_axis()} is used to find the user coordinates of a
-#   single dimension of the figure area. In this case, \code{usr} and
-#   \code{plt} should both be two-element vectors corresponding to the same
-#   dimension (see examples). Both vectors need to be in the format
-#   \code{c(max,min)}.
-#
-#   \code{.get_coords()} is simply a wrapper for \code{.get_coords_axis} that
-#   does both dimensions at once. In this case the output of \code{par("usr")}
-#   and \code{par("plt")} can be directly supplied to the \code{usr} and
-#   \code{plt} parameters, respectively. Note that for both parameters the
-#   vectors must have length 4 and be in this order:
-#   \code{c(xmin,xmax,ymin,ymax)}.
-#
-#   These functions were written for use in \code{\link{add_legend}}. In order
-#   to properly place the legend, I needed to know the extent of the entire
-#   figure region in user coordinates. However, there's nothing about this
-#   function that is specific to that one application, and could be used in
-#   other situations as well.
-#
-#   Understanding what these functions do (and why they're necessary) requires
-#   an understanding of the graphical parameters, and in particular what
-#   \code{usr} and \code{plt} represent. See \code{?par} for more on these
-#   parameters.
-# @examples
-# p = par() # retrieve the graphical parameters as a list
-# .get_coords_axis(p$usr[1:2], p$plt[1:2]) # x-axis
-# .get_coords_axis(p$usr[3:4], p$plt[3:4]) # y-axis
-#
-# .get_coords(p$usr, p$plt) # both dimensions at once
-# .get_coords(par("usr"), par("plt")) # this also works
-# @seealso Run \code{?par} for more details on the \code{usr} and \code{plt}
-#   parameters
+#' @noRd
+#' @name .get_coords
+#' @rdname .get_coords
+#' @title Get the extent of the figure area in plot units (for one dimension)
+#' @description Given the coordinate range of a single dimension in user units
+#'   (\code{par("usr")}) and the coordinates of that same coordinate range as a
+#'   fraction of the current figure region (\code{par("plt")}), calculates the
+#'   extent of the entire figure area in user units.
+#' @param usr two-element (\code{.get_coords_axis}) or four-element
+#'   (\code{.get_coords}) numeric vector; specifies the user coordinates of the
+#'   plot region. Can be retrieved using \code{par("usr")}, and subscripts can
+#'   be used to get only one dimension (for \code{.get_coords_axis} - i.e
+#'   \code{par("usr")[1:2]})
+#' @param plt two-element (\code{.get_coords_axis}) or four-element
+#'   (\code{.get_coords}) numeric vector; specifies the coordinates of the plot
+#'   region as fractions of the figure region. Can be retrieved using
+#'   \code{par("plt")}, and subscripts can be used to get only one dimension
+#'   (for \code{.get_coords_axis} - i.e \code{par("plt")[1:2]})
+#' @details \code{.get_coords_axis()} is used to find the user coordinates of a
+#'   single dimension of the figure area. In this case, \code{usr} and
+#'   \code{plt} should both be two-element vectors corresponding to the same
+#'   dimension (see examples). Both vectors need to be in the format
+#'   \code{c(max,min)}.
+#'
+#'   \code{.get_coords()} is simply a wrapper for \code{.get_coords_axis} that
+#'   does both dimensions at once. In this case the output of \code{par("usr")}
+#'   and \code{par("plt")} can be directly supplied to the \code{usr} and
+#'   \code{plt} parameters, respectively. Note that for both parameters the
+#'   vectors must have length 4 and be in this order:
+#'   \code{c(xmin,xmax,ymin,ymax)}.
+#'
+#'   These functions were written for use in \code{\link{add_legend}}. In order
+#'   to properly place the legend, I needed to know the extent of the entire
+#'   figure region in user coordinates. However, there's nothing about this
+#'   function that is specific to that one application, and could be used in
+#'   other situations as well.
+#'
+#'   Understanding what these functions do (and why they're necessary) requires
+#'   an understanding of the graphical parameters, and in particular what
+#'   \code{usr} and \code{plt} represent. See \code{?par} for more on these
+#'   parameters.
+#' @examples
+#' p = par() # retrieve the graphical parameters as a list
+#' .get_coords_axis(p$usr[1:2], p$plt[1:2]) # x-axis
+#' .get_coords_axis(p$usr[3:4], p$plt[3:4]) # y-axis
+#'
+#' .get_coords(p$usr, p$plt) # both dimensions at once
+#' .get_coords(par("usr"), par("plt")) # this also works
+#' @seealso Run \code{?par} for more details on the \code{usr} and \code{plt}
+#'   parameters
 NULL
 
-# @rdname .get_coords
+#' @noRd
+#' @rdname .get_coords
 .get_coords_axis <- function(usr, plt) {
   b_a <- (usr[2] - usr[1]) / (plt[2] - plt[1])
   a <- usr[1] - plt[1] * b_a
@@ -304,7 +306,8 @@ NULL
   return(c(a, b))
 }
  
-# @rdname .get_coords
+#' @noRd
+#' @rdname .get_coords
 .get_coords <- function(usr, plt) {
   x <- .get_coords_axis(usr[1:2], plt[1:2])
   y <- .get_coords_axis(usr[3:4], plt[3:4])
@@ -312,7 +315,7 @@ NULL
 }
 
 #' @title Add a gradient legend to a plot
-#' @description Adds a gradient legent to a plot
+#' @description Adds a gradient legend to a plot
 #' @param zlim two-element numeric vector; required; the min and max value of z
 #' @param col character vector; required; the colors that will be used in the
 #'   legend.
@@ -366,6 +369,7 @@ NULL
 #'   \code{\link[=plot.Quadtree]{plot}()}. Using this function to plot the legend after using
 #'   \code{\link[=plot.Quadtree]{plot}()} raises the possibility of the legend not corresponding
 #'   correctly with the plot, and thus should be avoided.
+#' @return no return value
 #' @examples
 #' set.seed(23)
 #' mat <- matrix(runif(64, 0, 1), nrow = 8)

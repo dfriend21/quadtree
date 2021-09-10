@@ -18,7 +18,7 @@ contains the x-coordinates, second column contains the y-coordinates}
 to the corresponding value in \code{z}.}
 }
 \value{
-No return value
+no return value
 }
 \description{
 Given a \code{\link{Quadtree}} a set of points and a vector of

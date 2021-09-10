@@ -16,14 +16,14 @@
 #' 
 #' \code{write_quadtree()} - no return value
 #' @examples
-#' \dontrun{
 #' library(quadtree)
 #' data(habitat)
 #'
-#' qt1 <- quadtree(habitat, .1)
-#' write_quadtree(qt1, "path/to/quadtree.qtree")
-#' qt2 <- read_quadtree("path/to/quadtree.qtree")
-#' }
+#' qt <- quadtree(habitat, .1)
+#' 
+#' path <- tempfile(fileext = "qtree")
+#' write_quadtree(path, qt)
+#' qt2 <- read_quadtree(path)
 NULL
 
 #' @rdname read_quadtree

@@ -19,7 +19,7 @@ This class is defined in 'src/QuadtreeWrapper.h' and
   \code{QuadtreeWrapper} contains a pointer to a \code{Quadtree} C++ object
   (defined in 'src/Quadtree.h' and 'src/Quadtree.cpp'). All of the core
   functionality is in the \code{Quadtree} C++ class - \code{QuadtreeWrapper}
-  is a wrapper class that adds the Rcpp code required for it to be accessible
+  is a wrapper class that adds the 'Rcpp' code required for it to be accessible
   from R.
 
   Each member function exposed to R is described below. Note that when a
@@ -305,7 +305,7 @@ This class is defined in 'src/QuadtreeWrapper.h' and
 }}
 
 \item{\code{root}}{\itemize{
-  \item \strong{Description}: Returns the root node of the quadree
+  \item \strong{Description}: Returns the root node of the quadtree
   \item \strong{Parameters}: none
   \item \strong{Returns}: a \code{CppNode} object
 }}

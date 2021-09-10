@@ -19,7 +19,7 @@
 \code{\link{Quadtree}}}
 }
 \value{
-\code{projection()} returns a string
+a string
 }
 \description{
 Retrieves the proj4string of a \code{\link{Quadtree}}

@@ -9,7 +9,7 @@
 #'   \code{CppNode} instead of \code{NodeWrapper}. \code{NodeWrapper} contains a
 #'   pointer to a \code{Node} object (defined in 'src/Node.h' and
 #'   'src/Node.cpp'). All of the core functionality is in the \code{Node} class
-#'   - \code{NodeWrapper} is a wrapper class that adds the Rcpp code required
+#'   - \code{NodeWrapper} is a wrapper class that adds the 'Rcpp' code required
 #'   for it to be accessible from R.
 #' @field asVector \itemize{
 #'   \item \strong{Description}: Returns a vector giving info about the node

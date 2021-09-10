@@ -15,7 +15,7 @@ value. Must accept a single numeric value and return a single numeric
 value. The function must also be able to handle NA values.}
 }
 \value{
-No return value
+no return value
 }
 \description{
 Uses a function to change all cell values of a

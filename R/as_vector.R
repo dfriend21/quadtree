@@ -15,8 +15,8 @@
 #' @examples
 #' data(habitat)
 #' qt <- quadtree(habitat, .2)
-#' as_vector(qt)
-#' as_vector(qt, FALSE)
+#' head(as_vector(qt), 20)
+#' head(as_vector(qt, FALSE), 20)
 #' @export
 setMethod("as_vector", signature(x = "Quadtree"),
   function(x, terminal_only = TRUE) {

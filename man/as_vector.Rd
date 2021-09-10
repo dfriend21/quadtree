@@ -23,8 +23,8 @@ Returns all cell values  of a \code{\link{Quadtree}} as a
 \examples{
 data(habitat)
 qt <- quadtree(habitat, .2)
-as_vector(qt)
-as_vector(qt, FALSE)
+head(as_vector(qt), 20)
+head(as_vector(qt, FALSE), 20)
 }
 \seealso{
 \code{\link{as_data_frame}} creates a data frame from a

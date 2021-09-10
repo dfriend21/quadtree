@@ -22,7 +22,7 @@ is done after the calculation and has no effect on the path found by the
 algorithm.}
 }
 \value{
-\code{find_lcp} returns a five column matrix representing the
+Returns a five column matrix representing the
   least cost path. It has the following columns:
   \itemize{
      \item{\code{x}: }{x coordinate of this point (centroid of the cell)}

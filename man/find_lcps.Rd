@@ -22,7 +22,7 @@ paths found. If \code{FALSE}, no value is returned.}
 If \code{return_summary} is \code{TRUE},
   \code{\link{summarize_lcps}()} is used to return a matrix summarizing each
   LCP found. See the help page of that function for details on the return
-  matrix.
+  matrix. If \code{return_summary} is \code{FALSE}, no value is returned.
 }
 \description{
 Calculates least-cost paths (LCPs) from the start point (the
@@ -38,7 +38,7 @@ Once the LCPs have been calculated, \code{\link{find_lcp}()} can be
 
   A very important note to make is that once the LCP tree is calculated, it
   never gets smaller. For example, we could use \code{\link{find_lcps}()}
-  with \code{limit = NULL} to calculate all LCPS. If we then used
+  with \code{limit = NULL} to calculate all LCPs. If we then used
   \code{\link{find_lcps}()} on the same \code{LcpFinder} but this time used a
   limit, it would still return \emph{all} of the LCPs - even those that are
   greater than the specified limit, since the tree never shrinks.

@@ -24,7 +24,7 @@
 #' to maintain a version of the original quadtree, use \code{\link{copy}}
 #' beforehand to make a copy of the quadtree (see 'Examples').
 #' @return
-#' No return value
+#' no return value
 #' @seealso \code{\link{set_values}()} can be used to set the values of cells
 #' to specified values (rather than transforming the existing values)
 #' @examples
