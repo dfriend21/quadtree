@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -97,22 +97,27 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/quadtree-creation.html">Creating quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-usage.html">Using quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-lcp.html">Finding LCPs</a>
+    </li>
+    <li>
       <a href="../articles/quadtree-code.html">Code Details</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-creation.html">Quadtree creation</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-lcp.html">Finding Least-Cost Paths on a Quadtree</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-usage.html">Using Quadtrees</a>
     </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dfriend21/quadtree/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -127,7 +132,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Find the LCP between two points on a <code><a href='Quadtree-class.html'>Quadtree</a></code></h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/lcp.R'><code>R/lcp.R</code></a></small>
     <div class="hidden name"><code>find_lcp.Rd</code></div>
     </div>
 
@@ -166,7 +171,7 @@ algorithm.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>find_lcp</code> returns a five column matrix representing the
+    <p>Returns a five column matrix representing the
   least cost path. It has the following columns:</p><ul>
 <li><p><code>x</code>: x coordinate of this point (centroid of the cell)</p></li>
 <li><p><code>y</code>: y coordinate of this point (centroid of the cell)</p></li>
@@ -202,7 +207,7 @@ algorithm.</p></td>
 <span class='co'># vignette("quadtree-lcp", package = "quadtree")</span>
 <span class='co'>####################</span>
 
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dfriend21.github.io/quadtree'>quadtree</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dfriend21/quadtree/'>quadtree</a></span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
 
 <span class='co'># create a quadtree</span>

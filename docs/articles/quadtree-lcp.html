@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -54,21 +54,28 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/quadtree-creation.html">Creating quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-usage.html">Using quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-lcp.html">Finding LCPs</a>
+    </li>
+    <li>
       <a href="../articles/quadtree-code.html">Code Details</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-creation.html">Quadtree creation</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-lcp.html">Finding Least-Cost Paths on a Quadtree</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-usage.html">Using Quadtrees</a>
     </li>
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/dfriend21/quadtree/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -84,9 +91,9 @@
       <h1 data-toc-skip>Finding Least-Cost Paths on a Quadtree</h1>
                         <h4 class="author">Derek Friend</h4>
             
-            <h4 class="date">Last compiled on 09 September, 2021</h4>
+            <h4 class="date">Last compiled on 10 September, 2021</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/master/vignettes/quadtree-lcp.Rmd"><code>vignettes/quadtree-lcp.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-lcp.Rmd</code></div>
 
     </div>
@@ -98,7 +105,7 @@
 <a href="#the-content-of-this-vignette" class="anchor"></a>The content of this vignette</h2>
 <p>This vignette goes over the process of finding least-cost paths (LCPs) using a quadtree as a resistance surface. Sample data provided with the <code>quadtree</code> package is used to construct the quadtree used as a resistance surface in the examples.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dfriend21.github.io/quadtree">quadtree</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/">quadtree</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span>
@@ -109,8 +116,8 @@
 <h2 class="hasAnchor">
 <a href="#overview-of-least-cost-paths" class="anchor"></a>Overview of Least-Cost Paths</h2>
 <p>Surfaces like rasters are often used for calculating least-cost paths (LCPs). In this case, the underlying raster surface is assumed to represent the degree to which the landscape “resists” movement. The goal, then, is to find the path between two points such that the least amount of resistance is accumulated.</p>
-<p>The LCP is estimated by treating the surface (whether it be a raster or a quadree) as a network and then using an algorithm for finding the shortest path on a network. Each cell centroid is considered to be a node, and two nodes are connected by an edge if they are adjacent to one another. Each edge has an assigned cost which is derived from the underlying surface. Edges will always travel through two cells. In the quadtree package, then, the cost is determined by first dividing the edge into segments two so that each segment falls in a single cell. The length of each segment is multiplied by the cost of the cell, and then these two values are added together to determine the total cost of the edge. Once the network has been constructed, we can use Djikstra’s algorithm to find the least-cost path between two nodes.</p>
-<p>Dijkstra’s algorithm essentially builds a tree data structure, where the starting node is the root of the tree. It iteratively builds the tree structure, and in each iteration it adds the node that is “closest” to the current tree - that is, it chooses the node which is easiest to get to from the current structure. The result is that even if only one LCP is desired, LCPs to other nodes are also calculated in the process. To find a path to a specific node, then, this tree is iteratively built, and once the destination node is reached, the path to that node is returned.</p>
+<p>The LCP is estimated by treating the surface (whether it be a raster or a quadtree) as a network and then using an algorithm for finding the shortest path on a network. Each cell centroid is considered to be a node, and two nodes are connected by an edge if they are adjacent to one another. Each edge has an assigned cost which is derived from the underlying surface. Edges will always travel through two cells. In the quadtree package, then, the cost is determined by first dividing the edge into two segments so that each segment falls in a single cell. The length of each segment is multiplied by the cost of the cell, and then these two values are added together to determine the total cost of the edge. Once the network has been constructed, we can use Dijkstra’s algorithm to find the least-cost path between two nodes.</p>
+<p>Dijkstra’s algorithm essentially builds a tree data structure, where the starting node is the root of the tree. It builds the tree structure over multiple iterations, and in each iteration it adds the node that is “closest” to the current tree - that is, it chooses the node which is easiest to get to from the current structure. The result is that even if only one LCP is desired, LCPs to other nodes are also calculated in the process. To find a path to a specific node, then, this tree is built, and once the destination node is reached, the path to that node is returned.</p>
 <p>It’s important to note that variable cell size of a quadtree will result in least-cost paths being distorted to some degree, and this distortion will increase as cell size increases. It is important for the user to be aware of this distortion - depending on the application, this distortion may or may not cause a meaningful amount of error, and it is up to the user to determine whether the distortion caused by calculating LCPs on a quadtree will significantly affect the analysis being performed.</p>
 </div>
 <div id="finding-lcps-on-a-quadtree" class="section level2">
@@ -262,7 +269,6 @@
 <span class="va">paths1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html">nrow</a></span><span class="op">(</span><span class="va">paths1</span><span class="op">)</span>
 <span class="co">#&gt; [1] 833</span>
-
 <span class="va">paths2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html">nrow</a></span><span class="op">(</span><span class="va">paths2</span><span class="op">)</span> <span class="co"># same as for paths1!!!</span>
 <span class="co">#&gt; [1] 833</span></code></pre></div>

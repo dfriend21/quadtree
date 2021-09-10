@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -98,22 +98,27 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/quadtree-creation.html">Creating quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-usage.html">Using quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-lcp.html">Finding LCPs</a>
+    </li>
+    <li>
       <a href="../articles/quadtree-code.html">Code Details</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-creation.html">Quadtree creation</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-lcp.html">Finding Least-Cost Paths on a Quadtree</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-usage.html">Using Quadtrees</a>
     </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dfriend21/quadtree/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -128,7 +133,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1><code>CppQuadtree</code>: C++ quadtree data structure</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/CppQuadtree-class.R'><code>R/CppQuadtree-class.R</code></a></small>
     <div class="hidden name"><code>CppQuadtree-class.Rd</code></div>
     </div>
 
@@ -149,7 +154,7 @@
   <code>QuadtreeWrapper</code> contains a pointer to a <code>Quadtree</code> C++ object
   (defined in 'src/Quadtree.h' and 'src/Quadtree.cpp'). All of the core
   functionality is in the <code>Quadtree</code> C++ class - <code>QuadtreeWrapper</code>
-  is a wrapper class that adds the Rcpp code required for it to be accessible
+  is a wrapper class that adds the 'Rcpp' code required for it to be accessible
   from R.</p>
 <p>Each member function exposed to R is described below. Note that when a
   function directly corresponds with an R function, the user is referred to
@@ -434,7 +439,7 @@
 </ul></p></dd>
 
 <dt><code>root</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Returns the root node of the quadree</p></li>
+<li><p><strong>Description</strong>: Returns the root node of the quadtree</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
 <li><p><strong>Returns</strong>: a <code>CppNode</code> object</p></li>
 </ul></p></dd>

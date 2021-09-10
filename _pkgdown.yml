@@ -1,1 +1,15 @@
 title: quadtree
+navbar:
+  components:
+    articles:
+      text: Articles
+      menu:
+      - text: Creating quadtrees
+        href: articles/quadtree-creation.html
+      - text: Using quadtrees
+        href: articles/quadtree-usage.html
+      - text: Finding LCPs
+        href: articles/quadtree-lcp.html
+      - text: Code Details
+        href: articles/quadtree-code.html
+        

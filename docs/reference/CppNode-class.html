@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -97,22 +97,27 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/quadtree-creation.html">Creating quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-usage.html">Using quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-lcp.html">Finding LCPs</a>
+    </li>
+    <li>
       <a href="../articles/quadtree-code.html">Code Details</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-creation.html">Quadtree creation</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-lcp.html">Finding Least-Cost Paths on a Quadtree</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-usage.html">Using Quadtrees</a>
     </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dfriend21/quadtree/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -127,7 +132,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1><code>CppNode</code>: C++ quadtree node</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/CppNode-class.R'><code>R/CppNode-class.R</code></a></small>
     <div class="hidden name"><code>CppNode-class.Rd</code></div>
     </div>
 
@@ -146,7 +151,7 @@
   <code>CppNode</code> instead of <code>NodeWrapper</code>. <code>NodeWrapper</code> contains a
   pointer to a <code>Node</code> object (defined in 'src/Node.h' and
   'src/Node.cpp'). All of the core functionality is in the <code>Node</code> class
-  - <code>NodeWrapper</code> is a wrapper class that adds the Rcpp code required
+  - <code>NodeWrapper</code> is a wrapper class that adds the 'Rcpp' code required
   for it to be accessible from R.</p>
     <h2 class="hasAnchor" id="fields"><a class="anchor" href="#fields"></a>Fields</h2>
 

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -54,21 +54,28 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/quadtree-creation.html">Creating quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-usage.html">Using quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-lcp.html">Finding LCPs</a>
+    </li>
+    <li>
       <a href="../articles/quadtree-code.html">Code Details</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-creation.html">Quadtree creation</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-lcp.html">Finding Least-Cost Paths on a Quadtree</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-usage.html">Using Quadtrees</a>
     </li>
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/dfriend21/quadtree/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -84,9 +91,9 @@
       <h1 data-toc-skip>Using Quadtrees</h1>
                         <h4 class="author">Derek Friend</h4>
             
-            <h4 class="date">Last compiled on 09 September, 2021</h4>
+            <h4 class="date">Last compiled on 10 September, 2021</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/master/vignettes/quadtree-usage.Rmd"><code>vignettes/quadtree-usage.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-usage.Rmd</code></div>
 
     </div>
@@ -99,7 +106,7 @@
 <p>This vignette covers ways of interacting with a <code>Quadtree</code> object after it has been created - for example, extracting values and modifying values.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dfriend21.github.io/quadtree">quadtree</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/">quadtree</a></span><span class="op">)</span>
 
 <span class="co"># retrieve the sample data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span>
@@ -196,12 +203,12 @@
 <code class="sourceCode R"><span class="fu"><a href="../reference/get_neighbors.html">get_neighbors</a></span><span class="op">(</span><span class="va">qt</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">pts</span><span class="op">[</span><span class="fl">3</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;        id  xmin  xmax  ymin  ymax     value</span>
 <span class="co">#&gt; [1,]  975 19500 20000 32000 32500 0.8557500</span>
-<span class="co">#&gt; [2,] 1047 21000 22000 32000 33000 0.7893750</span>
-<span class="co">#&gt; [3,] 1046 20000 21000 32000 33000 0.8236875</span>
+<span class="co">#&gt; [2,] 1046 20000 21000 32000 33000 0.8236875</span>
+<span class="co">#&gt; [3,] 1047 21000 22000 32000 33000 0.7893750</span>
 <span class="co">#&gt; [4,] 3295 19000 20000 31000 32000 0.9098125</span>
 <span class="co">#&gt; [5,] 3301 19000 20000 30000 31000 0.9466250</span>
-<span class="co">#&gt; [6,] 3396 20000 21000 30000 31000 0.8688750</span>
-<span class="co">#&gt; [7,] 3395 21000 22000 31000 32000 0.8061875</span>
+<span class="co">#&gt; [6,] 3395 21000 22000 31000 32000 0.8061875</span>
+<span class="co">#&gt; [7,] 3396 20000 21000 30000 31000 0.8688750</span>
 <span class="co">#&gt; [8,] 3397 21000 22000 30000 31000 0.8125625</span></code></pre></div>
 </div>
 </div>
@@ -299,7 +306,6 @@
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">vec1</span><span class="op">)</span>
 <span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
 <span class="co">#&gt;  0.1090  0.4850  0.6275  0.6363  0.8139  0.9740     832</span>
-
 <span class="va">vec2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_vector.html">as_vector</a></span><span class="op">(</span><span class="va">qt</span>, <span class="cn">FALSE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">vec2</span><span class="op">)</span>
 <span class="co">#&gt; [1] 5613</span>
@@ -323,7 +329,6 @@
 <span class="co">#&gt; 9   8       0     5  4000  6000 46000 48000   NaN   2000        7</span>
 <span class="co">#&gt; 10  9       0     5  6000  8000 46000 48000   NaN   2000        7</span>
 <span class="co">#&gt; 11 10       0     5  4000  6000 44000 46000   NaN   2000        7</span>
-
 <span class="va">df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_data_frame.html">as_data_frame</a></span><span class="op">(</span><span class="va">qt</span>, <span class="cn">FALSE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/dimensions.html">dim</a></span><span class="op">(</span><span class="va">df2</span><span class="op">)</span>
 <span class="co">#&gt; [1] 5613   10</span>
@@ -340,7 +345,7 @@
 <h3 class="hasAnchor">
 <a href="#convert-to-a-raster" class="anchor"></a>Convert to a <code>raster</code>
 </h3>
-<p>A <code>Quadtree</code> can also be converted back to a raster using the <code><a href="../reference/as_raster.html">as_raster()</a></code> function. This function has one optional parameter named <code>rast</code>, which is used as the template for the output raster. If <code>NULL</code> (the default), a raster is automatically created, where the quadtree extent is used as the raster extent, and the smallest cell in the quadtree is used to determine the resolution of the raster. Note that the value of a raster cell is determined by the value of the quadtree cell located at the centroid of the raster cell - thus, if a raster cell overlaps several quadtree cells, whichever quadtree cell the centroid of the raster cell falls in will determine the raster cell’s value. If the default value for <code>rast</code> is used, the raster cells will never overlap with more than one quadtree cell.</p>
+<p>A <code>Quadtree</code> can also be converted to a raster using the <code><a href="../reference/as_raster.html">as_raster()</a></code> function. This function has one optional parameter named <code>rast</code>, which is used as the template for the output raster. If <code>NULL</code> (the default), a raster is automatically created, where the quadtree extent is used as the raster extent, and the smallest cell in the quadtree is used to determine the resolution of the raster. Note that the value of a raster cell is determined by the value of the quadtree cell located at the centroid of the raster cell - thus, if a raster cell overlaps several quadtree cells, whichever quadtree cell the centroid of the raster cell falls in will determine the raster cell’s value. If the default value for <code>rast</code> is used, the raster cells will never overlap with more than one quadtree cell.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_raster.html">as_raster</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rast</span><span class="op">)</span></code></pre></div>

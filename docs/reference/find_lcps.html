@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -98,22 +98,27 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/quadtree-creation.html">Creating quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-usage.html">Using quadtrees</a>
+    </li>
+    <li>
+      <a href="../articles/quadtree-lcp.html">Finding LCPs</a>
+    </li>
+    <li>
       <a href="../articles/quadtree-code.html">Code Details</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-creation.html">Quadtree creation</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-lcp.html">Finding Least-Cost Paths on a Quadtree</a>
-    </li>
-    <li>
-      <a href="../articles/quadtree-usage.html">Using Quadtrees</a>
     </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dfriend21/quadtree/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -128,7 +133,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Find LCPs to surrounding points</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/lcp.R'><code>R/lcp.R</code></a></small>
     <div class="hidden name"><code>find_lcps.Rd</code></div>
     </div>
 
@@ -168,7 +173,7 @@ paths found. If <code>FALSE</code>, no value is returned.</p></td>
     <p>If <code>return_summary</code> is <code>TRUE</code>,
   <code><a href='summarize_lcps.html'>summarize_lcps</a>()</code> is used to return a matrix summarizing each
   LCP found. See the help page of that function for details on the return
-  matrix.</p>
+  matrix. If <code>return_summary</code> is <code>FALSE</code>, no value is returned.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Once the LCPs have been calculated, <code><a href='find_lcp.html'>find_lcp</a>()</code> can be
@@ -177,7 +182,7 @@ paths found. If <code>FALSE</code>, no value is returned.</p></td>
   <code>find_lcps()</code> was run.</p>
 <p>A very important note to make is that once the LCP tree is calculated, it
   never gets smaller. For example, we could use <code>find_lcps()</code>
-  with <code>limit = NULL</code> to calculate all LCPS. If we then used
+  with <code>limit = NULL</code> to calculate all LCPs. If we then used
   <code>find_lcps()</code> on the same <code>LcpFinder</code> but this time used a
   limit, it would still return <em>all</em> of the LCPs - even those that are
   greater than the specified limit, since the tree never shrinks.</p>
@@ -195,7 +200,7 @@ paths found. If <code>FALSE</code>, no value is returned.</p></td>
 <span class='co'># vignette("quadtree-lcp", package = "quadtree")</span>
 <span class='co'>####################</span>
 
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dfriend21.github.io/quadtree'>quadtree</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dfriend21/quadtree/'>quadtree</a></span><span class='op'>)</span>
 
 <span class='co'># create a quadtree</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
