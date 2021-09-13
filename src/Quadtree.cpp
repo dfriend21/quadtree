@@ -474,7 +474,7 @@ std::shared_ptr<Quadtree> Quadtree::copy() const{
 std::vector<double> Quadtree::toVector(bool terminalOnly) const{
     int vecLength{nNodes};
     if(terminalOnly){
-        vecLength = (floor(nNodes/4)*3)+1;
+        vecLength = (floor( (double) nNodes) / (double) 4) * 3) + 1;
     }
     std::vector<double> vals(vecLength);
     toVector(root, vals, 0, terminalOnly);
