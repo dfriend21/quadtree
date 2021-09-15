@@ -1,7 +1,7 @@
 ---
-title: "Quadtree creation"
+title: "Creating Quadtrees"
 author: "Derek Friend"
-date: "Last compiled on `r format(Sys.time(), '%d %B, %Y')`"
+date: "Last compiled on `r format(Sys.time(), '%B %d, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{quadtree-creation}
@@ -15,27 +15,20 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.height = 4.375,
   fig.width = 7,
-  # fig.height = 3.125,
-  # fig.width = 5,
   dev = "jpeg",
-  #fig.height = 6.25,
-  #fig.width = 10,
   out.width = "100%"
 )
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
-```{r setup, message = FALSE, warning = FALSE}
+## Vignette content
+
+This vignette goes over the process of creating a quadtree and covers all of the various parameter settings that can be used to modify the way a quadtree is created. Note that all the examples use the following example raster:
+
+```{r, message = FALSE, warning = FALSE}
 library(quadtree)
 library(raster)
-```
 
-## The content of this vignette
-
-This vignette goes over the process of creating a quadtree, and covers all of the various parameter that can be used to modify the way a quadtree is created. Note that all the examples use the following example raster:
-
-```{r}
-# retrieve the sample data
 data(habitat)
 rast <- habitat
 plot(rast, main = "sample raster")
@@ -43,10 +36,11 @@ plot(rast, main = "sample raster")
 
 ## Overview of the quadtree data structure
 
-Quadtrees are tree data structures where each node is allowed to have either 0 or 4 children, and are well-suited for representing 2-dimensional space. When used in this fashion, each node represents a rectangular cell. The root of the tree represents a single cell that encompasses the entire area. If a node has children, they represent the four cells created when the parent cell is divided into quadrants. Each node is associated with a value that represents the value of the variable for that cell. This creates a hierarchical data structure where any given point in space is contained within many different cells at different levels. To represent a space-exhausting surface similar to a raster, the terminal nodes can be treated as the only value for any given point, and the values at the higher levels can essentially be ignored. The end result is a variable-sized grid representing the value of some variable across space.
+Quadtrees are tree data structures where each node is allowed to have either zero or four children. This data structure can be used to represent two-dimensional space by interpreting each node as a rectangular cell. The root of the tree represents a single cell that encompasses the entire area. If a node has children, they represent the four cells created when the node is divided into quadrants. This creates a hierarchical data structure where any given point in space is contained within many different cells at different levels. In order to represent the value of some variable across space, each node has a value that represents the value of that variable in the region covered by the node. This means that any point may be associated with multiple values - this can be useful in some situations. However, it may also be desirable for each point to be associated with only a single value. The terminal nodes can be treated as the only value for any given point, and the values at the higher levels can essentially be ignored. This creates a space-exhausting surface like a raster where every point in space has a single value. Unlike a raster, however, the hierarchical nature of a quadtree easily facilitates variable-sized cells. When a quadtree is used in this fashion it is referred to as a *region quadtree*.
 
+This feature of quadtrees make them advantageous in certain situations. In some applications it may be critical for the data structure to have a fine resolution in certain areas, while other areas may be suitably represented by large cells. For example, quadtrees have been used for image compression - by allowing largely homogeneous areas of an image to be represented by large cells, the amount of data needed to represent the image can be greatly reduced while still preserving fine resolution in heterogeneous areas.
 
-The following figure shows a quadtree data structure (left), it's spatial representation (middle), and how the data structure and the spatial representation correspond.
+The following figure shows a quadtree data structure (left), it's spatial representation (middle), and a 3D plot showing how the data structure and the spatial representation correspond (right).
 
 ```{r, echo=FALSE, out.width = "100%"}
 knitr::include_graphics("figures/quadtree-structure-illustration.png")
@@ -54,15 +48,15 @@ knitr::include_graphics("figures/quadtree-structure-illustration.png")
 
 ## Overview of quadtree creation
 
-A quadtree is created from a raster or a matrix by successively dividing the raster/matrix into smaller and smaller cells, with the decision on whether to divide a quadrant determined by a function that checks the cell values within each quadrant and returns `TRUE` if it should be split, and `FALSE` otherwise. Initially, all of the cells in the raster are considered. If the cell values meet the condition determined by the splitting function, the raster is divided into four quadrants - otherwise, the raster is not divided further and the value of this larger cell is calculated by applying a 'combine function' that aggregates the cell values into a single value (for example, mean and median). If the given cell is split, the process is repeated for each of those 'child' quadrants, and then for their children, and so on and so forth, until either the split function returns `FALSE` or the smallest possible cell size has been reached.
+In the `quadtree` package, a quadtree is created from a raster or a matrix by successively dividing the raster/matrix into smaller and smaller cells, with the decision on whether to divide a quadrant determined by a function that checks the cell values within each quadrant and returns `TRUE` if it should be split, and `FALSE` otherwise. Initially, all of the cells in the raster are considered. If the cell values meet the condition determined by the splitting function, the raster is divided into four quadrants - otherwise, the raster is not divided further and the value of this larger cell is calculated by applying a 'combine function' that aggregates the cell values into a single value (for example, mean or median). If a quadrant is split, the process is repeated for each of those 'child' quadrants, and then for their children, and so on and so forth, until either the split function returns `FALSE` or the smallest possible cell size (as determined by the input raster) has been reached.
 
 ## Pre-creation dimension adjustment
 
-If a given quadrant has dimensions that are not divisible by 2 (for example, 5x5), then the process stops. Because of this, only rasters that have dimensions that are a power of 2 can be divided down to their smallest cell size. In addition, the rasters should be square. To create quadtrees from rasters that have dimensions that are not a power of two and are not square, two options are provided. The choice of method is determined by the `adj_type` parameter.
+If a given quadrant has dimensions that are not divisible by two (for example, 5 x 5), then the process stops. Because of this, only rasters that have dimensions that are a power of two can be divided down to their smallest cell size. In addition, only square rasters can be divided down to their smallest cell size. To create quadtrees from rasters that have dimensions that are not a power of two and are not square, two options are provided. The choice of method is determined by the `adj_type` parameter.
 
 ### The `"expand"` method
 
-In the `"expand"` method, NA cells are added to the raster in order to create an expanded raster whose dimensions are a power of 2. The smallest number that is a power of two but greater than the larger dimension is used as the dimensions of the expanded raster. In the following example, the raster has dimensions of 178 x 161. To make it suitable for quadtree creation, `NA` cells are first added to the top and right of the raster in order to create a raster with dimensions 256 x 256 (as 256 is the smallest power of 2 that is also greater than 178), and then the quadtree is created from that raster.
+In the `"expand"` method, `NA` cells are added to the raster in order to create an expanded raster whose dimensions are a power of two. The smallest number that is a power of two but greater than the larger dimension is used as the dimensions of the expanded raster. In the following example, the raster has dimensions of 178 x 161. To make it suitable for quadtree creation, `NA` rows and columns are added in order to create a raster with dimensions 256 x 256 (as 256 is the smallest power of two that is also greater than 178), and then the quadtree is created from that raster.
 
 ```{r}
 dim(rast) # not a power of 2
@@ -72,7 +66,7 @@ plot(qt, border_lwd = .3, main = "expand raster dimensions")
 
 ### The `"resample"` method
 
-In the `"resample"` method, the raster is resampled in order to create a square matrix with dimensions that are a power of two. If the data does not have same number of rows and columns, resampling the raster to have an equal number of rows and column will result in rectangular but non-square cells. This resampled raster is then used to create the quadtree.
+In the `"resample"` method, the raster is resampled in order to create a square raster with dimensions that are a power of two. If the data does not have the same number of rows and columns, resampling the raster to have an equal number of rows and column will result in rectangular but non-square cells. This resampled raster is then used to create the quadtree.
 
 ```{r}
 qt <- quadtree(rast, .15, adj_type = "resample", resample_n_side = 128,
@@ -98,13 +92,13 @@ plot(qt, main = "adj_type = 'none'")
 
 ## Splitting and aggregating functions
 
-The method used to determine whether or not to split a cell as well as the method used to aggregate cell values can be defined by the user. Simple methods are already provided, but custom functions can be defined. Note that the provided splitting and combining functions are written in C++. So while we could define an R function to perform splitting based on the range, the C++ version will run much faster. Custom R functions will likely run slower than the provided C++ functions.
+The method used to determine whether or not to split a cell as well as the method used to aggregate cell values can be defined by the user. Simple methods are already provided, but custom functions can be defined.
 
 ### Default methods
 
 #### Splitting functions
 
-For splitting a cell, two methods are provided. `"range"` checks the difference between the minimum value and the maximum value within the quadrant - if this difference exceeds `split_threshold`, the quadrant is split. `"sd"` uses the standard deviation of the cell values within a quadrant - if the standard deviation exceeds `split_threshold`, the quadrant is split.
+For splitting a quadrant, two methods are provided. `"range"` checks the difference between the minimum value and the maximum value within the quadrant - if this difference exceeds `split_threshold`, the quadrant is split. `"sd"` uses the standard deviation of the cell values within a quadrant - if the standard deviation exceeds `split_threshold`, the quadrant is split.
 
 ```{r}
 qt_range <- quadtree(rast, .1, split_method = "range")
@@ -123,10 +117,10 @@ plot(qt_sd, crop = TRUE, na_col = NULL, zlim = c(0,1), border_lwd = .3,
 Four methods to aggregate cell values are provided - `"mean"`, `"median"`, `"min"`, and `"max"` - the names are self-explanatory. Note that in the following example the structures of the quadtrees are identical - the combine function has no influence on the decision to split a cell.
 
 ```{r}
-qt_mean <- quadtree(rast, .1, split_method = "sd", combine_method = "mean")
-qt_median <- quadtree(rast, .1, split_method = "sd", combine_method = "median")
-qt_min <- quadtree(rast, .1, split_method = "sd", combine_method = "min")
-qt_max <- quadtree(rast, .1, split_method = "sd", combine_method = "max")
+qt_mean <- quadtree(rast, .1, "sd", combine_method = "mean")
+qt_median <- quadtree(rast, .1, "sd", combine_method = "median")
+qt_min <- quadtree(rast, .1, "sd", combine_method = "min")
+qt_max <- quadtree(rast, .1, "sd", combine_method = "max")
 
 par(mfrow = c(2, 2), mar = c(.5, .5, .5, .5))
 plot(qt_mean, crop = TRUE, na_col = NULL, axes = FALSE, legend = TRUE,
@@ -143,19 +137,15 @@ plot(qt_max, crop = TRUE, na_col = NULL, axes = FALSE, legend = TRUE,
 
 #### Splitting functions
 
-Custom functions can be written to apply more complex rules to splitting and combining. These functions must take two parameters: `vals` and `args`. `vals` is a numeric vector of the values of the cells within the current quadrant. `args` is a named list that contains the arguments need by the custom function. Any parameters needed for the function should be accessed through `args`. Note that even if no extra parameters are needed, the custom function still needs to take an `args` parameter - in that case it just won't be used by the function.
+Custom functions can be written to apply more complex rules to splitting and combining. These functions must take two parameters: `vals` and `args`. `vals` is a numeric vector of the values of the cells within the current quadrant. `args` is a named list that contains the arguments needed by the custom function. Any parameters needed for the function should be accessed through `args`. Note that even if no extra parameters are needed, the custom function still needs to take an `args` parameter - in that case it just won't be used by the function.
 
 `split_fun` must return a boolean, where `TRUE` indicates that the quadrant should be split. An important note to make is that any custom function must be able to handle `NA` values. The function must always return either `TRUE` or `FALSE` - if `NA` is ever returned an error will occur.
 
 For example, a simple splitting function that splits a quadrant when any of the values are below a given limit could be defined as follows:
 
 ```{r}
-split_fun = function(vals, args) {
-  if (any(is.na(vals))) { # check for NAs first
-    return(TRUE) # if there are any NAs we'll split automatically
-  } else {
-    return(any(vals < args$threshold))
-  }
+split_fun <- function(vals, args) {
+  return(any(vals < args$threshold))
 }
 ```
 
@@ -192,7 +182,7 @@ plot(qt, crop = TRUE, na_col = NULL, border_lwd = .3,
 
 ## Creating a quadtree using a template
 
-This function also allows users to create a quadtree using another quadtree as a "template" (via the `template_quadtree` parameter). The structure of the new quadtree will be identical to that of the template quadtree, but the values of the cells will be derived from the raster used to create the new quadtree. This allows for a raster to be converted into a quadtree, with the structure of the quadtree being determined by a different raster. The rasters used to make the template quadtree and the new quadtree should have the exact same extent and dimensions - in addition the exact same 'expansion method' (i.e. the method specified by `adj_type`) should be used to create both quadtrees.
+The `quadtree()` function also allows users to create a quadtree using another quadtree as a "template" (via the `template_quadtree` parameter). The structure of the new quadtree will be identical to that of the template quadtree, but the values of the cells will be derived from the raster used to create the new quadtree. This allows for a raster to be converted into a quadtree, with the structure of the quadtree being determined by a different raster. The rasters used to make the template quadtree and the new quadtree should have the exact same extent and dimensions - in addition the exact same expansion method (i.e. the method specified by `adj_type`) should be used to create both quadtrees.
 
 In the following example, a raster representing the presence/absence of roads is used to create a quadtree, and then that quadtree is used as a template to create a quadtree from a different raster.
 
@@ -239,7 +229,7 @@ plot(qt_min_cell, crop = TRUE, na_col = NULL, border_lwd = .3, legend = FALSE,
 
 ### `split_if_any_na` and `split_if_all_na`
 
-The `split_if_any_na` and `split_if_all_na` parameters control how `NA` values are handled. If `split_if_any_na` is `TRUE` (the default), a quadrant will be split if any of the values are `NA`. This ensures that rasters with irregular shapes maintain their shape in the resulting quadtree representation. If `FALSE`, quadrants with `NA`s are not automatically split - note that this can produce unexpected results if the raster is irregularly shaped. `split_if_all_na` controls what happens when a quadrant consists entirely of `NA` values. If `FALSE` (the default), these quadrants are not split. If `TRUE`, these quadrants are automatically split, which results in quadrants with all `NA` values being split to the smallest possible cell size.
+The `split_if_any_na` and `split_if_all_na` parameters control how `NA` values are handled. If `split_if_any_na` is `TRUE` (the default), a quadrant will be split if any of the values are `NA`. This ensures that rasters with irregular shapes maintain their shape in the resulting quadtree representation. If `FALSE`, quadrants with `NA`s are not automatically split - note that this can produce unexpected results if the raster is irregularly shaped (see the example below). `split_if_all_na` controls what happens when a quadrant consists entirely of `NA` values. If `FALSE` (the default), these quadrants are not split. If `TRUE`, these quadrants are automatically split, which results in quadrants with all `NA` values being split to the smallest possible cell size.
 
 ```{r}
 qt_any <- quadtree(rast, .15, split_if_any_na = FALSE)

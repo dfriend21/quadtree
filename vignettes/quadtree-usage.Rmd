@@ -1,7 +1,7 @@
 ---
 title: "Using Quadtrees"
 author: "Derek Friend"
-date: "Last compiled on `r format(Sys.time(), '%d %B, %Y')`"
+date: "Last compiled on `r format(Sys.time(), '%B %d, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{quadtree-usage}
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Vignette Contents
+## Vignette content
 
 This vignette covers ways of interacting with a `Quadtree` object after it has been created - for example, extracting values and modifying values.
 
@@ -27,20 +27,19 @@ This vignette covers ways of interacting with a `Quadtree` object after it has b
 library(raster)
 library(quadtree)
 
-# retrieve the sample data
 data(habitat)
 rast <- habitat
+
 qt <- quadtree(rast, .15)
-par(mfrow = c(1, 2))
-plot(rast, main = "sample raster")
-plot(qt, crop = TRUE, border_lwd = .3, na_col = NULL, legend = FALSE, main = "sample quadtree")
 ```
 
 ## Retrieving basic info about a quadtree
 
+There are a number of functions for retrieving basic info about a `Quadtree`.
+
 ### Getting a summary of a quadtree
 
-A basic summary of a quadtree can be shown by just typing the variable name:
+A basic summary of a quadtree can be shown by just typing the variable name or using the `summary()` function:
 
 ```{r}
 qt
@@ -48,7 +47,7 @@ qt
 
 ### Getting the projection of a quadtree
 
-There are also functions that can be used to retrieve basic info about a `Quadtree`. `projection` can be used to get and set the projection of the `Quadtree`. In this case there is no projection, so an empty string is returned.
+`projection()` can be used to get and set the projection of the `Quadtree`. In this case there is no projection, so an empty string is returned.
 
 ```{r}
 projection(qt)
@@ -56,7 +55,7 @@ projection(qt)
 
 ### Getting the number of cells in a quadtree
 
-`n_cells` returns the number of cells in the quadtree. It has one optional parameter, `terminal_only` - if `TRUE`, the number of cells of the quadtree that are terminal (i.e. have no children) is returned. If `FALSE`, the total number of nodes in the quadtree is returned.
+`n_cells()` returns the number of cells in the quadtree. It has one optional parameter, `terminal_only` - if `TRUE`, the number of cells of the quadtree that are terminal (i.e. have no children) is returned. If `FALSE`, the total number of nodes in the quadtree is returned.
 
 ```{r}
 n_cells(qt)
@@ -80,7 +79,7 @@ Values can be 'extracted' at point locations using the `extract()` function. Thi
 
 ```{r}
 pts <- cbind(x = c(5609, 3959, 20161, 27662, 32763),
-            y = c(10835, 29586, 31836, 10834, 36337))
+             y = c(10835, 29586, 31836, 10834, 36337))
 
 plot(qt, crop = TRUE, border_lwd = .3, na_col = NULL)
 points(pts, pch = 16)
@@ -93,7 +92,7 @@ extract(qt, pts, extents = TRUE)
 
 ### Retrieving neighbor relationships
 
-In addition to extracting values from cells, it is possible to determine neighbor relationships between cells via the `get_neighbors()` function. Given a point, `get_neighbors` returns the cells that neighbor the cell that the point falls in. Note that cells that are diagonal from each either (i.e. only touch at the corner) are considered to be adjacent.
+In addition to extracting values from cells, it is possible to determine neighbor relationships between cells via the `get_neighbors()` function. Given a point, `get_neighbors()` returns the cells that neighbor the cell that the point falls in. Note that cells that are diagonal from each either (i.e. only touch at the corner) are considered to be neighbors.
 
 ```{r}
 get_neighbors(qt, as.numeric(pts[3,]))
@@ -115,11 +114,11 @@ In the next section ("Modifying cell values"), this function is used in the exam
 
 ## Modifying cell values
 
-Two functions are provided for modifying cell values: `set_values` and `transform_values`. 
+Two functions are provided for modifying cell values: `set_values()` and `transform_values()`. 
 
-### `set_values`
+### Setting values of cells
 
-`set_values` takes a matrix of points and associated values, and changes the values of the cells the points fall in. Note that only the values of the *terminal cells* that the point falls in are changed.
+`set_values()` takes a matrix of points and associated values and changes the values of the cells the points fall in. Note that only the values of the *terminal cells* that the point falls in are changed.
 
 ```{r}
 qt2 <- copy(qt)
@@ -127,9 +126,9 @@ set_values(qt2, pts, rep(2, nrow(pts)))
 plot(qt2, crop = TRUE, border_lwd = .3)
 ```
 
-### `transform_values`
+### Transforming all cell values
 
-`transform_values` uses a function to change all cell values. For example, we could use this function to cube all of the cell values:
+`transform_values()` uses a function to change all cell values. For example, we could use this function to cube all of the cell values:
 
 ```{r}
 qt3 <- copy(qt)
@@ -165,7 +164,7 @@ qt_read
 
 ## Converting quadtrees to other data types
 
-Functions are also provided for converting a `Quadtree` to different data types
+Functions are also provided for converting a `Quadtree` to different data types.
 
 ### Get all cell values as a vector
 
@@ -183,7 +182,7 @@ summary(vec2)
 
 ### Convert to a data frame
 
-`as_data_frame()` converts the quadtree to a data frame. In the resulting data frame, each row represents a single cell, and has columns describing the cell ID, x and y limits, value, level (i.e. node depth), the size of its smallest child, the ID of its parent, and whether it has children. As with `as_vector()`, there is one optional parameter called `terminal_only` - when `TRUE` (the default) only the terminal cells are returned, and when `FALSE`, all cells are returned.
+`as_data_frame()` converts the quadtree to a data frame. In the resulting data frame, each row represents a single cell and has columns describing the cell ID, x and y limits, value, level (i.e. node depth), the size of its smallest child, the ID of its parent, and whether it has children. As with `as_vector()`, there is one optional parameter called `terminal_only` - when `TRUE` (the default) only the terminal cells are returned, and when `FALSE`, all cells are returned.
 
 ```{r}
 df1 <- as_data_frame(qt)
@@ -195,9 +194,9 @@ dim(df2)
 head(df2)
 ```
 
-### Convert to a `raster`
+### Convert to a raster
 
-A `Quadtree` can also be converted to a raster using the `as_raster()` function. This function has one optional parameter named `rast`, which is used as the template for the output raster. If `NULL` (the default), a raster is automatically created, where the quadtree extent is used as the raster extent, and the smallest cell in the quadtree is used to determine the resolution of the raster. Note that the value of a raster cell is determined by the value of the quadtree cell located at the centroid of the raster cell - thus, if a raster cell overlaps several quadtree cells, whichever quadtree cell the centroid of the raster cell falls in will determine the raster cell's value. If the default value for `rast` is used, the raster cells will never overlap with more than one quadtree cell.
+A `Quadtree` can also be converted to a raster using the `as_raster()` function. This function has one optional parameter named `rast`, which is used as the template for the output raster. If `NULL` (the default), a raster is automatically created, where the quadtree extent is used as the raster extent and the smallest cell in the quadtree is used to determine the resolution of the raster. Note that the value of a raster cell is determined by the value of the quadtree cell located at the centroid of the raster cell - thus, if a raster cell overlaps several quadtree cells, whichever quadtree cell the centroid of the raster cell falls in will determine the raster cell's value. If the default value for `rast` is used, the raster cells will never overlap with more than one quadtree cell.
 
 ```{r}
 rast <- as_raster(qt)
