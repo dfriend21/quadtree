@@ -26,7 +26,7 @@
 #' library(raster)
 #' library(quadtree)
 #' data(habitat)
-#' 
+#'
 #' # create a quadtree
 #' qt <- quadtree(habitat, split_threshold = .1, split_method = "sd")
 #'

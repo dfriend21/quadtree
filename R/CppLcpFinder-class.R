@@ -15,7 +15,7 @@
 #'   core functionality is in the \code{LcpFinder} C++ class.
 #'   \code{LcpFinderWrapper} is a wrapper class that adds the 'Rcpp' code
 #'   required for it to be accessible from R.
-#'   
+#'
 #'   Note that there is no constructor made accessible to R - a
 #'   \code{CppLcpFinder} is created by using the
 #'   \code{getLcpFinder} method of the \code{\link{CppQuadtree}} class.

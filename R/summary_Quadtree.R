@@ -18,7 +18,7 @@
 #' @examples
 #' library(quadtree)
 #' data(habitat)
-#' 
+#'
 #' qt <- quadtree(habitat, .1)
 #' summary(qt)
 #' @export

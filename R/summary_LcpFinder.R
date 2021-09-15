@@ -16,7 +16,7 @@
 #' @examples
 #' library(quadtree)
 #' data(habitat)
-#' 
+#'
 #' qt <- quadtree(habitat, .1)
 #'
 #' start_point <- c(6989, 34007)

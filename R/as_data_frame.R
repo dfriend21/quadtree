@@ -18,8 +18,8 @@
 #'     \item \code{xmin}, \code{xmax}, \code{ymin}, \code{ymax}: the x and y
 #'     limits of the cell
 #'     \item \code{value}: the value of the cell
-#'     \item \code{smallestChildLength}: the smallest cell length among all of this cell's
-#'     descendants
+#'     \item \code{smallestChildLength}: the smallest cell length among all of
+#'     this cell's descendants
 #'     \item \code{parentID}: the ID of the cell's parent. The root, which has
 #'     no parent, has a value of -1 for this column
 #'   }
@@ -27,7 +27,7 @@
 #' vector.
 #' @examples
 #' library(quadtree)
-#' 
+#'
 #' mat <- rbind(c(1, 1, 0, 1),
 #'              c(1, 1, 1, 0),
 #'              c(1, 0, 1, 1),

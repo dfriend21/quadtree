@@ -11,16 +11,16 @@
 #' To read/write a quadtree object, the C++ library \code{cereal} is used to
 #' serialize the quadtree and save it to a file. The file extension is
 #' unimportant - it can be anything (I've been using the extension '.qtree').
-#' @return 
+#' @return
 #' \code{read_quadtree()} - returns a \code{\link{Quadtree}}
-#' 
+#'
 #' \code{write_quadtree()} - no return value
 #' @examples
 #' library(quadtree)
 #' data(habitat)
 #'
 #' qt <- quadtree(habitat, .1)
-#' 
+#'
 #' path <- tempfile(fileext = "qtree")
 #' write_quadtree(path, qt)
 #' qt2 <- read_quadtree(path)

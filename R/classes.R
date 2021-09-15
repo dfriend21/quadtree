@@ -6,7 +6,7 @@
 #' object. \code{Quadtree} has one slot, which is named \code{ptr} and contains
 #' a \code{\link{CppQuadtree}} object. Instances of this class can be created
 #' through the \code{\link{quadtree}()} function.
-#' 
+#'
 #' An important note to make is that functions that modify a \code{Quadtree}
 #' modify the existing object. For example, running
 #' \code{\link{transform_values}(qt, function(x) x+1)} modifies \code{qt}. This

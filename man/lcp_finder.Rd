@@ -22,8 +22,8 @@ in \code{xlim}. If \code{NULL} the x limits of \code{x} are used}
 \item{search_by_centroid}{boolean; determines which cells are considered to
 be "in" the box specified by \code{xlim} and \code{ylim}. If \code{FALSE}
 (the default) any cell that overlaps with the box is included. If
-\code{TRUE}, a cell is only included if its \strong{centroid} falls inside the
-box.}
+\code{TRUE}, a cell is only included if its \strong{centroid} falls inside
+the box.}
 }
 \value{
 a \code{\link{LcpFinder}}

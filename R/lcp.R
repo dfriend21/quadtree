@@ -16,8 +16,8 @@
 #' @param search_by_centroid boolean; determines which cells are considered to
 #'   be "in" the box specified by \code{xlim} and \code{ylim}. If \code{FALSE}
 #'   (the default) any cell that overlaps with the box is included. If
-#'   \code{TRUE}, a cell is only included if its \strong{centroid} falls inside the
-#'   box.
+#'   \code{TRUE}, a cell is only included if its \strong{centroid} falls inside
+#'   the box.
 #' @details
 #'   See the vignette 'quadtree-lcp' for more details and examples (i.e. run
 #'   \code{vignette("quadtree-lcp", package = "quadtree")})

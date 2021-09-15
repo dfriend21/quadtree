@@ -30,7 +30,7 @@
 #'   \item \code{"quadtree-usage"}
 #'   \item \code{"quadtree-lcp"}
 #' }
-#' 
+#'
 #' A fourth vignette called "quadtree-code" is also available. This briefly
 #' discusses the structure of the package. It is not necessary for using the
 #' package but may be useful for those who want more details about the code.

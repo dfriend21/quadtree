@@ -188,9 +188,9 @@ This class is defined in 'src/QuadtreeWrapper.h' and
     coordinates of the centroid, and cell value for each cell that neighbors
     the cell of interest (i.e. the cell represented by the columns suffixed
     with '0').
-    \item \code{hasChildren}: 1 or 0 - whether or not the cell of interest (i.e.
-    the cell represented by the columns suffixed with '0') has children,
-    where 1 means it has children and 0 means it doesn't.
+    \item \code{hasChildren}: 1 or 0 - whether or not the cell of interest
+    (i.e. the cell represented by the columns suffixed with '0') has
+    children, where 1 means it has children and 0 means it doesn't.
   }
 }}
 

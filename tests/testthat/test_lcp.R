@@ -89,6 +89,5 @@ test_that("find_lcp() finds the same path as in previous runs", {
 
   # write.csv(lcp,"lcps/qt_find_lcp_data.csv", row.names=FALSE)
   lcp_prev <- read.csv("lcps/qt_find_lcp_data.csv")
-  #expect_true(all(round(lcp, 6) == round(lcp_prev, 6))) # differences in precision was messing with this
   expect_equal(lcp, as.matrix(lcp_prev))
 })

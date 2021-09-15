@@ -17,7 +17,7 @@
 #'   plotted.
 #' @param border_col character; the color to use for the cell borders. Use
 #'   "transparent" if you don't want borders to be shown. Default is "black".
-#' @param border_lwd numeric; the line width of the cell borders. Default is 1. 
+#' @param border_lwd numeric; the line width of the cell borders. Default is 1.
 #' @param xlim two-element numeric vector; defines the minimum and
 #'   maximum values of the x axis. Note that this overrides the \code{crop}
 #'   parameter.

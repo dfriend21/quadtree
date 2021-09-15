@@ -8,7 +8,7 @@
 #' @param terminal_only boolean; if \code{TRUE} (the default) only the terminal
 #' nodes are counted. If \code{FALSE}, all nodes are counted, thereby giving the
 #' total number of nodes in the tree.
-#' @return a numeric 
+#' @return a numeric
 #' @examples
 #' library(quadtree)
 #' data(habitat)

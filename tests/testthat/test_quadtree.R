@@ -1,15 +1,13 @@
 test_that("we can create a quadtree from a matrix", {
   mat <- matrix(runif(16), 4)
-  qt <- expect_error(quadtree(mat, split_threshold = .2, split_method = "range",
-                              combine_method = "mean"), NA)
+  qt <- expect_error(quadtree(mat, .2), NA)
   expect_s4_class(qt, "Quadtree")
 })
 
 test_that("we can create a quadtree from a raster", {
   mat <- matrix(runif(16), 4)
   rast <- raster::raster(mat)
-  qt <- expect_error(quadtree(rast, split_threshold = .2, split_method = "range",
-                              combine_method = "mean"), NA)
+  qt <- expect_error(quadtree(rast, .2), NA)
   expect_s4_class(qt, "Quadtree")
 })
 
@@ -18,30 +16,30 @@ test_that("quadtree creation with templates works", {
   data(habitat_roads)
   qt1 <- expect_error(quadtree(habitat_roads, .1), NA)
   qt2 <- expect_error(quadtree(habitat, template_quadtree = qt1), NA)
-  
+
   qt1_df <- as_data_frame(qt1, FALSE)
   qt2_df <- as_data_frame(qt2, FALSE)
   expect_equal(dim(qt1_df), dim(qt2_df))
-  
+
   # everything except for the cell values should be the same
   qt1_df2 <- qt1_df[, -1 * which(names(qt1_df) == "value")]
   qt2_df2 <- qt2_df[, -1 * which(names(qt2_df) == "value")]
   expect_equal(qt1_df2, qt2_df2)
 })
 
-test_that("'quadtree()' runs without errors for all parameter settings", { 
+test_that("'quadtree()' runs without errors for all parameter settings", {
   library(raster)
 
   # retrieve the sample data
   data(habitat)
   # make the raster smaller so the output files are smaller
-  rast <- aggregate(habitat, 6) 
+  rast <- aggregate(habitat, 6)
 
   qts <- list()
   qts[[1]] <- expect_error(quadtree(rast, .3), NA)
   qts[[2]] <- expect_error(quadtree(rast, .3, adj_type = "resample", resample_n_side = 32), NA)
   qts[[3]] <- expect_error(quadtree(rast, .3, adj_type = "resample", resample_n_side = 32, resample_pad_nas = FALSE), NA)
-  qts[[4]] <- expect_error(quadtree(rast, .3, adj_type = "none"),NA)
+  qts[[4]] <- expect_error(quadtree(rast, .3, adj_type = "none"), NA)
   qts[[5]] <- expect_error(quadtree(rast, .3, max_cell_length = 3000), NA)
   qts[[6]] <- expect_error(quadtree(rast, .3, min_cell_length = 3000), NA)
   expect_equal(qts[[6]]@ptr$root()$smallestChildSideLength(), 3000) #make sure the minimum length restriction works
@@ -84,7 +82,7 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
   qts[[19]] <- expect_error(quadtree(rast, .1, combine_method = "custom", combine_fun = cmb_fun2), NA)
   #----
   data(habitat_roads)
-  template <- aggregate(habitat_roads,6)
+  template <- aggregate(habitat_roads, 6)
   split_if_road <- function(vals, args) {
     if (any(vals > 0, na.rm = TRUE)) return(TRUE)
     return(FALSE)
@@ -96,7 +94,7 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
   # now I'll check to see if the structure of the quadtrees is the same as in
   # previous runs. Note that this doesn't guarantee correctness but is still
   # useful for alerting me if the result of 'quadtree()' changes
-  
+
   # for (i in seq_len(length(qts))) {
   #   write_quadtree(paste0("qtrees/qt", sprintf("%03d", i), ".qtree"), qts[[i]])
   # }

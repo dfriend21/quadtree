@@ -41,7 +41,7 @@
 #' @param combine_method character; one of \code{"mean"}, \code{"median"},
 #'   \code{"min"}, \code{"max"}, or \code{"custom"}. Determines the method used
 #'   for aggregating the values of multiple cells into a single value for a
-#'   larger, aggregated cell. Default is \code{"mean"}. If \code{"custom"}, a 
+#'   larger, aggregated cell. Default is \code{"mean"}. If \code{"custom"}, a
 #'   function must be supplied to \code{combine_fun}.
 #' @param combine_fun function; function used to calculate the value of a
 #'   quadrant. Only used when \code{combine_method} is \code{"custom"}. Must

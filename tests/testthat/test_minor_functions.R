@@ -29,7 +29,7 @@ test_that("as_raster() works", {
   pts1 <- raster::rasterToPoints(rst1, spatial = FALSE)
   pts2 <- raster::rasterToPoints(rst2, spatial = FALSE)
   pts3 <- raster::rasterToPoints(rst3, spatial = FALSE)
-  
+
   expect_equal(extract(qt, pts1[, 1:2]), extract(rst1, pts1[, 1:2]))
   expect_equal(extract(qt, pts2[, 1:2]), extract(rst2, pts2[, 1:2]))
   expect_equal(extract(qt, pts3[, 1:2]), extract(rst3, pts3[, 1:2]))
@@ -56,10 +56,10 @@ test_that("copy() runs without errors and produces expected output", {
   qt1 <- quadtree(habitat, .3, split_method = "sd")
   qt2 <- expect_error(copy(qt1), NA)
   expect_s4_class(qt2, "Quadtree")
-  
+
   df1 <- as_data_frame(qt1, FALSE)
   df2 <- as_data_frame(qt2, FALSE)
-  
+
   expect_equal(df1, df2)
 })
 
@@ -149,7 +149,7 @@ test_that("projection() runs without errors and returns correct value", {
   qt1 <- quadtree(habitat, .5)
   qt_proj <- expect_error(quadtree::projection(qt1), NA)
   expect_equal(qt_proj, raster::projection(habitat))
-  
+
   expect_error(quadtree::projection(qt1) <- "stuff", NA)
   expect_equal(quadtree::projection(qt1), "stuff")
 })
@@ -165,14 +165,14 @@ test_that("read_quadtree() and write_quadtree() work", {
   expect_equal(extent(qt1, original = TRUE), extent(qt2, original = TRUE))
   qt1_nb <- do.call(rbind, qt1@ptr$getNeighborList())
   qt2_nb <- do.call(rbind, qt2@ptr$getNeighborList())
-  qt1_nb <- qt1_nb[order(qt1_nb[,"id0"], qt1_nb[,"id1"]),]
-  qt2_nb <- qt2_nb[order(qt2_nb[,"id0"], qt2_nb[,"id1"]),]
+  qt1_nb <- qt1_nb[order(qt1_nb[, "id0"], qt1_nb[, "id1"]), ]
+  qt2_nb <- qt2_nb[order(qt2_nb[, "id0"], qt2_nb[, "id1"]), ]
   expect_equal(qt1_nb, qt2_nb)
-  
+
   df1 <- as_data_frame(qt1, FALSE)
   df2 <- as_data_frame(qt2, FALSE)
   expect_equal(df1, df2)
-  
+
   unlink(filepath)
 })
 
@@ -184,7 +184,7 @@ test_that("set_values() works", {
   pts <- cbind(runif(100, ext[1], ext[2]), runif(100, ext[3], ext[4]))
   new_vals <- rep(-5, nrow(pts))
   expect_error(set_values(qt, pts, new_vals), NA)
-  
+
   vals <- extract(qt, pts)
   expect_equal(vals, new_vals)
 })
