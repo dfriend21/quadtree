@@ -4,9 +4,9 @@ navbar:
     articles:
       text: Articles
       menu:
-      - text: Creating quadtrees
+      - text: Creating Quadtrees
         href: articles/quadtree-creation.html
-      - text: Using quadtrees
+      - text: Using Quadtrees
         href: articles/quadtree-usage.html
       - text: Finding LCPs
         href: articles/quadtree-lcp.html

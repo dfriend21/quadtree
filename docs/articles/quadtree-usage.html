@@ -54,10 +54,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/quadtree-creation.html">Creating quadtrees</a>
+      <a href="../articles/quadtree-creation.html">Creating Quadtrees</a>
     </li>
     <li>
-      <a href="../articles/quadtree-usage.html">Using quadtrees</a>
+      <a href="../articles/quadtree-usage.html">Using Quadtrees</a>
     </li>
     <li>
       <a href="../articles/quadtree-lcp.html">Finding LCPs</a>
@@ -91,7 +91,7 @@
       <h1 data-toc-skip>Using Quadtrees</h1>
                         <h4 class="author">Derek Friend</h4>
             
-            <h4 class="date">Last compiled on 14 September, 2021</h4>
+            <h4 class="date">Last compiled on September 15, 2021</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/master/vignettes/quadtree-usage.Rmd"><code>vignettes/quadtree-usage.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-usage.Rmd</code></div>
@@ -100,30 +100,27 @@
 
     
     
-<div id="vignette-contents" class="section level2">
+<div id="vignette-content" class="section level2">
 <h2 class="hasAnchor">
-<a href="#vignette-contents" class="anchor"></a>Vignette Contents</h2>
+<a href="#vignette-content" class="anchor"></a>Vignette content</h2>
 <p>This vignette covers ways of interacting with a <code>Quadtree</code> object after it has been created - for example, extracting values and modifying values.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/">quadtree</a></span><span class="op">)</span>
 
-<span class="co"># retrieve the sample data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span>
 <span class="va">rast</span> <span class="op">&lt;-</span> <span class="va">habitat</span>
-<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rast</span>, main <span class="op">=</span> <span class="st">"sample raster"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"sample quadtree"</span><span class="op">)</span></code></pre></div>
-<p><img src="quadtree-usage_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
+
+<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="retrieving-basic-info-about-a-quadtree" class="section level2">
 <h2 class="hasAnchor">
 <a href="#retrieving-basic-info-about-a-quadtree" class="anchor"></a>Retrieving basic info about a quadtree</h2>
+<p>There are a number of functions for retrieving basic info about a <code>Quadtree</code>.</p>
 <div id="getting-a-summary-of-a-quadtree" class="section level3">
 <h3 class="hasAnchor">
 <a href="#getting-a-summary-of-a-quadtree" class="anchor"></a>Getting a summary of a quadtree</h3>
-<p>A basic summary of a quadtree can be shown by just typing the variable name:</p>
+<p>A basic summary of a quadtree can be shown by just typing the variable name or using the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">qt</span>
 <span class="co">#&gt; class         : Quadtree</span>
@@ -136,7 +133,7 @@
 <div id="getting-the-projection-of-a-quadtree" class="section level3">
 <h3 class="hasAnchor">
 <a href="#getting-the-projection-of-a-quadtree" class="anchor"></a>Getting the projection of a quadtree</h3>
-<p>There are also functions that can be used to retrieve basic info about a <code>Quadtree</code>. <code>projection</code> can be used to get and set the projection of the <code>Quadtree</code>. In this case there is no projection, so an empty string is returned.</p>
+<p><code><a href="../reference/projection.html">projection()</a></code> can be used to get and set the projection of the <code>Quadtree</code>. In this case there is no projection, so an empty string is returned.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/projection.html">projection</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
 <span class="co">#&gt; [1] ""</span></code></pre></div>
@@ -144,7 +141,7 @@
 <div id="getting-the-number-of-cells-in-a-quadtree" class="section level3">
 <h3 class="hasAnchor">
 <a href="#getting-the-number-of-cells-in-a-quadtree" class="anchor"></a>Getting the number of cells in a quadtree</h3>
-<p><code>n_cells</code> returns the number of cells in the quadtree. It has one optional parameter, <code>terminal_only</code> - if <code>TRUE</code>, the number of cells of the quadtree that are terminal (i.e. have no children) is returned. If <code>FALSE</code>, the total number of nodes in the quadtree is returned.</p>
+<p><code><a href="../reference/n_cells.html">n_cells()</a></code> returns the number of cells in the quadtree. It has one optional parameter, <code>terminal_only</code> - if <code>TRUE</code>, the number of cells of the quadtree that are terminal (i.e. have no children) is returned. If <code>FALSE</code>, the total number of nodes in the quadtree is returned.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/n_cells.html">n_cells</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
 <span class="co">#&gt; [1] 4210</span>
@@ -179,7 +176,7 @@
 <p>Values can be ‘extracted’ at point locations using the <code><a href="../reference/extract.html">extract()</a></code> function. This function has one optional parameter - <code>extents</code>. If <code>extents</code> is <code>FALSE</code> (the default), then only the values at the point locations are returned. If <code>extents</code> is <code>TRUE</code>, then a matrix is returned that also returns the x and y limits of each cell in addition to the cell value.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5609</span>, <span class="fl">3959</span>, <span class="fl">20161</span>, <span class="fl">27662</span>, <span class="fl">32763</span><span class="op">)</span>,
-            y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10835</span>, <span class="fl">29586</span>, <span class="fl">31836</span>, <span class="fl">10834</span>, <span class="fl">36337</span><span class="op">)</span><span class="op">)</span>
+             y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10835</span>, <span class="fl">29586</span>, <span class="fl">31836</span>, <span class="fl">10834</span>, <span class="fl">36337</span><span class="op">)</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, na_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">pts</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></code></pre></div>
@@ -198,18 +195,18 @@
 <div id="retrieving-neighbor-relationships" class="section level3">
 <h3 class="hasAnchor">
 <a href="#retrieving-neighbor-relationships" class="anchor"></a>Retrieving neighbor relationships</h3>
-<p>In addition to extracting values from cells, it is possible to determine neighbor relationships between cells via the <code><a href="../reference/get_neighbors.html">get_neighbors()</a></code> function. Given a point, <code>get_neighbors</code> returns the cells that neighbor the cell that the point falls in. Note that cells that are diagonal from each either (i.e. only touch at the corner) are considered to be adjacent.</p>
+<p>In addition to extracting values from cells, it is possible to determine neighbor relationships between cells via the <code><a href="../reference/get_neighbors.html">get_neighbors()</a></code> function. Given a point, <code><a href="../reference/get_neighbors.html">get_neighbors()</a></code> returns the cells that neighbor the cell that the point falls in. Note that cells that are diagonal from each either (i.e. only touch at the corner) are considered to be neighbors.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/get_neighbors.html">get_neighbors</a></span><span class="op">(</span><span class="va">qt</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">pts</span><span class="op">[</span><span class="fl">3</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;        id  xmin  xmax  ymin  ymax     value</span>
-<span class="co">#&gt; [1,] 3295 19000 20000 31000 32000 0.9098125</span>
-<span class="co">#&gt; [2,] 3301 19000 20000 30000 31000 0.9466250</span>
-<span class="co">#&gt; [3,] 3396 20000 21000 30000 31000 0.8688750</span>
+<span class="co">#&gt; [1,] 1047 21000 22000 32000 33000 0.7893750</span>
+<span class="co">#&gt; [2,] 1046 20000 21000 32000 33000 0.8236875</span>
+<span class="co">#&gt; [3,]  975 19500 20000 32000 32500 0.8557500</span>
 <span class="co">#&gt; [4,] 3395 21000 22000 31000 32000 0.8061875</span>
-<span class="co">#&gt; [5,] 3397 21000 22000 30000 31000 0.8125625</span>
-<span class="co">#&gt; [6,] 1046 20000 21000 32000 33000 0.8236875</span>
-<span class="co">#&gt; [7,] 1047 21000 22000 32000 33000 0.7893750</span>
-<span class="co">#&gt; [8,]  975 19500 20000 32000 32500 0.8557500</span></code></pre></div>
+<span class="co">#&gt; [5,] 3396 20000 21000 30000 31000 0.8688750</span>
+<span class="co">#&gt; [6,] 3397 21000 22000 30000 31000 0.8125625</span>
+<span class="co">#&gt; [7,] 3301 19000 20000 30000 31000 0.9466250</span>
+<span class="co">#&gt; [8,] 3295 19000 20000 31000 32000 0.9098125</span></code></pre></div>
 </div>
 </div>
 <div id="copying-a-quadtree" class="section level2">
@@ -238,23 +235,21 @@
 <div id="modifying-cell-values" class="section level2">
 <h2 class="hasAnchor">
 <a href="#modifying-cell-values" class="anchor"></a>Modifying cell values</h2>
-<p>Two functions are provided for modifying cell values: <code>set_values</code> and <code>transform_values</code>.</p>
-<div id="set_values" class="section level3">
+<p>Two functions are provided for modifying cell values: <code><a href="../reference/set_values.html">set_values()</a></code> and <code><a href="../reference/transform_values.html">transform_values()</a></code>.</p>
+<div id="setting-values-of-cells" class="section level3">
 <h3 class="hasAnchor">
-<a href="#set_values" class="anchor"></a><code>set_values</code>
-</h3>
-<p><code>set_values</code> takes a matrix of points and associated values, and changes the values of the cells the points fall in. Note that only the values of the <em>terminal cells</em> that the point falls in are changed.</p>
+<a href="#setting-values-of-cells" class="anchor"></a>Setting values of cells</h3>
+<p><code><a href="../reference/set_values.html">set_values()</a></code> takes a matrix of points and associated values and changes the values of the cells the points fall in. Note that only the values of the <em>terminal cells</em> that the point falls in are changed.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">qt2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
 <span class="fu"><a href="../reference/set_values.html">set_values</a></span><span class="op">(</span><span class="va">qt2</span>, <span class="va">pts</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html">nrow</a></span><span class="op">(</span><span class="va">pts</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt2</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></code></pre></div>
 <p><img src="quadtree-usage_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 </div>
-<div id="transform_values" class="section level3">
+<div id="transforming-all-cell-values" class="section level3">
 <h3 class="hasAnchor">
-<a href="#transform_values" class="anchor"></a><code>transform_values</code>
-</h3>
-<p><code>transform_values</code> uses a function to change all cell values. For example, we could use this function to cube all of the cell values:</p>
+<a href="#transforming-all-cell-values" class="anchor"></a>Transforming all cell values</h3>
+<p><code><a href="../reference/transform_values.html">transform_values()</a></code> uses a function to change all cell values. For example, we could use this function to cube all of the cell values:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">qt3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
 <span class="fu"><a href="../reference/transform_values.html">transform_values</a></span><span class="op">(</span><span class="va">qt3</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span>
@@ -294,7 +289,7 @@
 <div id="converting-quadtrees-to-other-data-types" class="section level2">
 <h2 class="hasAnchor">
 <a href="#converting-quadtrees-to-other-data-types" class="anchor"></a>Converting quadtrees to other data types</h2>
-<p>Functions are also provided for converting a <code>Quadtree</code> to different data types</p>
+<p>Functions are also provided for converting a <code>Quadtree</code> to different data types.</p>
 <div id="get-all-cell-values-as-a-vector" class="section level3">
 <h3 class="hasAnchor">
 <a href="#get-all-cell-values-as-a-vector" class="anchor"></a>Get all cell values as a vector</h3>
@@ -317,7 +312,7 @@
 <div id="convert-to-a-data-frame" class="section level3">
 <h3 class="hasAnchor">
 <a href="#convert-to-a-data-frame" class="anchor"></a>Convert to a data frame</h3>
-<p><code><a href="../reference/as_data_frame.html">as_data_frame()</a></code> converts the quadtree to a data frame. In the resulting data frame, each row represents a single cell, and has columns describing the cell ID, x and y limits, value, level (i.e. node depth), the size of its smallest child, the ID of its parent, and whether it has children. As with <code><a href="../reference/as_vector.html">as_vector()</a></code>, there is one optional parameter called <code>terminal_only</code> - when <code>TRUE</code> (the default) only the terminal cells are returned, and when <code>FALSE</code>, all cells are returned.</p>
+<p><code><a href="../reference/as_data_frame.html">as_data_frame()</a></code> converts the quadtree to a data frame. In the resulting data frame, each row represents a single cell and has columns describing the cell ID, x and y limits, value, level (i.e. node depth), the size of its smallest child, the ID of its parent, and whether it has children. As with <code><a href="../reference/as_vector.html">as_vector()</a></code>, there is one optional parameter called <code>terminal_only</code> - when <code>TRUE</code> (the default) only the terminal cells are returned, and when <code>FALSE</code>, all cells are returned.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_data_frame.html">as_data_frame</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/dimensions.html">dim</a></span><span class="op">(</span><span class="va">df1</span><span class="op">)</span>
@@ -359,9 +354,8 @@
 </div>
 <div id="convert-to-a-raster" class="section level3">
 <h3 class="hasAnchor">
-<a href="#convert-to-a-raster" class="anchor"></a>Convert to a <code>raster</code>
-</h3>
-<p>A <code>Quadtree</code> can also be converted to a raster using the <code><a href="../reference/as_raster.html">as_raster()</a></code> function. This function has one optional parameter named <code>rast</code>, which is used as the template for the output raster. If <code>NULL</code> (the default), a raster is automatically created, where the quadtree extent is used as the raster extent, and the smallest cell in the quadtree is used to determine the resolution of the raster. Note that the value of a raster cell is determined by the value of the quadtree cell located at the centroid of the raster cell - thus, if a raster cell overlaps several quadtree cells, whichever quadtree cell the centroid of the raster cell falls in will determine the raster cell’s value. If the default value for <code>rast</code> is used, the raster cells will never overlap with more than one quadtree cell.</p>
+<a href="#convert-to-a-raster" class="anchor"></a>Convert to a raster</h3>
+<p>A <code>Quadtree</code> can also be converted to a raster using the <code><a href="../reference/as_raster.html">as_raster()</a></code> function. This function has one optional parameter named <code>rast</code>, which is used as the template for the output raster. If <code>NULL</code> (the default), a raster is automatically created, where the quadtree extent is used as the raster extent and the smallest cell in the quadtree is used to determine the resolution of the raster. Note that the value of a raster cell is determined by the value of the quadtree cell located at the centroid of the raster cell - thus, if a raster cell overlaps several quadtree cells, whichever quadtree cell the centroid of the raster cell falls in will determine the raster cell’s value. If the default value for <code>rast</code> is used, the raster cells will never overlap with more than one quadtree cell.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_raster.html">as_raster</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rast</span><span class="op">)</span></code></pre></div>

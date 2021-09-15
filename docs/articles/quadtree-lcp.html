@@ -54,10 +54,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/quadtree-creation.html">Creating quadtrees</a>
+      <a href="../articles/quadtree-creation.html">Creating Quadtrees</a>
     </li>
     <li>
-      <a href="../articles/quadtree-usage.html">Using quadtrees</a>
+      <a href="../articles/quadtree-usage.html">Using Quadtrees</a>
     </li>
     <li>
       <a href="../articles/quadtree-lcp.html">Finding LCPs</a>
@@ -91,7 +91,7 @@
       <h1 data-toc-skip>Finding Least-Cost Paths on a Quadtree</h1>
                         <h4 class="author">Derek Friend</h4>
             
-            <h4 class="date">Last compiled on 14 September, 2021</h4>
+            <h4 class="date">Last compiled on September 15, 2021</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/master/vignettes/quadtree-lcp.Rmd"><code>vignettes/quadtree-lcp.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-lcp.Rmd</code></div>
@@ -100,9 +100,9 @@
 
     
     
-<div id="the-content-of-this-vignette" class="section level2">
+<div id="vignette-content" class="section level2">
 <h2 class="hasAnchor">
-<a href="#the-content-of-this-vignette" class="anchor"></a>The content of this vignette</h2>
+<a href="#vignette-content" class="anchor"></a>Vignette content</h2>
 <p>This vignette goes over the process of finding least-cost paths (LCPs) using a quadtree as a resistance surface. Sample data provided with the <code>quadtree</code> package is used to construct the quadtree used as a resistance surface in the examples.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/">quadtree</a></span><span class="op">)</span>
@@ -114,11 +114,11 @@
 </div>
 <div id="overview-of-least-cost-paths" class="section level2">
 <h2 class="hasAnchor">
-<a href="#overview-of-least-cost-paths" class="anchor"></a>Overview of Least-Cost Paths</h2>
+<a href="#overview-of-least-cost-paths" class="anchor"></a>Overview of least-cost paths</h2>
 <p>Surfaces like rasters are often used for calculating least-cost paths (LCPs). In this case, the underlying raster surface is assumed to represent the degree to which the landscape “resists” movement. The goal, then, is to find the path between two points such that the least amount of resistance is accumulated.</p>
-<p>The LCP is estimated by treating the surface (whether it be a raster or a quadtree) as a network and then using an algorithm for finding the shortest path on a network. Each cell centroid is considered to be a node, and two nodes are connected by an edge if they are adjacent to one another. Each edge has an assigned cost which is derived from the underlying surface. Edges will always travel through two cells. In the quadtree package, then, the cost is determined by first dividing the edge into two segments so that each segment falls in a single cell. The length of each segment is multiplied by the cost of the cell, and then these two values are added together to determine the total cost of the edge. Once the network has been constructed, we can use Dijkstra’s algorithm to find the least-cost path between two nodes.</p>
+<p>The LCP is estimated by treating the surface (whether it be a raster or a quadtree) as a network and then using an algorithm for finding the shortest path on a network. Each cell centroid is considered to be a node, and two nodes are connected by an edge if they are adjacent to one another. Each edge has an assigned cost which is derived from the underlying surface. Edges will always travel through two cells. In the <code>quadtree</code> package, then, the cost is determined by first dividing the edge into two segments so that each segment falls in a single cell. The length of each segment is multiplied by the cost of the cell, and then these two values are added together to determine the total cost of the edge. Once the network has been constructed, we can use Dijkstra’s algorithm to find the least-cost path between two nodes.</p>
 <p>Dijkstra’s algorithm essentially builds a tree data structure, where the starting node is the root of the tree. It builds the tree structure over multiple iterations, and in each iteration it adds the node that is “closest” to the current tree - that is, it chooses the node which is easiest to get to from the current structure. The result is that even if only one LCP is desired, LCPs to other nodes are also calculated in the process. To find a path to a specific node, then, this tree is built, and once the destination node is reached, the path to that node is returned.</p>
-<p>It’s important to note that variable cell size of a quadtree will result in least-cost paths being distorted to some degree, and this distortion will increase as cell size increases. It is important for the user to be aware of this distortion - depending on the application, this distortion may or may not cause a meaningful amount of error, and it is up to the user to determine whether the distortion caused by calculating LCPs on a quadtree will significantly affect the analysis being performed.</p>
+<p>It’s important to note that the variable cell sizes of a quadtree will result in least-cost paths being distorted to some degree, and this distortion will increase as cell size increases. It is important for the user to be aware of this distortion - depending on the application, this distortion may or may not cause a meaningful amount of error, and it is up to the user to determine whether the distortion caused by calculating LCPs on a quadtree will significantly affect the analysis being performed.</p>
 </div>
 <div id="finding-lcps-on-a-quadtree" class="section level2">
 <h2 class="hasAnchor">
@@ -127,7 +127,7 @@
 <h3 class="hasAnchor">
 <a href="#the-lcpfinder-class" class="anchor"></a>The <code>LcpFinder</code> class</h3>
 <p>The <code>LcpFinder</code> class is a wrapper class for a C++ object that actually performs the calculations. The C++ object internally stores the results as a tree-like structure. Finding the LCP to a given point can be seen as a two-step process. First, construct the tree structure as described above. Second, starting from the destination node, travel up the tree, keeping track of the sequence of nodes passed through, until the root (the starting node) is reached. This sequence of nodes (in reverse, since we started from the destination node) is the LCP to that point.</p>
-<p>Once the tree has been constructed, LCPs can be found to any of the of the child nodes without further computation. This allows for efficient computation of multiple LCPs. The LCP finder saves state - whenever an LCP is asked to be calculated, it first checks whether or not a path has been found to that node already - if so, it simply returns the path using the process described above. If not, it builds out the existing tree until the desired node has been reached.</p>
+<p>Once the tree has been constructed, LCPs can be found to any of the of the nodes in the tree without further computation. This allows for efficient computation of multiple LCPs. The LCP finder saves state - whenever an LCP is asked to be calculated, it first checks whether or not a path has been found to that node already - if so, it simply returns the path using the process described above. If not, it builds out the existing tree until the desired node has been reached.</p>
 </div>
 <div id="creating-a-lcpfinder-object-using-lcp_finder" class="section level3">
 <h3 class="hasAnchor">
@@ -142,7 +142,7 @@
 <span class="co">#&gt; start point      : (6989, 34007)</span>
 <span class="co">#&gt; search limits    : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span>
 <span class="co">#&gt; # of paths found : 0</span></code></pre></div>
-<p>There are also three optional parameters for the <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code> function: <code>xlim</code> and <code>ylim</code>, and <code>search_by_centroids</code>. If <code>xlim</code> and <code>ylim</code> are specified, the <code>LcpFinder</code> object restricts its search area to nodes that fall within the specified limits. This can be useful for at least two reasons. First, it is sometimes desirable to constrain an LCP to be within certain “reasonable” limits. For example, if two points are separated by a long barrier, this could be used to prevent the path from going all the way around the barrier (which may result in an unrealistically long path, depending on the application). Second, it can also be used to decrease computation time by decreasing the number of nodes in the network.</p>
+<p>There are also three optional parameters for the <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code> function: <code>xlim</code>, <code>ylim</code>, and <code>search_by_centroids</code>. If <code>xlim</code> and <code>ylim</code> are specified, the <code>LcpFinder</code> object restricts its search area to nodes that fall within the specified limits. This can be useful for at least two reasons. First, it is sometimes desirable to constrain an LCP to be within certain “reasonable” limits. For example, if two points are separated by a long barrier, this could be used to prevent the path from going all the way around the barrier (which may result in an unrealistically long path, depending on the application). Second, it can also be used to decrease computation time by decreasing the number of nodes in the network.</p>
 <p>The <code>search_by_centroid</code> parameter essentially defines what it means for a cell to be “in” the box defined by <code>xlim</code> and <code>ylim</code>. If <code>FALSE</code> (the default), any cell that overlaps with the box is included. If <code>TRUE</code>, a cell is only included if its <em>centroid</em> falls inside the box. This is a subtle but important distinction. If cells are included if they <em>overlap</em> with the box, it is likely that cells will be included whose centroid falls outside the box. Since all LCPs are found using the cell centroids, this means that LCPs could travel outside of the user-defined box. The difference between the two is illustrated later on in this vignette, when <code><a href="../reference/find_lcps.html">find_lcps()</a></code> is discussed.</p>
 <p>Note that when a <code>LcpFinder</code> object is created, no paths have been found yet. Paths are found by using the <code><a href="../reference/find_lcp.html">find_lcp()</a></code> and <code><a href="../reference/find_lcps.html">find_lcps()</a></code> functions.</p>
 </div>
@@ -205,10 +205,10 @@
 <h4 class="hasAnchor">
 <a href="#using-find_lcps" class="anchor"></a>Using <code>find_lcps()</code>
 </h4>
-<p><code><a href="../reference/find_lcps.html">find_lcps()</a></code> can be used to find all possible LCPs. In addition, a maximum cost-distance can optionally be provided so that only LCPs with a cost-distance less than the specified value are found. Instead of returning a single path, it returns the output of <code><a href="../reference/summarize_lcps.html">summarize_lcps()</a></code>, providing a summary of each path found.</p>
-<p>It should be noted that while <code><a href="../reference/find_lcps.html">find_lcps()</a></code> does not return individual LCPs, it still calculates the LCPs to each point, and <code><a href="../reference/find_lcp.html">find_lcp()</a></code> can be used to retrieve individual paths. As stated before, when <code><a href="../reference/find_lcp.html">find_lcp()</a></code> is run, the <code>LcpFinder</code> object first checks to see if the path has been calculated already - if so, it simply returns the path without having to perform further calculations.</p>
+<p><code><a href="../reference/find_lcps.html">find_lcps()</a></code> can be used to find all possible LCPs. In addition, a maximum cost-distance can optionally be provided so that only LCPs with a cost-distance less than the specified value are found. If the <code>return_summary</code> parameter is <code>TRUE</code>, it returns the output of <code><a href="../reference/summarize_lcps.html">summarize_lcps()</a></code>, providing a summary of each path found. If it is <code>FALSE</code>, no value is returned.</p>
+<p>It should be noted that while <code><a href="../reference/find_lcps.html">find_lcps()</a></code> does not return individual LCPs, it still calculates the LCPs to each point, and <code><a href="../reference/find_lcp.html">find_lcp()</a></code> can be used to retrieve individual paths. As stated before, when <code><a href="../reference/find_lcp.html">find_lcp()</a></code> is run, the <code>LcpFinder</code> object first checks to see if the path has been calculated already - if so, it simply returns the path without having to perform further calculations. This means that after <code><a href="../reference/find_lcps.html">find_lcps()</a></code> has been run, individual LCPs can be extracted very efficiently using <code><a href="../reference/find_lcp.html">find_lcp()</a></code>.</p>
 <p><strong><em>Finding all paths</em></strong></p>
-<p>The following example uses <code>find_lcps</code> to generate all LCPs from the starting point.</p>
+<p>The following example uses <code><a href="../reference/find_lcps.html">find_lcps()</a></code> to generate all LCPs from the starting point.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">16715</span>, <span class="fl">25634</span><span class="op">)</span>
 <span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span>
@@ -216,10 +216,10 @@
 
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
      main <span class="op">=</span> <span class="st">"All LCPs from a given start point"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">lcpf</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">lcpf</span>, lwd <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span>, bg <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></code></pre></div>
 <p><img src="quadtree-lcp_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
-<p>An important point to make is that <code>find_lcps</code> with no restrictions will find all paths <em>within the previously specified search limit</em> (i.e. the <code>xlim</code> and <code>ylim</code> parameters of <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code>.) As discussed above, the <code>search_by_centroid</code> parameter also plays a role in determining which cells are included in the search area, as demonstrated in the following example.</p>
+<p>An important point to make is that <code><a href="../reference/find_lcps.html">find_lcps()</a></code> with no restrictions will find all paths <em>within the previously specified search limit</em> (i.e. the <code>xlim</code> and <code>ylim</code> parameters of <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code>.) As discussed above, the <code>search_by_centroid</code> parameter also plays a role in determining which cells are included in the search area, as demonstrated in the following example.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">16715</span>, <span class="fl">25634</span><span class="op">)</span>
 
@@ -250,14 +250,14 @@
 <span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span>, bg <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></code></pre></div>
 <p><img src="quadtree-lcp_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
 <p><strong><em>Finding all paths under a given cost-distance threshold</em></strong></p>
-<p>As stated before, a value can be passed to the <code>limit</code> parameter, which will restrict the <code>LcpFinder</code> to only finding paths less than that value. In the following example, all LCPs with a total cost less than 3000 are found.</p>
+<p>As stated before, a value can be passed to the <code>limit</code> parameter, which will restrict the <code>LcpFinder</code> to only finding paths less than that value. In the following example, all LCPs with a total cost-distance less than 3000 are found.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span>
 <span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
      main <span class="op">=</span> <span class="st">"All LCPs with cost-distance less than 3000"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">lcpf</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">lcpf</span>, lwd <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></code></pre></div>
 <p><img src="quadtree-lcp_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 <p>A very important note to make is that once the LCP tree is calculated, it never gets smaller. The implication of this is that great care is needed if using <code><a href="../reference/find_lcps.html">find_lcps()</a></code> more than once on a single <code>LcpFinder</code> object.</p>
