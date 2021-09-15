@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Get the extent of a Quadtree — extent" />
 <meta property="og:description" content="Gets the extent of the Quadtree as an
-  Extent object (from the raster package)" />
+  Extent object (from the raster package)." />
 
 
 
@@ -130,14 +130,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get the extent of a <code><a href='Quadtree-class.html'>Quadtree</a></code></h1>
+    <h1>Get the extent of a <code>Quadtree</code></h1>
     <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/extent.R'><code>R/extent.R</code></a></small>
     <div class="hidden name"><code>extent.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Gets the extent of the <code><a href='Quadtree-class.html'>Quadtree</a></code> as an
-  <code><a href='https://rdrr.io/pkg/raster/man/Extent-class.html'>Extent</a></code> object (from the raster package)</p>
+  <code><a href='https://rdrr.io/pkg/raster/man/Extent-class.html'>Extent</a></code> object (from the raster package).</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for Quadtree</span>
@@ -154,8 +154,9 @@
       <th>original</th>
       <td><p>boolean; if <code>FALSE</code> (the default), it returns the total
 extent covered by the quadtree. If <code>TRUE</code>, the function returns the
-extent of the original raster used to create the quadtree, before <code>NA</code>
-rows/columns were added to pad the dimensions.</p></td>
+extent of the original raster used to create the quadtree, before the
+dimensions were adjusted by padding with <code>NA</code>s and/or the raster was
+resampled.</p></td>
     </tr>
     </table>
 

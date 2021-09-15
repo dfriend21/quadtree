@@ -40,11 +40,11 @@
 
 
 <meta property="og:title" content="CppLcpFinder: C++ LCP finder — CppLcpFinder-class" />
-<meta property="og:description" content="The CppLcpFinder class is a C++ data structure
-  used to find least-cost paths using a quadtree as a resistance surface. The
-  average user should not need to interact with this class at all - all of 
-  the LCP functionality is made available through the LcpFinder
-  S4 class." />
+<meta property="og:description" content="CppLcpFinder is a C++ class for finding least-cost paths
+  (LCPs) using a Quadtree as a resistance surface. The average
+  user should not need to interact with this class at all - all of the LCP
+  functionality is made available through the LcpFinder S4
+  class." />
 
 
 
@@ -139,11 +139,11 @@
     </div>
 
     <div class="ref-description">
-    <p>The <code>CppLcpFinder</code> class is a C++ data structure
-  used to find least-cost paths using a quadtree as a resistance surface. The
-  average user should not need to interact with this class at all - all of 
-  the LCP functionality is made available through the <code><a href='LcpFinder-class.html'>LcpFinder</a></code>
-  S4 class.</p>
+    <p><code>CppLcpFinder</code> is a C++ class for finding least-cost paths
+  (LCPs) using a <code><a href='Quadtree-class.html'>Quadtree</a></code> as a resistance surface. The average
+  user should not need to interact with this class at all - all of the LCP
+  functionality is made available through the <code><a href='LcpFinder-class.html'>LcpFinder</a></code> S4
+  class.</p>
     </div>
 
 
@@ -176,34 +176,34 @@
   <code><a href='summarize_lcps.html'>summarize_lcps</a>()</code> for details.</p></li>
 </ul></p></dd>
 
-<dt><code>getSearchLimits</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Returns the x and y limits of the search area.</p></li>
-<li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>:  4-element numeric vector, in this order: xMin,
-  xMax, yMin, yMax</p></li>
-</ul></p></dd>
-
 <dt><code>getLcp</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Finds the least-cost path from the starting
-  point to another point. <code><a href='find_lcp.html'>find_lcp</a></code> is a wrapper for this
-  function - see its documentation for more details.</p></li>
+<li><p><strong>Description</strong>: Finds the LCP from the starting point to
+  another point. <code><a href='find_lcp.html'>find_lcp</a></code> is a wrapper for this function - see
+  its documentation for more details.</p></li>
 <li><p><strong>Parameters</strong>:</p><ul>
-<li><p><code>endPoint</code>: 2-element numeric vector - the point to find a
-    shortest path to</p></li>
+<li><p><code>endPoint</code>: two-element numeric vector (x,y) - the point to
+    find a shortest path to</p></li>
 </ul></li>
 <li><p><strong>Returns</strong>: A matrix representing the least-cost path. See
   <code><a href='find_lcp.html'>find_lcp</a>()</code> for details on the return matrix.</p></li>
 </ul></p></dd>
 
+<dt><code>getSearchLimits</code></dt><dd><p><ul>
+<li><p><strong>Description</strong>: Returns the x and y limits of the search area.</p></li>
+<li><p><strong>Parameters</strong>: none</p></li>
+<li><p><strong>Returns</strong>:  four-element numeric vector, in this order: xmin,
+  xmax, ymin, ymax</p></li>
+</ul></p></dd>
+
 <dt><code>getStartPoint</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Returns the start point</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: 2-element numeric vector (x,y)</p></li>
+<li><p><strong>Returns</strong>: two-element numeric vector (x,y)</p></li>
 </ul></p></dd>
 
 <dt><code>makeNetworkAll</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Calculates least-cost paths to all cells in the
-  search area. This is used by <code><a href='find_lcps.html'>find_lcps</a></code> when <code>limit</code> is
+<li><p><strong>Description</strong>: Calculates LCPs to all cells in the search
+  area. This is used by <code><a href='find_lcps.html'>find_lcps</a></code> when <code>limit</code> is
   <code>NULL</code>. See documentation of that function for more details.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
 <li><p><strong>Returns</strong>: void - no return value. Specific paths can be
@@ -212,13 +212,13 @@
 </ul></p></dd>
 
 <dt><code>makeNetworkCostDist</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Calculates all least-cost paths whose
-  cost-distance is less than a given threshold. This is used in
-  <code><a href='find_lcps.html'>find_lcps</a></code> when <code>limit</code> is not <code>NULL</code>. See
-  documentation of that function for more details.</p></li>
+<li><p><strong>Description</strong>: Calculates all LCPs whose cost-distance is less
+  than a given threshold. This is used in <code><a href='find_lcps.html'>find_lcps</a></code> when
+  <code>limit</code> is not <code>NULL</code>. See documentation of that function for
+  more details.</p></li>
 <li><p><strong>Parameters</strong>:</p><ul>
 <li><p><code>constraint</code>: double; the maximum cost-distance allowed for a
-    least-cost path</p></li>
+    LCP</p></li>
 </ul></li>
 <li><p><strong>Returns</strong>: void - no return value. Specific paths can be
   retrieved using <code>getLcp</code>, and <code>getAllPathsSummary</code> can

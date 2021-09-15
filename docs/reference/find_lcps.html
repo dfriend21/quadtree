@@ -42,7 +42,7 @@
 <meta property="og:title" content="Find LCPs to surrounding points — find_lcps" />
 <meta property="og:description" content="Calculates least-cost paths (LCPs) from the start point (the
   point used to create the LcpFinder) to surrounding points. A
-  constraint can be placed on the LCPs, so that only LCPs that are less than
+  constraint can be placed on the LCPs so that only LCPs that are less than
   some specified cost-distance are returned." />
 
 
@@ -140,7 +140,7 @@
     <div class="ref-description">
     <p>Calculates least-cost paths (LCPs) from the start point (the
   point used to create the <code><a href='LcpFinder-class.html'>LcpFinder</a></code>) to surrounding points. A
-  constraint can be placed on the LCPs, so that only LCPs that are less than
+  constraint can be placed on the LCPs so that only LCPs that are less than
   some specified cost-distance are returned.</p>
     </div>
 
@@ -152,7 +152,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code>LcpFinder</code></p></td>
+      <td><p>a <code><a href='LcpFinder-class.html'>LcpFinder</a></code></p></td>
     </tr>
     <tr>
       <th>limit</th>
@@ -184,7 +184,7 @@ paths found. If <code>FALSE</code>, no value is returned.</p></td>
   never gets smaller. For example, we could use <code>find_lcps()</code>
   with <code>limit = NULL</code> to calculate all LCPs. If we then used
   <code>find_lcps()</code> on the same <code>LcpFinder</code> but this time used a
-  limit, it would still return <em>all</em> of the LCPs - even those that are
+  limit, it would still return <em>all</em> of the LCPs, even those that are
   greater than the specified limit, since the tree never shrinks.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -201,9 +201,8 @@ paths found. If <code>FALSE</code>, no value is returned.</p></td>
 <span class='co'>####################</span>
 
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dfriend21/quadtree/'>quadtree</a></span><span class='op'>)</span>
-
-<span class='co'># create a quadtree</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
+
 <span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, adj_type <span class='op'>=</span> <span class='st'>"expand"</span><span class='op'>)</span>
 
 <span class='va'>start_pt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>19000</span>, <span class='fl'>25000</span><span class='op'>)</span>

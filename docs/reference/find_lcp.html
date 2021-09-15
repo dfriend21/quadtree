@@ -42,7 +42,7 @@
 <meta property="og:title" content="Find the LCP between two points on a Quadtree — find_lcp" />
 <meta property="og:description" content="Finds the least-cost path (LCP) from the start point (the point
   used to create the LcpFinder) to another point, using a
-  Quadtree as a resistance surface" />
+  Quadtree as a resistance surface." />
 
 
 
@@ -131,7 +131,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Find the LCP between two points on a <code><a href='Quadtree-class.html'>Quadtree</a></code></h1>
+    <h1>Find the LCP between two points on a <code>Quadtree</code></h1>
     <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/lcp.R'><code>R/lcp.R</code></a></small>
     <div class="hidden name"><code>find_lcp.Rd</code></div>
     </div>
@@ -139,7 +139,7 @@
     <div class="ref-description">
     <p>Finds the least-cost path (LCP) from the start point (the point
   used to create the <code><a href='LcpFinder-class.html'>LcpFinder</a></code>) to another point, using a
-  <code><a href='Quadtree-class.html'>Quadtree</a></code> as a resistance surface</p>
+  <code><a href='Quadtree-class.html'>Quadtree</a></code> as a resistance surface.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for LcpFinder,numeric</span>
@@ -154,8 +154,8 @@
     </tr>
     <tr>
       <th>y</th>
-      <td><p>numeric vector with two elements - the x and y coordinates
-of the the destination point</p></td>
+      <td><p>two-element numeric vector; the x and y coordinates of the the
+destination point</p></td>
     </tr>
     <tr>
       <th>use_original_end_points</th>
@@ -171,8 +171,8 @@ algorithm.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a five column matrix representing the
-  least cost path. It has the following columns:</p><ul>
+    <p>Returns a five column matrix representing the LCP. It has the
+  following columns:</p><ul>
 <li><p><code>x</code>: x coordinate of this point (centroid of the cell)</p></li>
 <li><p><code>y</code>: y coordinate of this point (centroid of the cell)</p></li>
 <li><p><code>cost_tot</code>: the cumulative cost up to this point</p></li>
@@ -182,7 +182,7 @@ algorithm.</p></td>
 <li><p><code>cost_cell</code>: the cost of the cell that contains this point</p></li>
 </ul>
 
-<p>If no path is possible between the two points, a 0-row matrix with the
+<p>If no path is possible between the two points, a zero-row matrix with the
   previously described columns is returned.</p>
 <p><strong>Important note:</strong> the <code>use_original_end_points</code> option
   <strong>only</strong> changes the x and y coordinates of the first and last points

@@ -91,7 +91,7 @@
       <h1 data-toc-skip>Finding Least-Cost Paths on a Quadtree</h1>
                         <h4 class="author">Derek Friend</h4>
             
-            <h4 class="date">Last compiled on 10 September, 2021</h4>
+            <h4 class="date">Last compiled on 14 September, 2021</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/master/vignettes/quadtree-lcp.Rmd"><code>vignettes/quadtree-lcp.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-lcp.Rmd</code></div>
@@ -269,6 +269,7 @@
 <span class="va">paths1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html">nrow</a></span><span class="op">(</span><span class="va">paths1</span><span class="op">)</span>
 <span class="co">#&gt; [1] 833</span>
+
 <span class="va">paths2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html">nrow</a></span><span class="op">(</span><span class="va">paths2</span><span class="op">)</span> <span class="co"># same as for paths1!!!</span>
 <span class="co">#&gt; [1] 833</span></code></pre></div>

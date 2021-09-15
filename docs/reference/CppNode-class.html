@@ -40,9 +40,9 @@
 
 
 <meta property="og:title" content="CppNode: C++ quadtree node — CppNode-class" />
-<meta property="og:description" content="The CppNode class defines objects that represent a single
-  node of a quadtree. This is used internally - end users should have no need
-  to use any of the methods listed here." />
+<meta property="og:description" content="The CppNode C++ class defines objects that represent a
+  single node of a quadtree. This is used internally - end users should have
+  no need to use any of the methods listed here." />
 
 
 
@@ -137,9 +137,9 @@
     </div>
 
     <div class="ref-description">
-    <p>The <code>CppNode</code> class defines objects that represent a single
-  node of a quadtree. This is used internally - end users should have no need
-  to use any of the methods listed here.</p>
+    <p>The <code>CppNode</code> C++ class defines objects that represent a
+  single node of a quadtree. This is used internally - end users should have
+  no need to use any of the methods listed here.</p>
     </div>
 
 
@@ -163,22 +163,22 @@
 <li><p><strong>Parameters</strong>: none</p></li>
 <li><p><strong>Returns</strong>: a numeric vector with the following named elements:</p><ul>
 <li><p><code>id</code></p></li>
-<li><p><code>hasChdn</code></p></li>
+<li><p><code>hasChidren</code></p></li>
 <li><p><code>level</code></p></li>
-<li><p><code>xMin</code></p></li>
-<li><p><code>xMax</code></p></li>
-<li><p><code>yMin</code></p></li>
-<li><p><code>yMax</code></p></li>
-<li><p><code>smSide</code></p></li>
+<li><p><code>xmin</code></p></li>
+<li><p><code>xmax</code></p></li>
+<li><p><code>ymin</code></p></li>
+<li><p><code>ymax</code></p></li>
+<li><p><code>smallestChildLength</code></p></li>
 </ul><p><code><a href='as_data_frame.html'>as_data_frame</a></code> makes use of this function to output info on
   each node - see the documentation of that function for details on what each
   column represents</p></li>
 </ul></p></dd>
 
 <dt><code>getChildren</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Returns a <code>list</code> of the child nodes</p></li>
+<li><p><strong>Description</strong>: Returns a list of the child nodes</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: a <code>list</code> of <code>CppNode</code> objects</p></li>
+<li><p><strong>Returns</strong>: a list of <code>CppNode</code> objects</p></li>
 </ul></p></dd>
 
 <dt><code>getNeighborIds</code></dt><dd><p><ul>
@@ -191,9 +191,9 @@
 <li><p><strong>Description</strong>: Returns a matrix with info on each of the
   neighboring cells</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: a matrix. The <code>getNbList()</code> member function
-  of <code><a href='CppQuadtree-class.html'>CppQuadtree</a></code> makes use of this function - see documentation
-  of that function for details on the return matrix.</p></li>
+<li><p><strong>Returns</strong>: a matrix. The <code>getNeighborList()</code> member
+  function of <code><a href='CppQuadtree-class.html'>CppQuadtree</a></code> makes use of this function - see
+  documentation of that function for details on the return matrix.</p></li>
 </ul></p></dd>
 
 <dt><code>getNeighborVals</code></dt><dd><p><ul>
@@ -203,9 +203,9 @@
 </ul></p></dd>
 
 <dt><code>getNeighbors</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Returns a <code>list</code> of the neighboring nodes</p></li>
+<li><p><strong>Description</strong>: Returns a list of the neighboring nodes</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: a <code>list</code> of <code>CppNode</code> objects</p></li>
+<li><p><strong>Returns</strong>: a list of <code>CppNode</code> objects</p></li>
 </ul></p></dd>
 
 <dt><code>hasChildren</code></dt><dd><p><ul>
@@ -245,13 +245,13 @@
 <dt><code>xLims</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Returns the x boundaries of the node</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: 2-element numeric vector (xMin, xMax)</p></li>
+<li><p><strong>Returns</strong>: two-element numeric vector (xmin, xmax)</p></li>
 </ul></p></dd>
 
 <dt><code>yLims</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Returns the y boundaries of the node</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: 2-element numeric vector (yMin, yMax)</p></li>
+<li><p><strong>Returns</strong>: two-element numeric vector (ymin, ymax)</p></li>
 </ul></p></dd>
 
 </dl>

@@ -91,7 +91,7 @@
       <h1 data-toc-skip>Code Details</h1>
                         <h4 class="author">Derek Friend</h4>
             
-            <h4 class="date">Last compiled on 10 September, 2021</h4>
+            <h4 class="date">Last compiled on 14 September, 2021</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/master/vignettes/quadtree-code.Rmd"><code>vignettes/quadtree-code.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-code.Rmd</code></div>
@@ -135,7 +135,7 @@
 <h3 class="hasAnchor">
 <a href="#r-code" class="anchor"></a>R code</h3>
 <p>Almost all of the core functionality of the quadtree package is contained in the C++ code, and the R code serves primarily as an interface for working with the C++ quadtree data structure. A Quadtree S4 class is defined which consists only of one slot, which contains a ‘CppQuadtree’ object. The methods for this class are often quite simple, merely consisting of calling one of the methods on the CppQuadtree object. Using this approach has a few benefits. First, wrapping the C++ class in an S4 class allows the quadtree functionality to be accessed in a way that is much more consistent with typical R syntax, which will hopefully be more intuitive to R users. Second, it allows for me to add R code to validate and make any necessary modifications to parameters before calling the C++ methods - this helps make the functions more robust. This also allows me to take advantage of existing R functionality (for example, resampling a raster from the ‘raster’ package).</p>
-<p>I won’t discuss each R file/function here - see the documentation PDF for details on each R function.</p>
+<p>I won’t discuss each R file/function here - see the the function help files for details on each R function.</p>
 </div>
 </div>
   </div>

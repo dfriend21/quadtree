@@ -40,10 +40,10 @@
 
 
 <meta property="og:title" content="CppQuadtree: C++ quadtree data structure — CppQuadtree-class" />
-<meta property="og:description" content="The CppQuadtree class is the underlying C++ data structure used
-  in the quadtree package. Note that the average user should not need
-  to use these functions - there are R wrapper functions that provide access
-  to the many of the member functions." />
+<meta property="og:description" content="The CppQuadtree class is the underlying C++ data structure used by
+  the Quadtree S4 class. Note that the average user should not
+  need to use these functions - there are R wrapper functions that provide
+  access to the many of the member functions." />
 
 
 
@@ -138,10 +138,10 @@
     </div>
 
     <div class="ref-description">
-    <p>The <code>CppQuadtree</code> class is the underlying C++ data structure used
-  in the <code>quadtree</code> package. Note that the average user should not need
-  to use these functions - there are R wrapper functions that provide access
-  to the many of the member functions.</p>
+    <p>The <code>CppQuadtree</code> class is the underlying C++ data structure used by
+  the <code><a href='Quadtree-class.html'>Quadtree</a></code> S4 class. Note that the average user should not
+  need to use these functions - there are R wrapper functions that provide
+  access to the many of the member functions.</p>
     </div>
 
 
@@ -154,26 +154,22 @@
   <code>QuadtreeWrapper</code> contains a pointer to a <code>Quadtree</code> C++ object
   (defined in 'src/Quadtree.h' and 'src/Quadtree.cpp'). All of the core
   functionality is in the <code>Quadtree</code> C++ class - <code>QuadtreeWrapper</code>
-  is a wrapper class that adds the 'Rcpp' code required for it to be accessible
-  from R.</p>
-<p>Each member function exposed to R is described below. Note that when a
-  function directly corresponds with an R function, the user is referred to
-  the documentation for that function for more details (in order to avoid
-  replication of documentation).</p>
+  is a wrapper class that adds the 'Rcpp' code required for it to be
+  accessible from R.</p>
     <h2 class="hasAnchor" id="fields"><a class="anchor" href="#fields"></a>Fields</h2>
 
     
 
 <dl>
 <dt><code>constructor</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: default constructor. Can be used as follows:
+<li><p><strong>Description</strong>: Default constructor. Can be used as follows:
   <code>qt &lt;- new(CppQuadtree)</code></p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
 <li><p><strong>Returns</strong>: an empty <code>CppQuadtree</code> object</p></li>
 </ul></p></dd>
 
 <dt><code>constructor</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: constructor. Can be used as follows: <code>qt
+<li><p><strong>Description</strong>: Constructor. Can be used as follows: <code>qt
   &lt;- new(CppQuadtree, xlims, ylims, maxCellLength, minCellLength,
   splitAllNAs, splitAnyNAs)</code>. Used in <code><a href='quadtree.html'>quadtree</a>()</code>. The
   parameters for this constructor correspond with the similarly named
@@ -181,11 +177,11 @@
   details on what the parameters signify. Note that the constructor does not
   "build" the quadtree structure - that is done by <code>createTree()</code>.</p></li>
 <li><p><strong>Parameters</strong>:</p><ul>
-<li><p><code>xlims</code>: 2-element numeric vector</p></li>
-<li><p><code>ylims</code>: 2-element numeric vector</p></li>
-<li><p><code>maxCellLength</code>: 2-element numeric vector - first element is
+<li><p><code>xlims</code>: two-element numeric vector (xmin, xmax)</p></li>
+<li><p><code>ylims</code>: two-element numeric vector (ymin, ymax)</p></li>
+<li><p><code>maxCellLength</code>: two-element numeric vector - first element is
     for the x dimension, second is for the y dimension</p></li>
-<li><p><code>minCellLength</code>: 2-element numeric vector - first element is
+<li><p><code>minCellLength</code>: two-element numeric vector - first element is
     for the x dimension, second is for the y dimension</p></li>
 <li><p><code>splitAllNAs</code>: boolean</p></li>
 <li><p><code>splitAnyNAs</code>: boolean</p></li>
@@ -200,22 +196,22 @@
 <li><p><strong>Parameters</strong>:</p><ul>
 <li><p><code>filePath</code>: string; the file to read from</p></li>
 </ul></li>
-<li><p><strong>Returns</strong>: a <code>CppQuadtree</code> object</p></li>
+<li><p><strong>Returns</strong>: a <code>CppQuadtree</code></p></li>
 </ul></p></dd>
 
 <dt><code>asList</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: outputs a list containing details about each
-  cell. <code><a href='as_data_frame.html'>as_data_frame</a>()</code> is a wrapper for this function that
-  <code>rbind</code>s the individual list elements into a data frame.</p></li>
+<li><p><strong>Description</strong>: Outputs a list containing details about
+  each cell. <code><a href='as_data_frame.html'>as_data_frame</a>()</code> is a wrapper for this function
+  that <code>rbind</code>s the individual list elements into a data frame.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: a <code>list</code> of named numeric vectors. Each
+<li><p><strong>Returns</strong>: a list of named numeric vectors. Each
   numeric vector provides information on a single cell. The elements returned
   are the same as the columns described in the documentation for
   <code><a href='as_data_frame.html'>as_data_frame</a>()</code> - see that help page for details.</p></li>
 </ul></p></dd>
 
 <dt><code>asVector</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: returns cell values as a vector.
+<li><p><strong>Description</strong>: Returns cell values as a vector.
   <code><a href='as_vector.html'>as_vector</a>()</code> is a wrapper for this function.</p></li>
 <li><p><strong>Parameters</strong>:</p><ul>
 <li><p><code>terminalOnly</code>: boolean; if <code>TRUE</code>, returns only the
@@ -225,7 +221,7 @@
 </ul></p></dd>
 
 <dt><code>copy</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: returns a deep copy of a quadtree.
+<li><p><strong>Description</strong>: Returns a deep copy of a quadtree.
   <code><a href='copy.html'>copy</a>()</code> is a wrapper for this function - see the
   documentation for that function for more details.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
@@ -233,10 +229,10 @@
 </ul></p></dd>
 
 <dt><code>createTree</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: constructs a quadtree from a matrix.
+<li><p><strong>Description</strong>: Constructs a quadtree from a matrix.
   <code><a href='quadtree.html'>quadtree</a>()</code> is a wrapper for this function and should be used
   to create quadtrees. The parameters correspond with the similarly
-  named parameters in <code><a href='quadtree.html'>quadtree</a></code> - see the
+  named parameters in <code><a href='quadtree.html'>quadtree</a>()</code> - see the
   documentation of that function for details on the parameters.</p></li>
 <li><p><strong>Parameters</strong>:</p><ul>
 <li><p><code>mat</code>: matrix; data to be used to create the quadtree</p></li>
@@ -252,25 +248,38 @@
 </ul></p></dd>
 
 <dt><code>extent</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: returns the extent of the quadtree. This is
+<li><p><strong>Description</strong>: Returns the extent of the quadtree. This is
   equivalent to <code><a href='extent.html'>extent</a>(qt, original = FALSE)</code></p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: 4-element numeric vector, in this order: xMin,
-  xMax, yMin, yMax</p></li>
+<li><p><strong>Returns</strong>: four-element numeric vector, in this order: xmin,
+  xmax, ymin, ymax</p></li>
 </ul></p></dd>
 
 <dt><code>getCell</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Given the x and y coordinates of a point,
-  returns the cell at that point (as a <code><a href='CppNode-class.html'>CppNode</a></code> object)</p></li>
+  returns the cell at that point.</p></li>
 <li><p><strong>Parameters</strong>:</p><ul>
-<li><p><code>x</code>: double; x coordinate</p></li>
-<li><p><code>y</code>: double; y coordinate</p></li>
+<li><p><code>pt</code>: two-element numeric vector (x,y)</p></li>
 </ul></li>
 <li><p><strong>Returns</strong>: a <code><a href='CppNode-class.html'>CppNode</a></code> object representing the
   cell that contains the point</p></li>
 </ul></p></dd>
 
-<dt><code>getCellDetails</code></dt><dd><p><ul>
+<dt><code>getCells</code></dt><dd><p><ul>
+<li><p><strong>Description</strong>: Given x and y coordinates of points, returns a
+  list of the cells at those points (as <code><a href='CppNode-class.html'>CppNode</a></code> objects). It is
+  the same as <code>getCell</code>, except that it allows users to get multiple
+  cells at once instead of one at a time.</p></li>
+<li><p><strong>Parameters</strong>:</p><ul>
+<li><p><code>x</code>: numeric vector; the x coordinates</p></li>
+<li><p><code>y</code>: numeric vector; the y coordinates; must be the same
+    length as <code>x</code></p></li>
+</ul></li>
+<li><p><strong>Returns</strong>: a list of <code><a href='CppNode-class.html'>CppNode</a></code> objects
+  corresponding to the x and y coordinates passed to the function</p></li>
+</ul></p></dd>
+
+<dt><code>getCellsDetails</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Given points defined by their x and y
   coordinates, returns a matrix giving details on the cells at each of the
   points.
@@ -284,25 +293,26 @@
   <code><a href='extract.html'>extract</a>()</code> for details about the matrix columns</p></li>
 </ul></p></dd>
 
-<dt><code>getCells</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Given x and y coordinates of points, returns a
-  list of the cells at those points (as <code><a href='CppNode-class.html'>CppNode</a></code> objects). It is
-  the same as <code>getCell</code>, except that it allows users to get multiple
-  cells at once instead of one at a time.</p></li>
+<dt><code>getLcpFinder</code></dt><dd><p><ul>
+<li><p><strong>Description</strong>: Returns a <code><a href='CppLcpFinder-class.html'>CppLcpFinder</a></code> object
+  that can be used to find least-cost paths on the quadtree.
+  <code><a href='lcp_finder.html'>lcp_finder</a>()</code> is a wrapper for this function. For details on
+  the parameters see the documentation of the similarly named parameters in
+  <code><a href='lcp_finder.html'>lcp_finder</a>()</code>.</p></li>
 <li><p><strong>Parameters</strong>:</p><ul>
-<li><p><code>x</code>: numeric vector; the x coordinates</p></li>
-<li><p><code>y</code>: numeric vector; the y coordinates; must be the same
-    length as <code>x</code></p></li>
+<li><p><code>startPoint</code>: two-element numeric vector</p></li>
+<li><p><code>xlim</code>: two-element numeric vector</p></li>
+<li><p><code>ylim</code>: two-element numeric vector</p></li>
+<li><p><code>searchByCentroid</code> : boolean</p></li>
 </ul></li>
-<li><p><strong>Returns</strong>: a <code>list</code> of <code><a href='CppNode-class.html'>CppNode</a></code> objects
-  corresponding to the x and y coordinates passed to the function</p></li>
+<li><p><strong>Returns</strong>: a <code><a href='CppLcpFinder-class.html'>CppLcpFinder</a></code> object</p></li>
 </ul></p></dd>
 
-<dt><code>getNbList</code></dt><dd><p><ul>
+<dt><code>getNeighborList</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Returns the neighbor relationships between all
-  cells</p></li>
+  cells.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: <code>list</code> of matrices. Each matrix corresponds to
+<li><p><strong>Returns</strong>: a list of matrices. Each matrix corresponds to
   a single cell and has one line for each neighboring cell. "neighbor"
   includes diagonal adjacency. Each matrix has the following columns:</p><ul>
 <li><p><code>id0</code>, <code>x0</code>, <code>y0</code>, <code>val0</code>: the ID, x and y
@@ -313,10 +323,9 @@
     coordinates of the centroid, and cell value for each cell that neighbors
     the cell of interest (i.e. the cell represented by the columns suffixed
     with '0').</p></li>
-<li><p><code>isLowest</code>: 1 or 0 - whether or not the cell of interest (i.e.
-    the cell represented by the columns suffixed with '0') is a terminal
-    node, where 1 means it is a terminal node (no children) and 0 means it is
-    not a terminal node (has children).</p></li>
+<li><p><code>hasChildren</code>: 1 or 0 - whether or not the cell of interest (i.e.
+    the cell represented by the columns suffixed with '0') has children,
+    where 1 means it has children and 0 means it doesn't.</p></li>
 </ul></li>
 </ul></p></dd>
 
@@ -325,10 +334,9 @@
   the cells that neighbor the cell that the point falls in.
   <code><a href='get_neighbors.html'>get_neighbors</a>()</code> is a wrapper for this function.</p></li>
 <li><p><strong>Parameters</strong>:</p><ul>
-<li><p><code>pt</code>: numeric vector of length two giving the x and y
-    coordinates of a point</p></li>
+<li><p><code>pt</code>: two-element numeric vector (x,y)</p></li>
 </ul></li>
-<li><p><strong>Returns</strong>: a 6-column matrix with one row per neighboring
+<li><p><strong>Returns</strong>: a six-column matrix with one row per neighboring
   cell. It has the following columns:</p><ul>
 <li><p><code>id</code></p></li>
 <li><p><code>xmin</code></p></li>
@@ -337,21 +345,6 @@
 <li><p><code>ymax</code></p></li>
 <li><p><code>value</code></p></li>
 </ul></li>
-</ul></p></dd>
-
-<dt><code>getLcpFinder</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Returns a <code><a href='CppLcpFinder-class.html'>CppLcpFinder</a></code>
-  object that can be used to find least-cost paths on the quadtree.
-  <code><a href='lcp_finder.html'>lcp_finder</a>()</code> is a wrapper for this function. For details on
-  the parameters see the documentation of the similarly named parameters in
-  <code><a href='lcp_finder.html'>lcp_finder</a>()</code>.</p></li>
-<li><p><strong>Parameters</strong>:</p><ul>
-<li><p><code>startPoint</code>: two-element numeric vector</p></li>
-<li><p><code>xlims</code>: two-element numeric vector</p></li>
-<li><p><code>ylims</code>: two-element numeric vector</p></li>
-<li><p><code>searchByCentroid</code> : boolean</p></li>
-</ul></li>
-<li><p><strong>Returns</strong>: an <code><a href='CppLcpFinder-class.html'>CppLcpFinder</a></code> object</p></li>
 </ul></p></dd>
 
 <dt><code>getValues</code></dt><dd><p><ul>
@@ -373,12 +366,12 @@
   when constructing the quadtree (i.e. the value passed to the
   <code>max_cell_length</code> parameter of <code><a href='quadtree.html'>quadtree</a>()</code>). Note that
   this does <strong>not</strong> return the maximum cell size in the quadtree - it
-  returns the maximum <em>allowable</em> cell size. Note that if no value was
-  provided for <code>max_cell_length</code>, the max allowable cell length is set
-  to the length and width of the total extent.</p></li>
+  returns the maximum <em>allowable</em> cell size. Also note that if no value
+  was provided for <code>max_cell_length</code>, the max allowable cell length is
+  set to the length and width of the total extent.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
 <li><p><strong>Returns</strong>: A two-element numeric vector giving the maximum
-  allowable side length in the x and y dimensions.</p></li>
+  allowable side length for the x and y dimensions.</p></li>
 </ul></p></dd>
 
 <dt><code>minCellDims</code></dt><dd><p><ul>
@@ -386,12 +379,12 @@
   when constructing the quadtree (i.e. the value passed to the
   <code>min_cell_length</code> parameter of <code><a href='quadtree.html'>quadtree</a>()</code>). Note that
   this does <strong>not</strong> return the minimum cell size in the quadtree - it
-  returns the minimum <em>allowable</em> cell size. Note that if no value was
-  provided for <code>min_cell_length</code>, the min allowable cell length is set
-  to -1.</p></li>
+  returns the minimum <em>allowable</em> cell size. Also note that if no value
+  was provided for <code>min_cell_length</code>, the min allowable cell length is
+  set to -1.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
 <li><p><strong>Returns</strong>: A two-element numeric vector giving the minimum
-  allowable side length in the x and y dimensions.</p></li>
+  allowable side length for the x and y dimensions.</p></li>
 </ul></p></dd>
 
 <dt><code>nNodes</code></dt><dd><p><ul>
@@ -406,7 +399,7 @@
 <li><p><strong>Description</strong>: Returns the dimensions of the raster used to
   create the quadtree <em>before</em> its dimensions were adjusted.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: 2-element numeric vector that gives the number of
+<li><p><strong>Returns</strong>: two-element numeric vector that gives the number of
   cells along the x and y dimensions.</p></li>
 </ul></p></dd>
 
@@ -415,43 +408,44 @@
   the quadtree <em>before</em> its dimensions/extent were adjusted. This is
   equivalent to <code><a href='extent.html'>extent</a>(qt, original = TRUE)</code></p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: 4-element numeric vector, in this order: xMin,
-  xMax, yMin, yMax</p></li>
+<li><p><strong>Returns</strong>: four-element numeric vector, in this order: xmin,
+  xmax, ymin, ymax</p></li>
 </ul></p></dd>
 
 <dt><code>originalRes</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Returns the resolution of the raster used to
   create the quadtree <em>before</em> its dimensions/extent were adjusted.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: 2-element numeric vector</p></li>
+<li><p><strong>Returns</strong>: two-element numeric vector (x cell length, y cell
+  length)</p></li>
 </ul></p></dd>
 
 <dt><code>print</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Returns a string that represents the quadtree</p></li>
+<li><p><strong>Description</strong>: Returns a string that represents the quadtree.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
 <li><p><strong>Returns</strong>: a string</p></li>
 </ul></p></dd>
 
 <dt><code>projection</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Returns the proj4string of the quadtree</p></li>
+<li><p><strong>Description</strong>: Returns the proj4string of the quadtree.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
 <li><p><strong>Returns</strong>: a string</p></li>
 </ul></p></dd>
 
 <dt><code>root</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Returns the root node of the quadtree</p></li>
+<li><p><strong>Description</strong>: Returns the root node of the quadtree.</p></li>
 <li><p><strong>Parameters</strong>: none</p></li>
-<li><p><strong>Returns</strong>: a <code>CppNode</code> object</p></li>
+<li><p><strong>Returns</strong>: a <code><a href='CppNode-class.html'>CppNode</a></code> object</p></li>
 </ul></p></dd>
 
 <dt><code>setOriginalValues</code></dt><dd><p><ul>
 <li><p><strong>Description</strong>: Sets the properties that record the extent and
   dimensions of the original raster used to create the quadtree</p></li>
 <li><p><strong>Parameters</strong>:</p><ul>
-<li><p><code>xMin</code>: double</p></li>
-<li><p><code>xMax</code>: double</p></li>
-<li><p><code>yMin</code>: double</p></li>
-<li><p><code>yMax</code>: double</p></li>
+<li><p><code>xmin</code>: double</p></li>
+<li><p><code>xmax</code>: double</p></li>
+<li><p><code>ymin</code>: double</p></li>
+<li><p><code>ymax</code>: double</p></li>
 <li><p><code>nX</code>: integer - number of cells along the x dimension</p></li>
 <li><p><code>nY</code>: integer - number of cells along the y dimension</p></li>
 </ul></li>
@@ -459,8 +453,7 @@
 </ul></p></dd>
 
 <dt><code>setProjection</code></dt><dd><p><ul>
-<li><p><strong>Description</strong>: Sets the property that records the proj4string
-  of the quadtree</p></li>
+<li><p><strong>Description</strong>: Sets the the proj4string of the quadtree.</p></li>
 <li><p><strong>Parameters</strong>:</p><ul>
 <li><p><code>proj4string</code>: string</p></li>
 </ul></li>

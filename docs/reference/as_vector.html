@@ -130,7 +130,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get all <code><a href='Quadtree-class.html'>Quadtree</a></code> cell values as a vector</h1>
+    <h1>Get all <code>Quadtree</code> cell values as a vector</h1>
     <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/as_vector.R'><code>R/as_vector.R</code></a></small>
     <div class="hidden name"><code>as_vector.Rd</code></div>
     </div>
@@ -167,7 +167,9 @@ terminal cells are returned. If <code>FALSE</code>, all cell values are returned
   about each cell's size and extent.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dfriend21/quadtree/'>quadtree</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
+
 <span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, <span class='fl'>.2</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/raster/man/headtail.html'>head</a></span><span class='op'>(</span><span class='fu'>as_vector</span><span class='op'>(</span><span class='va'>qt</span><span class='op'>)</span>, <span class='fl'>20</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1]   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN

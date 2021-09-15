@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Show a summary of all LCPs found by a LcpFinder — summarize_lcps • quadtree</title>
+<title>Get a matrix summarizing all LCPs found by a LcpFinder — summarize_lcps • quadtree</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Show a summary of all LCPs found by a LcpFinder — summarize_lcps" />
-<meta property="og:description" content="Given a LcpFinder object, returns a matrix that
-  summarizes all of the LCPs that have already been calculated by the
+<meta property="og:title" content="Get a matrix summarizing all LCPs found by a LcpFinder — summarize_lcps" />
+<meta property="og:description" content="Given a LcpFinder, returns a matrix that
+  summarizes all of the LCPs that have been calculated by the
   LcpFinder." />
 
 
@@ -131,14 +131,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Show a summary of all LCPs found by a <code><a href='LcpFinder-class.html'>LcpFinder</a></code></h1>
+    <h1>Get a matrix summarizing all LCPs found by a <code>LcpFinder</code></h1>
     <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/lcp.R'><code>R/lcp.R</code></a></small>
     <div class="hidden name"><code>summarize_lcps.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Given a <code><a href='LcpFinder-class.html'>LcpFinder</a></code> object, returns a matrix that
-  summarizes all of the LCPs that have already been calculated by the
+    <p>Given a <code><a href='LcpFinder-class.html'>LcpFinder</a></code>, returns a matrix that
+  summarizes all of the LCPs that have been calculated by the
   <code><a href='LcpFinder-class.html'>LcpFinder</a></code>.</p>
     </div>
 
@@ -156,7 +156,7 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a 9-column matrix with one row for each LCP (and therefore
+    <p>Returns a nine-column matrix with one row for each LCP (and therefore
   one row per destination cell). The columns are as follows:</p><ul>
 <li><p><code>id</code>: the ID of the destination cell</p></li>
 <li><p><code>xmin, xmax, ymin, ymax</code>: the extent of the destination
@@ -185,9 +185,8 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dfriend21/quadtree/'>quadtree</a></span><span class='op'>)</span>
-
-<span class='co'># create a quadtree</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
+
 <span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, adj_type <span class='op'>=</span> <span class='st'>"expand"</span><span class='op'>)</span>
 
 <span class='va'>start_pt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>19000</span>, <span class='fl'>25000</span><span class='op'>)</span>
@@ -199,13 +198,14 @@
 
 <span class='co'># retrieve ALL the paths that have been calculated</span>
 <span class='va'>paths</span> <span class='op'>&lt;-</span> <span class='fu'>summarize_lcps</span><span class='op'>(</span><span class='va'>lcpf</span><span class='op'>)</span>
-
-<span class='co'># plot - put points in each of the cells to which an LCP has been calculated</span>
-<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt</span>, crop <span class='op'>=</span> <span class='cn'>TRUE</span>, na_col <span class='op'>=</span> <span class='cn'>NULL</span>, border_col <span class='op'>=</span> <span class='st'>"gray60"</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='op'>(</span><span class='va'>paths</span><span class='op'>$</span><span class='va'>xmin</span> <span class='op'>+</span> <span class='va'>paths</span><span class='op'>$</span><span class='va'>xmax</span><span class='op'>)</span> <span class='op'>/</span> <span class='fl'>2</span>, <span class='op'>(</span><span class='va'>paths</span><span class='op'>$</span><span class='va'>ymin</span> <span class='op'>+</span> <span class='va'>paths</span><span class='op'>$</span><span class='va'>ymax</span><span class='op'>)</span> <span class='op'>/</span> <span class='fl'>2</span>,
-   pch <span class='op'>=</span> <span class='fl'>16</span>, col <span class='op'>=</span> <span class='st'>"black"</span>, cex <span class='op'>=</span> <span class='fl'>.4</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>start_pt</span>, <span class='va'>end_pt</span><span class='op'>)</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"red"</span>, <span class='st'>"blue"</span><span class='op'>)</span>, pch <span class='op'>=</span> <span class='fl'>16</span><span class='op'>)</span>
-</div><div class='img'><img src='summarize_lcps-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='fu'><a href='https://rdrr.io/pkg/raster/man/headtail.html'>head</a></span><span class='op'>(</span><span class='va'>paths</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;     id  xmin  xmax  ymin  ymax value  area lcp_cost lcp_dist
+#&gt; 1 6352 14500 14750 15750 16000 0.966 62500 8481.750 13471.78
+#&gt; 2 6353 14750 15000 15750 16000 0.863 62500 8468.178 13471.78
+#&gt; 3 3986  3750  4000 18500 18750 0.780 62500 8223.767 18223.11
+#&gt; 4 3984  3750  4000 18750 19000 0.557 62500 8108.320 17889.65
+#&gt; 5 3978  3750  4000 19000 19250 0.582 62500 8025.839 17734.64
+#&gt; 6 3976  3750  4000 19250 19500 0.626 62500 7980.157 17643.15</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Add a gradient legend to a plot — add_legend" />
-<meta property="og:description" content="Adds a gradient legend to a plot" />
+<meta property="og:description" content="Adds a gradient legend to a plot." />
 
 
 
@@ -135,7 +135,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Adds a gradient legend to a plot</p>
+    <p>Adds a gradient legend to a plot.</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_legend</span><span class='op'>(</span>
@@ -181,7 +181,7 @@ legend. If <code>NULL</code> (the default), no box is drawn</p></td>
       <th>lgd_x_pct</th>
       <td><p>numeric; location of the center of the legend in the
 x-dimension, as a fraction (0 to 1) of the <em>right margin area</em>,
-<strong>not</strong> the entire width</p></td>
+<strong>not</strong> the entire width of the figure</p></td>
     </tr>
     <tr>
       <th>lgd_y_pct</th>
@@ -226,7 +226,7 @@ height)</p></td>
       <th>ticks_n</th>
       <td><p>integer; the number of ticks desired - only used if
 <code>ticks</code> is <code>NULL</code>. Note that this is an <em>approximate</em> number
-- the <code><a href='https://rdrr.io/r/base/pretty.html'>pretty()</a></code> function from <code>grDevices</code> is used to generate
+- the <code><a href='https://rdrr.io/r/base/pretty.html'>pretty()</a></code> function is used to generate
 "nice-looking" values, but it doesn't guarantee a set number of tick marks</p></td>
     </tr>
     <tr>
@@ -244,29 +244,28 @@ end exactly at the right border of the legend area</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>I took an HTML/CSS-like approach to determining the positioning -
-  that is, each space is treated as &lt;div&gt;-like space, and the position of
-  objects within that space happens <em>relative to that space</em> rather then
-  the entire space. The parameters prefixed by <code>lgd</code> are all relative to
-  the right margin space and correspond to the box that contains the entire
-  legend. The parameters prefixed <code>bar</code> and <code>ticks</code> are relative to
-  the space within the legend box.</p>
-<p>I obviously wrote this for plotting the quadtree, but there's nothing
-  quadtree-specific about this particular function.</p>
-<p>This function is used within <code><a href='plot.html'>plot</a>()</code>, so the user shouldn't
-  call this function to manually create the legend. Customizations to the
-  legend can be done via the <code>legend_args</code> parameter of
-  <code><a href='plot.html'>plot</a>()</code>. Using this function to plot the legend after using
-  <code><a href='plot.html'>plot</a>()</code> raises the possibility of the legend not corresponding
-  correctly with the plot, and thus should be avoided.</p>
+  that is, each space is treated as <code>&lt;div&gt;</code>-like space, and the position
+  of objects within that space happens <em>relative to that space</em> rather
+  than the entire space. The parameters prefixed by <code>lgd</code> are all
+  relative to the right margin space and correspond to the box that contains
+  the entire legend. The parameters prefixed by <code>bar</code> and <code>ticks</code>
+  are relative to the space within the legend box.</p>
+<p>This function is used within <code><a href='plot.html'>plot</a>()</code>, so the
+  user shouldn't call this function to manually create the legend.
+  Customizations to the legend can be done via the <code>legend_args</code>
+  parameter of <code><a href='plot.html'>plot</a>()</code>. Using this function to
+  plot the legend after using <code><a href='plot.html'>plot</a>()</code> raises the
+  possibility of the legend not corresponding correctly with the plot, and
+  thus should be avoided.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>23</span><span class='op'>)</span>
-<span class='va'>mat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>64</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>, nrow <span class='op'>=</span> <span class='fl'>8</span><span class='op'>)</span>
-<span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>mat</span>, <span class='fl'>.75</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dfriend21/quadtree/'>quadtree</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
+<span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, <span class='fl'>.2</span><span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>qt</span>, legend <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'>add_legend</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>mat</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/rev.html'>rev</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>terrain.colors</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'>add_legend</span><span class='op'>(</span><span class='fu'>raster</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/cellStats.html'>cellStats</a></span><span class='op'>(</span><span class='va'>habitat</span>, <span class='st'>"range"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/rev.html'>rev</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>terrain.colors</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='add_legend-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># this example simply illustrates how it COULD be used, but as stated in the</span>
 <span class='co'># 'Details' section, it shouldn't be called separately from 'plot()' - if</span>
 <span class='co'># customizations to the legend are desired, use the 'legend_args' parameter</span>

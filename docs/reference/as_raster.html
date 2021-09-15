@@ -130,7 +130,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a raster from a <code><a href='Quadtree-class.html'>Quadtree</a></code></h1>
+    <h1>Create a raster from a <code>Quadtree</code></h1>
     <small class="dont-index">Source: <a href='https://github.com/dfriend21/quadtree/blob/master/R/as_raster.R'><code>R/as_raster.R</code></a></small>
     <div class="hidden name"><code>as_raster.Rd</code></div>
     </div>
@@ -152,18 +152,18 @@
     </tr>
     <tr>
       <th>rast</th>
-      <td><p>a <code><a href='https://rdrr.io/pkg/raster/man/Raster-classes.html'>RasterLayer</a></code> object; optional; this will be used as a
-template - the output raster will have the same extent and dimensions as
-this raster. If <code>NULL</code> (the default), a raster is automatically
-created, where the quadtree extent is used as the raster extent, and the
-smallest cell in the quadtree is used to determine the resolution of the
-raster.</p></td>
+      <td><p>a <code><a href='https://rdrr.io/pkg/raster/man/Raster-classes.html'>RasterLayer</a></code>; optional;
+this will be used as a template - the output raster will have the same
+extent and dimensions as this raster. If <code>NULL</code> (the default), a
+raster is automatically created, where the quadtree extent is used as the
+raster extent, and the size of smallest cell in the quadtree is used as
+the resolution of the raster.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code><a href='https://rdrr.io/pkg/raster/man/Raster-classes.html'>RasterLayer</a></code> object</p>
+    <p>a <code><a href='https://rdrr.io/pkg/raster/man/Raster-classes.html'>RasterLayer</a></code></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Note that the value of a raster cell is determined by the value of the
@@ -180,7 +180,8 @@ the issue.</p>
 </div><div class='output co'>#&gt; <span class='message'>Loading required package: sp</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘raster’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:quadtree’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    projection, projection&lt;-</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
+#&gt; <span class='message'>    projection, projection&lt;-</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dfriend21/quadtree/'>quadtree</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>habitat</span><span class='op'>)</span>
 
 <span class='co'># create a quadtree</span>
 <span class='va'>qt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='quadtree.html'>quadtree</a></span><span class='op'>(</span><span class='va'>habitat</span>, split_threshold <span class='op'>=</span> <span class='fl'>.1</span>, split_method <span class='op'>=</span> <span class='st'>"sd"</span><span class='op'>)</span>
