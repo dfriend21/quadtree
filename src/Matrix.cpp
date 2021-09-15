@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <cassert>
+//#include <cassert>
 #include <string>
 #include <cmath>
 #include <algorithm>
@@ -22,8 +22,8 @@ Matrix::Matrix(double val, int _nrow, int _ncol) : nrow{_nrow}, ncol{_ncol}
 Matrix::Matrix(std::vector<double> _vec, int _nrow, int _ncol) 
     : nrow{_nrow}, ncol{_ncol}, vec(_vec)  
 {
-    assert(_nrow >= 0 && _ncol >= 0);
-    assert(vec.size() == (size_t)(nrow*ncol));
+    //assert(_nrow >= 0 && _ncol >= 0);
+    //assert(vec.size() == (size_t)(nrow*ncol));
 }
 
 //-------------------------
@@ -31,7 +31,7 @@ Matrix::Matrix(std::vector<double> _vec, int _nrow, int _ncol)
 //-------------------------
 // given a row and a column, get the index of that element in 'vec'
 int Matrix::getIndex(const int row, const int col) const{
-    assert(row >= 0 || row < nRow() || col >= 0 || col < nCol());//check to make sure the indices are valid
+    //assert(row >= 0 || row < nRow() || col >= 0 || col < nCol());//check to make sure the indices are valid
     int index = row*nCol() + col; 
     return index;
 }
@@ -165,7 +165,7 @@ Matrix Matrix::getCofactorsMatrix() const{
 //https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html
 Matrix Matrix::getInverse() const {
     double det = determinant();
-    assert(det != 0);
+    // assert(det != 0);
 
     //definitely not memory efficient
     Matrix minors = getMinorsMatrix();
@@ -249,7 +249,7 @@ double Matrix::max() const{
 }
 
 double Matrix::determinant() const{
-    assert(nRow() == nCol());
+    //assert(nRow() == nCol());
 
     if(nRow() == 2){
         return getValue(0,0)*getValue(1,1) - getValue(0,1)*getValue(1,0);
@@ -311,7 +311,7 @@ std::string Matrix::toString() const{
 // arithmetic operations
 //-------------------------
 Matrix operator+(const Matrix &lhs, const Matrix &rhs){
-    assert(lhs.nRow() == rhs.nRow() && lhs.nCol() == rhs.nCol());
+    //assert(lhs.nRow() == rhs.nRow() && lhs.nCol() == rhs.nCol());
     std::vector<double> sum(lhs.asVector().size());
     for(std::size_t i = 0; i<lhs.asVector().size(); i++){
         sum[i] = lhs.getValueByIndex(i) + rhs.getValueByIndex(i);
@@ -344,7 +344,7 @@ Matrix operator+(const double scalar, const Matrix &mat){
 }
 
 Matrix operator*(const Matrix &lhs, const Matrix &rhs){
-    assert(lhs.nCol() == rhs.nRow());
+    //assert(lhs.nCol() == rhs.nRow());
     int nRowNew = lhs.nRow();
     int nColNew = rhs.nCol();
     std::vector<double> prod(nRowNew * nColNew);
@@ -399,7 +399,7 @@ std::ostream& operator<< (std::ostream &out, const Matrix mat){
 // combine matrices
 //-------------------------
 Matrix rbind(const Matrix &mat1, const Matrix &mat2){
-    assert(mat1.nCol() == mat2.nCol());
+    //assert(mat1.nCol() == mat2.nCol());
     
     std::vector<double> newMatVec(mat1.size() + mat2.size());
     Matrix newMat(newMatVec, mat1.nRow()+mat2.nRow(), mat1.nCol());
@@ -416,7 +416,7 @@ Matrix rbind(const Matrix &mat1, const Matrix &mat2){
 }
 
 Matrix cbind(const Matrix &mat1, const Matrix &mat2){
-    assert(mat1.nRow() == mat2.nRow());
+    //assert(mat1.nRow() == mat2.nRow());
     
     std::vector<double> newMatVec(mat1.size() + mat2.size());
     Matrix newMat(newMatVec, mat1.nRow(), mat1.nCol()+mat2.nCol());

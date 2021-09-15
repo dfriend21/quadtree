@@ -4,7 +4,6 @@
 #include <fstream>
 #include <vector>
 #include <memory>
-#include <cassert>
 #include <cmath>
 #include <string>
 #include <algorithm>
@@ -334,7 +333,6 @@ std::shared_ptr<Node> Quadtree::getNode(double x, double y) const{
 //-------------------------
 // getValue
 //-------------------------
-//THOUGHT: Use getNode, and then just return the value? Then I don't have two nearly identical functions.
 //recursively finds the value at a given (x,y) location. Checks if this point falls
 //within it's boundaries - if it does, and it doesn't have children, returns the
 //value of this node. If it does have children, it calls the function on the 
@@ -428,7 +426,6 @@ void Quadtree::transformValues(std::function<double (const double)> &transformFu
 // copyNode
 //-------------------------
 // --DESCRIPTION: creates a deep copy of a node
-// I feel like this is probably out of place here... should this be a member function of 'Node' instead?
 int Quadtree::copyNode(std::shared_ptr<Node> nodeCopy, const std::shared_ptr<Node> nodeOrig) const{
     nodeCopy->xMin = nodeOrig->xMin;
     nodeCopy->xMax = nodeOrig->xMax;
@@ -474,7 +471,7 @@ std::shared_ptr<Quadtree> Quadtree::copy() const{
 std::vector<double> Quadtree::toVector(bool terminalOnly) const{
     int vecLength{nNodes};
     if(terminalOnly){
-        vecLength = (floor((double) nNodes / (double) 4) * 3) + 1;
+        vecLength = (floor((double) nNodes / 4.0) * 3) + 1;
     }
     std::vector<double> vals(vecLength);
     toVector(root, vals, 0, terminalOnly);

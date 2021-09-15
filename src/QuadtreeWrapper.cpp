@@ -8,7 +8,7 @@
 #include "LcpFinderWrapper.h"
 
 #include <Rcpp.h>
-#include <cassert>
+//#include <cassert>
 #include <algorithm>
 #include <string>
 #include <functional>
@@ -138,8 +138,7 @@ void QuadtreeWrapper::createTree(Rcpp::NumericMatrix &mat, std::string splitMeth
 }
 
 std::vector<double> QuadtreeWrapper::getValues(const std::vector<double> &x, const std::vector<double> &y) const{
-  assert(x.size() == y.size());
-  
+  //assert(x.size() == y.size());
   std::vector<double> vals(x.size());
   for(size_t i = 0; i < x.size(); ++i){
     vals[i] = quadtree->getValue(x[i], y[i]);
@@ -164,10 +163,8 @@ Rcpp::NumericMatrix QuadtreeWrapper::getNeighbors(Rcpp::NumericVector pt) const{
   return mat;
 }
 
-//I should maybe switch this to accept NumericVectors for consistency...
 void QuadtreeWrapper::setValues(const std::vector<double> &x, const std::vector<double> &y, const std::vector<double> &newVals){
-  assert(x.size() == y.size() && y.size() == newVals.size());
-  
+  //assert(x.size() == y.size() && y.size() == newVals.size());
   for(size_t i = 0; i < x.size(); ++i){
     quadtree->setValue(x[i], y[i], newVals[i]);
   }
@@ -180,14 +177,12 @@ void QuadtreeWrapper::transformValues(Rcpp::Function transformFun){
   quadtree->transformValues(transform);
 }
 
-
-//NodeWrapper QuadtreeWrapper::getCell(double x, double y) const{
 NodeWrapper QuadtreeWrapper::getCell(Rcpp::NumericVector pt) const{
   return NodeWrapper(quadtree->getNode(pt[0], pt[1]));
 }
 
 Rcpp::List QuadtreeWrapper::getCells(Rcpp::NumericVector x, Rcpp::NumericVector y) const{
-  assert(x.length() == y.length());
+  //assert(x.length() == y.length());
   Rcpp::List list = Rcpp::List(x.length());
   for(int i = 0; i < x.length(); ++i){
     list[i] = NodeWrapper(quadtree->getNode(x[i], y[i]));
@@ -196,7 +191,7 @@ Rcpp::List QuadtreeWrapper::getCells(Rcpp::NumericVector x, Rcpp::NumericVector 
 }
 
 Rcpp::NumericMatrix QuadtreeWrapper::getCellsDetails(Rcpp::NumericVector x, Rcpp::NumericVector y) const{
-  assert(x.length() == y.length());
+  //assert(x.length() == y.length());
   Rcpp::NumericMatrix mat(x.length(),6);
   colnames(mat) = Rcpp::CharacterVector({"id","xmin","xmax","ymin","ymax","value"}); //name the columns
   for(int i = 0; i < x.length(); ++i){

@@ -3,7 +3,6 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include <cassert>
 #include <limits>
 #include <cmath>
 #include <cereal/archives/portable_binary.hpp>
