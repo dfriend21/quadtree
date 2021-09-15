@@ -2,9 +2,9 @@
 #'
 #' @name quadtree
 #' @aliases quadtree,ANY-method
-#' @title Create a \code{\link{Quadtree}} from a raster or matrix
-#' @description Create a \code{\link{Quadtree}} from a
-#' \code{\link[raster:RasterLayer-class]{RasterLayer}} or a matrix
+#' @title Create a \code{Quadtree} from a raster or matrix
+#' @description Creates a \code{\link{Quadtree}} from a
+#' \code{\link[raster:RasterLayer-class]{RasterLayer}} or a matrix.
 #' @param x a \code{\link[raster:RasterLayer-class]{RasterLayer}} or a
 #'   \code{matrix}. If \code{x} is a \code{matrix}, the \code{extent} and
 #'   \code{proj4string} parameters can be used to set the extent and projection
@@ -14,8 +14,8 @@
 #' @param split_threshold numeric; the threshold value used by the split method
 #'   (specified by \code{split_method}) to decide whether to split a quadrant.
 #'   If the value for a quadrant is greater than this value, it is split into
-#'   its four child cells. If \code{split_method} is "custom", this parameter is
-#'   ignored.
+#'   its four child cells. If \code{split_method} is \code{"custom"}, this
+#'   parameter is ignored.
 #' @param split_method character; one of \code{"range"} (the default),
 #'   \code{"sd"} (standard deviation), or \code{"custom"}. Determines the method
 #'   used for calculating the value used to determine whether or not to split a
@@ -23,7 +23,7 @@
 #'   decide whether to split a cell). If \code{"custom"}, a function must be
 #'   supplied to \code{split_fun}. See 'Details' for more.
 #' @param split_fun function; function used on each quadrant to decide whether
-#'   or not to split the cell. Only used when \code{split_method} is
+#'   or not to split the quadrant. Only used when \code{split_method} is
 #'   \code{"custom"}. Must take two arguments, \code{vals} (a numeric vector of
 #'   the cell values in a quadrant) and \code{args} (a named list of arguments
 #'   used within the function), and must output \code{TRUE} if the quadrant is
@@ -31,9 +31,9 @@
 #'   values - if \code{NA} is ever returned, an error will occur.
 #' @param split_args list; named list that contains the arguments needed by
 #'   \code{split_fun}. This list is given to the \code{args} parameter of
-#'   \code{split_fun}
+#'   \code{split_fun}.
 #' @param split_if_any_na boolean; if \code{TRUE} (the default), a quadrant is
-#'   automatically split if any of the values within the quadrant are NA
+#'   automatically split if any of the values within the quadrant are \code{NA}.
 #' @param split_if_all_na boolean; if \code{FALSE} (the default), a quadrant
 #'   that contains only \code{NA} values is not split. If \code{TRUE}, quadrants
 #'   that contain all \code{NA} values are split to the smallest possible cell
@@ -44,14 +44,14 @@
 #'   larger, aggregated cell. Default is \code{"mean"}. If \code{"custom"}, a 
 #'   function must be supplied to \code{combine_fun}.
 #' @param combine_fun function; function used to calculate the value of a
-#'   quadrant that consists of multiple cells. Only used when
-#'   \code{combine_method} is \code{"custom"}. Must take two arguments,
-#'   \code{vals} (a numeric vector of the cell values in a quadrant) and
-#'   \code{args} (a named list of arguments used within the function), and must
-#'   output a single numeric value, which will be used as the cell value.
+#'   quadrant. Only used when \code{combine_method} is \code{"custom"}. Must
+#'   take two arguments, \code{vals} (a numeric vector of the cell values in a
+#'   quadrant) and \code{args} (a named list of arguments used within the
+#'   function), and must output a single numeric value, which will be used as
+#'   the cell value.
 #' @param combine_args list; named list that contains the arguments needed by
 #'   \code{combine_fun}. This list is given to the \code{args} parameter of
-#'   \code{combine_fun}
+#'   \code{combine_fun}.
 #' @param max_cell_length numeric; the maximum side length allowed for a
 #'   quadtree cell. Any quadrants larger than \code{max_cell_length} will
 #'   automatically be split. If \code{NULL} (the default) no restrictions are
@@ -66,7 +66,7 @@
 #'   square and with the number of cells in each direction being a power of 2).
 #'   See 'Details' for more on the two methods of adjustment.
 #' @param resample_n_side integer; if \code{adj_type} is \code{'resample'}, this
-#'   number is used to determine the dimensions to resample the raster to
+#'   number is used to determine the dimensions to resample the raster to.
 #' @param resample_pad_nas boolean; only applicable if \code{adj_type} is
 #'   \code{'resample'}. If \code{TRUE} (the default), \code{NA}s are added to
 #'   the shorter side of the raster to make it square before resampling. This
@@ -84,7 +84,7 @@
 #'   \code{x} is a raster since the proj4string of the raster is automatically
 #'   used. If no value is provided and \code{x} is a matrix, the proj4string of
 #'   the quadtree is set to \code{NA}.
-#' @param template_quadtree \code{\link{Quadtree}} object; if provided, the new
+#' @param template_quadtree \code{\link{Quadtree}}; if provided, the new
 #'   quadtree will be created so that it has the exact same structure as the
 #'   template quadtree. Thus, no split function is used because the decision
 #'   about whether to split is pre-determined by the template quadtree. The
@@ -100,7 +100,7 @@
 #'
 #'   If \code{adj_type} is \code{"expand"}, \code{NA} cells are added to the
 #'   raster in order to create an expanded raster whose dimensions are a power
-#'   of 2. The smallest number that is a power of two but greater than the
+#'   of two. The smallest number that is a power of two but greater than the
 #'   larger dimension is used as the dimensions of the expanded raster. If
 #'   \code{adj_type} is \code{"resample"}, the raster is resampled to a raster
 #'   with \code{resample_n_side} rows and columns. If \code{resample_pad_nas} is
@@ -115,7 +115,7 @@
 #'   \code{split_method} is \code{"sd"}, the standard deviation of the cell
 #'   values in a quadrant is calculated - if this value is greater than
 #'   \code{split_threshold}, the quadrant is split.
-#' @return a \code{\link{Quadtree}} object
+#' @return a \code{\link{Quadtree}}
 #' @examples
 #' ####### NOTE #######
 #' # see the "quadtree-creation" vignette for more details and examples of all
@@ -124,8 +124,6 @@
 #' ####################
 #'
 #' library(quadtree)
-#'
-#' # retrieve the sample data
 #' data(habitat)
 #'
 #' qt <- quadtree(habitat, .15)
@@ -137,7 +135,7 @@
 #' qt <- quadtree(habitat, .05, "sd")
 #' plot(qt)
 #'
-#' #---- using a custom split function ----
+#' # ---- using a custom split function ----
 #'
 #' # split a cell if any of the values are below a given value
 #' split_fun = function(vals, args) {

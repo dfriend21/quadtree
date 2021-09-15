@@ -5,7 +5,7 @@
 \alias{summary,Quadtree-method}
 \alias{show.Quadtree}
 \alias{show,Quadtree-method}
-\title{Show a summary of a \code{\link{Quadtree}}}
+\title{Show a summary of a \code{Quadtree}}
 \usage{
 \S4method{summary}{Quadtree}(object)
 

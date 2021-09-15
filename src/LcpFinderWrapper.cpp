@@ -5,9 +5,9 @@ LcpFinderWrapper::LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::Num
   spf = LcpFinder(quadtree,Point(startPoint[0], startPoint[1]));
 }
 
-LcpFinderWrapper::LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid)
+LcpFinderWrapper::LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlim, Rcpp::NumericVector ylim, bool searchByCentroid)
   : startPoint {_startPoint}{
-  spf = LcpFinder(quadtree,Point(startPoint[0], startPoint[1]), xlims[0], xlims[1], ylims[0], ylims[1], searchByCentroid);
+  spf = LcpFinder(quadtree,Point(startPoint[0], startPoint[1]), xlim[0], xlim[1], ylim[0], ylim[1], searchByCentroid);
 }
 
 void LcpFinderWrapper::makeNetworkAll(){
@@ -67,6 +67,7 @@ Rcpp::NumericVector LcpFinderWrapper::getStartPoint(){
   Rcpp::NumericVector vec(2);
   vec[0] = startPoint[0];
   vec[1] = startPoint[1];
+  vec.names() = Rcpp::CharacterVector({"x","y"});
   return vec;
 }
 
@@ -76,5 +77,6 @@ Rcpp::NumericVector LcpFinderWrapper::getSearchLimits(){
   vec[1] = spf.xMax;
   vec[2] = spf.yMin;
   vec[3] = spf.yMax;
+  vec.names() = Rcpp::CharacterVector({"xmin","xmax","ymin","ymax"});
   return vec;
 }

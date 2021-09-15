@@ -7,9 +7,9 @@
 \alias{Rcpp_CppNode-class}
 \title{\code{CppNode}: C++ quadtree node}
 \description{
-The \code{CppNode} class defines objects that represent a single
-  node of a quadtree. This is used internally - end users should have no need
-  to use any of the methods listed here.
+The \code{CppNode} C++ class defines objects that represent a
+  single node of a quadtree. This is used internally - end users should have
+  no need to use any of the methods listed here.
 }
 \details{
 This class is defined in 'src/NodeWrapper.h' and
@@ -29,13 +29,13 @@ This class is defined in 'src/NodeWrapper.h' and
   \item \strong{Returns}: a numeric vector with the following named elements:
   \itemize{
     \item{\code{id}}
-    \item{\code{hasChdn}}
+    \item{\code{hasChidren}}
     \item{\code{level}}
-    \item{\code{xMin}}
-    \item{\code{xMax}}
-    \item{\code{yMin}}
-    \item{\code{yMax}}
-    \item{\code{smSide}}
+    \item{\code{xmin}}
+    \item{\code{xmax}}
+    \item{\code{ymin}}
+    \item{\code{ymax}}
+    \item{\code{smallestChildLength}}
   }
   \code{\link{as_data_frame}} makes use of this function to output info on
   each node - see the documentation of that function for details on what each
@@ -43,9 +43,9 @@ This class is defined in 'src/NodeWrapper.h' and
 }}
 
 \item{\code{getChildren}}{\itemize{
-  \item \strong{Description}: Returns a \code{list} of the child nodes
+  \item \strong{Description}: Returns a list of the child nodes
   \item \strong{Parameters}: none
-  \item \strong{Returns}: a \code{list} of \code{CppNode} objects
+  \item \strong{Returns}: a list of \code{CppNode} objects
 }}
 
 \item{\code{getNeighborIds}}{\itemize{
@@ -58,9 +58,9 @@ This class is defined in 'src/NodeWrapper.h' and
   \item \strong{Description}: Returns a matrix with info on each of the
   neighboring cells
   \item \strong{Parameters}: none
-  \item \strong{Returns}: a matrix. The \code{getNbList()} member function
-  of \code{\link{CppQuadtree}} makes use of this function - see documentation
-  of that function for details on the return matrix.
+  \item \strong{Returns}: a matrix. The \code{getNeighborList()} member
+  function of \code{\link{CppQuadtree}} makes use of this function - see
+  documentation of that function for details on the return matrix.
 }}
 
 \item{\code{getNeighborVals}}{\itemize{
@@ -70,9 +70,9 @@ This class is defined in 'src/NodeWrapper.h' and
 }}
 
 \item{\code{getNeighbors}}{\itemize{
-  \item \strong{Description}: Returns a \code{list} of the neighboring nodes
+  \item \strong{Description}: Returns a list of the neighboring nodes
   \item \strong{Parameters}: none
-  \item \strong{Returns}: a \code{list} of \code{CppNode} objects
+  \item \strong{Returns}: a list of \code{CppNode} objects
 }}
 
 \item{\code{hasChildren}}{\itemize{
@@ -112,13 +112,13 @@ This class is defined in 'src/NodeWrapper.h' and
 \item{\code{xLims}}{\itemize{
   \item \strong{Description}: Returns the x boundaries of the node
   \item \strong{Parameters}: none
-  \item \strong{Returns}: 2-element numeric vector (xMin, xMax)
+  \item \strong{Returns}: two-element numeric vector (xmin, xmax)
 }}
 
 \item{\code{yLims}}{\itemize{
   \item \strong{Description}: Returns the y boundaries of the node
   \item \strong{Parameters}: none
-  \item \strong{Returns}: 2-element numeric vector (yMin, yMax)
+  \item \strong{Returns}: two-element numeric vector (ymin, ymax)
 }}
 }}
 

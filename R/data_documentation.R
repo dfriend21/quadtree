@@ -19,7 +19,7 @@
 #' These rasters are included for two reasons. First, they provide the datasets
 #' that are used for the code examples in the help files and the vignettes.
 #' Second, they provide easy-to-access datasets for users to experiment with
-#' when learning how to use the 'quadtree' package.
+#' when learning how to use the \code{quadtree} package.
 #' @examples
 #' library(quadtree)
 #' data(habitat)

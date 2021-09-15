@@ -2,13 +2,13 @@
 
 #' @name transform_values
 #' @aliases transform_values,Quadtree,function-method
-#' @title Transform the values of all \code{\link{Quadtree}} cells
+#' @title Transform the values of all \code{Quadtree} cells
 #' @description Uses a function to change all cell values of a
-#'   \code{\link{Quadtree}}
+#'   \code{\link{Quadtree}}.
 #' @param x A \code{\link{Quadtree}}
 #' @param y function; function used on each cell to transform the
 #'   value. Must accept a single numeric value and return a single numeric
-#'   value. The function must also be able to handle NA values.
+#'   value. The function must also be able to handle \code{NA} values.
 #' @details
 #' This function applies a function to every single cell, which allows the user
 #' to do things like multiply by a scalar, invert the values, etc.
@@ -26,8 +26,9 @@
 #' @return
 #' no return value
 #' @seealso \code{\link{set_values}()} can be used to set the values of cells
-#' to specified values (rather than transforming the existing values)
+#' to specified values (rather than transforming the existing values).
 #' @examples
+#' library(quadtree)
 #' data(habitat)
 #'
 #' # create a quadtree

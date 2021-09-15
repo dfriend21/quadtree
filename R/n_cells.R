@@ -2,7 +2,7 @@
 
 #' @name n_cells
 #' @aliases n_cells,Quadtree-method
-#' @title Get the number of cells in a \code{\link{Quadtree}}
+#' @title Get the number of cells in a \code{Quadtree}
 #' @description Returns the number of nodes/cells in the quadtree.
 #' @param x a \code{\link{Quadtree}}
 #' @param terminal_only boolean; if \code{TRUE} (the default) only the terminal

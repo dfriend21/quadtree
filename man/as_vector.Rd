@@ -3,7 +3,7 @@
 \name{as_vector}
 \alias{as_vector}
 \alias{as_vector,Quadtree-method}
-\title{Get all \code{\link{Quadtree}} cell values as a vector}
+\title{Get all \code{Quadtree} cell values as a vector}
 \usage{
 \S4method{as_vector}{Quadtree}(x, terminal_only = TRUE)
 }
@@ -21,7 +21,9 @@ Returns all cell values  of a \code{\link{Quadtree}} as a
   numeric vector.
 }
 \examples{
+library(quadtree)
 data(habitat)
+
 qt <- quadtree(habitat, .2)
 head(as_vector(qt), 20)
 head(as_vector(qt, FALSE), 20)

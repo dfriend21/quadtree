@@ -2,7 +2,7 @@
 
 #' @name summary.LcpFinder
 #' @aliases summary,LcpFinder-method show.LcpFinder show,LcpFinder-method
-#' @title Show a summary of a \code{\link{LcpFinder}}
+#' @title Show a summary of a \code{LcpFinder}
 #' @param object a \code{\link{LcpFinder}}
 #' @description Prints out information about the \code{\link{LcpFinder}}.
 #'   Information shown is:

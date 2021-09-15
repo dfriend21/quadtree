@@ -3,7 +3,7 @@
 \name{summarize_lcps}
 \alias{summarize_lcps}
 \alias{summarize_lcps,LcpFinder-method}
-\title{Show a summary of all LCPs found by a \code{\link{LcpFinder}}}
+\title{Get a matrix summarizing all LCPs found by a \code{LcpFinder}}
 \usage{
 \S4method{summarize_lcps}{LcpFinder}(x)
 }
@@ -11,7 +11,7 @@
 \item{x}{a \code{\link{LcpFinder}}}
 }
 \value{
-Returns a 9-column matrix with one row for each LCP (and therefore
+Returns a nine-column matrix with one row for each LCP (and therefore
   one row per destination cell). The columns are as follows:
   \itemize{
      \item{\code{id}: }{the ID of the destination cell}
@@ -25,8 +25,8 @@ Returns a 9-column matrix with one row for each LCP (and therefore
      along the path} }
 }
 \description{
-Given a \code{\link{LcpFinder}} object, returns a matrix that
-  summarizes all of the LCPs that have already been calculated by the
+Given a \code{\link{LcpFinder}}, returns a matrix that
+  summarizes all of the LCPs that have been calculated by the
   \code{\link{LcpFinder}}.
 }
 \details{
@@ -38,9 +38,8 @@ Note that this function returns \strong{all} of the paths that have
 }
 \examples{
 library(quadtree)
-
-# create a quadtree
 data(habitat)
+
 qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 
 start_pt <- c(19000, 25000)
@@ -52,12 +51,7 @@ lcp <- find_lcp(lcpf, end_pt)
 
 # retrieve ALL the paths that have been calculated
 paths <- summarize_lcps(lcpf)
-
-# plot - put points in each of the cells to which an LCP has been calculated
-plot(qt, crop = TRUE, na_col = NULL, border_col = "gray60")
-points((paths$xmin + paths$xmax) / 2, (paths$ymin + paths$ymax) / 2,
-   pch = 16, col = "black", cex = .4)
-points(rbind(start_pt, end_pt), col = c("red", "blue"), pch = 16)
+head(paths)
 }
 \seealso{
 \code{\link{lcp_finder}()} creates the \code{\link{LcpFinder}}

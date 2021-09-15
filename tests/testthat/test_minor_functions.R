@@ -11,7 +11,7 @@ test_that("as_data_frame() runs without errors and produces expected output", {
   expect_true(nrow(df_term) > 0)
   expect_true(nrow(df_all) > 0)
 
-  expect_true(qt@ptr$nNodes() == nrow(df_all))
+  expect_equal(qt@ptr$nNodes(), nrow(df_all))
 
   expect_true(nrow(df_term) < nrow(df_all))
 })
@@ -29,10 +29,10 @@ test_that("as_raster() works", {
   pts1 <- raster::rasterToPoints(rst1, spatial = FALSE)
   pts2 <- raster::rasterToPoints(rst2, spatial = FALSE)
   pts3 <- raster::rasterToPoints(rst3, spatial = FALSE)
-
-  expect_true(all(extract(qt, pts1[, 1:2]) == extract(rst1, pts1[, 1:2])))
-  expect_true(all(extract(qt, pts2[, 1:2]) == extract(rst2, pts2[, 1:2])))
-  expect_true(all(extract(qt, pts3[, 1:2]) == extract(rst3, pts3[, 1:2])))
+  
+  expect_equal(extract(qt, pts1[, 1:2]), extract(rst1, pts1[, 1:2]))
+  expect_equal(extract(qt, pts2[, 1:2]), extract(rst2, pts2[, 1:2]))
+  expect_equal(extract(qt, pts3[, 1:2]), extract(rst3, pts3[, 1:2]))
 })
 
 test_that("as_vector() works", {
@@ -48,7 +48,7 @@ test_that("as_vector() works", {
 
   vec_term2 <- vec_term[!is.na(vec_term)]
   expect_true(length(vec_term2) == length(mat))
-  expect_true(all(sort(as.numeric(mat)) == sort(vec_term2)))
+  expect_equal(sort(as.numeric(mat)), sort(vec_term2))
 })
 
 test_that("copy() runs without errors and produces expected output", {
@@ -56,14 +56,11 @@ test_that("copy() runs without errors and produces expected output", {
   qt1 <- quadtree(habitat, .3, split_method = "sd")
   qt2 <- expect_error(copy(qt1), NA)
   expect_s4_class(qt2, "Quadtree")
+  
   df1 <- as_data_frame(qt1, FALSE)
   df2 <- as_data_frame(qt2, FALSE)
-  # first test w/o the value column since NA columns mess up the equality check
-  expect_true(all(df1[, -1 * which(names(df1) == "value")] ==
-                  df2[, -1 * which(names(df2) == "value")]))
-  # now do the 'value' column separately
-  expect_true(all(df1$value == df2$value, na.rm = TRUE))
-  expect_true(all(which(is.na(df1$value)) == which(is.na(df2$value))))
+  
+  expect_equal(df1, df2)
 })
 
 test_that("extent() runs without errors and produces expected output", {
@@ -72,7 +69,7 @@ test_that("extent() runs without errors and produces expected output", {
   qt1 <- quadtree(habitat, .3, split_method = "sd")
   expect_error(extent(qt1, original = FALSE), NA)
   qt_ext <- expect_error(extent(qt1, original = TRUE), NA)
-  expect_true(qt_ext == extent(habitat))
+  expect_equal(qt_ext, extent(habitat))
 })
 
 test_that("extract runs without errors and returns correct values", {
@@ -85,17 +82,16 @@ test_that("extract runs without errors and returns correct values", {
   pts <- cbind(runif(1000, ext[1], ext[2]), runif(1000, ext[3], ext[4]))
   rst_ext <- extract(habitat, pts)
   qt_ext <- expect_error(extract(qt1, pts), NA)
-  rst_ext[is.na(rst_ext)] <- -1
-  qt_ext[is.na(qt_ext)] <- -1
-  expect_true(all(qt_ext == rst_ext))
+  qt_ext[is.nan(qt_ext)] <- NA
+  expect_equal(qt_ext, rst_ext)
 
   # make sure it works with the 'extents=TRUE' option too
   qt_ext2 <- expect_error(extract(qt1, pts, extents = TRUE), NA)
   expect_true("matrix" %in% class(qt_ext2))
   expect_true(nrow(qt_ext2) > 0)
   nums <- qt_ext2[, "value"]
-  nums[is.na(nums)] <- -1
-  expect_true(all(nums == rst_ext))
+  nums[is.nan(nums)] <- NA
+  expect_equal(nums, rst_ext)
 })
 
 test_that("get_neighbors() works", {
@@ -117,7 +113,7 @@ test_that("get_neighbors() works", {
   expect_true(nrow(nbs) == nrow(nb_centroids))
 
   nb_ids <- extract(qt, nb_centroids, extents = TRUE)[, "id"]
-  expect_true(all(sort(nbs[, "id"]) == sort(nb_ids)))
+  expect_equal(sort(nbs[, "id"]), sort(nb_ids))
 })
 
 test_that("n_cells() works", {
@@ -151,34 +147,32 @@ test_that("projection() runs without errors and returns correct value", {
   data(habitat)
   suppressWarnings({crs(habitat) <- "+init=EPSG:27700"})
   qt1 <- quadtree(habitat, .5)
-  qt_proj <- expect_error(projection(qt1), NA)
-  expect_true(qt_proj == projection(habitat))
+  qt_proj <- expect_error(quadtree::projection(qt1), NA)
+  expect_equal(qt_proj, raster::projection(habitat))
+  
+  expect_error(quadtree::projection(qt1) <- "stuff", NA)
+  expect_equal(quadtree::projection(qt1), "stuff")
 })
 
 test_that("read_quadtree() and write_quadtree() work", {
   data(habitat)
-  qt1 <- quadtree(habitat, .1)
+  qt1 <- quadtree(habitat, .3, "sd")
   filepath <- tempfile()
   expect_error(write_quadtree(filepath, qt1), NA)
   qt2 <- expect_error(read_quadtree(filepath), NA)
 
   expect_s4_class(qt2, "Quadtree")
-  expect_true(extent(qt1, original = TRUE) == extent(qt2, original = TRUE))
-  qt1_nb <- do.call(rbind, qt1@ptr$getNbList())
-  qt2_nb <- do.call(rbind, qt2@ptr$getNbList())
-  qt1_nb[is.na(qt1_nb[, "val1"]), "val1"] <- -1
-  qt2_nb[is.na(qt2_nb[, "val1"]), "val1"] <- -1
-
+  expect_equal(extent(qt1, original = TRUE), extent(qt2, original = TRUE))
+  qt1_nb <- do.call(rbind, qt1@ptr$getNeighborList())
+  qt2_nb <- do.call(rbind, qt2@ptr$getNeighborList())
+  qt1_nb <- qt1_nb[order(qt1_nb[,"id0"], qt1_nb[,"id1"]),]
+  qt2_nb <- qt2_nb[order(qt2_nb[,"id0"], qt2_nb[,"id1"]),]
+  expect_equal(qt1_nb, qt2_nb)
+  
   df1 <- as_data_frame(qt1, FALSE)
   df2 <- as_data_frame(qt2, FALSE)
-  # first test w/o the value column since NA columns mess up the equality check
-  expect_true(all(df1[, -1 * which(names(df1) == "value")] ==
-                  df2[, -1 * which(names(df2) == "value")]))
-
-  # now do the 'value' column separately
-  expect_true(all(df1$value == df2$value, na.rm = TRUE))
-  expect_true(all(which(is.na(df1$value)) == which(is.na(df2$value))))
-
+  expect_equal(df1, df2)
+  
   unlink(filepath)
 })
 
@@ -188,9 +182,11 @@ test_that("set_values() works", {
   set.seed(10)
   ext <- extent(qt)
   pts <- cbind(runif(100, ext[1], ext[2]), runif(100, ext[3], ext[4]))
-  expect_error(set_values(qt, pts, rep(-5, nrow(pts))), NA)
+  new_vals <- rep(-5, nrow(pts))
+  expect_error(set_values(qt, pts, new_vals), NA)
+  
   vals <- extract(qt, pts)
-  expect_true(all(vals == -5))
+  expect_equal(vals, new_vals)
 })
 
 test_that("transform_values() works", {
@@ -204,12 +200,8 @@ test_that("transform_values() works", {
 
   qt1df$value[is.na(qt1df$value)] <- 0
   qt2df$value[is.na(qt2df$value)] <- 0
-  expect_true(all(qt1df$value * 2 == qt2df$value))
+  expect_equal(qt1df$value * 2, qt2df$value)
 })
-
-
-
-
 
 # mat = rbind(c(1,1,1,1,0,1,1,1),
 #             c(1,1,1,1,1,0,1,1),

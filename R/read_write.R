@@ -3,8 +3,8 @@
 #' @name read_quadtree
 #' @aliases write_quadtree read_quadtree,character-method
 #'   write_quadtree,character-method
-#' @title Read/write a \code{\link{Quadtree}}
-#' @description Read/write a \code{\link{Quadtree}}
+#' @title Read/write a \code{Quadtree}
+#' @description Reads and writes a \code{\link{Quadtree}}.
 #' @param x character; the filepath to read from or write to
 #' @param y a \code{\link{Quadtree}}
 #' @details

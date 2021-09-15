@@ -35,7 +35,7 @@ legend. If \code{NULL} (the default), no box is drawn}
 
 \item{lgd_x_pct}{numeric; location of the center of the legend in the
 x-dimension, as a fraction (0 to 1) of the \emph{right margin area},
-\strong{not} the entire width}
+\strong{not} the entire width of the figure}
 
 \item{lgd_y_pct}{numeric; location of the center of the legend in the
 y-dimension, as a fraction (0 to 1). Unlike \code{lgd_x_pct}, this
@@ -64,7 +64,7 @@ height)}
 
 \item{ticks_n}{integer; the number of ticks desired - only used if
 \code{ticks} is \code{NULL}. Note that this is an \emph{approximate} number
-- the \code{pretty()} function from \code{grDevices} is used to generate
+- the \code{\link[base:pretty]{pretty()}} function is used to generate
 "nice-looking" values, but it doesn't guarantee a set number of tick marks}
 
 \item{ticks_x_pct}{numeric; the x-placement of the tick labels as a fraction
@@ -76,35 +76,33 @@ end exactly at the right border of the legend area}
 no return value
 }
 \description{
-Adds a gradient legend to a plot
+Adds a gradient legend to a plot.
 }
 \details{
 I took an HTML/CSS-like approach to determining the positioning -
-  that is, each space is treated as <div>-like space, and the position of
-  objects within that space happens \emph{relative to that space} rather then
-  the entire space. The parameters prefixed by \code{lgd} are all relative to
-  the right margin space and correspond to the box that contains the entire
-  legend. The parameters prefixed \code{bar} and \code{ticks} are relative to
-  the space within the legend box.
+  that is, each space is treated as \code{<div>}-like space, and the position
+  of objects within that space happens \emph{relative to that space} rather
+  than the entire space. The parameters prefixed by \code{lgd} are all
+  relative to the right margin space and correspond to the box that contains
+  the entire legend. The parameters prefixed by \code{bar} and \code{ticks}
+  are relative to the space within the legend box.
 
-  I obviously wrote this for plotting the quadtree, but there's nothing
-  quadtree-specific about this particular function.
-
-  This function is used within \code{\link[=plot.Quadtree]{plot}()}, so the user shouldn't
-  call this function to manually create the legend. Customizations to the
-  legend can be done via the \code{legend_args} parameter of
-  \code{\link[=plot.Quadtree]{plot}()}. Using this function to plot the legend after using
-  \code{\link[=plot.Quadtree]{plot}()} raises the possibility of the legend not corresponding
-  correctly with the plot, and thus should be avoided.
+  This function is used within \code{\link[=plot.Quadtree]{plot}()}, so the
+  user shouldn't call this function to manually create the legend.
+  Customizations to the legend can be done via the \code{legend_args}
+  parameter of \code{\link[=plot.Quadtree]{plot}()}. Using this function to
+  plot the legend after using \code{\link[=plot.Quadtree]{plot}()} raises the
+  possibility of the legend not corresponding correctly with the plot, and
+  thus should be avoided.
 }
 \examples{
-set.seed(23)
-mat <- matrix(runif(64, 0, 1), nrow = 8)
-qt <- quadtree(mat, .75)
+library(quadtree)
+data(habitat)
+qt <- quadtree(habitat, .2)
 
 par(mar = c(5, 4, 4, 5))
 plot(qt, legend = FALSE)
-add_legend(range(mat), rev(terrain.colors(100)))
+add_legend(raster::cellStats(habitat, "range"), rev(terrain.colors(100)))
 # this example simply illustrates how it COULD be used, but as stated in the
 # 'Details' section, it shouldn't be called separately from 'plot()' - if
 # customizations to the legend are desired, use the 'legend_args' parameter

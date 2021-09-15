@@ -2,9 +2,9 @@
 
 #' @name extract
 #' @aliases extract,Quadtree,ANY-method extract.Quadtree
-#' @title Extract \code{\link{Quadtree}} values
+#' @title Extract \code{Quadtree} values
 #' @description Extracts the cell values and optionally the cell extents at the
-#'   given points
+#'   given points.
 #' @param x a \code{\link{Quadtree}}
 #' @param y a two-column matrix representing point coordinates. First column
 #'   contains the x-coordinates, second column contains the y-coordinates
@@ -15,11 +15,10 @@
 #' If \code{extents = FALSE}, returns a numeric vector corresponding to the
 #' values at the points represented by \code{pts}.
 #'
-#' If \code{extents = TRUE}, returns a 6-column numeric matrix providing the
-#' extent of each cell along with the cell's value and ID. The 6 columns are, in
-#' this order: \code{id}, \code{xmin}, \code{xmax}, \code{ymin}, \code{ymax},
+#' If \code{extents = TRUE}, returns a six-column numeric matrix providing the
+#' extent of each cell along with the cell's value and ID. The six columns are,
+#' in this order: \code{id}, \code{xmin}, \code{xmax}, \code{ymin}, \code{ymax},
 #' \code{value}.
-#'
 #' @examples
 #' library(quadtree)
 #' data(habitat)
@@ -50,7 +49,7 @@ setMethod("extract", signature(x = "Quadtree", y = "ANY"),
     if (ncol(y) != 2) stop("'y' must have two columns")
     if (!is.numeric(y[, 1]) || !is.numeric(y[, 2])) stop("'y' must be numeric")
     if (extents) {
-      return(x@ptr$getCellDetails(y[, 1], y[, 2]))
+      return(x@ptr$getCellsDetails(y[, 1], y[, 2]))
     } else {
       return(x@ptr$getValues(y[, 1], y[, 2]))
     }

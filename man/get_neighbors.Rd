@@ -3,18 +3,18 @@
 \name{get_neighbors}
 \alias{get_neighbors}
 \alias{get_neighbors,Quadtree,numeric-method}
-\title{Get the neighbors of a \code{\link{Quadtree}} cell}
+\title{Get the neighbors of a \code{Quadtree} cell}
 \usage{
 \S4method{get_neighbors}{Quadtree,numeric}(x, y)
 }
 \arguments{
 \item{x}{\code{\link{Quadtree}}}
 
-\item{y}{numeric vector of length 2; the x and y coordinates of a point -
+\item{y}{two-element numeric vector; the x and y coordinates of a point -
 this is used to identify which quadtree cell to find neighbors for.}
 }
 \value{
-A 6-column matrix with one row per neighboring cell. It has the following
+A six-column matrix with one row per neighboring cell. It has the following
 columns: \itemize{
     \item \code{id}: the ID of the cell
     \item \code{xmin}, \code{xmax}, \code{ymin}, \code{ymax}: the x and y

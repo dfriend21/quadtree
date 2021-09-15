@@ -12,7 +12,7 @@ public:
   Rcpp::NumericVector startPoint;
   
   LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint);
-  LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid);
+  LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint, Rcpp::NumericVector xlim, Rcpp::NumericVector ylim, bool searchByCentroid);
   
   void makeNetworkAll();
   void makeNetworkCostDist(double constraint);

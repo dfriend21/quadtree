@@ -16,11 +16,13 @@ NodeWrapper::NodeWrapper(std::shared_ptr<Node> _node){
 
 Rcpp::NumericVector NodeWrapper::xLims() const{
   Rcpp::NumericVector vec = {node->xMin, node->xMax};
+  vec.names() = Rcpp::CharacterVector({"xmin","xmax"});
   return vec;
 }
 
 Rcpp::NumericVector NodeWrapper::yLims() const{
   Rcpp::NumericVector vec = {node->yMin, node->yMax};
+  vec.names() = Rcpp::CharacterVector({"ymin","ymax"});
   return vec;
 }
 
@@ -95,7 +97,7 @@ Rcpp::NumericVector getOverlapInfo(std::shared_ptr<Node> node, std::shared_ptr<N
 
 Rcpp::NumericMatrix NodeWrapper::getNeighborInfo() const{
   Rcpp::NumericMatrix mat(node->neighbors.size(), 13);
-  colnames(mat) = Rcpp::CharacterVector({"id", "xMin", "xMax", "yMin", "yMax", "xMean", "yMean", "value", "hasChdn", "xOverlap", "yOverlap", "totOverlap", "nCorners"});
+  colnames(mat) = Rcpp::CharacterVector({"id", "xmin", "xmax", "ymin", "ymax", "xmean", "ymean", "value", "hasChildren", "xOverlap", "yOverlap", "totOverlap", "nCorners"});
   for(size_t i = 0; i < node->neighbors.size(); i++){
     auto node_i = node->neighbors[i].lock();
     mat(i,0) = node_i->id;
@@ -137,6 +139,6 @@ Rcpp::NumericVector NodeWrapper::getNeighborVals() const{
 Rcpp::NumericVector NodeWrapper::asVector() const{
   double hasChildrenInt = node->hasChildren ? 1 : 0;
   Rcpp::NumericVector vec = {(double)node->id, hasChildrenInt, (double)node->level, node->xMin, node->xMax, node->yMin, node->yMax, node->value, node->smallestChildSideLength};
-  vec.names() = Rcpp::CharacterVector({"id","hasChdn","level","xMin","xMax", "yMin", "yMax", "value", "smSide"});
+  vec.names() = Rcpp::CharacterVector({"id","hasChildren","level","xmin","xmax", "ymin", "ymax", "value", "smallestChildLength"});
   return vec;
 }

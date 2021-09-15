@@ -2,14 +2,14 @@
 
 #' @name get_neighbors
 #' @aliases get_neighbors,Quadtree,numeric-method
-#' @title Get the neighbors of a \code{\link{Quadtree}} cell
+#' @title Get the neighbors of a \code{Quadtree} cell
 #' @description Returns a matrix with information about the neighbors of a
 #' quadtree cell.
 #' @param x \code{\link{Quadtree}}
-#' @param y numeric vector of length 2; the x and y coordinates of a point -
+#' @param y two-element numeric vector; the x and y coordinates of a point -
 #' this is used to identify which quadtree cell to find neighbors for.
 #' @return
-#' A 6-column matrix with one row per neighboring cell. It has the following
+#' A six-column matrix with one row per neighboring cell. It has the following
 #' columns: \itemize{
 #'     \item \code{id}: the ID of the cell
 #'     \item \code{xmin}, \code{xmax}, \code{ymin}, \code{ymax}: the x and y

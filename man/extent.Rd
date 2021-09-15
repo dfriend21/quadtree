@@ -4,7 +4,7 @@
 \alias{extent}
 \alias{extent,Quadtree-method}
 \alias{extent.Quadtree}
-\title{Get the extent of a \code{\link{Quadtree}}}
+\title{Get the extent of a \code{Quadtree}}
 \usage{
 \S4method{extent}{Quadtree}(x, original = FALSE)
 }
@@ -13,15 +13,16 @@
 
 \item{original}{boolean; if \code{FALSE} (the default), it returns the total
 extent covered by the quadtree. If \code{TRUE}, the function returns the
-extent of the original raster used to create the quadtree, before \code{NA}
-rows/columns were added to pad the dimensions.}
+extent of the original raster used to create the quadtree, before the
+dimensions were adjusted by padding with \code{NA}s and/or the raster was
+resampled.}
 }
 \value{
 an \code{\link[raster:Extent-class]{Extent}} object
 }
 \description{
 Gets the extent of the \code{\link{Quadtree}} as an
-  \code{\link[raster:Extent-class]{Extent}} object (from the raster package)
+  \code{\link[raster:Extent-class]{Extent}} object (from the raster package).
 }
 \examples{
 library(quadtree)

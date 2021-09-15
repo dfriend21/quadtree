@@ -3,7 +3,7 @@
 \name{transform_values}
 \alias{transform_values}
 \alias{transform_values,Quadtree,function-method}
-\title{Transform the values of all \code{\link{Quadtree}} cells}
+\title{Transform the values of all \code{Quadtree} cells}
 \usage{
 \S4method{transform_values}{Quadtree,`function`}(x, y)
 }
@@ -12,14 +12,14 @@
 
 \item{y}{function; function used on each cell to transform the
 value. Must accept a single numeric value and return a single numeric
-value. The function must also be able to handle NA values.}
+value. The function must also be able to handle \code{NA} values.}
 }
 \value{
 no return value
 }
 \description{
 Uses a function to change all cell values of a
-  \code{\link{Quadtree}}
+  \code{\link{Quadtree}}.
 }
 \details{
 This function applies a function to every single cell, which allows the user
@@ -37,6 +37,7 @@ to maintain a version of the original quadtree, use \code{\link{copy}}
 beforehand to make a copy of the quadtree (see 'Examples').
 }
 \examples{
+library(quadtree)
 data(habitat)
 
 # create a quadtree
@@ -68,5 +69,5 @@ plot(qt4, main = "values converted to 0/1", crop = TRUE, na_col = NULL,
 }
 \seealso{
 \code{\link{set_values}()} can be used to set the values of cells
-to specified values (rather than transforming the existing values)
+to specified values (rather than transforming the existing values).
 }

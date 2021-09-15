@@ -6,7 +6,7 @@
 \alias{read_quadtree,character-method}
 \alias{write_quadtree,character-method}
 \alias{write_quadtree,character,Quadtree-method}
-\title{Read/write a \code{\link{Quadtree}}}
+\title{Read/write a \code{Quadtree}}
 \usage{
 \S4method{read_quadtree}{character}(x)
 
@@ -23,7 +23,7 @@
 \code{write_quadtree()} - no return value
 }
 \description{
-Read/write a \code{\link{Quadtree}}
+Reads and writes a \code{\link{Quadtree}}.
 }
 \details{
 To read/write a quadtree object, the C++ library \code{cereal} is used to

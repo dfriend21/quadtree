@@ -3,7 +3,7 @@
 \name{n_cells}
 \alias{n_cells}
 \alias{n_cells,Quadtree-method}
-\title{Get the number of cells in a \code{\link{Quadtree}}}
+\title{Get the number of cells in a \code{Quadtree}}
 \usage{
 \S4method{n_cells}{Quadtree}(x, terminal_only = TRUE)
 }

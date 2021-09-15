@@ -2,11 +2,11 @@
 
 #' @name plot
 #' @aliases plot,Quadtree,missing-method plot.Quadtree
-#' @title Plot a \code{\link{Quadtree}}
-#' @description Plot a \code{\link{Quadtree}}
+#' @title Plot a \code{Quadtree}
+#' @description Plots a \code{\link{Quadtree}}.
 #' @param x a \code{\link{Quadtree}}
 #' @param add boolean; if \code{FALSE} (the default) a new plot is created. If
-#'   \code{TRUE}, the plot is added to the existing plot
+#'   \code{TRUE}, the plot is added to the existing plot.
 #' @param col character vector; the colors that will be used to create the
 #'   color ramp used in the plot. If no argument is provided,
 #'   \code{terrain.colors(100, rev = TRUE)} is used.
@@ -14,17 +14,17 @@
 #'   0-1, where 0 is fully transparent and 1 (the default) is fully opaque.
 #' @param nb_line_col character; the color of the lines drawn between
 #'   neighboring cells. If \code{NULL} (the default), these lines are not
-#'   plotted
+#'   plotted.
 #' @param border_col character; the color to use for the cell borders. Use
-#'   'transparent' if you don't want borders to be shown. Default is "black".
+#'   "transparent" if you don't want borders to be shown. Default is "black".
 #' @param border_lwd numeric; the line width of the cell borders. Default is 1. 
-#' @param xlim two element numeric vector; optional; defines the minimum and
+#' @param xlim two-element numeric vector; defines the minimum and
 #'   maximum values of the x axis. Note that this overrides the \code{crop}
 #'   parameter.
-#' @param ylim two element numeric vector; optional; defines the minimum and
+#' @param ylim two-element numeric vector; defines the minimum and
 #'   maximum values of the y axis. Note that this overrides the \code{crop}
 #'   parameter.
-#' @param zlim two element numeric vector; optional; defines how the colors are
+#' @param zlim two-element numeric vector; defines how the colors are
 #'   assigned to the cell values.  The first color in \code{col} will correspond
 #'   to \code{zlim[1]} and the last color in \code{col} will correspond to
 #'   \code{zlim[2]}. If \code{zlim} does not encompass the entire range of cell
@@ -34,16 +34,16 @@
 #' @param crop boolean; if \code{TRUE}, only displays the extent of the original
 #'   raster, thus ignoring any of the \code{NA} cells that were added to pad the
 #'   raster before making the quadtree. Ignored if either \code{xlim} or
-#'   \code{ylim} are non-\code{NULL}
+#'   \code{ylim} are non-\code{NULL}.
 #' @param na_col character; the color to use for \code{NA} cells. If
-#'   \code{NULL}, \code{NA} cells are not plotted. Default is "white"
+#'   \code{NULL}, \code{NA} cells are not plotted. Default is "white".
 #' @param adj_mar_auto numeric; if not \code{NULL}, it checks the size of the
 #'   right margin (\code{par("mar")[4]}) - if it is less than the provided value
 #'   and \code{legend} is \code{TRUE}, then it sets it to be the provided value
 #'   in order to make room for the legend (after plotting, it resets it to its
 #'   original value). Default is 6.
 #' @param legend boolean; if \code{TRUE} (the default) a legend is plotted in
-#'   the right margin
+#'   the right margin.
 #' @param legend_args named list; contains arguments that are sent to the
 #'   \code{\link{add_legend}()} function. See the help page for
 #'   \code{\link{add_legend}()} for the parameters. Note that \code{zlim},
@@ -56,7 +56,7 @@
 #' used.
 #' @return no return value
 #' @examples
-#' library(raster)
+#' library(quadtree)
 #' data(habitat)
 #'
 #' # create quadtree
@@ -215,15 +215,15 @@ setMethod("plot", signature(x = "Quadtree", y = "missing"),
               c(list(x = 1, y = 1, xlim = xlim, ylim = ylim, type = "n",
                      asp = 1), args))
     }
-    graphics::rect(nodes$xMin, nodes$yMin, nodes$xMax, nodes$yMax,
+    graphics::rect(nodes$xmin, nodes$ymin, nodes$xmax, nodes$ymax,
                    col = nodes$col, border = border_col, lwd = border_lwd)
 
     if (!is.null(nb_line_col)) {
-      edges <- data.frame(do.call(rbind, x@ptr$getNbList())) # gets a data frame with one row for each 'connection'
+      edges <- data.frame(do.call(rbind, x@ptr$getNeighborList())) # gets a data frame with one row for each 'connection'
       if (is.null(na_col)) {
         edges <- stats::na.omit(edges)
       }
-      edges <- edges[edges$isLowest == 1, ] # only plot connections between terminal nodes
+      edges <- edges[edges$hasChildren == 0, ] # only plot connections between terminal nodes
       graphics::segments(edges$x0, edges$y0, edges$x1, edges$y1,
                          col = nb_line_col)
     }
@@ -315,7 +315,7 @@ NULL
 }
 
 #' @title Add a gradient legend to a plot
-#' @description Adds a gradient legend to a plot
+#' @description Adds a gradient legend to a plot.
 #' @param zlim two-element numeric vector; required; the min and max value of z
 #' @param col character vector; required; the colors that will be used in the
 #'   legend.
@@ -325,7 +325,7 @@ NULL
 #'   legend. If \code{NULL} (the default), no box is drawn
 #' @param lgd_x_pct numeric; location of the center of the legend in the
 #'   x-dimension, as a fraction (0 to 1) of the \emph{right margin area},
-#'   \strong{not} the entire width
+#'   \strong{not} the entire width of the figure
 #' @param lgd_y_pct numeric; location of the center of the legend in the
 #'   y-dimension, as a fraction (0 to 1). Unlike \code{lgd_x_pct}, this
 #'   \strong{is} relative to the entire figure height (since the right margin
@@ -346,38 +346,36 @@ NULL
 #'   \code{NULL} (the default), tick placement is automatically calculated
 #' @param ticks_n integer; the number of ticks desired - only used if
 #'   \code{ticks} is \code{NULL}. Note that this is an \emph{approximate} number
-#'   - the \code{pretty()} function from \code{grDevices} is used to generate
+#'   - the \code{\link[base:pretty]{pretty()}} function is used to generate
 #'   "nice-looking" values, but it doesn't guarantee a set number of tick marks
 #' @param ticks_x_pct numeric; the x-placement of the tick labels as a fraction
 #'   (0 to 1) of the width of the legend area. This corresponds to the
 #'   \emph{right-most} part of the text - i.e. a value of 1 means the text will
 #'   end exactly at the right border of the legend area
 #' @details I took an HTML/CSS-like approach to determining the positioning -
-#'   that is, each space is treated as <div>-like space, and the position of
-#'   objects within that space happens \emph{relative to that space} rather then
-#'   the entire space. The parameters prefixed by \code{lgd} are all relative to
-#'   the right margin space and correspond to the box that contains the entire
-#'   legend. The parameters prefixed \code{bar} and \code{ticks} are relative to
-#'   the space within the legend box.
+#'   that is, each space is treated as \code{<div>}-like space, and the position
+#'   of objects within that space happens \emph{relative to that space} rather
+#'   than the entire space. The parameters prefixed by \code{lgd} are all
+#'   relative to the right margin space and correspond to the box that contains
+#'   the entire legend. The parameters prefixed by \code{bar} and \code{ticks}
+#'   are relative to the space within the legend box.
 #'
-#'   I obviously wrote this for plotting the quadtree, but there's nothing
-#'   quadtree-specific about this particular function.
-#'
-#'   This function is used within \code{\link[=plot.Quadtree]{plot}()}, so the user shouldn't
-#'   call this function to manually create the legend. Customizations to the
-#'   legend can be done via the \code{legend_args} parameter of
-#'   \code{\link[=plot.Quadtree]{plot}()}. Using this function to plot the legend after using
-#'   \code{\link[=plot.Quadtree]{plot}()} raises the possibility of the legend not corresponding
-#'   correctly with the plot, and thus should be avoided.
+#'   This function is used within \code{\link[=plot.Quadtree]{plot}()}, so the
+#'   user shouldn't call this function to manually create the legend.
+#'   Customizations to the legend can be done via the \code{legend_args}
+#'   parameter of \code{\link[=plot.Quadtree]{plot}()}. Using this function to
+#'   plot the legend after using \code{\link[=plot.Quadtree]{plot}()} raises the
+#'   possibility of the legend not corresponding correctly with the plot, and
+#'   thus should be avoided.
 #' @return no return value
 #' @examples
-#' set.seed(23)
-#' mat <- matrix(runif(64, 0, 1), nrow = 8)
-#' qt <- quadtree(mat, .75)
+#' library(quadtree)
+#' data(habitat)
+#' qt <- quadtree(habitat, .2)
 #'
 #' par(mar = c(5, 4, 4, 5))
 #' plot(qt, legend = FALSE)
-#' add_legend(range(mat), rev(terrain.colors(100)))
+#' add_legend(raster::cellStats(habitat, "range"), rev(terrain.colors(100)))
 #' # this example simply illustrates how it COULD be used, but as stated in the
 #' # 'Details' section, it shouldn't be called separately from 'plot()' - if
 #' # customizations to the legend are desired, use the 'legend_args' parameter

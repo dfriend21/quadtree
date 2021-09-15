@@ -13,8 +13,9 @@ test_that("find_lcp() finds the correct path in a trivial example", {
                         c(2.5, 2.5),
                         c(1.5, 2.5),
                         c(0.5, 3.5))
+  colnames(lcp_expected) <- c("x", "y")
   expect_equal(nrow(lcp), nrow(lcp_expected))
-  expect_true(all(lcp[, 1:2] == lcp_expected))
+  expect_equal(as.matrix(lcp[, 1:2]), lcp_expected)
 })
 
 test_that("lcp_finder() with search limits works as expected", {
@@ -32,10 +33,10 @@ test_that("lcp_finder() with search limits works as expected", {
   lcp2 <- expect_error(find_lcp(lcpf, e_pt2), NA)
 
   expect_true(nrow(lcp1) > 0)
-  expect_true(nrow(lcp2) == 0)
+  expect_equal(nrow(lcp2), 0)
 })
 
-test_that("find_lcps() works without errors", {
+test_that("find_lcps() runs without errors", {
   data(habitat)
 
   start_point <- c(6989, 34007)
@@ -57,7 +58,7 @@ test_that("summarize_lcps() runs without errors and produces expected output", {
   lcpf <- lcp_finder(qt, start_point)
   expect_error(find_lcps(lcpf, limit = NULL), NA)
   lcp_sum <- expect_error(summarize_lcps(lcpf), NA)
-  expect_true("data.frame" %in% class(lcp_sum))
+  expect_s3_class(lcp_sum, "data.frame")
 })
 
 test_that("find_lcps() finds the same paths as in previous runs", {
@@ -70,7 +71,7 @@ test_that("find_lcps() finds the same paths as in previous runs", {
   lcp_sum <- expect_error(find_lcps(lcpf, limit = NULL), NA)
   # write.csv(lcp_sum,"lcps/qt_find_lcps_data.csv", row.names=FALSE)
   lcp_sum_prev <- read.csv("lcps/qt_find_lcps_data.csv")
-  expect_true(all(round(lcp_sum, 6) == round(lcp_sum_prev, 6)))
+  expect_equal(lcp_sum, lcp_sum_prev)
 })
 
 test_that("find_lcp() finds the same path as in previous runs", {
@@ -88,5 +89,6 @@ test_that("find_lcp() finds the same path as in previous runs", {
 
   # write.csv(lcp,"lcps/qt_find_lcp_data.csv", row.names=FALSE)
   lcp_prev <- read.csv("lcps/qt_find_lcp_data.csv")
-  expect_true(all(round(lcp, 6) == round(lcp_prev, 6))) # differences in precision was messing with this
+  #expect_true(all(round(lcp, 6) == round(lcp_prev, 6))) # differences in precision was messing with this
+  expect_equal(lcp, as.matrix(lcp_prev))
 })

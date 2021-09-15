@@ -34,7 +34,7 @@ class QuadtreeWrapper{
     int nNodes() const;
     NodeWrapper root() const;
     
-    void setOriginalValues(double xMin, double xMax, double yMin, double yMax, double nX, double nY);
+    void setOriginalValues(double xmin, double xmax, double ymin, double ymax, double nX, double nY);
     void setProjection(std::string proj4string);
     
     Rcpp::NumericVector extent() const;
@@ -49,9 +49,9 @@ class QuadtreeWrapper{
     
     void setValues(const std::vector<double> &x, const std::vector<double> &y, const std::vector<double> &newVals);
     void transformValues(Rcpp::Function transformFun);
-    NodeWrapper getCell(double x, double y) const;
+    NodeWrapper getCell(Rcpp::NumericVector pt) const;
     Rcpp::List getCells(Rcpp::NumericVector x, Rcpp::NumericVector y) const;
-    Rcpp::NumericMatrix getCellDetails(Rcpp::NumericVector x, Rcpp::NumericVector y) const;
+    Rcpp::NumericMatrix getCellsDetails(Rcpp::NumericVector x, Rcpp::NumericVector y) const;
 
     void createTree(Rcpp::NumericMatrix &mat, std::string splitMethod, double splitThreshold, std::string combineMethod, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs, QuadtreeWrapper templateQuadtree);
     std::string print() const;
@@ -59,8 +59,8 @@ class QuadtreeWrapper{
     Rcpp::List asList();
     
     std::vector<double> asVector(bool terminalOnly) const;
-    void makeNbList(std::shared_ptr<Node> node, Rcpp::List &list) const;
-    Rcpp::List getNbList();
+    void makeNeighborList(std::shared_ptr<Node> node, Rcpp::List &list) const;
+    Rcpp::List getNeighborList();
     
     LcpFinderWrapper getLcpFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid) const;
     

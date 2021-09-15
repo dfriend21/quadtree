@@ -8,7 +8,7 @@
 \S4method{find_lcps}{LcpFinder}(x, limit = NULL, return_summary = TRUE)
 }
 \arguments{
-\item{x}{a \code{LcpFinder}}
+\item{x}{a \code{\link{LcpFinder}}}
 
 \item{limit}{numeric; the maximum cost-distance for the LCPs. If \code{NULL}
 (the default), no limit is applied and all possible LCPs (within the
@@ -27,7 +27,7 @@ If \code{return_summary} is \code{TRUE},
 \description{
 Calculates least-cost paths (LCPs) from the start point (the
   point used to create the \code{\link{LcpFinder}}) to surrounding points. A
-  constraint can be placed on the LCPs, so that only LCPs that are less than
+  constraint can be placed on the LCPs so that only LCPs that are less than
   some specified cost-distance are returned.
 }
 \details{
@@ -40,7 +40,7 @@ Once the LCPs have been calculated, \code{\link{find_lcp}()} can be
   never gets smaller. For example, we could use \code{\link{find_lcps}()}
   with \code{limit = NULL} to calculate all LCPs. If we then used
   \code{\link{find_lcps}()} on the same \code{LcpFinder} but this time used a
-  limit, it would still return \emph{all} of the LCPs - even those that are
+  limit, it would still return \emph{all} of the LCPs, even those that are
   greater than the specified limit, since the tree never shrinks.
 }
 \examples{
@@ -50,9 +50,8 @@ Once the LCPs have been calculated, \code{\link{find_lcp}()} can be
 ####################
 
 library(quadtree)
-
-# create a quadtree
 data(habitat)
+
 qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 
 start_pt <- c(19000, 25000)

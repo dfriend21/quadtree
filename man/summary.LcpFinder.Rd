@@ -5,7 +5,7 @@
 \alias{summary,LcpFinder-method}
 \alias{show.LcpFinder}
 \alias{show,LcpFinder-method}
-\title{Show a summary of a \code{\link{LcpFinder}}}
+\title{Show a summary of a \code{LcpFinder}}
 \usage{
 \S4method{summary}{LcpFinder}(object)
 

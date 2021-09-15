@@ -2,25 +2,25 @@
 
 #' @name copy
 #' @aliases copy,Quadtree-method copy.Quadtree
-#' @title Create a deep copy of a \code{\link{Quadtree}}
+#' @title Create a deep copy of a \code{Quadtree}
 #' @description Creates a \emph{deep} copy of a \code{\link{Quadtree}}.
 #' @param x a \code{\link{Quadtree}}
 #' @details This function creates a \emph{deep} copy of a \code{\link{Quadtree}}
 #'   object. The \code{\link{Quadtree}} class contains a pointer to a
 #'   \code{\link{CppQuadtree}} C++ object. If a copy is attempted by simply
 #'   assigning the quadtree to a new variable, it will simply make a copy of the
-#'   \emph{pointer} - both variables will point to the same
+#'   \emph{pointer}, and both variables will point to the same
 #'   \code{\link{CppQuadtree}}. Thus, changes made to one will also change the
 #'   other. See "Examples" for a demonstration of this.
 #'
 #'   This function creates a deep copy by copying the entire quadtree, and
 #'   should be used whenever a copy of a quadtree is desired.
-#' @return A \code{\link{Quadtree}} object
+#' @return a \code{\link{Quadtree}}
 #' @examples
+#' library(quadtree)
 #' data(habitat)
 #'
-#' # create quadtree, then create a shallow copy and a deep copy for
-#' # demonstration
+#' # create a quadtree, then create a shallow copy and a deep copy
 #' qt1 <- quadtree(habitat, split_threshold = .1)
 #' plot(qt1)
 #'
@@ -28,10 +28,10 @@
 #' qt3 <- copy(qt1) # DEEP copy
 #'
 #' # change the values of qt1 so we can observe how this affects qt2 and qt3
-#' transform_values(qt1, function(x) 1-x)
+#' transform_values(qt1, function(x) 1 - x)
 #'
 #' # plot it out to see what happened
-#' par(mfrow = c(1,3))
+#' par(mfrow = c(1, 3))
 #' plot(qt1, main = "qt1", border_col = "transparent")
 #' plot(qt2, main = "qt2", border_col = "transparent")
 #' plot(qt3, main = "qt3", border_col = "transparent")

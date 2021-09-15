@@ -1,32 +1,35 @@
 test_that("we can create a quadtree from a matrix", {
   mat <- matrix(runif(16), 4)
-  qt <- quadtree(mat, split_threshold = .2, split_method = "range",
-                 combine_method = "mean")
+  qt <- expect_error(quadtree(mat, split_threshold = .2, split_method = "range",
+                              combine_method = "mean"), NA)
   expect_s4_class(qt, "Quadtree")
 })
 
 test_that("we can create a quadtree from a raster", {
   mat <- matrix(runif(16), 4)
   rast <- raster::raster(mat)
-  qt <- quadtree(rast, split_threshold = .2, split_method = "range",
-                 combine_method = "mean")
+  qt <- expect_error(quadtree(rast, split_threshold = .2, split_method = "range",
+                              combine_method = "mean"), NA)
   expect_s4_class(qt, "Quadtree")
 })
 
 test_that("quadtree creation with templates works", {
   data(habitat)
   data(habitat_roads)
-  qt1 <- quadtree(habitat_roads, .1)
-  qt2 <- quadtree(habitat, template_quadtree = qt1)
+  qt1 <- expect_error(quadtree(habitat_roads, .1), NA)
+  qt2 <- expect_error(quadtree(habitat, template_quadtree = qt1), NA)
+  
   qt1_df <- as_data_frame(qt1, FALSE)
   qt2_df <- as_data_frame(qt2, FALSE)
-  expect_true(all(dim(qt1_df) == dim(qt2_df)))
+  expect_equal(dim(qt1_df), dim(qt2_df))
+  
+  # everything except for the cell values should be the same
   qt1_df2 <- qt1_df[, -1 * which(names(qt1_df) == "value")]
   qt2_df2 <- qt2_df[, -1 * which(names(qt2_df) == "value")]
-  expect_true(all(qt1_df2 == qt2_df2))
+  expect_equal(qt1_df2, qt2_df2)
 })
 
-test_that("'quadtree()' runs without errors for all parameter settings", {
+test_that("'quadtree()' runs without errors for all parameter settings", { 
   library(raster)
 
   # retrieve the sample data
@@ -41,7 +44,7 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
   qts[[4]] <- expect_error(quadtree(rast, .3, adj_type = "none"),NA)
   qts[[5]] <- expect_error(quadtree(rast, .3, max_cell_length = 3000), NA)
   qts[[6]] <- expect_error(quadtree(rast, .3, min_cell_length = 3000), NA)
-  expect_true(qts[[6]]@ptr$root()$smallestChildSideLength() == 3000) #make sure the minimum length restriction works
+  expect_equal(qts[[6]]@ptr$root()$smallestChildSideLength(), 3000) #make sure the minimum length restriction works
 
   qts[[7]] <- expect_error(quadtree(rast, .3, split_if_all_na = TRUE), NA)
   qts[[8]] <- expect_error(quadtree(rast, .3, split_if_any_na = FALSE), NA)
@@ -92,7 +95,7 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
   #------------------------
   # now I'll check to see if the structure of the quadtrees is the same as in
   # previous runs. Note that this doesn't guarantee correctness but is still
-  # useful for alerting me when the result of 'qt_create' changes
+  # useful for alerting me if the result of 'quadtree()' changes
   
   # for (i in seq_len(length(qts))) {
   #   write_quadtree(paste0("qtrees/qt", sprintf("%03d", i), ".qtree"), qts[[i]])
@@ -100,12 +103,10 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
 
   paths <- list.files("qtrees/", pattern = "*.qtree", full.names = TRUE)
   qtsp <- lapply(paths, read_quadtree) #'p' in 'qtsp' stands for 'previous'
-  expect_true(length(qts) == length(qtsp))
+  expect_equal(length(qts), length(qtsp))
   for (i in seq_len(length(qtsp))) {
     qts_df <- as_data_frame(qts[[i]], FALSE)
     qtsp_df <- as_data_frame(qtsp[[i]], FALSE)
-    qts_df$value[is.na(qts_df$value)] <- -1
-    qtsp_df$value[is.na(qtsp_df$value)] <- -1
-    expect_true(all(qts_df == qtsp_df))
+    expect_equal(qts_df, qtsp_df)
   }
 })

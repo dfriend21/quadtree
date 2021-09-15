@@ -6,7 +6,7 @@
 \alias{points,LcpFinder-method}
 \alias{lines.LcpFinder}
 \alias{lines,LcpFinder-method}
-\title{Plot a \code{\link{LcpFinder}} object}
+\title{Plot a \code{LcpFinder} object}
 \usage{
 \S4method{points}{LcpFinder}(x, add = TRUE, ...)
 
@@ -24,7 +24,7 @@ existing plot. If \code{FALSE}, a new plot is created.}
 no return value
 }
 \description{
-Plots a \code{\link{LcpFinder}} object
+Plots a \code{\link{LcpFinder}} object.
 }
 \details{
 \code{points()} plots points at the centroids of the cells to which
@@ -32,7 +32,9 @@ Plots a \code{\link{LcpFinder}} object
   the \code{\link{LcpFinder}} object.
 }
 \examples{
+library(quadtree)
 data(habitat)
+
 qt <- quadtree(habitat, .1)
 
 start_point <- c(6989, 34007)

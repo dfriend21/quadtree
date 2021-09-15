@@ -4,7 +4,7 @@
 \alias{extract}
 \alias{extract,Quadtree,ANY-method}
 \alias{extract.Quadtree}
-\title{Extract \code{\link{Quadtree}} values}
+\title{Extract \code{Quadtree} values}
 \usage{
 \S4method{extract}{Quadtree,ANY}(x, y, extents = FALSE)
 }
@@ -22,14 +22,14 @@ each cell's extent in addition to its value}
 If \code{extents = FALSE}, returns a numeric vector corresponding to the
 values at the points represented by \code{pts}.
 
-If \code{extents = TRUE}, returns a 6-column numeric matrix providing the
-extent of each cell along with the cell's value and ID. The 6 columns are, in
-this order: \code{id}, \code{xmin}, \code{xmax}, \code{ymin}, \code{ymax},
+If \code{extents = TRUE}, returns a six-column numeric matrix providing the
+extent of each cell along with the cell's value and ID. The six columns are,
+in this order: \code{id}, \code{xmin}, \code{xmax}, \code{ymin}, \code{ymax},
 \code{value}.
 }
 \description{
 Extracts the cell values and optionally the cell extents at the
-  given points
+  given points.
 }
 \examples{
 library(quadtree)

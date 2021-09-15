@@ -3,15 +3,15 @@
 \name{find_lcp}
 \alias{find_lcp}
 \alias{find_lcp,LcpFinder,numeric-method}
-\title{Find the LCP between two points on a \code{\link{Quadtree}}}
+\title{Find the LCP between two points on a \code{Quadtree}}
 \usage{
 \S4method{find_lcp}{LcpFinder,numeric}(x, y, use_original_end_points = FALSE)
 }
 \arguments{
 \item{x}{a \code{\link{LcpFinder}}}
 
-\item{y}{numeric vector with two elements - the x and y coordinates
-of the the destination point}
+\item{y}{two-element numeric vector; the x and y coordinates of the the
+destination point}
 
 \item{use_original_end_points}{boolean; by default the start and end points
 of the returned path are not the points given by the user but instead the
@@ -22,8 +22,8 @@ is done after the calculation and has no effect on the path found by the
 algorithm.}
 }
 \value{
-Returns a five column matrix representing the
-  least cost path. It has the following columns:
+Returns a five column matrix representing the LCP. It has the
+  following columns:
   \itemize{
      \item{\code{x}: }{x coordinate of this point (centroid of the cell)}
      \item{\code{y}: }{y coordinate of this point (centroid of the cell)}
@@ -34,7 +34,7 @@ Returns a five column matrix representing the
      \item{\code{cost_cell}: }{the cost of the cell that contains this point}
    }
 
-  If no path is possible between the two points, a 0-row matrix with the
+  If no path is possible between the two points, a zero-row matrix with the
   previously described columns is returned.
 
   \strong{Important note:} the \code{use_original_end_points} option
@@ -47,7 +47,7 @@ Returns a five column matrix representing the
 \description{
 Finds the least-cost path (LCP) from the start point (the point
   used to create the \code{\link{LcpFinder}}) to another point, using a
-  \code{\link{Quadtree}} as a resistance surface
+  \code{\link{Quadtree}} as a resistance surface.
 }
 \details{
 See the vignette 'quadtree-lcp' for more details and examples (i.e. run

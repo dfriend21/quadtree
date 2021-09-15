@@ -3,7 +3,7 @@
 \name{set_values}
 \alias{set_values}
 \alias{set_values,Quadtree,ANY,numeric-method}
-\title{Change values of \code{\link{Quadtree}} cells}
+\title{Change values of \code{Quadtree} cells}
 \usage{
 \S4method{set_values}{Quadtree,ANY,numeric}(x, y, z)
 }
@@ -11,7 +11,7 @@
 \item{x}{A \code{\link{Quadtree}}}
 
 \item{y}{A two-column matrix representing point coordinates. First column
-contains the x-coordinates, second column contains the y-coordinates}
+contains the x-coordinates, second column contains the y-coordinates.}
 
 \item{z}{A numeric vector the same length as the number of rows of
 \code{y}. The values of the cells containing \code{y} will be changed
@@ -21,20 +21,21 @@ to the corresponding value in \code{z}.}
 no return value
 }
 \description{
-Given a \code{\link{Quadtree}} a set of points and a vector of
+Given a \code{\link{Quadtree}}, a set of points, and a vector of
   new values, changes the value of the quadtree cells containing the points
-  to the corresponding value
+  to the corresponding value.
 }
 \details{
 Note that it is entirely possible for \code{y} to contain multiple points
 that all fall within the same cell. The values are changed in the order
-given, so in this case the cell will take on the \emph{last} value given for
-that cell.
+given, so the cell will take on the \emph{last} value given for that cell.
 
-Also note that the structure of the quadtree will not be changed - only the
-cell values will change.
+It's important to note that this modifies the original quadtree. If you wish
+to maintain a version of the original quadtree, use \code{\link{copy}}
+beforehand to make a copy of the quadtree.
 }
 \examples{
+library(quadtree)
 data(habitat)
 
 # create a quadtree
@@ -53,5 +54,5 @@ plot(qt, main = "after modification")
 }
 \seealso{
 \code{\link{transform_values}()} can be used to transform the
-  existing values of all cells using a function
+  existing values of all cells using a function.
 }

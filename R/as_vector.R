@@ -2,7 +2,7 @@
 
 #' @name as_vector
 #' @aliases as_vector,Quadtree-method
-#' @title Get all \code{\link{Quadtree}} cell values as a vector
+#' @title Get all \code{Quadtree} cell values as a vector
 #' @description Returns all cell values  of a \code{\link{Quadtree}} as a
 #'   numeric vector.
 #' @param x a \code{\link{Quadtree}}
@@ -13,7 +13,9 @@
 #'   \code{\link{Quadtree}} that has all the cell values as well as details
 #'   about each cell's size and extent.
 #' @examples
+#' library(quadtree)
 #' data(habitat)
+#'
 #' qt <- quadtree(habitat, .2)
 #' head(as_vector(qt), 20)
 #' head(as_vector(qt, FALSE), 20)

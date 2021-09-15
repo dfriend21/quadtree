@@ -2,7 +2,7 @@
 
 #' @name summary.Quadtree
 #' @aliases summary,Quadtree-method show.Quadtree show,Quadtree-method
-#' @title Show a summary of a \code{\link{Quadtree}}
+#' @title Show a summary of a \code{Quadtree}
 #' @param object a \code{\link{Quadtree}} object
 #' @description Prints out information about a \code{\link{Quadtree}}.
 #'   Information shown is:

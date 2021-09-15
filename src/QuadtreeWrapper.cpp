@@ -42,22 +42,22 @@ void QuadtreeWrapper::setProjection(std::string proj4string){
   quadtree->proj4string = proj4string;
 }
 
-void QuadtreeWrapper::setOriginalValues(double xMin, double xMax, double yMin, double yMax, double nX, double nY){
-  originalXMin = xMin;
-  originalXMax = xMax;
-  originalYMin = yMin;
-  originalYMax = yMax;
+void QuadtreeWrapper::setOriginalValues(double xmin, double xmax, double ymin, double ymax, double nX, double nY){
+  originalXMin = xmin;
+  originalXMax = xmax;
+  originalYMin = ymin;
+  originalYMax = ymax;
   originalNX = nX;
   originalNY = nY;
 };
 
 Rcpp::NumericVector QuadtreeWrapper::extent() const{
-  Rcpp::NumericVector v = Rcpp::NumericVector::create(Rcpp::Named("xMin",quadtree->root->xMin), Rcpp::Named("xMax", quadtree->root->xMax), Rcpp::Named("yMin",quadtree->root->yMin), Rcpp::Named("yMax", quadtree->root->yMax));
+  Rcpp::NumericVector v = Rcpp::NumericVector::create(Rcpp::Named("xmin",quadtree->root->xMin), Rcpp::Named("xmax", quadtree->root->xMax), Rcpp::Named("ymin",quadtree->root->yMin), Rcpp::Named("ymax", quadtree->root->yMax));
   return v;
 }
 
 Rcpp::NumericVector QuadtreeWrapper::originalExtent() const{
-  Rcpp::NumericVector v = Rcpp::NumericVector::create(Rcpp::Named("xMin",originalXMin), Rcpp::Named("xMax", originalXMax), Rcpp::Named("yMin",originalYMin), Rcpp::Named("yMax", originalYMax));
+  Rcpp::NumericVector v = Rcpp::NumericVector::create(Rcpp::Named("xmin",originalXMin), Rcpp::Named("xmax", originalXMax), Rcpp::Named("ymin",originalYMin), Rcpp::Named("ymax", originalYMax));
   return v;
 }
 
@@ -181,8 +181,9 @@ void QuadtreeWrapper::transformValues(Rcpp::Function transformFun){
 }
 
 
-NodeWrapper QuadtreeWrapper::getCell(double x, double y) const{
-  return NodeWrapper(quadtree->getNode(x, y));
+//NodeWrapper QuadtreeWrapper::getCell(double x, double y) const{
+NodeWrapper QuadtreeWrapper::getCell(Rcpp::NumericVector pt) const{
+  return NodeWrapper(quadtree->getNode(pt[0], pt[1]));
 }
 
 Rcpp::List QuadtreeWrapper::getCells(Rcpp::NumericVector x, Rcpp::NumericVector y) const{
@@ -194,7 +195,7 @@ Rcpp::List QuadtreeWrapper::getCells(Rcpp::NumericVector x, Rcpp::NumericVector 
   return list;
 }
 
-Rcpp::NumericMatrix QuadtreeWrapper::getCellDetails(Rcpp::NumericVector x, Rcpp::NumericVector y) const{
+Rcpp::NumericMatrix QuadtreeWrapper::getCellsDetails(Rcpp::NumericVector x, Rcpp::NumericVector y) const{
   assert(x.length() == y.length());
   Rcpp::NumericMatrix mat(x.length(),6);
   colnames(mat) = Rcpp::CharacterVector({"id","xmin","xmax","ymin","ymax","value"}); //name the columns
@@ -246,7 +247,7 @@ std::vector<double> QuadtreeWrapper::asVector(bool terminalOnly) const{
   return quadtree->toVector(terminalOnly);
 }
 
-//not directly callable from R - called by 'getNbList()'
+//not directly callable from R - called by 'getNeighborList()'
 //recursively creates a matrix of that represents all the neighbors of a node
 //returns a matrix with 9 columns, in this order:
 //id of this node
@@ -258,10 +259,10 @@ std::vector<double> QuadtreeWrapper::asVector(bool terminalOnly) const{
 //y coordinate of centroid of the neighbor
 //value of the neighbor
 //0 if either of the nodes has children, 1 otherwise (think of this column as 'are both of these cells at the bottom of the tree?')
-void QuadtreeWrapper::makeNbList(std::shared_ptr<Node> node, Rcpp::List &list) const{
+void QuadtreeWrapper::makeNeighborList(std::shared_ptr<Node> node, Rcpp::List &list) const{
   std::vector<std::shared_ptr<Node>> neighbors = quadtree->findNeighbors(node, quadtree->root->smallestChildSideLength);
   Rcpp::NumericMatrix nbMat(neighbors.size(), 9); //initialize a matrix
-  colnames(nbMat) = Rcpp::CharacterVector({"id0", "x0", "y0", "val0", "id1", "x1", "y1", "val1", "isLowest"}); //name the columns
+  colnames(nbMat) = Rcpp::CharacterVector({"id0", "x0", "y0", "val0", "id1", "x1", "y1", "val1", "hasChildren"}); //name the columns
   
   //loop through the neighbors and create an entry in the matrix for each neighbor
   for(size_t i = 0; i < neighbors.size(); ++i){
@@ -273,22 +274,22 @@ void QuadtreeWrapper::makeNbList(std::shared_ptr<Node> node, Rcpp::List &list) c
     nbMat(i,5) = (neighbors[i]->xMin + neighbors[i]->xMax)/2;
     nbMat(i,6) = (neighbors[i]->yMin + neighbors[i]->yMax)/2;
     nbMat(i,7) = neighbors[i]->value;
-    nbMat(i,8) = (node->hasChildren | neighbors[i]->hasChildren) ? 0 : 1;
+    nbMat(i,8) = (node->hasChildren | neighbors[i]->hasChildren) ? 1 : 0;
   }
   list[node->id] = nbMat;
   if(node->hasChildren){
     for(size_t i = 0; i < node->children.size(); ++i){
-      makeNbList(node->children[i], list);
+      makeNeighborList(node->children[i], list);
     }
   }
 }
 
 //returns a list of neighbor matrices, one for each node. If it's already been 
 //created, just return it. Otherwise, create it first, then return it.
-Rcpp::List QuadtreeWrapper::getNbList(){
+Rcpp::List QuadtreeWrapper::getNeighborList(){
   if(nbList.length() == 0){
     Rcpp::List list = Rcpp::List(quadtree->nNodes);
-    makeNbList(quadtree->root, list);
+    makeNeighborList(quadtree->root, list);
     nbList = list;
   } 
   return nbList;

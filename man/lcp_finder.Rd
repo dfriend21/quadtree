@@ -3,19 +3,19 @@
 \name{lcp_finder}
 \alias{lcp_finder}
 \alias{lcp_finder,Quadtree,numeric-method}
-\title{Create a \code{\link{LcpFinder}}}
+\title{Create a \code{LcpFinder}}
 \usage{
 \S4method{lcp_finder}{Quadtree,numeric}(x, y, xlim = NULL, ylim = NULL, search_by_centroid = FALSE)
 }
 \arguments{
 \item{x}{a \code{\link{Quadtree}} to be used as a resistance surface}
 
-\item{y}{numeric vector with 2 elements - the x and y coordinates
-of the starting point of the path(s)}
+\item{y}{two-element numeric vector (x, y) - the x and y coordinates of the
+starting point}
 
-\item{xlim}{numeric vector with 2 elements - constrains the nodes included
-in the network to those whose x limits fall in the range specified in
-\code{xlim}. If \code{NULL} the x limits of \code{x} are used}
+\item{xlim}{two-element numeric vector (xmin, xmax) - constrains the nodes
+included in the network to those whose x limits fall in the range specified
+in \code{xlim}. If \code{NULL} the x limits of \code{x} are used}
 
 \item{ylim}{same as \code{xlim}, but for y}
 
@@ -31,7 +31,7 @@ a \code{\link{LcpFinder}}
 \description{
 Creates a \code{\link{LcpFinder}} object that can then be used
   by \code{\link{find_lcp}} and \code{\link{find_lcps}} to find least-cost
-  paths (LCPs).
+  paths (LCPs) using a \code{\link{Quadtree}} as a resistance surface.
 }
 \details{
 See the vignette 'quadtree-lcp' for more details and examples (i.e. run
@@ -48,8 +48,7 @@ library(quadtree)
 data(habitat)
 qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 
-#---- find the LCP to a single point ----
-
+# find the LCP between two points
 start_pt <- c(6989, 34007)
 end_pt <- c(33015, 38162)
 

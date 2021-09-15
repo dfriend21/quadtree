@@ -4,7 +4,7 @@
 \alias{plot}
 \alias{plot,Quadtree,missing-method}
 \alias{plot.Quadtree}
-\title{Plot a \code{\link{Quadtree}}}
+\title{Plot a \code{Quadtree}}
 \usage{
 \S4method{plot}{Quadtree,missing}(
   x,
@@ -29,7 +29,7 @@
 \item{x}{a \code{\link{Quadtree}}}
 
 \item{add}{boolean; if \code{FALSE} (the default) a new plot is created. If
-\code{TRUE}, the plot is added to the existing plot}
+\code{TRUE}, the plot is added to the existing plot.}
 
 \item{col}{character vector; the colors that will be used to create the
 color ramp used in the plot. If no argument is provided,
@@ -40,22 +40,22 @@ color ramp used in the plot. If no argument is provided,
 
 \item{nb_line_col}{character; the color of the lines drawn between
 neighboring cells. If \code{NULL} (the default), these lines are not
-plotted}
+plotted.}
 
 \item{border_col}{character; the color to use for the cell borders. Use
-'transparent' if you don't want borders to be shown. Default is "black".}
+"transparent" if you don't want borders to be shown. Default is "black".}
 
 \item{border_lwd}{numeric; the line width of the cell borders. Default is 1.}
 
-\item{xlim}{two element numeric vector; optional; defines the minimum and
+\item{xlim}{two-element numeric vector; defines the minimum and
 maximum values of the x axis. Note that this overrides the \code{crop}
 parameter.}
 
-\item{ylim}{two element numeric vector; optional; defines the minimum and
+\item{ylim}{two-element numeric vector; defines the minimum and
 maximum values of the y axis. Note that this overrides the \code{crop}
 parameter.}
 
-\item{zlim}{two element numeric vector; optional; defines how the colors are
+\item{zlim}{two-element numeric vector; defines how the colors are
 assigned to the cell values.  The first color in \code{col} will correspond
 to \code{zlim[1]} and the last color in \code{col} will correspond to
 \code{zlim[2]}. If \code{zlim} does not encompass the entire range of cell
@@ -66,10 +66,10 @@ values, cells that have values outside of the range specified by
 \item{crop}{boolean; if \code{TRUE}, only displays the extent of the original
 raster, thus ignoring any of the \code{NA} cells that were added to pad the
 raster before making the quadtree. Ignored if either \code{xlim} or
-\code{ylim} are non-\code{NULL}}
+\code{ylim} are non-\code{NULL}.}
 
 \item{na_col}{character; the color to use for \code{NA} cells. If
-\code{NULL}, \code{NA} cells are not plotted. Default is "white"}
+\code{NULL}, \code{NA} cells are not plotted. Default is "white".}
 
 \item{adj_mar_auto}{numeric; if not \code{NULL}, it checks the size of the
 right margin (\code{par("mar")[4]}) - if it is less than the provided value
@@ -78,7 +78,7 @@ in order to make room for the legend (after plotting, it resets it to its
 original value). Default is 6.}
 
 \item{legend}{boolean; if \code{TRUE} (the default) a legend is plotted in
-the right margin}
+the right margin.}
 
 \item{legend_args}{named list; contains arguments that are sent to the
 \code{\link{add_legend}()} function. See the help page for
@@ -94,14 +94,14 @@ user-provided values will be ignored.}
 no return value
 }
 \description{
-Plot a \code{\link{Quadtree}}
+Plots a \code{\link{Quadtree}}.
 }
 \details{
 See 'Examples' for demonstrations of how the various options can be
 used.
 }
 \examples{
-library(raster)
+library(quadtree)
 data(habitat)
 
 # create quadtree

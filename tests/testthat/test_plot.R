@@ -1,5 +1,5 @@
-test_that("plot output runs without errors and looks right", {
-  skip("these tests should be manually run and visually inspected")
+test_that("plot() output runs without errors and looks right for all parameter options", {
+  #skip("these tests should be manually run and visually inspected")
   library(raster)
   data(habitat)
   rast <- habitat
@@ -7,7 +7,7 @@ test_that("plot output runs without errors and looks right", {
   qt1 <- quadtree(rast, split_threshold = .1, adj_type = "expand")
 
   # png("plots/plots1.png", height = 1200, width = 1600)
-  par(mfrow = c(3, 4))
+  #par(mfrow = c(3, 4))
   expect_error(plot(qt1, main = "default - no additional parameters provided"), NA)
   expect_error(plot(qt1, crop = TRUE, main = "crop extent to the original extent of the raster"), NA)
   expect_error(plot(qt1, crop = TRUE, na_col = NULL, main = "crop and don't plot NA cells"), NA)
@@ -23,7 +23,7 @@ test_that("plot output runs without errors and looks right", {
   # dev.off()
 
   # png("plots/plots2.png", height = 1200, width = 1600)
-  par(mfrow = c(3, 4))
+  #par(mfrow = c(3, 4))
   expect_error(plot(qt1, zlim = c(0, 5), main = "change zlim: c(0,5)"), NA)
   expect_error(plot(qt1, zlim = c(.2, .7), main = "change zlim: c(.2,.7)"), NA)
   expect_error(plot(qt1, nb_line_col = "black", border_col = "gray60", main = "plot all neighbor connections"), NA)

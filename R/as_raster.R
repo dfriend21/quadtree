@@ -2,16 +2,16 @@
 
 #' @name as_raster
 #' @aliases as_raster,Quadtree-method
-#' @title Create a raster from a \code{\link{Quadtree}}
+#' @title Create a raster from a \code{Quadtree}
 #' @description Creates a \code{\link[raster:RasterLayer-class]{RasterLayer}}
 #'   from a \code{\link{Quadtree}}.
 #' @param x a \code{\link{Quadtree}}
-#' @param rast a \code{\link[raster:RasterLayer-class]{RasterLayer}} object; optional; this will be used as a
-#'   template - the output raster will have the same extent and dimensions as
-#'   this raster. If \code{NULL} (the default), a raster is automatically
-#'   created, where the quadtree extent is used as the raster extent, and the
-#'   smallest cell in the quadtree is used to determine the resolution of the
-#'   raster.
+#' @param rast a \code{\link[raster:RasterLayer-class]{RasterLayer}}; optional;
+#'   this will be used as a template - the output raster will have the same
+#'   extent and dimensions as this raster. If \code{NULL} (the default), a
+#'   raster is automatically created, where the quadtree extent is used as the
+#'   raster extent, and the size of smallest cell in the quadtree is used as
+#'   the resolution of the raster.
 #' @details
 #' Note that the value of a raster cell is determined by the value of the
 #' quadtree cell located at the centroid of the raster cell - thus, if a raster
@@ -21,9 +21,10 @@
 #' automatically determined from the quadtree in such a way that the cells are
 #' guaranteed to line up with the quadtree cells with no overlap, thus avoiding
 #' the issue.
-#' @return a \code{\link[raster:RasterLayer-class]{RasterLayer}} object
+#' @return a \code{\link[raster:RasterLayer-class]{RasterLayer}}
 #' @examples
 #' library(raster)
+#' library(quadtree)
 #' data(habitat)
 #' 
 #' # create a quadtree
