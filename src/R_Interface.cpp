@@ -1,17 +1,8 @@
-#include "Quadtree.h"
-#include "Node.h"
-#include "Point.h"
 #include "Matrix.h"
-#include "QuadtreeWrapper.h"
-#include "NodeWrapper.h"
 #include "R_Interface.h"
 #include <vector>
 #include <Rcpp.h>
-//////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////
-//                  R interface code                        //
-//////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////
+
 Matrix rInterface::rMatToCppMat(Rcpp::NumericMatrix &mat){
   std::vector<double> vec(mat.nrow()*mat.ncol());
   int counter{0};
