@@ -157,17 +157,15 @@
 #'   a single cell and has one line for each neighboring cell. "neighbor"
 #'   includes diagonal adjacency. Each matrix has the following columns:
 #'   \itemize{
-#'     \item \code{id0}, \code{x0}, \code{y0}, \code{val0}: the ID, x and y
-#'     coordinates of the centroid, and cell value for the cell of interest.
-#'     Note that the values of these columns will be same across all rows
-#'     because they refer to the same cell.
-#'     \item \code{id1}, \code{x1}, \code{y1}, \code{val1}: the ID, x and y
-#'     coordinates of the centroid, and cell value for each cell that neighbors
-#'     the cell of interest (i.e. the cell represented by the columns suffixed
-#'     with '0').
-#'     \item \code{hasChildren}: 1 or 0 - whether or not the cell of interest
-#'     (i.e. the cell represented by the columns suffixed with '0') has
-#'     children, where 1 means it has children and 0 means it doesn't.
+#'     \item \code{id0}, \code{x0}, \code{y0}, \code{val0}, \code{hasChildren0}:
+#'     the ID, x and y coordinates of the centroid, cell value, and whether the
+#'     cell has children. This is for the cell of interest. Note that the values
+#'     of these columns will be same across all rows because they refer to the
+#'     same cell.
+#'     \item \code{id1}, \code{x1}, \code{y1}, \code{val1}, \code{hasChildren1}:
+#'     the ID, x and y coordinates of the centroid, cell value, and whether the
+#'     cell has children. This is for the neighbors of the cell of interest.
+#'     (i.e. the cell represented by the columns suffixed with '0').
 #'   }
 #' }
 #' @field getNeighbors \itemize{
