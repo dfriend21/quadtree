@@ -2,26 +2,16 @@
 #define POINT_H
 
 #include <string>
-#include <vector>
 
 class Point { 
 public:
-  double x;
-  double y;
-  bool hasCoordinates;
+    double x;
+    double y;
 
-  Point();
-  Point(double _x, double _y);
-  
-  double getX() const;
-  double getY() const;
-  bool hasCoords() const;
+    Point();
+    Point(double _x, double _y);
 
-  void setCoords(double _x, double _y);
-
-  std::string toString() const;
+    std::string toString() const;
 };
-
-std::vector<Point> readPoints(std::string filePath);
 
 #endif
