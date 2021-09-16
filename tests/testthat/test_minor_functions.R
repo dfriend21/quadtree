@@ -72,7 +72,7 @@ test_that("extent() runs without errors and produces expected output", {
   expect_equal(qt_ext, extent(habitat))
 })
 
-test_that("extract runs without errors and returns correct values", {
+test_that("extract() runs without errors and returns correct values", {
   library(raster)
   data(habitat)
   # use 0 to make sure everything gets split as small as possible

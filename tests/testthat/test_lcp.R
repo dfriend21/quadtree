@@ -26,14 +26,44 @@ test_that("lcp_finder() with search limits works as expected", {
   e_pt2 <- c(26925.696, 31176.70)
   qt <- quadtree(habitat, .2)
 
-  dist <- 7000
-  lcpf <- lcp_finder(qt, s_pt, xlim = c(s_pt[1] - dist, s_pt[1] + dist),
-                     ylim = c(s_pt[2] - dist, s_pt[2] + dist))
-  lcp1 <- expect_error(find_lcp(lcpf, e_pt1), NA)
-  lcp2 <- expect_error(find_lcp(lcpf, e_pt2), NA)
-
-  expect_true(nrow(lcp1) > 0)
-  expect_equal(nrow(lcp2), 0)
+  dist <- 7112
+  xlim <- c(s_pt[1] - dist, s_pt[1] + dist)
+  ylim <- c(s_pt[2] - dist, s_pt[2] + dist)
+  
+  # test when search_by_centroid = FALSE (lcpf1)
+  lcpf1 <- expect_error(lcp_finder(qt, s_pt, xlim = xlim, ylim = ylim), NA)
+  lcpf1_all <- find_lcps(lcpf1)
+  lcp1_1 <- expect_error(find_lcp(lcpf1, e_pt1), NA)
+  lcp1_2 <- expect_error(find_lcp(lcpf1, e_pt2), NA)
+  expect_true(nrow(lcp1_1) > 0)
+  expect_equal(nrow(lcp1_2), 0)
+  
+  # test that all nodes overlap with the search area (lcpf1_)
+  lcpf1_all$x <- (lcpf1_all$xmin + lcpf1_all$xmax) / 2
+  lcpf1_all$y <- (lcpf1_all$ymin + lcpf1_all$ymax) / 2
+  lcpf1_is_valid <- with(lcpf1_all, !(xmax < xlim[1] | xmin > xlim[2]) &
+                                    !(ymax < ylim[1] | ymin > ylim[2]))
+  expect_true(all(lcpf1_is_valid))
+  
+  # test when search_by_centroid = TRUE (lcpf2)
+  lcpf2 <- expect_error(lcp_finder(qt, s_pt, xlim = xlim,ylim = ylim,
+                                   search_by_centroid = TRUE), NA)
+  lcpf2_all <- find_lcps(lcpf2)
+  lcp2_1 <- expect_error(find_lcp(lcpf2, e_pt1), NA)
+  lcp2_2 <- expect_error(find_lcp(lcpf2, e_pt2), NA)
+  expect_true(nrow(lcp2_1) > 0)
+  expect_equal(nrow(lcp2_2), 0)
+  
+  # test that all centroids fall within the search area (lcpf2)
+  lcpf2_all$x <- (lcpf2_all$xmin + lcpf2_all$xmax) / 2
+  lcpf2_all$y <- (lcpf2_all$ymin + lcpf2_all$ymax) / 2
+  lcpf2_is_valid <- with(lcpf2_all, x >= xlim[1] & x <= xlim[2] & 
+                                    y >= ylim[1] & y <= ylim[2])
+  expect_true(all(lcpf2_is_valid))  
+  
+  # test that lcpf2 finds fewer paths
+  expect_true(nrow(lcpf1_all) > nrow(lcpf2_all))
+  
 })
 
 test_that("find_lcps() runs without errors", {
@@ -56,9 +86,18 @@ test_that("summarize_lcps() runs without errors and produces expected output", {
   qt <- quadtree(habitat, .1, split_method = "sd")
   start_point <- c(19000, 27500)
   lcpf <- lcp_finder(qt, start_point)
-  expect_error(find_lcps(lcpf, limit = NULL), NA)
+  find_lcps(lcpf, limit = NULL)
   lcp_sum <- expect_error(summarize_lcps(lcpf), NA)
   expect_s3_class(lcp_sum, "data.frame")
+})
+
+test_that("summary(<LcpFinder>) runs without errors", {
+  data(habitat)
+  qt <- quadtree(habitat, .1, split_method = "sd")
+  start_point <- c(19000, 27500)
+  lcpf <- lcp_finder(qt, start_point)
+  find_lcps(lcpf, limit = NULL)
+  expect_output(summary(lcpf))
 })
 
 test_that("find_lcps() finds the same paths as in previous runs", {

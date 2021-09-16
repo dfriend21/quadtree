@@ -1,4 +1,4 @@
-test_that("plot() output runs without errors and looks right for all parameter options", {
+test_that("plot(<Quadtree>) output runs without errors and looks right for all parameter options", {
   # skip("these tests should be manually run and visually inspected")
   library(raster)
   data(habitat)
@@ -32,4 +32,21 @@ test_that("plot() output runs without errors and looks right for all parameter o
   expect_error(plot(qt1, adj_mar_auto = 10, main = "increase right margin size"), NA)
   expect_error(plot(qt1, adj_mar_auto = 10, legend_args = list(lgd_ht_pct = .8, bar_wd_pct = .4), main = "'legend_args': lgd_ht_pct=.8, bar_wd_pct=.4"), NA)
   # dev.off()
+})
+
+test_that("points(<LcpFinder>) and lines(<LcpFinder>) run without errors", {
+  data(habitat)
+  
+  s_pt <- c(8488.439, 25842.65)
+  qt <- quadtree(habitat, .2)
+  
+  dist <- 7112
+  xlim <- c(s_pt[1] - dist, s_pt[1] + dist)
+  ylim <- c(s_pt[2] - dist, s_pt[2] + dist)
+  
+  lcpf <- lcp_finder(qt, s_pt, xlim = xlim, ylim = ylim)
+  find_lcps(lcpf, return_summary = FALSE)
+  plot(qt, crop = TRUE, border_lwd = .3, na_col = NULL)
+  expect_error(lines(lcpf), NA)
+  expect_error(points(lcpf, col = "red", pch = 16, cex = .5), NA)
 })

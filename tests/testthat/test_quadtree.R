@@ -27,6 +27,12 @@ test_that("quadtree creation with templates works", {
   expect_equal(qt1_df2, qt2_df2)
 })
 
+test_that("summary(<Quadtree>) runs without errors", {
+  data(habitat)
+  qt <- quadtree(habitat, .1, split_method = "sd")
+  expect_output(summary(qt))
+})
+
 test_that("'quadtree()' runs without errors for all parameter settings", {
   library(raster)
 
