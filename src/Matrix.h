@@ -1,7 +1,7 @@
-#ifndef MATRIX_HPP
-#define MATRIX_HPP
+#ifndef MATRIX_H
+#define MATRIX_H
 
-#include <iostream>
+#include <string>
 #include <vector>
 
 class Matrix{
@@ -10,14 +10,14 @@ private:
     int ncol{0};
 
     int getIndex(const int row, const int col) const;
-public:
 
+public:
     std::vector<double> vec;
 
     Matrix();
     Matrix(double val, int _nrow, int _ncol);
     Matrix(std::vector<double> _vec, int _nrow, int _ncol);
-    
+
     int nRow() const;
     int nCol() const;
     int size() const;
@@ -46,7 +46,6 @@ public:
 
     int countNans() const;
     std::string toString() const;
-
 };
 
 Matrix operator+(const Matrix &lhs, const Matrix &rhs);
@@ -62,8 +61,6 @@ Matrix operator*(const Matrix &mat, const int scalar);
 Matrix operator*(const int scalar, const Matrix &mat);
 Matrix operator*(const Matrix &mat, const double scalar);
 Matrix operator*(const double scalar, const Matrix &mat);
-
-std::ostream& operator<< (std::ostream &out, const Matrix mat);
 
 Matrix cbind(const Matrix &mat1, const Matrix &mat2);
 Matrix rbind(const Matrix &mat1, const Matrix &mat2);

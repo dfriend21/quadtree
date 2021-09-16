@@ -1,15 +1,11 @@
-#include <iostream>
-#include <vector>
-//#include <cassert>
-#include <string>
-#include <cmath>
-#include <algorithm>
 #include "Matrix.h"
 
-//-------------------------
-// constructors
-//-------------------------
+#include <algorithm>
+// #include <cassert>
+#include <cmath>
+#include <limits>
 
+// ------- constructors -------
 Matrix::Matrix() : nrow{0}, ncol{0}{
     vec = std::vector<double>(0);
 }
@@ -22,31 +18,25 @@ Matrix::Matrix(double val, int _nrow, int _ncol) : nrow{_nrow}, ncol{_ncol}
 Matrix::Matrix(std::vector<double> _vec, int _nrow, int _ncol) 
     : nrow{_nrow}, ncol{_ncol}, vec(_vec)  
 {
-    //assert(_nrow >= 0 && _ncol >= 0);
-    //assert(vec.size() == (size_t)(nrow*ncol));
+    // assert(_nrow >= 0 && _ncol >= 0);
+    // assert(vec.size() == (size_t)(nrow*ncol));
 }
 
-//-------------------------
-// getIndex
-//-------------------------
+// ------- getIndex -------
 // given a row and a column, get the index of that element in 'vec'
 int Matrix::getIndex(const int row, const int col) const{
-    //assert(row >= 0 || row < nRow() || col >= 0 || col < nCol());//check to make sure the indices are valid
+    // assert(row >= 0 || row < nRow() || col >= 0 || col < nCol());//check to make sure the indices are valid
     int index = row*nCol() + col; 
     return index;
 }
 
-//-------------------------
-// retrieve basic properties of the matrix
-//-------------------------
+// ------- retrieve basic properties of the matrix -------
 int Matrix::nRow() const{ return nrow; }
 int Matrix::nCol() const{ return ncol; }
 int Matrix::size() const{ return vec.size(); }
 std::vector<double> Matrix::asVector() const{ return vec; }
 
-//-------------------------
-// functions for getting individual values
-//-------------------------
+// ------- functions for getting individual values -------
 double Matrix::getValueByIndex(const int index) const{
     return vec.at(index);
 }
@@ -54,9 +44,7 @@ double Matrix::getValue(const int row, const int col) const {
     return getValueByIndex(getIndex(row, col));
 }
 
-//-------------------------
-// functions for setting individual values
-//-------------------------
+// ------- functions for setting individual values -------
 void Matrix::setValueByIndex(const double value, const int index){
     vec.at(index) = value;
 }
@@ -64,9 +52,7 @@ void Matrix::setValue(const double value, const int row, const int col){
     vec.at(getIndex(row,col)) = value;
 }
 
-//-------------------------
-// functions for subsetting a matrix
-//-------------------------
+// ------- functions for subsetting a matrix -------
 Matrix Matrix::getRow(const int index) const{
     std::vector<double> slice(ncol);
     for(int i = 0; i < ncol; i++){
@@ -99,9 +85,7 @@ Matrix Matrix::subset(int rMin, int rMax, int cMin, int cMax) const{
     return subset;
 }
 
-//-------------------------
-// functions for matrix operations
-//-------------------------
+// ------- functions for matrix operations -------
 Matrix Matrix::flipRows() const{
     std::vector<double> newVec(vec.size());
     int counter{0};
@@ -125,7 +109,7 @@ Matrix Matrix::getTranspose() const {
     return Matrix(newVec, ncol, nrow);
 }
 
-//https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html
+// https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html
 Matrix Matrix::getMinorsMatrix() const {
     Matrix minors(0,nRow(), nCol());
     for(int iRow = 0; iRow < nRow(); ++iRow){
@@ -147,7 +131,7 @@ Matrix Matrix::getMinorsMatrix() const {
     return minors;
 }
 
-//https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html
+// https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html
 Matrix Matrix::getCofactorsMatrix() const{
     Matrix cofactors(0,nRow(), nCol());
     for(int iRow = 0; iRow < nRow(); ++iRow){
@@ -162,12 +146,12 @@ Matrix Matrix::getCofactorsMatrix() const{
     return cofactors;
 }
 
-//https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html
+// https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html
 Matrix Matrix::getInverse() const {
     double det = determinant();
     // assert(det != 0);
 
-    //definitely not memory efficient
+    // definitely not memory efficient
     Matrix minors = getMinorsMatrix();
     Matrix cofactors = minors.getCofactorsMatrix();
     Matrix transpose = cofactors.getTranspose();
@@ -176,9 +160,7 @@ Matrix Matrix::getInverse() const {
     return inverse;
 }
 
-//-------------------------
-// summary stats
-//-------------------------
+// ------- summary stats -------
 double Matrix::mean(bool removeNA) const{
     if(removeNA){
         double sum = 0;
@@ -249,7 +231,7 @@ double Matrix::max() const{
 }
 
 double Matrix::determinant() const{
-    //assert(nRow() == nCol());
+    // assert(nRow() == nCol());
 
     if(nRow() == 2){
         return getValue(0,0)*getValue(1,1) - getValue(0,1)*getValue(1,0);
@@ -279,9 +261,7 @@ double Matrix::determinant() const{
 
 }
 
-//-------------------------
-// countNans
-//-------------------------
+// ------- countNans -------
 // counts the number of Nans in a matrix
 int Matrix::countNans() const{
     int count = 0;
@@ -293,9 +273,7 @@ int Matrix::countNans() const{
     return count;
 }
 
-//-------------------------
-// toString
-//-------------------------
+// ------- toString -------
 std::string Matrix::toString() const{
     std::string str = "";
     for(int i = 0; i < nrow; i++){
@@ -307,11 +285,9 @@ std::string Matrix::toString() const{
     return(str);
 }
 
-//-------------------------
-// arithmetic operations
-//-------------------------
+// ------- arithmetic operations -------
 Matrix operator+(const Matrix &lhs, const Matrix &rhs){
-    //assert(lhs.nRow() == rhs.nRow() && lhs.nCol() == rhs.nCol());
+    // assert(lhs.nRow() == rhs.nRow() && lhs.nCol() == rhs.nCol());
     std::vector<double> sum(lhs.asVector().size());
     for(std::size_t i = 0; i<lhs.asVector().size(); i++){
         sum[i] = lhs.getValueByIndex(i) + rhs.getValueByIndex(i);
@@ -344,7 +320,7 @@ Matrix operator+(const double scalar, const Matrix &mat){
 }
 
 Matrix operator*(const Matrix &lhs, const Matrix &rhs){
-    //assert(lhs.nCol() == rhs.nRow());
+    // assert(lhs.nCol() == rhs.nRow());
     int nRowNew = lhs.nRow();
     int nColNew = rhs.nCol();
     std::vector<double> prod(nRowNew * nColNew);
@@ -353,7 +329,7 @@ Matrix operator*(const Matrix &lhs, const Matrix &rhs){
         for(int j = 0; j < nColNew; j++){
             const std::vector<double> &col_r{rhs.getCol(j).asVector()};
             double sum{0};
-            for(size_t k = 0; k < row_l.size(); k++){ //row_l and col_r should have the same length
+            for(size_t k = 0; k < row_l.size(); k++){ // row_l and col_r should have the same length
                 sum += row_l.at(k)*col_r.at(k);
             }
             prod.at(i*nColNew + j) = sum;
@@ -387,19 +363,9 @@ Matrix operator*(const double scalar, const Matrix &mat){
     return mat*scalar;
 }
 
-//-------------------------
-// print a string using <<
-//-------------------------
-std::ostream& operator<< (std::ostream &out, const Matrix mat){
-    out << mat.toString();
-    return out;
-}
-
-//-------------------------
-// combine matrices
-//-------------------------
+// ------- combine matrices -------
 Matrix rbind(const Matrix &mat1, const Matrix &mat2){
-    //assert(mat1.nCol() == mat2.nCol());
+    // assert(mat1.nCol() == mat2.nCol());
     
     std::vector<double> newMatVec(mat1.size() + mat2.size());
     Matrix newMat(newMatVec, mat1.nRow()+mat2.nRow(), mat1.nCol());
@@ -416,7 +382,7 @@ Matrix rbind(const Matrix &mat1, const Matrix &mat2){
 }
 
 Matrix cbind(const Matrix &mat1, const Matrix &mat2){
-    //assert(mat1.nRow() == mat2.nRow());
+    // assert(mat1.nRow() == mat2.nRow());
     
     std::vector<double> newMatVec(mat1.size() + mat2.size());
     Matrix newMat(newMatVec, mat1.nRow(), mat1.nCol()+mat2.nCol());
