@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -318,17 +318,15 @@
 <li><p><strong>Returns</strong>: a list of matrices. Each matrix corresponds to
   a single cell and has one line for each neighboring cell. "neighbor"
   includes diagonal adjacency. Each matrix has the following columns:</p><ul>
-<li><p><code>id0</code>, <code>x0</code>, <code>y0</code>, <code>val0</code>: the ID, x and y
-    coordinates of the centroid, and cell value for the cell of interest.
-    Note that the values of these columns will be same across all rows
-    because they refer to the same cell.</p></li>
-<li><p><code>id1</code>, <code>x1</code>, <code>y1</code>, <code>val1</code>: the ID, x and y
-    coordinates of the centroid, and cell value for each cell that neighbors
-    the cell of interest (i.e. the cell represented by the columns suffixed
-    with '0').</p></li>
-<li><p><code>hasChildren</code>: 1 or 0 - whether or not the cell of interest
-    (i.e. the cell represented by the columns suffixed with '0') has
-    children, where 1 means it has children and 0 means it doesn't.</p></li>
+<li><p><code>id0</code>, <code>x0</code>, <code>y0</code>, <code>val0</code>, <code>hasChildren0</code>:
+    the ID, x and y coordinates of the centroid, cell value, and whether the
+    cell has children. This is for the cell of interest. Note that the values
+    of these columns will be same across all rows because they refer to the
+    same cell.</p></li>
+<li><p><code>id1</code>, <code>x1</code>, <code>y1</code>, <code>val1</code>, <code>hasChildren1</code>:
+    the ID, x and y coordinates of the centroid, cell value, and whether the
+    cell has children. This is for the neighbors of the cell of interest.
+    (i.e. the cell represented by the columns suffixed with '0').</p></li>
 </ul></li>
 </ul></p></dd>
 

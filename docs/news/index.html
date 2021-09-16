@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -135,11 +135,25 @@
       <small>Source: <a href='https://github.com/dfriend21/quadtree/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="quadtree-011" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.1">
+<a href="#quadtree-011" class="anchor"></a>quadtree 0.1.1</h1>
+<ul>
+<li>Added a missing <code>#include</code> in <code>Matrix.cpp</code> that appeared to be causing the CRAN build to fail.</li>
+<li>Cleaned up <code>#include</code>s in C++ files - removed unnecessary <code>#includes</code> and order them in a way that is more readable.</li>
+<li>Removed <code>PointUtilities.h</code> and <code>PointUtilities.cpp</code>. Only a single function (<code>distBtwPoints()</code>) in this namespace was being used (in <code>LcpFinder.cpp</code>), and only once.</li>
+<li>Switched C++ functions to consistently require <code>Point</code> objects as parameters (rather than having <code>double x</code> and <code>double y</code> parameters).</li>
+<li>Removed unnecessary member functions of <code>Point</code>.</li>
+<li>Cleaned up C++ comments.</li>
+<li>Changed output of <code>makeNeighborList()</code> (from <code>QuadtreeWrapper</code>) - removed ambiguous <code>hasChildren</code> column and instead added <code>hasChildren0</code> and <code>hasChildren1</code> columns. Modified <code>plot_Quadtree.R</code> to work with the new columns.</li>
+<li>Added unit tests for <code>summary(&lt;Quadtree&gt;)</code>, <code>summary(&lt;LcpFinder&gt;)</code>, <code>lines(&lt;LcpFinder&gt;)</code>, and <code>points(&lt;LcpFinder&gt;)</code>. Also added a unit test for <code>search_by_centroid</code> option of <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code>.</li>
+</ul>
+</div>
     <div id="quadtree-010" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0">
 <a href="#quadtree-010" class="anchor"></a>quadtree 0.1.0</h1>
 <ul>
-<li>intial release</li>
+<li>initial release</li>
 </ul>
 </div>
   </div>
