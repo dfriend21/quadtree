@@ -223,7 +223,7 @@ setMethod("plot", signature(x = "Quadtree", y = "missing"),
       if (is.null(na_col)) {
         edges <- stats::na.omit(edges)
       }
-      edges <- edges[edges$hasChildren == 0, ] # only plot connections between terminal nodes
+      edges <- edges[edges$hasChildren0 == 0 & edges$hasChildren1 == 0, ] # only plot connections between terminal nodes
       graphics::segments(edges$x0, edges$y0, edges$x1, edges$y1,
                          col = nb_line_col)
     }
