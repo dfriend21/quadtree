@@ -2,10 +2,12 @@
 #define NODEWRAPPER_H
 
 #include "Node.h"
-#include <vector>
-#include <memory>
+
 #include <Rcpp.h>
+
+#include <memory>
 #include <string>
+#include <vector>
 
 class NodeWrapper{
 public:

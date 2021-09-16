@@ -1,7 +1,6 @@
 #include "NodeWrapper.h"
 #include "QuadtreeWrapper.h"
 #include "LcpFinderWrapper.h"
-#include "R_Interface.h"
 
 RCPP_MODULE(qt) {
   using namespace Rcpp;

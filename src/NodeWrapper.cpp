@@ -1,10 +1,4 @@
-#include "Matrix.h"
-#include "Node.h"
 #include "NodeWrapper.h"
-#include <memory>
-#include <vector>
-#include <string>
-#include <Rcpp.h>
 
 NodeWrapper::NodeWrapper(){
   node = nullptr;

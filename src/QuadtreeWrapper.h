@@ -1,16 +1,18 @@
 #ifndef QUADTREEWRAPPER_H
 #define QUADTREEWRAPPER_H
 
+#include "LcpFinderWrapper.h"
 #include "Node.h"
+#include "NodeWrapper.h"
 #include "Quadtree.h"
 
-#include "NodeWrapper.h"
-#include "LcpFinderWrapper.h"
+#include <cereal/archives/portable_binary.hpp>
+#include <cereal/types/memory.hpp>
+#include <Rcpp.h>
 
 #include <memory>
 #include <vector>
 #include <string>
-#include <Rcpp.h>
 
 class QuadtreeWrapper{
   public:

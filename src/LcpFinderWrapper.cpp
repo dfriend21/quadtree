@@ -1,5 +1,7 @@
 #include "LcpFinderWrapper.h"
 
+#include "Point.h"
+
 LcpFinderWrapper::LcpFinderWrapper(std::shared_ptr<Quadtree> quadtree, Rcpp::NumericVector _startPoint)
     : startPoint{_startPoint}{
   spf = LcpFinder(quadtree,Point(startPoint[0], startPoint[1]));

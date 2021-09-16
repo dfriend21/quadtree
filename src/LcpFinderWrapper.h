@@ -2,9 +2,11 @@
 #define LCPFINDERWRAPPER_H
 
 #include "LcpFinder.h"
+
 #include <Rcpp.h>
-#include <string>
+
 #include <memory>
+#include <string>
 
 class LcpFinderWrapper{
 public:

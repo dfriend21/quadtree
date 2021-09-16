@@ -1,7 +1,6 @@
-#include "Matrix.h"
 #include "R_Interface.h"
+
 #include <vector>
-#include <Rcpp.h>
 
 Matrix rInterface::rMatToCppMat(Rcpp::NumericMatrix &mat){
   std::vector<double> vec(mat.nrow()*mat.ncol());
