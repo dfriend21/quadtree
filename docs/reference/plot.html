@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -235,11 +235,11 @@ raster before making the quadtree. Ignored if either <code>xlim</code> or
     </tr>
     <tr>
       <th>adj_mar_auto</th>
-      <td><p>numeric; if not <code>NULL</code>, it checks the size of the
-right margin (<code>par("mar")[4]</code>) - if it is less than the provided value
-and <code>legend</code> is <code>TRUE</code>, then it sets it to be the provided value
-in order to make room for the legend (after plotting, it resets it to its
-original value). Default is 6.</p></td>
+      <td><p>numeric; checks the size of the right margin
+(<code>par("mar")[4]</code>) - if it is less than the provided value and
+<code>legend</code> is <code>TRUE</code>, then it sets it to be the provided value in
+order to make room for the legend (after plotting, it resets it to its
+original value). If <code>NULL</code>, the margin is not adjusted. Default is 6.</p></td>
     </tr>
     <tr>
       <th>legend</th>

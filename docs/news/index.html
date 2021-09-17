@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -135,6 +135,18 @@
       <small>Source: <a href='https://github.com/dfriend21/quadtree/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="quadtree-012" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.2">
+<a href="#quadtree-012" class="anchor"></a>quadtree 0.1.2</h1>
+<p>Responded to comments after CRAN submission. This led to the following changes:</p>
+<ul>
+<li>In <code>plot&lt;Quadtree&gt;&gt;()</code>, switched to resetting <code><a href="https://rdrr.io/r/graphics/par.html">par()</a></code> using <code><a href="https://rdrr.io/r/base/on.exit.html">on.exit()</a></code>
+</li>
+<li>In all examples, added code to reset <code><a href="https://rdrr.io/r/graphics/par.html">par()</a></code> if it was changed</li>
+<li>Removed the ‘rapidjson’ and ‘rapidxml’ libraries from within ‘cereal’.</li>
+<li>Added additional copyright holder in ‘DESCRIPTION’.</li>
+</ul>
+</div>
     <div id="quadtree-011" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.1">
 <a href="#quadtree-011" class="anchor"></a>quadtree 0.1.1</h1>
