@@ -37,11 +37,11 @@
 #'   \code{ylim} are non-\code{NULL}.
 #' @param na_col character; the color to use for \code{NA} cells. If
 #'   \code{NULL}, \code{NA} cells are not plotted. Default is "white".
-#' @param adj_mar_auto numeric; if not \code{NULL}, it checks the size of the
-#'   right margin (\code{par("mar")[4]}) - if it is less than the provided value
-#'   and \code{legend} is \code{TRUE}, then it sets it to be the provided value
-#'   in order to make room for the legend (after plotting, it resets it to its
-#'   original value). Default is 6.
+#' @param adj_mar_auto numeric; checks the size of the right margin
+#'   (\code{par("mar")[4]}) - if it is less than the provided value and
+#'   \code{legend} is \code{TRUE}, then it sets it to be the provided value in
+#'   order to make room for the legend (after plotting, it resets it to its
+#'   original value). If \code{NULL}, the margin is not adjusted. Default is 6.
 #' @param legend boolean; if \code{TRUE} (the default) a legend is plotted in
 #'   the right margin.
 #' @param legend_args named list; contains arguments that are sent to the
@@ -200,13 +200,14 @@ setMethod("plot", signature(x = "Quadtree", y = "missing"),
     if (is.null(xlim)) xlim <- x@ptr$root()$xLims()
     if (is.null(ylim)) ylim <- x@ptr$root()$yLims()
 
-    # if 'adj_mar_auto' and 'legend' are both TRUE, make sure the right margin is big enough for the legend
+    # if 'adj_mar_auto' is not NULL and 'legend' is TRUE, make sure the right margin is big enough for the legend
     if (!is.null(adj_mar_auto) && legend) {
-      old_mar <- graphics::par("mar") # keep track of the old value so we can reset it after plotting
-      new_mar <- old_mar
-      if (new_mar[4] < adj_mar_auto) {
-        new_mar[4] <- adj_mar_auto
-        graphics::par(mar = new_mar)
+      mar <- graphics::par("mar")
+      if (mar[4] < adj_mar_auto) {
+        old_mar <- mar
+        on.exit(graphics::par(mar = old_mar), add = TRUE) # reset 'par' on function exit  
+        mar[4] <- adj_mar_auto
+        graphics::par(mar = mar)
       }
     }
 
@@ -236,11 +237,6 @@ setMethod("plot", signature(x = "Quadtree", y = "missing"),
       legend_args$col <- col_hex
       legend_args$alpha <- alpha
       do.call(add_legend, legend_args)
-    }
-
-    # reset the margin setting back to what it was before
-    if (!is.null(adj_mar_auto) && legend) {
-      graphics::par(mar = old_mar)
     }
   }
 )
@@ -373,9 +369,10 @@ NULL
 #' data(habitat)
 #' qt <- quadtree(habitat, .2)
 #'
-#' par(mar = c(5, 4, 4, 5))
+#' old_par <- par(mar = c(5, 4, 4, 5))
 #' plot(qt, legend = FALSE)
 #' add_legend(raster::cellStats(habitat, "range"), rev(terrain.colors(100)))
+#' par(old_par)
 #' # this example simply illustrates how it COULD be used, but as stated in the
 #' # 'Details' section, it shouldn't be called separately from 'plot()' - if
 #' # customizations to the legend are desired, use the 'legend_args' parameter
