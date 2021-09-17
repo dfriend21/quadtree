@@ -1,3 +1,12 @@
+# quadtree 0.1.2
+
+Responded to comments after CRAN submission. This led to the following changes:
+
+* In `plot<Quadtree>>()`, switched to resetting `par()` using `on.exit()`
+* In all examples, added code to reset `par()` if it was changed
+* Removed the 'rapidjson' and 'rapidxml' libraries from within 'cereal'.
+* Added additional copyright holder in 'DESCRIPTION'.
+
 # quadtree 0.1.1
 
 * Added a missing `#include` in `Matrix.cpp` that appeared to be causing the CRAN build to fail.
