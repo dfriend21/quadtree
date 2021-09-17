@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
   fig.width = 7,
   dev = "jpeg"
 )
+old_par <- par(no.readonly = TRUE)
 ```
 
 ## Vignette content
@@ -114,7 +115,7 @@ In the next section ("Modifying cell values"), this function is used in the exam
 
 ## Modifying cell values
 
-Two functions are provided for modifying cell values: `set_values()` and `transform_values()`. 
+Two functions are provided for modifying cell values: `set_values()` and `transform_values()`.
 
 ### Setting values of cells
 
@@ -201,4 +202,8 @@ A `Quadtree` can also be converted to a raster using the `as_raster()` function.
 ```{r}
 rast <- as_raster(qt)
 plot(rast)
+```
+
+```{r, echo=FALSE}
+par(old_par)
 ```

@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 options(rmarkdown.html_vignette.check_title = FALSE)
+old_par <- par(no.readonly = TRUE)
 ```
 
 ## Vignette content
@@ -238,4 +239,8 @@ qt_all <- quadtree(rast, .15, split_if_all_na = TRUE)
 par(mfrow = c(1, 2))
 plot(qt_any, border_lwd = .3, legend = FALSE, main = "split_if_any_na = FALSE")
 plot(qt_all, border_lwd = .3, legend = FALSE, main = "split_if_all_na = TRUE")
+```
+
+```{r, echo = FALSE}
+par(old_par)
 ```

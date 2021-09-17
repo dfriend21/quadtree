@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
   # fig.width = 5
 )
 options(rmarkdown.html_vignette.check_title = FALSE)
+old_par <- par(no.readonly = TRUE)
 ```
 
 ## Vignette content
@@ -206,3 +207,7 @@ nrow(paths2) # same as for paths1!!!
 ```
 
 In order to find the LCPs with cost-distance less than 1000, we would need to create a new `LcpFinder` object using `lcp_finder()`.
+
+```{r, echo=FALSE}
+par(old_par)
+```
