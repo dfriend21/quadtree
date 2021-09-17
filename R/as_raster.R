@@ -33,11 +33,12 @@
 #' rst1 <- as_raster(qt) # use the default raster
 #' rst2 <- as_raster(qt, habitat) # use another raster as a template
 #'
-#' par(mfrow = c(2, 2))
+#' old_par <- par(mfrow = c(2, 2))
 #' plot(habitat, main = "original raster")
 #' plot(qt, main = "quadtree")
 #' plot(rst1, main = "raster from quadtree")
 #' plot(rst2, main = "raster from quadtree")
+#' par(old_par)
 #' @export
 setMethod("as_raster", signature(x = "Quadtree"),
   function(x, rast=NULL) {

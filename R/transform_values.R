@@ -48,7 +48,7 @@
 #'   return(1)
 #' })
 #'
-#' par(mfrow = c(2, 2))
+#' old_par <- par(mfrow = c(2, 2))
 #' plot(qt1, main = "original", crop = TRUE, na_col = NULL,
 #'      border_lwd = .3, zlim = c(0, 1))
 #' plot(qt2, main = "1 - value", crop = TRUE, na_col = NULL,
@@ -57,6 +57,7 @@
 #'      border_lwd = .3, zlim = c(0, 1))
 #' plot(qt4, main = "values converted to 0/1", crop = TRUE, na_col = NULL,
 #'      border_lwd = .3, zlim = c(0, 1))
+#' par(old_par)
 #' @export
 setMethod("transform_values", signature(x = "Quadtree", y = "function"),
   function(x, y) {

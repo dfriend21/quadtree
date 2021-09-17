@@ -25,14 +25,15 @@
 #' data(habitat)
 #' data(habitat_roads)
 #'
-#' par(mfrow = c(1, 2))
+#' old_par <- par(mfrow = c(1, 2))
 #' plot(habitat)
 #' plot(habitat_roads)
 #'
 #' qt1 <- quadtree(habitat, .1)
 #' qt2 <- quadtree(habitat_roads, .1)
 #'
-#' par(mfrow = c(1, 2))
 #' plot(qt1, crop = TRUE, na_col = NULL, border_lwd = .3)
 #' plot(qt2, crop = TRUE, na_col = NULL, border_lwd = .3)
+#' 
+#' par(old_par)
 NULL

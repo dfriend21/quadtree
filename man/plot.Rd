@@ -71,11 +71,11 @@ raster before making the quadtree. Ignored if either \code{xlim} or
 \item{na_col}{character; the color to use for \code{NA} cells. If
 \code{NULL}, \code{NA} cells are not plotted. Default is "white".}
 
-\item{adj_mar_auto}{numeric; if not \code{NULL}, it checks the size of the
-right margin (\code{par("mar")[4]}) - if it is less than the provided value
-and \code{legend} is \code{TRUE}, then it sets it to be the provided value
-in order to make room for the legend (after plotting, it resets it to its
-original value). Default is 6.}
+\item{adj_mar_auto}{numeric; checks the size of the right margin
+(\code{par("mar")[4]}) - if it is less than the provided value and
+\code{legend} is \code{TRUE}, then it sets it to be the provided value in
+order to make room for the legend (after plotting, it resets it to its
+original value). If \code{NULL}, the margin is not adjusted. Default is 6.}
 
 \item{legend}{boolean; if \code{TRUE} (the default) a legend is plotted in
 the right margin.}

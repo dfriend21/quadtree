@@ -100,9 +100,10 @@ library(quadtree)
 data(habitat)
 qt <- quadtree(habitat, .2)
 
-par(mar = c(5, 4, 4, 5))
+old_par <- par(mar = c(5, 4, 4, 5))
 plot(qt, legend = FALSE)
 add_legend(raster::cellStats(habitat, "range"), rev(terrain.colors(100)))
+par(old_par)
 # this example simply illustrates how it COULD be used, but as stated in the
 # 'Details' section, it shouldn't be called separately from 'plot()' - if
 # customizations to the legend are desired, use the 'legend_args' parameter

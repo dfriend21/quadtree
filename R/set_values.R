@@ -31,16 +31,16 @@
 #' # create a quadtree
 #' qt <- quadtree(habitat, split_threshold = .1)
 #'
-#' par(mfrow = c(1, 2))
-#' plot(qt, main = "original")
-#'
 #' # generate some random points, then change the values at those points
 #' ext <- extent(qt)
 #' pts <- cbind(runif(100, ext[1], ext[2]), runif(100, ext[3], ext[4]))
 #' set_values(qt, pts, rep(10, 100))
 #'
 #' # plot it out to see what happened
+#' old_par <- par(mfrow = c(1, 2))
+#' plot(qt, main = "original")
 #' plot(qt, main = "after modification")
+#' par(old_par)
 #' @export
 setMethod("set_values", signature(x = "Quadtree", y = "ANY", z = "numeric"),
   function(x, y, z) {

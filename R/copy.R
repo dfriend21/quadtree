@@ -31,10 +31,11 @@
 #' transform_values(qt1, function(x) 1 - x)
 #'
 #' # plot it out to see what happened
-#' par(mfrow = c(1, 3))
+#' old_par <- par(mfrow = c(1, 3))
 #' plot(qt1, main = "qt1", border_col = "transparent")
 #' plot(qt2, main = "qt2", border_col = "transparent")
 #' plot(qt3, main = "qt3", border_col = "transparent")
+#' par(old_par)
 #' # qt2 was modified but qt3 was not
 #' @export
 setMethod("copy", signature(x = "Quadtree"),
