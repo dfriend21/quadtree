@@ -12,11 +12,15 @@ Authors@R:
       person(given = "Randolph",
              family = "Voorhies",
              role = "cph",
-             comment = "Author of included cereal library"),
+             comment = "Author of included 'cereal' library"),
       person(given = "Shane",
              family = "Grant",
              role = "cph",
-             comment = "Author of included cereal library"))
+             comment = "Author of included 'cereal' library"),
+      person(given = "Juan Pedro",
+             family = "Bolivar Puente",
+             role = "cph",
+             comment = "Author of included 'cereal' library"))
 Description: Provides functionality for working with raster-like quadtrees
     (also called “region quadtrees”), which allow for variable-sized
     cells. The package allows for flexibility in the quadtree creation
