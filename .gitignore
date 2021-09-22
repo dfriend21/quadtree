@@ -3,6 +3,7 @@ src/*.so
 *.DS_store
 *.Rhistory
 .Rproj.user
+.Rapp.history
 inst/doc
 /doc/
 /Meta/
