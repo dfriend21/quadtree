@@ -99,17 +99,20 @@ The method used to determine whether or not to split a cell as well as the metho
 
 #### Splitting functions
 
-For splitting a quadrant, two methods are provided. `"range"` checks the difference between the minimum value and the maximum value within the quadrant - if this difference exceeds `split_threshold`, the quadrant is split. `"sd"` uses the standard deviation of the cell values within a quadrant - if the standard deviation exceeds `split_threshold`, the quadrant is split.
+Three methods are provided for splitting a quadrant. The `"range"` method calculates the difference between the minimum and maximum values within the quadrant, `"sd"` calculates the standard deviation of the values, and `"cv"` calculates the coefficient of variation. Regardless of which method is used, the resulting value is compared to the `split_threshold` parameter, and if it exceeds the threshold, the quadrant is split.
 
 ```{r}
 qt_range <- quadtree(rast, .1, split_method = "range")
 qt_sd <- quadtree(rast, .1, split_method = "sd")
+qt_cv <- quadtree(rast, .1, split_method = "cv")
 
-par(mfrow = c(1, 2))
+par(mfrow = c(1, 3), mar = c(0,0,3,0))
 plot(qt_range, crop = TRUE, na_col = NULL, zlim = c(0, 1), border_lwd = .3,
-     legend = FALSE, main = "split_method = 'range'")
+     axes = FALSE, legend = FALSE, main = "split_method = 'range'")
 plot(qt_sd, crop = TRUE, na_col = NULL, zlim = c(0,1), border_lwd = .3,
-     legend = FALSE, main = "split_method = 'sd'")
+     axes = FALSE, legend = FALSE, main = "split_method = 'sd'")
+plot(qt_cv, crop = TRUE, na_col = NULL, zlim = c(0,1), border_lwd = .3,
+     axes = FALSE, legend = FALSE, main = "split_method = 'cv'")
 
 ```
 
