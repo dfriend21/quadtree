@@ -96,7 +96,7 @@
 #' @details
 #'   The 'quadtree-creation' vignette contains detailed explanations and
 #'   examples for all of the various creation options - run
-#'   \code{vignettes("quadtree-creation", package = "quadtree")} to view the
+#'   \code{vignette("quadtree-creation", package = "quadtree")} to view the
 #'   vignette.
 #'
 #'   If \code{adj_type} is \code{"expand"}, \code{NA} cells are added to the
