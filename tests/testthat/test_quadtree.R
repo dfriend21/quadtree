@@ -52,14 +52,15 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
 
   qts[[7]] <- expect_error(quadtree(rast, .3, split_if_all_na = TRUE), NA)
   qts[[8]] <- expect_error(quadtree(rast, .3, split_if_any_na = FALSE), NA)
-  qts[[9]] <- expect_error(quadtree(rast, .3, split_if_any_na = FALSE, max_cell_length = 1000), NA)
+  qts[[9]] <- expect_error(quadtree(rast, .3, split_if_any_na = FALSE, max_cell_length = 3000), NA)
   qts[[10]] <- expect_error(quadtree(rast, .3, split_method = "range"), NA)
-  qts[[11]] <- expect_error(quadtree(rast, .3, split_method = "sd"), NA)
-  qts[[12]] <- expect_error(quadtree(rast, .3, combine_method = "mean"), NA)
-  qts[[13]] <- expect_error(quadtree(rast, .3, combine_method = "median"), NA)
-  qts[[14]] <- expect_error(quadtree(rast, .3, combine_method = "min"), NA)
-  qts[[15]] <- expect_error(quadtree(rast, .3, combine_method = "max"), NA)
-  qts[[16]] <- expect_error(quadtree(rast, .3, split_method = "sd", combine_method = "min"), NA)
+  qts[[11]] <- expect_error(quadtree(rast, .1, split_method = "sd"), NA)
+  qts[[12]] <- expect_error(quadtree(rast, .1, split_method = "cv"), NA)
+  qts[[13]] <- expect_error(quadtree(rast, .3, combine_method = "mean"), NA)
+  qts[[14]] <- expect_error(quadtree(rast, .3, combine_method = "median"), NA)
+  qts[[15]] <- expect_error(quadtree(rast, .3, combine_method = "min"), NA)
+  qts[[16]] <- expect_error(quadtree(rast, .3, combine_method = "max"), NA)
+  qts[[17]] <- expect_error(quadtree(rast, .1, split_method = "sd", combine_method = "min"), NA)
   #----
   split_fun <- function(vals, args) {
     if (any(is.na(vals))) { #check for NAs first
@@ -68,7 +69,7 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
       return(any(vals < args$threshold))
     }
   }
-  qts[[17]] <- expect_error(quadtree(rast, split_method = "custom", split_fun = split_fun, split_args = list(threshold = .8)), NA)
+  qts[[18]] <- expect_error(quadtree(rast, split_method = "custom", split_fun = split_fun, split_args = list(threshold = .8)), NA)
   #----
   cmb_fun <- function(vals, args) {
     if (any(is.na(vals))) {
@@ -80,12 +81,12 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
       return(args$high_val)
     }
   }
-  qts[[18]] <- expect_error(quadtree(rast, .1, combine_method = "custom", combine_fun = cmb_fun, combine_args = list(threshold = .5, low_val = 0, high_val = 1)), NA)
+  qts[[19]] <- expect_error(quadtree(rast, .1, combine_method = "custom", combine_fun = cmb_fun, combine_args = list(threshold = .5, low_val = 0, high_val = 1)), NA)
   #----
   cmb_fun2 <- function(vals, args) {
     return(max(vals) - min(vals))
   }
-  qts[[19]] <- expect_error(quadtree(rast, .1, combine_method = "custom", combine_fun = cmb_fun2), NA)
+  qts[[20]] <- expect_error(quadtree(rast, .1, combine_method = "custom", combine_fun = cmb_fun2), NA)
   #----
   data(habitat_roads)
   template <- aggregate(habitat_roads, 6)
@@ -94,7 +95,7 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
     return(FALSE)
   }
   qt_template <- quadtree(template, split_method = "custom", split_fun = split_if_road)
-  qts[[20]] <- expect_error(quadtree(rast, template_quadtree = qt_template), NA)
+  qts[[21]] <- expect_error(quadtree(rast, template_quadtree = qt_template), NA)
 
   #------------------------
   # now I'll check to see if the structure of the quadtrees is the same as in
@@ -102,7 +103,7 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
   # useful for alerting me if the result of 'quadtree()' changes
 
   # for (i in seq_len(length(qts))) {
-  #   write_quadtree(paste0("qtrees/qt", sprintf("%03d", i), ".qtree"), qts[[i]])
+  #   write_quadtree(paste0("tests/testthat/qtrees/qt", sprintf("%03d", i), ".qtree"), qts[[i]])
   # }
 
   paths <- list.files("qtrees/", pattern = "*.qtree", full.names = TRUE)
