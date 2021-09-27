@@ -41,6 +41,7 @@ public:
 
     static bool splitRange(const Matrix &mat, double limit);
     static bool splitSD(const Matrix &mat, double limit);
+    static bool splitCV(const Matrix &mat, double limit);
     static double combineMean(const Matrix &mat);
     static double combineMedian(const Matrix &mat);
     static double combineMin(const Matrix &mat);

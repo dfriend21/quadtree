@@ -164,14 +164,14 @@ Matrix Matrix::getInverse() const {
 double Matrix::mean(bool removeNA) const{
     if(removeNA){
         double sum = 0;
-        double numCount = 0;
+        double n = 0;
         for(size_t i = 0; i < vec.size(); i++){
             if(!std::isnan(vec[i])){
                 sum += vec[i];
-                numCount++;
+                n++;
             }
         }
-        return sum/numCount;
+        return sum/n;
     } else {
         double sum = 0;
         for(size_t i = 0; i < vec.size(); i++){
@@ -204,6 +204,27 @@ double Matrix::median(bool removeNA) const{
     } else {
         return vecSort[(vecSort.size()-1)/2];
     }
+}
+
+double Matrix::sd(bool removeNA) const{
+    double avg = mean(removeNA);
+    double sum = 0; 
+    double n = 0;
+    for(size_t i = 0; i < vec.size(); ++i){
+        if(std::isnan(vec[i])){
+            if(!removeNA){
+                return std::numeric_limits<double>::quiet_NaN();
+            }
+        } else {
+            sum += pow(vec[i] - avg, 2);
+            n++;
+        }
+    }
+    return sqrt(sum/n);
+}
+
+double Matrix::coefOfVar(bool removeNA) const{
+    return sd(removeNA)/mean(removeNA);
 }
 
 double Matrix::min() const{

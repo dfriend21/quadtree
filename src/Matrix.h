@@ -40,6 +40,8 @@ public:
     
     double mean(bool removeNA = true) const;
     double median(bool removeNA = true) const;
+    double sd(bool removeNA = true) const;
+    double coefOfVar(bool removeNA = true) const;
     double min() const;
     double max() const;
     double determinant() const; //gets the determinant

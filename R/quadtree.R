@@ -17,11 +17,12 @@
 #'   its four child cells. If \code{split_method} is \code{"custom"}, this
 #'   parameter is ignored.
 #' @param split_method character; one of \code{"range"} (the default),
-#'   \code{"sd"} (standard deviation), or \code{"custom"}. Determines the method
-#'   used for calculating the value used to determine whether or not to split a
-#'   quadrant (this calculated value is compared with \code{split_threshold} to
-#'   decide whether to split a cell). If \code{"custom"}, a function must be
-#'   supplied to \code{split_fun}. See 'Details' for more.
+#'   \code{"sd"} (standard deviation), \code{"cv"} (coefficient of variation) or
+#'   \code{"custom"}. Determines the method used for calculating the value used
+#'   to determine whether or not to split a quadrant (this calculated value is
+#'   compared with \code{split_threshold} to decide whether to split a cell). If
+#'   \code{"custom"}, a function must be supplied to \code{split_fun}. See
+#'   'Details' for more.
 #' @param split_fun function; function used on each quadrant to decide whether
 #'   or not to split the quadrant. Only used when \code{split_method} is
 #'   \code{"custom"}. Must take two arguments, \code{vals} (a numeric vector of
@@ -171,7 +172,7 @@ setMethod("quadtree", signature(x = "ANY"),
     if (!is.character(combine_method) || length(combine_method) != 1) stop("'combine_method' must be a character vector with length 1")
     if (!is.function(combine_fun) && !is.null(combine_fun)) stop(paste0("'combine_fun' must be a function"))
     if (!is.list(combine_args) && !is.null(combine_args)) stop(paste0("'combine_args' must be a list"))
-    if (!(split_method %in% c("range", "sd", "custom"))) stop(paste0("Invalid valid value given for 'split_method'. Acceptable values are 'range', 'sd', or 'custom'."))
+    if (!(split_method %in% c("range", "sd", "cv", "custom"))) stop(paste0("Invalid valid value given for 'split_method'. Acceptable values are 'range', 'sd', or 'custom'."))
     if (!(combine_method %in% c("mean", "median", "min", "max", "custom"))) stop(paste0("Invalid value given for 'combine_method'. Acceptable values are 'mean', 'median', 'min', 'max', or 'custom'."))
     if (split_method != "custom" && is.null(split_threshold) && is.null(template_quadtree)) stop(paste0("When 'split_method' is not 'custom' and 'template_quadtree' is NULL, a value is required for 'split_threshold'"))
     if (split_method == "custom" && is.null(split_fun)) stop(paste0("When 'split_method' is 'custom', a function must be provided to 'split_fun'"))

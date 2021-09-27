@@ -119,6 +119,10 @@ void QuadtreeWrapper::createTree(Rcpp::NumericMatrix &mat, std::string splitMeth
         split = [&splitThreshold](const Matrix &mat) -> bool {
           return Quadtree::splitSD(mat, splitThreshold);
         };
+      } else if(splitMethod == "cv"){
+        split = [&splitThreshold](const Matrix &mat) -> bool {
+          return Quadtree::splitCV(mat, splitThreshold);
+        };
       }
     } else {
       split = [&splitArgs, &splitFun] (const Matrix &mat) -> bool{

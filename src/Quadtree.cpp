@@ -53,6 +53,12 @@ bool Quadtree::splitSD(const Matrix &mat, double limit){
     return var >= pow(limit,2); // if the standard deviation is greater than the limit, return true (although I'm actually comparing the variances here)
 }
 
+// CV stands for 'coefficient of variation'
+bool Quadtree::splitCV(const Matrix &mat, double limit){
+    double cv = mat.coefOfVar(true);
+    return cv >= limit;
+}
+
 // ------- combine* -------
 // these functions are designed to be passed to 'makeTree' and 'makeTreeWithTemplate'.
 // They are responsible for determining the value of a cell in the case where multiple 

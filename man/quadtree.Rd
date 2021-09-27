@@ -41,11 +41,12 @@ its four child cells. If \code{split_method} is \code{"custom"}, this
 parameter is ignored.}
 
 \item{split_method}{character; one of \code{"range"} (the default),
-\code{"sd"} (standard deviation), or \code{"custom"}. Determines the method
-used for calculating the value used to determine whether or not to split a
-quadrant (this calculated value is compared with \code{split_threshold} to
-decide whether to split a cell). If \code{"custom"}, a function must be
-supplied to \code{split_fun}. See 'Details' for more.}
+\code{"sd"} (standard deviation), \code{"cv"} (coefficient of variation) or
+\code{"custom"}. Determines the method used for calculating the value used
+to determine whether or not to split a quadrant (this calculated value is
+compared with \code{split_threshold} to decide whether to split a cell). If
+\code{"custom"}, a function must be supplied to \code{split_fun}. See
+'Details' for more.}
 
 \item{split_fun}{function; function used on each quadrant to decide whether
 or not to split the quadrant. Only used when \code{split_method} is
