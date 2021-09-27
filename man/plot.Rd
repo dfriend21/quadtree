@@ -13,7 +13,7 @@
   alpha = 1,
   nb_line_col = NULL,
   border_col = "black",
-  border_lwd = 1,
+  border_lwd = 0.4,
   xlim = NULL,
   ylim = NULL,
   zlim = NULL,
@@ -45,7 +45,7 @@ plotted.}
 \item{border_col}{character; the color to use for the cell borders. Use
 "transparent" if you don't want borders to be shown. Default is "black".}
 
-\item{border_lwd}{numeric; the line width of the cell borders. Default is 1.}
+\item{border_lwd}{numeric; the line width of the cell borders. Default is .4.}
 
 \item{xlim}{two-element numeric vector; defines the minimum and
 maximum values of the x axis. Note that this overrides the \code{crop}

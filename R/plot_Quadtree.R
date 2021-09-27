@@ -17,7 +17,7 @@
 #'   plotted.
 #' @param border_col character; the color to use for the cell borders. Use
 #'   "transparent" if you don't want borders to be shown. Default is "black".
-#' @param border_lwd numeric; the line width of the cell borders. Default is 1.
+#' @param border_lwd numeric; the line width of the cell borders. Default is .4.
 #' @param xlim two-element numeric vector; defines the minimum and
 #'   maximum values of the x axis. Note that this overrides the \code{crop}
 #'   parameter.
@@ -139,7 +139,7 @@
 #' @export
 setMethod("plot", signature(x = "Quadtree", y = "missing"),
   function(x, add = FALSE, col = NULL, alpha = 1, nb_line_col = NULL,
-           border_col = "black", border_lwd = 1, xlim = NULL, ylim = NULL,
+           border_col = "black", border_lwd = .4, xlim = NULL, ylim = NULL,
            zlim = NULL, crop = FALSE, na_col = "white", adj_mar_auto = 6,
            legend = TRUE, legend_args = list(), ...) {
     args <- list(...)
