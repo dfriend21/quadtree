@@ -16,9 +16,12 @@ add_legend(
   bar_box_col = "black",
   bar_wd_pct = 0.2,
   bar_ht_pct = 1,
+  text_cex = 1,
+  text_col = NULL,
+  text_font = NULL,
+  text_x_pct = 1,
   ticks = NULL,
-  ticks_n = 5,
-  ticks_x_pct = 1
+  ticks_n = 5
 )
 }
 \arguments{
@@ -59,6 +62,18 @@ width)}
 the height of the \emph{legend area} (\strong{not} the entire right margin
 height)}
 
+\item{text_cex}{numeric; size of the legend text. Default is 1.}
+
+\item{text_col}{character; color of the legend text. Default is "black".}
+
+\item{text_font}{integer; specifies which font to use. See
+\code{\link[graphics:par]{par()}} for more details.}
+
+\item{text_x_pct}{numeric; the x-placement of the legend text as a fraction
+(0 to 1) of the width of the legend area. This corresponds to the
+\emph{right-most} part of the text - i.e. a value of 1 means the text will
+end exactly at the right border of the legend area. Default is 1.}
+
 \item{ticks}{numeric vector; the z-values at which to place tick marks. If
 \code{NULL} (the default), tick placement is automatically calculated}
 
@@ -66,11 +81,6 @@ height)}
 \code{ticks} is \code{NULL}. Note that this is an \emph{approximate} number
 - the \code{\link[base:pretty]{pretty()}} function is used to generate
 "nice-looking" values, but it doesn't guarantee a set number of tick marks}
-
-\item{ticks_x_pct}{numeric; the x-placement of the tick labels as a fraction
-(0 to 1) of the width of the legend area. This corresponds to the
-\emph{right-most} part of the text - i.e. a value of 1 means the text will
-end exactly at the right border of the legend area}
 }
 \value{
 no return value
