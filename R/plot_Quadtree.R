@@ -338,16 +338,20 @@ NULL
 #' @param bar_ht_pct numeric; height of the color bar, as a fraction (0 to 1) of
 #'   the height of the \emph{legend area} (\strong{not} the entire right margin
 #'   height)
+#' @param text_cex numeric; size of the legend text. Default is 1.
+#' @param text_col character; color of the legend text. Default is "black".
+#' @param text_font integer; specifies which font to use. See
+#'   \code{\link[graphics:par]{par()}} for more details.
+#' @param text_x_pct numeric; the x-placement of the legend text as a fraction
+#'   (0 to 1) of the width of the legend area. This corresponds to the
+#'   \emph{right-most} part of the text - i.e. a value of 1 means the text will
+#'   end exactly at the right border of the legend area. Default is 1.
 #' @param ticks numeric vector; the z-values at which to place tick marks. If
 #'   \code{NULL} (the default), tick placement is automatically calculated
 #' @param ticks_n integer; the number of ticks desired - only used if
 #'   \code{ticks} is \code{NULL}. Note that this is an \emph{approximate} number
 #'   - the \code{\link[base:pretty]{pretty()}} function is used to generate
 #'   "nice-looking" values, but it doesn't guarantee a set number of tick marks
-#' @param ticks_x_pct numeric; the x-placement of the tick labels as a fraction
-#'   (0 to 1) of the width of the legend area. This corresponds to the
-#'   \emph{right-most} part of the text - i.e. a value of 1 means the text will
-#'   end exactly at the right border of the legend area
 #' @details I took an HTML/CSS-like approach to determining the positioning -
 #'   that is, each space is treated as \code{<div>}-like space, and the position
 #'   of objects within that space happens \emph{relative to that space} rather
@@ -381,7 +385,8 @@ NULL
 add_legend <- function(zlim, col, alpha = 1, lgd_box_col = NULL, lgd_x_pct = .5,
                       lgd_y_pct = .5, lgd_wd_pct = .5, lgd_ht_pct = .5,
                       bar_box_col = "black", bar_wd_pct = .2, bar_ht_pct = 1,
-                      ticks = NULL, ticks_n = 5, ticks_x_pct = 1) {
+                      text_cex = 1, text_col = NULL, text_font = NULL, 
+                      text_x_pct = 1, ticks = NULL, ticks_n = 5) {
   p <- graphics::par() # get the current graphical parameter settings
   crds <- .get_coords(p$usr, p$plt) # get the x and y limits of the ENTIRE plot area, in the units used in the plot
   mar_crds <- c(p$usr[2], crds[2], crds[3], crds[4]) # get the x and y limits of the right margin area
@@ -429,9 +434,10 @@ add_legend <- function(zlim, col, alpha = 1, lgd_box_col = NULL, lgd_x_pct = .5,
   }
 
   # get the x and y coordinates where we'll put the ticks
-  ticks_x <- rep(lgd_x0 + ticks_x_pct * wd_crd, length(ticks))
+  ticks_x <- rep(lgd_x0 + text_x_pct * wd_crd, length(ticks))
   ticks_y <- lgd_y0 + ticks_pct * ht_crd
-  graphics::text(ticks_x, ticks_y, labels = ticks, xpd = TRUE, adj = 1) # add the ticks
+  graphics::text(ticks_x, ticks_y, labels = ticks, xpd = TRUE, adj = 1,
+                 cex = text_cex, col = text_col, font = text_font) # add the ticks
 
   # add horizontal lines between the color bar and the numbers
   txt_bar_gap <- (ticks_x - max(graphics::strwidth(ticks))) - bar_x1 # get the distances between the right side of the color bar and the left side of the text
