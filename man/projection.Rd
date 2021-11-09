@@ -29,6 +29,6 @@ library(quadtree)
 data(habitat)
 
 qt <- quadtree(habitat, .1)
-projection(qt) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
-projection(qt)
+quadtree::projection(qt) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+quadtree::projection(qt)
 }
