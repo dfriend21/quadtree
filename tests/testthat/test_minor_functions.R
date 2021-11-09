@@ -30,9 +30,9 @@ test_that("as_raster() works", {
   pts2 <- raster::rasterToPoints(rst2, spatial = FALSE)
   pts3 <- raster::rasterToPoints(rst3, spatial = FALSE)
 
-  expect_equal(extract(qt, pts1[, 1:2]), extract(rst1, pts1[, 1:2]))
-  expect_equal(extract(qt, pts2[, 1:2]), extract(rst2, pts2[, 1:2]))
-  expect_equal(extract(qt, pts3[, 1:2]), extract(rst3, pts3[, 1:2]))
+  expect_equal(quadtree::extract(qt, pts1[, 1:2]), raster::extract(rst1, pts1[, 1:2]))
+  expect_equal(quadtree::extract(qt, pts2[, 1:2]), raster::extract(rst2, pts2[, 1:2]))
+  expect_equal(quadtree::extract(qt, pts3[, 1:2]), raster::extract(rst3, pts3[, 1:2]))
 })
 
 test_that("as_vector() works", {
@@ -64,23 +64,23 @@ test_that("copy() runs without errors and produces expected output", {
 })
 
 test_that("extent() runs without errors and produces expected output", {
-  library(raster)
+  #library(raster)
   data(habitat)
   qt1 <- quadtree(habitat, .3, split_method = "sd")
   expect_error(extent(qt1, original = FALSE), NA)
   qt_ext <- expect_error(extent(qt1, original = TRUE), NA)
-  expect_equal(qt_ext, extent(habitat))
+  expect_equal(qt_ext, raster::extent(habitat))
 })
 
 test_that("extract() runs without errors and returns correct values", {
-  library(raster)
+  # library(raster)
   data(habitat)
   # use 0 to make sure everything gets split as small as possible
   qt1 <- quadtree(habitat, 0)
 
-  ext <- extent(habitat)
+  ext <- raster::extent(habitat)
   pts <- cbind(runif(1000, ext[1], ext[2]), runif(1000, ext[3], ext[4]))
-  rst_ext <- extract(habitat, pts)
+  rst_ext <- raster::extract(habitat, pts)
   qt_ext <- expect_error(extract(qt1, pts), NA)
   qt_ext[is.nan(qt_ext)] <- NA
   expect_equal(qt_ext, rst_ext)

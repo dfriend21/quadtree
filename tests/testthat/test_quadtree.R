@@ -34,12 +34,12 @@ test_that("summary(<Quadtree>) runs without errors", {
 })
 
 test_that("'quadtree()' runs without errors for all parameter settings", {
-  library(raster)
+  # library(raster)
 
   # retrieve the sample data
   data(habitat)
   # make the raster smaller so the output files are smaller
-  rast <- aggregate(habitat, 6)
+  rast <- raster::aggregate(habitat, 6)
 
   qts <- list()
   qts[[1]] <- expect_error(quadtree(rast, .3), NA)
@@ -89,7 +89,7 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
   qts[[20]] <- expect_error(quadtree(rast, .1, combine_method = "custom", combine_fun = cmb_fun2), NA)
   #----
   data(habitat_roads)
-  template <- aggregate(habitat_roads, 6)
+  template <- raster::aggregate(habitat_roads, 6)
   split_if_road <- function(vals, args) {
     if (any(vals > 0, na.rm = TRUE)) return(TRUE)
     return(FALSE)

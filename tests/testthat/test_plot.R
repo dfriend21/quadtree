@@ -1,6 +1,6 @@
 test_that("plot(<Quadtree>) output runs without errors and looks right for all parameter options", {
   # skip("these tests should be manually run and visually inspected")
-  library(raster)
+  # library(raster)
   data(habitat)
   rast <- habitat
   # create quadtree
