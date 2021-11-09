@@ -73,7 +73,7 @@ RasterLayer or a matrix." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
       </span>
     </div>
 
@@ -188,11 +188,12 @@ parameter is ignored.</p></td>
     <tr>
       <th>split_method</th>
       <td><p>character; one of <code>"range"</code> (the default),
-<code>"sd"</code> (standard deviation), or <code>"custom"</code>. Determines the method
-used for calculating the value used to determine whether or not to split a
-quadrant (this calculated value is compared with <code>split_threshold</code> to
-decide whether to split a cell). If <code>"custom"</code>, a function must be
-supplied to <code>split_fun</code>. See 'Details' for more.</p></td>
+<code>"sd"</code> (standard deviation), <code>"cv"</code> (coefficient of variation) or
+<code>"custom"</code>. Determines the method used for calculating the value used
+to determine whether or not to split a quadrant (this calculated value is
+compared with <code>split_threshold</code> to decide whether to split a cell). If
+<code>"custom"</code>, a function must be supplied to <code>split_fun</code>. See
+'Details' for more.</p></td>
     </tr>
     <tr>
       <th>split_fun</th>
@@ -318,7 +319,7 @@ non-<code>NULL</code>, all <code>split_</code>* parameters are disregarded, as a
 
     <p>The 'quadtree-creation' vignette contains detailed explanations and
   examples for all of the various creation options - run
-  <code><a href='https://rdrr.io/r/utils/vignette.html'>vignettes("quadtree-creation", package = "quadtree")</a></code> to view the
+  <code><a href='../articles/quadtree-creation.html'>vignette("quadtree-creation", package = "quadtree")</a></code> to view the
   vignette.</p>
 <p>If <code>adj_type</code> is <code>"expand"</code>, <code>NA</code> cells are added to the
   raster in order to create an expanded raster whose dimensions are a power

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
       </span>
     </div>
 
@@ -88,13 +88,13 @@
 
       
 
-      </header><script src="quadtree-creation_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="quadtree-creation_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Creating Quadtrees</h1>
                         <h4 class="author">Derek Friend</h4>
             
-            <h4 class="date">Last compiled on September 22, 2021</h4>
+            <h4 class="date">Last compiled on November 09, 2021</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/master/vignettes/quadtree-creation.Rmd"><code>vignettes/quadtree-creation.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-creation.Rmd</code></div>
@@ -179,16 +179,19 @@
 <div id="splitting-functions" class="section level4">
 <h4 class="hasAnchor">
 <a href="#splitting-functions" class="anchor"></a>Splitting functions</h4>
-<p>For splitting a quadrant, two methods are provided. <code>"range"</code> checks the difference between the minimum value and the maximum value within the quadrant - if this difference exceeds <code>split_threshold</code>, the quadrant is split. <code>"sd"</code> uses the standard deviation of the cell values within a quadrant - if the standard deviation exceeds <code>split_threshold</code>, the quadrant is split.</p>
+<p>Three methods are provided for splitting a quadrant. The <code>"range"</code> method calculates the difference between the minimum and maximum values within the quadrant, <code>"sd"</code> calculates the standard deviation of the values, and <code>"cv"</code> calculates the coefficient of variation. Regardless of which method is used, the resulting value is compared to the <code>split_threshold</code> parameter, and if it exceeds the threshold, the quadrant is split.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">qt_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, split_method <span class="op">=</span> <span class="st">"range"</span><span class="op">)</span>
 <span class="va">qt_sd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, split_method <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span>
+<span class="va">qt_cv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, split_method <span class="op">=</span> <span class="st">"cv"</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_range</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'range'"</span><span class="op">)</span>
+     axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'range'"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_sd</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'sd'"</span><span class="op">)</span></code></pre></div>
+     axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'sd'"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_cv</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
+     axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'cv'"</span><span class="op">)</span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
 </div>
 <div id="combine-functions" class="section level4">

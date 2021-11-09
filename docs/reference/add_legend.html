@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
       </span>
     </div>
 
@@ -153,9 +153,12 @@
   bar_box_col <span class='op'>=</span> <span class='st'>"black"</span>,
   bar_wd_pct <span class='op'>=</span> <span class='fl'>0.2</span>,
   bar_ht_pct <span class='op'>=</span> <span class='fl'>1</span>,
+  text_cex <span class='op'>=</span> <span class='fl'>1</span>,
+  text_col <span class='op'>=</span> <span class='cn'>NULL</span>,
+  text_font <span class='op'>=</span> <span class='cn'>NULL</span>,
+  text_x_pct <span class='op'>=</span> <span class='fl'>1</span>,
   ticks <span class='op'>=</span> <span class='cn'>NULL</span>,
-  ticks_n <span class='op'>=</span> <span class='fl'>5</span>,
-  ticks_x_pct <span class='op'>=</span> <span class='fl'>1</span>
+  ticks_n <span class='op'>=</span> <span class='fl'>5</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -221,6 +224,26 @@ the height of the <em>legend area</em> (<strong>not</strong> the entire right ma
 height)</p></td>
     </tr>
     <tr>
+      <th>text_cex</th>
+      <td><p>numeric; size of the legend text. Default is 1.</p></td>
+    </tr>
+    <tr>
+      <th>text_col</th>
+      <td><p>character; color of the legend text. Default is "black".</p></td>
+    </tr>
+    <tr>
+      <th>text_font</th>
+      <td><p>integer; specifies which font to use. See
+<code><a href='https://rdrr.io/r/graphics/par.html'>par()</a></code> for more details.</p></td>
+    </tr>
+    <tr>
+      <th>text_x_pct</th>
+      <td><p>numeric; the x-placement of the legend text as a fraction
+(0 to 1) of the width of the legend area. This corresponds to the
+<em>right-most</em> part of the text - i.e. a value of 1 means the text will
+end exactly at the right border of the legend area. Default is 1.</p></td>
+    </tr>
+    <tr>
       <th>ticks</th>
       <td><p>numeric vector; the z-values at which to place tick marks. If
 <code>NULL</code> (the default), tick placement is automatically calculated</p></td>
@@ -231,13 +254,6 @@ height)</p></td>
 <code>ticks</code> is <code>NULL</code>. Note that this is an <em>approximate</em> number
 - the <code><a href='https://rdrr.io/r/base/pretty.html'>pretty()</a></code> function is used to generate
 "nice-looking" values, but it doesn't guarantee a set number of tick marks</p></td>
-    </tr>
-    <tr>
-      <th>ticks_x_pct</th>
-      <td><p>numeric; the x-placement of the tick labels as a fraction
-(0 to 1) of the width of the legend area. This corresponds to the
-<em>right-most</em> part of the text - i.e. a value of 1 means the text will
-end exactly at the right border of the legend area</p></td>
     </tr>
     </table>
 

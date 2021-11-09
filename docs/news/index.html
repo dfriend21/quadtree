@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
       </span>
     </div>
 
@@ -135,15 +135,40 @@
       <small>Source: <a href='https://github.com/dfriend21/quadtree/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="quadtree-012" class="section level1">
+    <div id="quadtree-014-development-version-1092021" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.4">
+<a href="#quadtree-014-development-version-1092021" class="anchor"></a>quadtree 0.1.4 (development version) (10/9/2021)<small> Unreleased </small>
+</h1>
+<div id="bug-fixes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>bug fixes</h2>
+<ul>
+<li>No longer exports the <code><a href="../reference/extract.html">extract()</a></code> generic from <code>raster</code> - instead, it is set via <code>setGeneric()</code> in “R/generics.R”. This is an attempted fix for an error - in some cases the <code><a href="../reference/extract.html">extract()</a></code> generic with signature “Quadtree”, “matrix” was not being found.</li>
+</ul>
+</div>
+</div>
+    <div id="quadtree-013-development-version" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.3">
+<a href="#quadtree-013-development-version" class="anchor"></a>quadtree 0.1.3 (development version)<small> Unreleased </small>
+</h1>
+<div id="enhancements-and-modifications" class="section level2">
+<h2 class="hasAnchor">
+<a href="#enhancements-and-modifications" class="anchor"></a>enhancements and modifications</h2>
+<ul>
+<li>In <code><a href="../reference/add_legend.html">add_legend()</a></code>, added parameters for controlling text color, font, and size. Also renamed <code>ticks_x_pct</code> parameter to <code>text_x_pct</code> parameter for consistency.</li>
+<li>Changed default border width of plots (<code>border_lwd</code> parameter of <code>plot(&lt;Quadtree&gt;)</code>) to .4, since that typically looks nicer.</li>
+<li>Added a ‘coefficient of variation’ split function (used when <code>split_method</code> parameter of <code><a href="../reference/quadtree.html">quadtree()</a></code> is <code>"cv"</code>)</li>
+</ul>
+</div>
+</div>
+    <div id="quadtree-012-cran-version" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.2">
-<a href="#quadtree-012" class="anchor"></a>quadtree 0.1.2<small> 2021-09-20 </small>
+<a href="#quadtree-012-cran-version" class="anchor"></a>quadtree 0.1.2 (CRAN version)<small> 2021-09-20 </small>
 </h1>
 <p>Responded to comments after CRAN submission. This led to the following changes:</p>
 <ul>
-<li>In <code>plot&lt;Quadtree&gt;&gt;()</code>, switched to resetting <code><a href="https://rdrr.io/r/graphics/par.html">par()</a></code> using <code><a href="https://rdrr.io/r/base/on.exit.html">on.exit()</a></code>
-</li>
-<li>In all examples, added code to reset <code><a href="https://rdrr.io/r/graphics/par.html">par()</a></code> if it was changed</li>
+<li>In <code>plot(&lt;Quadtree&gt;)</code>, switched to resetting <code><a href="https://rdrr.io/r/graphics/par.html">par()</a></code> using <code><a href="https://rdrr.io/r/base/on.exit.html">on.exit()</a></code>.</li>
+<li>In all examples, added code to reset <code><a href="https://rdrr.io/r/graphics/par.html">par()</a></code> if it was changed.</li>
 <li>Removed the ‘rapidjson’ and ‘rapidxml’ libraries from within ‘cereal’.</li>
 <li>Added additional copyright holder in ‘DESCRIPTION’.</li>
 </ul>
