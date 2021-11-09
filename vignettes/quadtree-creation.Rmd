@@ -113,7 +113,6 @@ plot(qt_sd, crop = TRUE, na_col = NULL, zlim = c(0,1), border_lwd = .3,
      axes = FALSE, legend = FALSE, main = "split_method = 'sd'")
 plot(qt_cv, crop = TRUE, na_col = NULL, zlim = c(0,1), border_lwd = .3,
      axes = FALSE, legend = FALSE, main = "split_method = 'cv'")
-
 ```
 
 #### Combine functions
