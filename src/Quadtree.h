@@ -76,7 +76,7 @@ public:
 
     template<class Archive>
     void serialize(Archive & archive){ // couldn't get serialization to work unless I defined 'serialize' in the header rather than in 'Quadtree.cpp'
-        archive(nNodes,proj4string,root);
+        archive(root, nNodes, matNX, matNY, maxXCellLength, maxYCellLength, minXCellLength, minYCellLength, splitAllNAs, splitAnyNAs, proj4string);
     }
 
     static void writeQuadtree(std::shared_ptr<Quadtree> quadtree, std::string filePath);
