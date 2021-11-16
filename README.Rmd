@@ -11,9 +11,16 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+library(raster)
 ```
 
+
+
 # `quadtree`: An R package for region quadtrees
+
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/quadtree)](https://CRAN.R-project.org/package=quadtree)
+<!-- badges: end -->
 
 `quadtree` provides functionality for working with raster-like quadtrees (called "region quadtrees"), which allow for variable-sized cells.
 

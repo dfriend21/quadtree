@@ -3,11 +3,22 @@
 
 # `quadtree`: An R package for region quadtrees
 
+<!-- badges: start -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/quadtree)](https://CRAN.R-project.org/package=quadtree)
+<!-- badges: end -->
+
 `quadtree` provides functionality for working with raster-like quadtrees
 (called “region quadtrees”), which allow for variable-sized cells.
 
 ``` r
 library(quadtree)
+#> 
+#> Attaching package: 'quadtree'
+#> The following objects are masked from 'package:raster':
+#> 
+#>     extent, extract, projection, projection<-
 
 data(habitat, package = "quadtree") # load sample data
 qt <- quadtree(habitat, .03, "sd") # create a quadtree
