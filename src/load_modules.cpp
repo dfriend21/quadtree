@@ -18,7 +18,8 @@ RCPP_MODULE(qt) {
     .method("getNeighborInfo", &NodeWrapper::getNeighborInfo)
     .method("getNeighborIds", &NodeWrapper::getNeighborIds)
     .method("getNeighborVals", &NodeWrapper::getNeighborVals)
-    .method("asVector", &NodeWrapper::asVector);
+    .method("asVector", &NodeWrapper::asVector)
+    .method("toString", &NodeWrapper::toString);
   
   class_<QuadtreeWrapper>("CppQuadtree") 
     .constructor()
@@ -59,4 +60,5 @@ RCPP_MODULE(qt) {
 
   function("readQuadtreeCpp", &QuadtreeWrapper::readQuadtree);
   function("writeQuadtreeCpp", &QuadtreeWrapper::writeQuadtree);
+  function("writeQuadtreePtr", &QuadtreeWrapper::writeQuadtreePtr);
 }

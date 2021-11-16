@@ -30,6 +30,8 @@ public:
   Rcpp::NumericVector getNeighborIds() const;
   Rcpp::NumericVector getNeighborVals() const;
   Rcpp::NumericVector asVector() const;
+  
+  std::string toString() const;
 };
 
 RCPP_EXPOSED_CLASS(NodeWrapper);

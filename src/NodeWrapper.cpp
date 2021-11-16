@@ -136,3 +136,7 @@ Rcpp::NumericVector NodeWrapper::asVector() const{
   vec.names() = Rcpp::CharacterVector({"id","hasChildren","level","xmin","xmax", "ymin", "ymax", "value", "smallestChildLength"});
   return vec;
 }
+
+std::string NodeWrapper::toString() const{
+  return(node->toString());
+}
