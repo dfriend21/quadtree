@@ -307,6 +307,7 @@ QuadtreeWrapper QuadtreeWrapper::readQuadtree(std::string filePath){
   cereal::PortableBinaryInputArchive iarchive(is);
   QuadtreeWrapper qw;
   iarchive(qw);
+  qw.quadtree->assignNeighbors();
   return qw;
 }
 

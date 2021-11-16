@@ -102,6 +102,7 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
   # previous runs. Note that this doesn't guarantee correctness but is still
   # useful for alerting me if the result of 'quadtree()' changes
 
+  # # need to use 'setwd()' first
   # for (i in seq_len(length(qts))) {
   #   write_quadtree(paste0("tests/testthat/qtrees/qt", sprintf("%03d", i), ".qtree"), qts[[i]])
   # }

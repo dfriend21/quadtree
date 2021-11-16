@@ -173,6 +173,14 @@ test_that("read_quadtree() and write_quadtree() work", {
   df2 <- as_data_frame(qt2, FALSE)
   expect_equal(df1, df2)
 
+  # make sure neighbors are being assigned when read in. The above code was supposed
+  # to test this using 'getNeighborList()', but turns it doesn't actually catch the problem
+  # since 'getNeighborList()' calls 'findNeighbors()' rather than using the previously calculated
+  # neighbors. This next code actually catches the problem.
+  cell1 <- qt1@ptr$getCell(c(20000,20000))
+  cell2 <- qt2@ptr$getCell(c(20000,20000))
+  expect_equal(sort(cell1$getNeighborIds()), sort(cell2$getNeighborIds()))
+  
   unlink(filepath)
 })
 
