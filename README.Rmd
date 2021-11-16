@@ -24,7 +24,7 @@ library(raster)
 
 `quadtree` provides functionality for working with raster-like quadtrees (called "region quadtrees"), which allow for variable-sized cells.
 
-```{r example_create}
+```{r example_create, message = FALSE}
 library(quadtree)
 
 data(habitat, package = "quadtree") # load sample data
