@@ -309,3 +309,7 @@ QuadtreeWrapper QuadtreeWrapper::readQuadtree(std::string filePath){
   iarchive(qw);
   return qw;
 }
+
+void QuadtreeWrapper::writeQuadtreePtr(QuadtreeWrapper qw, std::string filePath){
+  writeQuadtree(qw.quadtree, filePath);
+}

@@ -43,3 +43,11 @@ setMethod("write_quadtree", signature(x = "character", y = "Quadtree"),
     writeQuadtreeCpp(y@ptr, x)
   }
 )
+
+#' @rdname read_quadtree
+#' @export
+setMethod("write_quadtree_ptr", signature(x = "character", y = "Quadtree"),
+  function(x, y) {
+    writeQuadtreePtr(y@ptr, x)
+  }
+)
