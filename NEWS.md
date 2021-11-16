@@ -1,3 +1,16 @@
+# quadtree 0.1.5 (development version) (10/16/2021)
+
+## bug fixes 
+
+* Neighbor relationships were not being assigned when reading a quadtree from file - this was causing functionality like LCP to fail. Fixed this by using `assignNeighbors()` in `QuadtreeWrapper::readQuadtree()`. Also added unit tests to detect this bug.
+
+## enhancements and modifications
+
+* Added `write_quadtree_ptr()` for writing only the `Quadtree` pointer to file (`write_quadtree()` writes the `QuadtreeWrapper` object to file). This is for my own use - the average user will never need to use this.
+* Added additional attributes to `Quadtree::serialize()` (previously, some attributes were not being serialized).
+* Added `NodeWrapper::toString()` and made it available to R - this simply prints a summary of a `NodeWrapper` object.
+* Stopped importing the `extent()` and `projection()` generics from `raster`. Relying on the `extract` generic from `raster` had caused the code to break (see news for previous version). I decided to stop importing generics from raster to avoid any future issues like this. This has the disadvantage of masking `extent()` and `projection()` from `raster`. This means users will need to preface the functions with the package names when using both packages, but it'll hopefully avoid issues caused by changes in `raster`.
+
 # quadtree 0.1.4 (development version) (10/9/2021)
 
 ## bug fixes

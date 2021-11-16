@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
       </span>
     </div>
 
@@ -135,13 +135,35 @@
       <small>Source: <a href='https://github.com/dfriend21/quadtree/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="quadtree-014-development-version-1092021" class="section level1">
-<h1 class="page-header" data-toc-text="0.1.4">
-<a href="#quadtree-014-development-version-1092021" class="anchor"></a>quadtree 0.1.4 (development version) (10/9/2021)<small> Unreleased </small>
+    <div id="quadtree-015-development-version-10162021" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.5">
+<a href="#quadtree-015-development-version-10162021" class="anchor"></a>quadtree 0.1.5 (development version) (10/16/2021)<small> Unreleased </small>
 </h1>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>bug fixes</h2>
+<ul>
+<li>Neighbor relationships were not being assigned when reading a quadtree from file - this was causing functionality like LCP to fail. Fixed this by using <code>assignNeighbors()</code> in <code>QuadtreeWrapper::readQuadtree()</code>. Also added unit tests to detect this bug.</li>
+</ul>
+</div>
+<div id="enhancements-and-modifications" class="section level2">
+<h2 class="hasAnchor">
+<a href="#enhancements-and-modifications" class="anchor"></a>enhancements and modifications</h2>
+<ul>
+<li>Added <code>write_quadtree_ptr()</code> for writing only the <code>Quadtree</code> pointer to file (<code><a href="../reference/read_quadtree.html">write_quadtree()</a></code> writes the <code>QuadtreeWrapper</code> object to file). This is for my own use - the average user will never need to use this.</li>
+<li>Added additional attributes to <code>Quadtree::serialize()</code> (previously, some attributes were not being serialized).</li>
+<li>Added <code>NodeWrapper::toString()</code> and made it available to R - this simply prints a summary of a <code>NodeWrapper</code> object.</li>
+<li>Stopped importing the <code><a href="../reference/extent.html">extent()</a></code> and <code><a href="../reference/projection.html">projection()</a></code> generics from <code>raster</code>. Relying on the <code>extract</code> generic from <code>raster</code> had caused the code to break (see news for previous version). I decided to stop importing generics from raster to avoid any future issues like this. This has the disadvantage of masking <code><a href="../reference/extent.html">extent()</a></code> and <code><a href="../reference/projection.html">projection()</a></code> from <code>raster</code>. This means users will need to preface the functions with the package names when using both packages, but it’ll hopefully avoid issues caused by changes in <code>raster</code>.</li>
+</ul>
+</div>
+</div>
+    <div id="quadtree-014-development-version-1092021" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.4">
+<a href="#quadtree-014-development-version-1092021" class="anchor"></a>quadtree 0.1.4 (development version) (10/9/2021)<small> Unreleased </small>
+</h1>
+<div id="bug-fixes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-1" class="anchor"></a>bug fixes</h2>
 <ul>
 <li>No longer exports the <code><a href="../reference/extract.html">extract()</a></code> generic from <code>raster</code> - instead, it is set via <code>setGeneric()</code> in “R/generics.R”. This is an attempted fix for an error - in some cases the <code><a href="../reference/extract.html">extract()</a></code> generic with signature “Quadtree”, “matrix” was not being found.</li>
 </ul>
@@ -151,9 +173,9 @@
 <h1 class="page-header" data-toc-text="0.1.3">
 <a href="#quadtree-013-development-version" class="anchor"></a>quadtree 0.1.3 (development version)<small> Unreleased </small>
 </h1>
-<div id="enhancements-and-modifications" class="section level2">
+<div id="enhancements-and-modifications-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#enhancements-and-modifications" class="anchor"></a>enhancements and modifications</h2>
+<a href="#enhancements-and-modifications-1" class="anchor"></a>enhancements and modifications</h2>
 <ul>
 <li>In <code><a href="../reference/add_legend.html">add_legend()</a></code>, added parameters for controlling text color, font, and size. Also renamed <code>ticks_x_pct</code> parameter to <code>text_x_pct</code> parameter for consistency.</li>
 <li>Changed default border width of plots (<code>border_lwd</code> parameter of <code>plot(&lt;Quadtree&gt;)</code>) to .4, since that typically looks nicer.</li>
