@@ -145,7 +145,7 @@ test_that("n_cells(), as_vector(), and as_data_frame() agree on the number of
 
 test_that("projection() runs without errors and returns correct value", {
   data(habitat)
-  suppressWarnings({crs(habitat) <- "+init=EPSG:27700"})
+  suppressWarnings({raster::crs(habitat) <- "+init=EPSG:27700"})
   qt1 <- quadtree(habitat, .5)
   qt_proj <- expect_error(quadtree::projection(qt1), NA)
   expect_equal(qt_proj, raster::projection(habitat))
