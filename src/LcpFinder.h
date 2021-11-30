@@ -15,19 +15,35 @@ class LcpFinder{
 private:
     // defines a connection between two nodes
     struct NodeEdge{
-        int id;
+        int id{-1};
         std::weak_ptr<Node> node;
+        Point pt;
         std::weak_ptr<NodeEdge> parent;
-        double dist;
-        double cost;
-        int nNodesFromOrigin;
+        double dist{-1};
+        double cost{-1};
+        int nNodesFromOrigin{-1};
     };
 
     // comparator function for the multiset (possibleEdges) - specifies that the elements
-    // should be sorted by the third tuple element (i.e. the cost-distance of the edge) 
+    // should be sorted by the third tuple element (i.e. the cost-distance of the edge), then by distance, then by ID of node 1, then by ID of node 2
     struct cmp {
         bool operator() (std::tuple<int,int,double,double> a, std::tuple<int,int,double,double> b) const {
-            return std::get<2>(a) < std::get<2>(b);
+            bool is_cost_eq = std::get<2>(a) == std::get<2>(b);
+            if(is_cost_eq){
+                bool is_dist_eq = std::get<3>(a) == std::get<3>(b);
+                if(is_dist_eq){
+                    bool is_node1_eq = std::get<0>(a) == std::get<0>(b);
+                    if(is_node1_eq){
+                        return std::get<1>(a) < std::get<1>(b);   
+                    } else {
+                        return std::get<0>(a) < std::get<0>(b);    
+                    }
+                } else {
+                    return std::get<3>(a) < std::get<3>(b);
+                }
+            } else {
+                return std::get<2>(a) < std::get<2>(b);
+            }
         }
     };
 

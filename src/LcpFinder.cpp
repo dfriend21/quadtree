@@ -55,7 +55,8 @@ void LcpFinder::init(int startNodeID){
             if(iNode->id == startNodeID){ // check if this node is the same as 'startNode'
                 hasStartNode = true;
             }
-            NodeEdge *ne = new NodeEdge{counter, std::weak_ptr<Node>(iNode), std::weak_ptr<NodeEdge>(),0,0,0};
+            Point pt((iNode->xMin + iNode->xMax)/2, (iNode->yMin + iNode->yMax)/2);
+            NodeEdge *ne = new NodeEdge{counter, std::weak_ptr<Node>(iNode), pt, std::weak_ptr<NodeEdge>(),0,0,0};
             nodeEdges.at(counter) = std::shared_ptr<NodeEdge>(ne);
             counter++;
         }
@@ -81,10 +82,10 @@ int LcpFinder::doNextIteration(){
     auto beginItr = possibleEdges.begin();
     std::shared_ptr<NodeEdge> nodeEdge = nodeEdges.at(std::get<1>(*beginItr)); // get the edge that's at the front of the set
     auto parent = nodeEdge->parent.lock();
-    if(parent){
+    if(parent){// if the destination node already has a pointer for parent, it's already been included, so we'll skip this one 
         possibleEdges.erase(beginItr); 
         return -1;
-    } else { // if the destination node already has a pointer for parent, it's already been included, so we'll skip this one - otherwise we'll set the 'parent' property of the destination node and then add the additional edge possibilities that result    
+    } else { // otherwise we'll set the 'parent' property of the destination node and then add the additional edge possibilities that result    
         nodeEdge->parent = std::weak_ptr<NodeEdge>(nodeEdges.at(std::get<0>(*beginItr))); // set the parent of the destination node to be the source node
         nodeEdge->nNodesFromOrigin = nodeEdges.at(std::get<0>(*beginItr))->nNodesFromOrigin + 1; // add 1 to the number of nodes from the origin of the parent
         nodeEdge->cost = std::get<2>(*beginItr); // assign the cost-distance to the NodeEdge
@@ -94,40 +95,52 @@ int LcpFinder::doNextIteration(){
 
         // now we'll add the edges corresponding to this node's neighbors
         auto node = nodeEdge->node.lock();
-        Point nodePoint = Point((node->xMin + node->xMax)/2, (node->yMin + node->yMax)/2); // make the point for the node by getting its centroid
         for(size_t i = 0; i < node->neighbors.size(); ++i){ // loop over each of its neighbors
             std::map<int,int>::iterator itr = dict.find(node->neighbors.at(i).lock()->id); // see if this neighbor is included in our dictionary - if not, then it must fall outside the extent
             if(itr != dict.end()){
                 std::shared_ptr<NodeEdge> nodeEdgeNb = nodeEdges.at(itr->second);
                 auto nodeNb = nodeEdgeNb->node.lock();
                 if(!(nodeEdgeNb->parent.lock()) && !std::isnan(nodeNb->value)){ // check if this node already has a parent assigned i.e. has already been included in the network, or if this node is NAN
-                    Point nbPoint = Point((nodeNb->xMin + nodeNb->xMax)/2, (nodeNb->yMin + nodeNb->yMax)/2);
-                    
                     // get cost for the path - to do that we need to know the length of the segment in each cell
                     // first, figure out which side the two cells are adjacent on - this'll give us one coordinate for the intersection point (whether we know the x or y depends on which side they're adjacent on)
+                    // note that I was previously checking for equality between the x and y limits - but this was causing problems because we're comparing doubles, so in rare cases none of the equality checks were true. Instead, I'm now looking for the lowest difference between the sides 
+                    std::vector<double> difs{
+                        std::abs(node->xMin - nodeNb->xMax), // left side
+                        std::abs(node->xMax - nodeNb->xMin), // right side
+                        std::abs(node->yMin - nodeNb->yMax), // bottom
+                        std::abs(node->yMax - nodeNb->yMin) // top
+                    }; 
+                    int minIndex = 0;
+                    for(int i = 1; i < 4; ++i){
+                        if(difs[i] < difs[minIndex]){
+                            minIndex = i;
+                        }
+                    }
+
                     double mid{0};
                     bool isX = true; // tells us whether mid coordinate is an x-coordinate or a y-coordinate
-                    if(node->xMin == nodeNb->xMax){ // left side
+
+                    if(minIndex == 0){ // left side
                         mid = node->xMin;
-                    } else if(node->xMax == nodeNb->xMin) { // right side
+                    } else if(minIndex == 1) { // right side
                         mid = node->xMax;
-                    } else if(node->yMin == nodeNb->yMax) { // bottom
+                    } else if(minIndex == 2) { // bottom
                         mid = node->yMin;
                         isX = false;
-                    } else if(node->yMax == nodeNb->yMin) { // top
+                    } else if(minIndex == 3) { // top
                         mid = node->yMax;
                         isX = false;
                     }
 
-                    double dist = std::sqrt(std::pow(nodePoint.x - nbPoint.x, 2) + std::pow(nodePoint.y - nbPoint.y, 2));
+                    double dist = std::sqrt(std::pow(nodeEdge->pt.x - nodeEdgeNb->pt.x, 2) + std::pow(nodeEdge->pt.y - nodeEdgeNb->pt.y, 2));
                     double ratio{0};
                     // now get the ratio between: {the difference between the known (x or y) mid-coordinate and the (x or y) coordinate of the starting point} and {the difference in the (x or y) coordinates of the two centroids}
                     if(isX){
-                        double deltaX = nodePoint.x - nbPoint.x; // get the difference of the x coords
-                        ratio = (nodePoint.x-mid)/deltaX;
+                        double deltaX = nodeEdge->pt.x - nodeEdgeNb->pt.x; // get the difference of the x coords
+                        ratio = (nodeEdge->pt.x - mid) / deltaX;
                     } else {
-                        double deltaY = nodePoint.y - nbPoint.y; // get the difference of the y coords
-                        ratio = (nodePoint.y-mid)/deltaY;
+                        double deltaY = nodeEdge->pt.y - nodeEdgeNb->pt.y; // get the difference of the y coords
+                        ratio = (nodeEdge->pt.y - mid) / deltaY;
                     }
 
                     // use the ratio we just calculated to get the length of the segment in each cell
@@ -135,10 +148,10 @@ int LcpFinder::doNextIteration(){
                     double dist2 = dist - dist1;
 
                     // use those distances to get the cost, weighted by the length of the segment in each cell. Add this to the cost to get to 'nodeEdge' to get the total cost from the origin
-                    double tot_cost = dist1*(node->value) + dist2*(nodeNb->value) + nodeEdge->cost; 
+                    double tot_cost = dist1 * (node->value) + dist2 * (nodeNb->value) + nodeEdge->cost; 
                     double tot_dist = dist + nodeEdge->dist;
 
-                    possibleEdges.insert(std::make_tuple(nodeEdge->id, nodeEdgeNb->id,tot_cost,tot_dist));
+                    possibleEdges.insert(std::make_tuple(nodeEdge->id, nodeEdgeNb->id, tot_cost, tot_dist));
                 }
             }
         }
