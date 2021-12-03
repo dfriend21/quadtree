@@ -278,8 +278,12 @@ Rcpp::List QuadtreeWrapper::getNeighborList(){
   return nbList;
 }
 
-LcpFinderWrapper QuadtreeWrapper::getLcpFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid) const{
-  return LcpFinderWrapper(quadtree, startPoint, xlims, ylims, searchByCentroid);
+// LcpFinderWrapper QuadtreeWrapper::getLcpFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid) const{
+//   return LcpFinderWrapper(quadtree, startPoint, xlims, ylims, searchByCentroid);
+// }
+
+LcpFinderWrapper QuadtreeWrapper::getLcpFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, Rcpp::NumericMatrix newPoints, bool searchByCentroid) const{
+  return LcpFinderWrapper(quadtree, startPoint, xlims, ylims, newPoints, searchByCentroid);
 }
 
 QuadtreeWrapper QuadtreeWrapper::copy() const{

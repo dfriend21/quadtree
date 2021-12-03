@@ -2,16 +2,20 @@
 % Please edit documentation in R/lcp.R
 \name{lcp_finder}
 \alias{lcp_finder}
-\alias{lcp_finder,Quadtree,numeric-method}
+\alias{lcp_finder,Quadtree-method}
 \title{Create a \code{LcpFinder}}
 \usage{
-\S4method{lcp_finder}{Quadtree,numeric}(x, y, xlim = NULL, ylim = NULL, search_by_centroid = FALSE)
+\S4method{lcp_finder}{Quadtree}(
+  x,
+  start_point,
+  xlim = NULL,
+  ylim = NULL,
+  new_points = matrix(nrow = 0, ncol = 2),
+  search_by_centroid = FALSE
+)
 }
 \arguments{
 \item{x}{a \code{\link{Quadtree}} to be used as a resistance surface}
-
-\item{y}{two-element numeric vector (x, y) - the x and y coordinates of the
-starting point}
 
 \item{xlim}{two-element numeric vector (xmin, xmax) - constrains the nodes
 included in the network to those whose x limits fall in the range specified
@@ -19,11 +23,19 @@ in \code{xlim}. If \code{NULL} the x limits of \code{x} are used}
 
 \item{ylim}{same as \code{xlim}, but for y}
 
+\item{new_points}{a two-column matrix representing point coordinates. First
+column contains the x-coordinates, second column contains the
+y-coordinates. This matrix specifies point locations to use instead of the
+node centroids. See 'Details' for more.}
+
 \item{search_by_centroid}{boolean; determines which cells are considered to
 be "in" the box specified by \code{xlim} and \code{ylim}. If \code{FALSE}
 (the default) any cell that overlaps with the box is included. If
 \code{TRUE}, a cell is only included if its \strong{centroid} falls inside
 the box.}
+
+\item{y}{two-element numeric vector (x, y) - the x and y coordinates of the
+starting point}
 }
 \value{
 a \code{\link{LcpFinder}}
@@ -34,7 +46,25 @@ Creates a \code{\link{LcpFinder}} object that can then be used
   paths (LCPs) using a \code{\link{Quadtree}} as a resistance surface.
 }
 \details{
-See the vignette 'quadtree-lcp' for more details and examples (i.e. run
+To find a least-cost path, the cells are treated as points - by default,
+  the cell centroids are used. This results in some degree of error,
+  especially for large cells. The \code{new_points} parameter can be used to
+  specify the points used to represent the cells. Each
+  point in the matrix will be used as the point for the cell it falls in.
+  Note that if two points fall in the same cell, the first point is used.
+  This is most useful for specifying the points to be used for the start cell
+  as well as the end cell (if the \code{LcpFinder} is being used to find a
+  path to one specific point).
+  
+  An \code{LcpFinder} saves state, so once the LCP tree is calculated,
+  individual LCPs can be retrieved without further computation. This makes it
+  efficient at calculating multiple LCPs from a single starting point.
+  However, in the case where only a single LCP is needed,
+  \code{\link{find_lcp()}} offers an interface for finding an LCP without
+  needing to use \code{lcp_finder()} to create the \code{LcpFinder} object
+  first.
+  
+  See the vignette 'quadtree-lcp' for more details and examples (i.e. run
   \code{vignette("quadtree-lcp", package = "quadtree")})
 }
 \examples{

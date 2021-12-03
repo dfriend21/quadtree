@@ -1,4 +1,4 @@
-test_that("find_lcp() finds the correct path in a trivial example", {
+test_that("find_lcp(<LcpFinder>) finds the correct path in a trivial example", {
   mat <- rbind(c(0, 1, 1, 1),
                c(1, 0, 0, 1),
                c(1, 1, 1, 0),
@@ -66,6 +66,74 @@ test_that("lcp_finder() with search limits works as expected", {
   
 })
 
+test_that("find_lcp(<Quadtree>) works as expected", {
+  data(habitat)
+  
+  s_pt <- c(2372, 29510)
+  e_pt <- c(37654, 26400)
+  qt <- quadtree(habitat, .2)
+  
+  plot(qt, crop = TRUE, border_lwd = .1)
+  points(rbind(s_pt, e_pt)) 
+  lcp1 <- expect_error(find_lcp(qt, s_pt, e_pt), NA)
+  
+  # check to make sure it matches find_lcp(<LcpFinder>)
+  lcpf2 <- lcp_finder(qt, s_pt, new_points = rbind(s_pt, e_pt))
+  lcp2 <- find_lcp(lcpf2, e_pt)
+  
+  lcp3 <- expect_error(find_lcp(qt, s_pt, e_pt, use_orig_points = FALSE), NA)
+  
+  lcpf4 <- lcp_finder(qt, s_pt)
+  lcp4 <- find_lcp(lcpf4, e_pt)
+  expect_equal(lcp3, lcp4)
+  
+  # check that same cell paths are found
+  lcp5 <- expect_error(find_lcp(qt, s_pt, s_pt-10), NA)
+  expect_true(nrow(lcp5) == 2)
+  
+  # check that edge cases are handled
+  expect_error(find_lcp(qt, c(NA, 1), e_pt))
+  expect_warning(find_lcp(qt, c(-1,-1), e_pt))
+})
+
+test_that("lcp_finder(<LcpFinder>) treats same-cell paths appropriately", {
+  data(habitat)
+  
+  pt <- c(2372, 29510)
+  qt <- quadtree(habitat, .2)
+  
+  lcpf <- lcp_finder(qt, pt)
+  lcp1 <- find_lcp(lcpf, pt-10)
+  expect_true(nrow(lcp1) == 1)
+  
+  lcp2 <- find_lcp(lcpf, pt - 10, allow_same_cell_path = TRUE)
+  expect_true(nrow(lcp2) == 2)
+  expect_equal(lcp2[2,c("x", "y")], pt - 10, ignore_attr = TRUE)
+})
+
+test_that("lcp_finder() with 'new_points' works as expected", {
+  data(habitat)
+  
+  s_pt1 <- c(2309, 27669)
+  s_pt2 <- c(2245, 26083)
+  e_pt <- c(722, 26907)
+  qt <- quadtree(habitat, .2)
+  
+  lcpf1 <- expect_error(lcp_finder(qt, s_pt1, 
+                                   new_points = rbind(s_pt1, e_pt)), NA)
+  lcp1 <- find_lcp(lcpf1, e_pt)  
+  expect_equal(lcp1[1,c("x", "y")], s_pt1, ignore_attr = TRUE)
+  expect_equal(lcp1[nrow(lcp1),c("x", "y")], e_pt, ignore_attr = TRUE)
+  
+  lcpf2 <- expect_error(lcp_finder(qt, s_pt2, 
+                                   new_points = rbind(s_pt2, e_pt)), NA)
+  lcp2 <- find_lcp(lcpf2, e_pt)  
+  expect_equal(lcp2[1,c("x", "y")], s_pt2, ignore_attr = TRUE)
+  expect_equal(lcp2[nrow(lcp2),c("x", "y")], e_pt, ignore_attr = TRUE)
+
+  expect_true(lcp1[2,"cell_id"] != lcp2[2,"cell_id"])
+})
+
 test_that("find_lcps() runs without errors", {
   data(habitat)
 
@@ -113,7 +181,7 @@ test_that("find_lcps() finds the same paths as in previous runs", {
   expect_equal(lcp_sum, lcp_sum_prev)
 })
 
-test_that("find_lcp() finds the same path as in previous runs", {
+test_that("find_lcp(<LcpFinder>) finds the same path as in previous runs", {
   # basically I'm just including this so I that I get alerted if the output
   # ever changes from what I'm getting right now - doesn't guarantee
   # its correctness, but is still useful to know

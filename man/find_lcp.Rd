@@ -2,24 +2,56 @@
 % Please edit documentation in R/lcp.R
 \name{find_lcp}
 \alias{find_lcp}
-\alias{find_lcp,LcpFinder,numeric-method}
+\alias{find_lcp,Quadtree-method}
+\alias{find_lcp.Quadtree}
+\alias{find_lcp,LcpFinder-method}
+\alias{find_lcp.LcpFinder}
 \title{Find the LCP between two points on a \code{Quadtree}}
 \usage{
-\S4method{find_lcp}{LcpFinder,numeric}(x, y, use_original_end_points = FALSE)
+\S4method{find_lcp}{Quadtree}(
+  x,
+  start_point,
+  end_point,
+  use_orig_points = TRUE,
+  xlim = NULL,
+  ylim = NULL,
+  search_by_centroid = FALSE
+)
+
+\S4method{find_lcp}{LcpFinder}(x, end_point, allow_same_cell_path = FALSE)
 }
 \arguments{
-\item{x}{a \code{\link{LcpFinder}}}
+\item{x}{a \code{\link{LcpFinder}} or a \code{\link{Quadtree}}}
 
-\item{y}{two-element numeric vector; the x and y coordinates of the the
+\item{start_point}{two-element numeric vector; the x and y coordinates of the
+starting point. Not used if \code{x} is a \code{\link{LcpFinder}} since the
+start point is determined when the \code{\link{LcpFinder}} is created
+(using \code{\link{lcp_finder}()}).}
+
+\item{end_point}{two-element numeric vector; the x and y coordinates of the
 destination point}
 
-\item{use_original_end_points}{boolean; by default the start and end points
-of the returned path are not the points given by the user but instead the
-centroids of the cells that those points fall in. If this parameter is set
-to \code{TRUE} the start and end points (representing the cell centroids)
-are replaced with the actual points specified by the user. Note that this
-is done after the calculation and has no effect on the path found by the
-algorithm.}
+\item{use_orig_points}{boolean; if \code{TRUE} (the default), the path is
+calculated between \code{start_point} and \code{end_point}. If
+\code{FALSE}, the path is calculated between the centroids of the cells the
+points fall in.}
+
+\item{xlim}{two-element numeric vector (xmin, xmax); passed to
+\code{\link{lcp_finder}()}; constrains the nodes included in the network to
+those whose x limits fall in the range specified in \code{xlim}. If
+\code{NULL} the x limits of \code{x} are used}
+
+\item{ylim}{same as \code{xlim}, but for y}
+
+\item{search_by_centroid}{boolean; passed to \code{\link{lcp_finder}()};
+determines which cells are considered to be "in" the box specified by
+\code{xlim} and \code{ylim}. If \code{FALSE} (the default) any cell that
+overlaps with the box is included. If \code{TRUE}, a cell is only included
+if its \strong{centroid} falls inside the box.}
+
+\item{allow_same_cell_path}{boolean; default is FALSE; if TRUE, allows
+paths to be found between two points that fall in the same cell. See
+'Details' for more.}
 }
 \value{
 Returns a five column matrix representing the LCP. It has the
@@ -32,17 +64,11 @@ Returns a five column matrix representing the LCP. It has the
      that this is not straight-line distance, but instead the distance along
      the path}
      \item{\code{cost_cell}: }{the cost of the cell that contains this point}
+     \item{\code{id}:}{ the ID of the cell that contains this point}
    }
 
   If no path is possible between the two points, a zero-row matrix with the
   previously described columns is returned.
-
-  \strong{Important note:} the \code{use_original_end_points} option
-  \strong{only} changes the x and y coordinates of the first and last points
-  - it doesn't change the \code{cost_tot} or \code{dist_tot} columns. This
-  means that even though the start and end points have changed, the
-  \code{cost_tot} and \code{dist_tot} columns still represent the cost and
-  distance using the cell centroids of the start and end cells.
 }
 \description{
 Finds the least-cost path (LCP) from the start point (the point
@@ -52,6 +78,16 @@ Finds the least-cost path (LCP) from the start point (the point
 \details{
 See the vignette 'quadtree-lcp' for more details and examples (i.e. run
   \code{vignette("quadtree-lcp", package = "quadtree")})
+  
+  By default, if the end point falls in the same cell as the start point, the
+  path will consist only of the point associated with the cell. When using
+  \code{find_lcp} with a \code{\link{LcpFinder}}, setting
+  \code{allow_same_cell_path} to \code{TRUE} allows for paths to be found
+  within a single cell. In this case, if the start and end points fall in the
+  same cell, the path will consist of two points - the point associated with
+  the cell and \code{end_point}. If using \code{find_lcp} with a
+  \code{\link{Quadtree}}, this will automatically be allowed if
+  \code{use_orig_points} is \code{TRUE}.
 }
 \examples{
 ####### NOTE #######

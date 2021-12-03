@@ -64,7 +64,8 @@ class QuadtreeWrapper{
     void makeNeighborList(std::shared_ptr<Node> node, Rcpp::List &list) const;
     Rcpp::List getNeighborList();
     
-    LcpFinderWrapper getLcpFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid) const;
+    // LcpFinderWrapper getLcpFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, bool searchByCentroid) const;
+    LcpFinderWrapper getLcpFinder(Rcpp::NumericVector startPoint, Rcpp::NumericVector xlims, Rcpp::NumericVector ylims, Rcpp::NumericMatrix newPoints, bool searchByCentroid) const;
     
     QuadtreeWrapper copy() const;
     
