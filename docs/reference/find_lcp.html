@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
       </span>
     </div>
 
@@ -145,30 +145,70 @@
   <code><a href='Quadtree-class.html'>Quadtree</a></code> as a resistance surface.</p>
     </div>
 
-    <pre class="usage"><span class='co'># S4 method for LcpFinder,numeric</span>
-<span class='fu'>find_lcp</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, use_original_end_points <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='co'># S4 method for Quadtree</span>
+<span class='fu'>find_lcp</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>start_point</span>,
+  <span class='va'>end_point</span>,
+  use_orig_points <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  xlim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ylim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  search_by_centroid <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
+
+<span class='co'># S4 method for LcpFinder</span>
+<span class='fu'>find_lcp</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>end_point</span>, allow_same_cell_path <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code><a href='LcpFinder-class.html'>LcpFinder</a></code></p></td>
+      <td><p>a <code><a href='LcpFinder-class.html'>LcpFinder</a></code> or a <code><a href='Quadtree-class.html'>Quadtree</a></code></p></td>
     </tr>
     <tr>
-      <th>y</th>
-      <td><p>two-element numeric vector; the x and y coordinates of the the
+      <th>start_point</th>
+      <td><p>two-element numeric vector; the x and y coordinates of the
+starting point. Not used if <code>x</code> is a <code><a href='LcpFinder-class.html'>LcpFinder</a></code> since the
+start point is determined when the <code><a href='LcpFinder-class.html'>LcpFinder</a></code> is created
+(using <code><a href='lcp_finder.html'>lcp_finder</a>()</code>).</p></td>
+    </tr>
+    <tr>
+      <th>end_point</th>
+      <td><p>two-element numeric vector; the x and y coordinates of the
 destination point</p></td>
     </tr>
     <tr>
-      <th>use_original_end_points</th>
-      <td><p>boolean; by default the start and end points
-of the returned path are not the points given by the user but instead the
-centroids of the cells that those points fall in. If this parameter is set
-to <code>TRUE</code> the start and end points (representing the cell centroids)
-are replaced with the actual points specified by the user. Note that this
-is done after the calculation and has no effect on the path found by the
-algorithm.</p></td>
+      <th>use_orig_points</th>
+      <td><p>boolean; if <code>TRUE</code> (the default), the path is
+calculated between <code>start_point</code> and <code>end_point</code>. If
+<code>FALSE</code>, the path is calculated between the centroids of the cells the
+points fall in.</p></td>
+    </tr>
+    <tr>
+      <th>xlim</th>
+      <td><p>two-element numeric vector (xmin, xmax); passed to
+<code><a href='lcp_finder.html'>lcp_finder</a>()</code>; constrains the nodes included in the network to
+those whose x limits fall in the range specified in <code>xlim</code>. If
+<code>NULL</code> the x limits of <code>x</code> are used</p></td>
+    </tr>
+    <tr>
+      <th>ylim</th>
+      <td><p>same as <code>xlim</code>, but for y</p></td>
+    </tr>
+    <tr>
+      <th>search_by_centroid</th>
+      <td><p>boolean; passed to <code><a href='lcp_finder.html'>lcp_finder</a>()</code>;
+determines which cells are considered to be "in" the box specified by
+<code>xlim</code> and <code>ylim</code>. If <code>FALSE</code> (the default) any cell that
+overlaps with the box is included. If <code>TRUE</code>, a cell is only included
+if its <strong>centroid</strong> falls inside the box.</p></td>
+    </tr>
+    <tr>
+      <th>allow_same_cell_path</th>
+      <td><p>boolean; default is FALSE; if TRUE, allows
+paths to be found between two points that fall in the same cell. See
+'Details' for more.</p></td>
     </tr>
     </table>
 
@@ -183,20 +223,24 @@ algorithm.</p></td>
      that this is not straight-line distance, but instead the distance along
      the path</p></li>
 <li><p><code>cost_cell</code>: the cost of the cell that contains this point</p></li>
+<li><p><code>id</code>: the ID of the cell that contains this point</p></li>
 </ul>
 
 <p>If no path is possible between the two points, a zero-row matrix with the
   previously described columns is returned.</p>
-<p><strong>Important note:</strong> the <code>use_original_end_points</code> option
-  <strong>only</strong> changes the x and y coordinates of the first and last points
-  - it doesn't change the <code>cost_tot</code> or <code>dist_tot</code> columns. This
-  means that even though the start and end points have changed, the
-  <code>cost_tot</code> and <code>dist_tot</code> columns still represent the cost and
-  distance using the cell centroids of the start and end cells.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>See the vignette 'quadtree-lcp' for more details and examples (i.e. run
-  <code><a href='../articles/quadtree-lcp.html'>vignette("quadtree-lcp", package = "quadtree")</a></code>)</p>
+  <code><a href='../articles/quadtree-lcp.html'>vignette("quadtree-lcp", package = "quadtree")</a></code>)</p>  
+<p>By default, if the end point falls in the same cell as the start point, the
+  path will consist only of the point associated with the cell. When using
+  <code>find_lcp</code> with a <code><a href='LcpFinder-class.html'>LcpFinder</a></code>, setting
+  <code>allow_same_cell_path</code> to <code>TRUE</code> allows for paths to be found
+  within a single cell. In this case, if the start and end points fall in the
+  same cell, the path will consist of two points - the point associated with
+  the cell and <code>end_point</code>. If using <code>find_lcp</code> with a
+  <code><a href='Quadtree-class.html'>Quadtree</a></code>, this will automatically be allowed if
+  <code>use_orig_points</code> is <code>TRUE</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='lcp_finder.html'>lcp_finder</a>()</code> creates the LCP finder object used as

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <h1 data-toc-skip>Using Quadtrees</h1>
                         <h4 class="author">Derek Friend</h4>
             
-            <h4 class="date">Last compiled on November 16, 2021</h4>
+            <h4 class="date">Last compiled on December 03, 2021</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/master/vignettes/quadtree-usage.Rmd"><code>vignettes/quadtree-usage.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-usage.Rmd</code></div>
@@ -154,15 +154,15 @@
 <div id="getting-the-extent-of-a-quadtree" class="section level3">
 <h3 class="hasAnchor">
 <a href="#getting-the-extent-of-a-quadtree" class="anchor"></a>Getting the extent of a quadtree</h3>
-<p><code><a href="../reference/extent.html">extent()</a></code> can be used to return the extent of the quadtree. It has one optional parameter <code>original</code> - if <code>FALSE</code> (the default), it returns the total extent covered by the quadtree. If <code>TRUE</code>, the function returns the extent of the original raster used to create the quadtree, before <code>NA</code> rows/columns were added to pad the dimensions.</p>
+<p><code><a href="../reference/extent.html">extent()</a></code> can be used to return the extent of the quadtree. It has one optional parameter <code>original</code> - if <code>FALSE</code> (the default), it returns the total extent covered by the quadtree. If <code>TRUE</code>, the function returns the extent of the original raster used to create the quadtree, before <code>NA</code> rows/columns were added to pad the dimensions. You may need to preface <code><a href="../reference/extent.html">extent()</a></code> with <code>quadtree::</code> to avoid conflicts with the <code>raster</code> package.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/extent.html">extent</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extent.html">extent</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
 <span class="co">#&gt; class      : Extent </span>
 <span class="co">#&gt; xmin       : 0 </span>
 <span class="co">#&gt; xmax       : 64000 </span>
 <span class="co">#&gt; ymin       : 0 </span>
 <span class="co">#&gt; ymax       : 64000</span>
-<span class="fu"><a href="../reference/extent.html">extent</a></span><span class="op">(</span><span class="va">qt</span>, original <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extent.html">extent</a></span><span class="op">(</span><span class="va">qt</span>, original <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; class      : Extent </span>
 <span class="co">#&gt; xmin       : 0 </span>
 <span class="co">#&gt; xmax       : 40250 </span>
@@ -185,9 +185,9 @@
 <span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">pts</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></code></pre></div>
 <p><img src="quadtree-usage_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">pts</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">pts</span><span class="op">)</span>
 <span class="co">#&gt; [1]       NaN 0.1451094 0.8202500 0.9556426 0.6800000</span>
-<span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">pts</span>, extents <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">pts</span>, extents <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt;        id  xmin  xmax  ymin  ymax     value</span>
 <span class="co">#&gt; [1,] 4339     0  8000  8000 16000       NaN</span>
 <span class="co">#&gt; [2,] 1826  2000  4000 28000 30000 0.1451094</span>
@@ -202,14 +202,14 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/get_neighbors.html">get_neighbors</a></span><span class="op">(</span><span class="va">qt</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">pts</span><span class="op">[</span><span class="fl">3</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;        id  xmin  xmax  ymin  ymax     value</span>
-<span class="co">#&gt; [1,] 1046 20000 21000 32000 33000 0.8236875</span>
+<span class="co">#&gt; [1,]  975 19500 20000 32000 32500 0.8557500</span>
 <span class="co">#&gt; [2,] 1047 21000 22000 32000 33000 0.7893750</span>
-<span class="co">#&gt; [3,]  975 19500 20000 32000 32500 0.8557500</span>
-<span class="co">#&gt; [4,] 3395 21000 22000 31000 32000 0.8061875</span>
-<span class="co">#&gt; [5,] 3396 20000 21000 30000 31000 0.8688750</span>
-<span class="co">#&gt; [6,] 3397 21000 22000 30000 31000 0.8125625</span>
-<span class="co">#&gt; [7,] 3295 19000 20000 31000 32000 0.9098125</span>
-<span class="co">#&gt; [8,] 3301 19000 20000 30000 31000 0.9466250</span></code></pre></div>
+<span class="co">#&gt; [3,] 1046 20000 21000 32000 33000 0.8236875</span>
+<span class="co">#&gt; [4,] 3295 19000 20000 31000 32000 0.9098125</span>
+<span class="co">#&gt; [5,] 3301 19000 20000 30000 31000 0.9466250</span>
+<span class="co">#&gt; [6,] 3396 20000 21000 30000 31000 0.8688750</span>
+<span class="co">#&gt; [7,] 3395 21000 22000 31000 32000 0.8061875</span>
+<span class="co">#&gt; [8,] 3397 21000 22000 30000 31000 0.8125625</span></code></pre></div>
 </div>
 </div>
 <div id="copying-a-quadtree" class="section level2">

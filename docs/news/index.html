@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
       </span>
     </div>
 
@@ -135,35 +135,69 @@
       <small>Source: <a href='https://github.com/dfriend21/quadtree/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="quadtree-015-development-version-10162021" class="section level1">
-<h1 class="page-header" data-toc-text="0.1.5">
-<a href="#quadtree-015-development-version-10162021" class="anchor"></a>quadtree 0.1.5 (development version) (10/16/2021)<small> Unreleased </small>
+    <div id="quadtree-017-development-version-1232021" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.7">
+<a href="#quadtree-017-development-version-1232021" class="anchor"></a>quadtree 0.1.7 (development version) (12/3/2021)<small> Unreleased </small>
 </h1>
-<div id="bug-fixes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a>bug fixes</h2>
+<div id="enhancements-and-modifications" class="section level3">
+<h3 class="hasAnchor">
+<a href="#enhancements-and-modifications" class="anchor"></a>enhancements and modifications</h3>
+<ul>
+<li>In the LCP functionality, added the ability to manually set the points use to represent cells (by default the centroids are used). This is especially useful for setting the start and end points of a LCP to the user-specified points - it helps reduce error caused by large cell sizes.
+<ul>
+<li>Added a <code>new_points</code> parameter that accepts a matrix of points to be used instead of the cell centroids.</li>
+<li>Removed the <code>use_original_end_points</code> parameter. This modified the end points after the LCP functionality had already been run. This is inferior to what I have now implemented, so I removed it. This can now be achieved using the <code>new_points</code> parameter of <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code>.</li>
+<li>Modified the LCP generics. For <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code> and <code><a href="../reference/find_lcp.html">find_lcp()</a></code> reduced the number of arguments used for method selection to one. I changed the name of the parameter no longer used for method selection to be more descriptive.</li>
+<li>Created an overload of <code><a href="../reference/find_lcp.html">find_lcp()</a></code> that accepts a <code>Quadtree</code>. It allows for LCPs to be found in one step (rather than having to use <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code> and then <code><a href="../reference/find_lcp.html">find_lcp()</a></code>). While it means that the <code>LcpFinder</code> object can’t be reused, it is more convenient in cases where only a single LCP needs to be calculated.</li>
+<li>In <code>find_lcp(&lt;LcpFinder&gt;)</code>, added the <code>allow_same_cell_path</code>, which allows for paths to be found between points that fall in the same cell.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+    <div id="quadtree-016-development-version-11302021" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.6">
+<a href="#quadtree-016-development-version-11302021" class="anchor"></a>quadtree 0.1.6 (development version) (11/30/2021)<small> Unreleased </small>
+</h1>
+<div id="bug-fixes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>bug fixes</h3>
+<ul>
+<li>Fixed issues <a href='https://github.com/dfriend21/quadtree/issues/8'>#8</a> and <a href='https://github.com/dfriend21/quadtree/issues/9'>#9</a> (see issues for details)</li>
+<li>Fixed error in the unit test for <code><a href="../reference/projection.html">projection()</a></code>
+</li>
+</ul>
+</div>
+</div>
+    <div id="quadtree-015-development-version-11162021" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.5">
+<a href="#quadtree-015-development-version-11162021" class="anchor"></a>quadtree 0.1.5 (development version) (11/16/2021)<small> Unreleased </small>
+</h1>
+<div id="bug-fixes-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes-1" class="anchor"></a>bug fixes</h3>
 <ul>
 <li>Neighbor relationships were not being assigned when reading a quadtree from file - this was causing functionality like LCP to fail. Fixed this by using <code>assignNeighbors()</code> in <code>QuadtreeWrapper::readQuadtree()</code>. Also added unit tests to detect this bug.</li>
 </ul>
 </div>
-<div id="enhancements-and-modifications" class="section level2">
-<h2 class="hasAnchor">
-<a href="#enhancements-and-modifications" class="anchor"></a>enhancements and modifications</h2>
+<div id="enhancements-and-modifications-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#enhancements-and-modifications-1" class="anchor"></a>enhancements and modifications</h3>
 <ul>
-<li>Added <code>write_quadtree_ptr()</code> for writing only the <code>Quadtree</code> pointer to file (<code><a href="../reference/read_quadtree.html">write_quadtree()</a></code> writes the <code>QuadtreeWrapper</code> object to file). This is for my own use - the average user will never need to use this.</li>
+<li>Added <code><a href="../reference/write_quadtree_ptr.html">write_quadtree_ptr()</a></code> for writing only the <code>Quadtree</code> pointer to file (<code><a href="../reference/read_quadtree.html">write_quadtree()</a></code> writes the <code>QuadtreeWrapper</code> object to file). This is for my own use - the average user will never need to use this.</li>
 <li>Added additional attributes to <code>Quadtree::serialize()</code> (previously, some attributes were not being serialized).</li>
 <li>Added <code>NodeWrapper::toString()</code> and made it available to R - this simply prints a summary of a <code>NodeWrapper</code> object.</li>
 <li>Stopped importing the <code><a href="../reference/extent.html">extent()</a></code> and <code><a href="../reference/projection.html">projection()</a></code> generics from <code>raster</code>. Relying on the <code>extract</code> generic from <code>raster</code> had caused the code to break (see news for previous version). I decided to stop importing generics from raster to avoid any future issues like this. This has the disadvantage of masking <code><a href="../reference/extent.html">extent()</a></code> and <code><a href="../reference/projection.html">projection()</a></code> from <code>raster</code>. This means users will need to preface the functions with the package names when using both packages, but it’ll hopefully avoid issues caused by changes in <code>raster</code>.</li>
 </ul>
 </div>
 </div>
-    <div id="quadtree-014-development-version-1092021" class="section level1">
+    <div id="quadtree-014-development-version-1192021" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.4">
-<a href="#quadtree-014-development-version-1092021" class="anchor"></a>quadtree 0.1.4 (development version) (10/9/2021)<small> Unreleased </small>
+<a href="#quadtree-014-development-version-1192021" class="anchor"></a>quadtree 0.1.4 (development version) (11/9/2021)<small> Unreleased </small>
 </h1>
-<div id="bug-fixes-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"></a>bug fixes</h2>
+<div id="bug-fixes-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes-2" class="anchor"></a>bug fixes</h3>
 <ul>
 <li>No longer exports the <code><a href="../reference/extract.html">extract()</a></code> generic from <code>raster</code> - instead, it is set via <code>setGeneric()</code> in “R/generics.R”. This is an attempted fix for an error - in some cases the <code><a href="../reference/extract.html">extract()</a></code> generic with signature “Quadtree”, “matrix” was not being found.</li>
 </ul>
@@ -173,9 +207,9 @@
 <h1 class="page-header" data-toc-text="0.1.3">
 <a href="#quadtree-013-development-version" class="anchor"></a>quadtree 0.1.3 (development version)<small> Unreleased </small>
 </h1>
-<div id="enhancements-and-modifications-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#enhancements-and-modifications-1" class="anchor"></a>enhancements and modifications</h2>
+<div id="enhancements-and-modifications-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#enhancements-and-modifications-2" class="anchor"></a>enhancements and modifications</h3>
 <ul>
 <li>In <code><a href="../reference/add_legend.html">add_legend()</a></code>, added parameters for controlling text color, font, and size. Also renamed <code>ticks_x_pct</code> parameter to <code>text_x_pct</code> parameter for consistency.</li>
 <li>Changed default border width of plots (<code>border_lwd</code> parameter of <code>plot(&lt;Quadtree&gt;)</code>) to .4, since that typically looks nicer.</li>

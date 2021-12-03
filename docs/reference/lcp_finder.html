@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
       </span>
     </div>
 
@@ -145,8 +145,15 @@
   paths (LCPs) using a <code><a href='Quadtree-class.html'>Quadtree</a></code> as a resistance surface.</p>
     </div>
 
-    <pre class="usage"><span class='co'># S4 method for Quadtree,numeric</span>
-<span class='fu'>lcp_finder</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, xlim <span class='op'>=</span> <span class='cn'>NULL</span>, ylim <span class='op'>=</span> <span class='cn'>NULL</span>, search_by_centroid <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='co'># S4 method for Quadtree</span>
+<span class='fu'>lcp_finder</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>start_point</span>,
+  xlim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ylim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  new_points <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span>nrow <span class='op'>=</span> <span class='fl'>0</span>, ncol <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>,
+  search_by_centroid <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,11 +161,6 @@
     <tr>
       <th>x</th>
       <td><p>a <code><a href='Quadtree-class.html'>Quadtree</a></code> to be used as a resistance surface</p></td>
-    </tr>
-    <tr>
-      <th>y</th>
-      <td><p>two-element numeric vector (x, y) - the x and y coordinates of the
-starting point</p></td>
     </tr>
     <tr>
       <th>xlim</th>
@@ -171,12 +173,24 @@ in <code>xlim</code>. If <code>NULL</code> the x limits of <code>x</code> are us
       <td><p>same as <code>xlim</code>, but for y</p></td>
     </tr>
     <tr>
+      <th>new_points</th>
+      <td><p>a two-column matrix representing point coordinates. First
+column contains the x-coordinates, second column contains the
+y-coordinates. This matrix specifies point locations to use instead of the
+node centroids. See 'Details' for more.</p></td>
+    </tr>
+    <tr>
       <th>search_by_centroid</th>
       <td><p>boolean; determines which cells are considered to
 be "in" the box specified by <code>xlim</code> and <code>ylim</code>. If <code>FALSE</code>
 (the default) any cell that overlaps with the box is included. If
 <code>TRUE</code>, a cell is only included if its <strong>centroid</strong> falls inside
 the box.</p></td>
+    </tr>
+    <tr>
+      <th>y</th>
+      <td><p>two-element numeric vector (x, y) - the x and y coordinates of the
+starting point</p></td>
     </tr>
     </table>
 
@@ -185,7 +199,23 @@ the box.</p></td>
     <p>a <code><a href='LcpFinder-class.html'>LcpFinder</a></code></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>See the vignette 'quadtree-lcp' for more details and examples (i.e. run
+    <p>To find a least-cost path, the cells are treated as points - by default,
+  the cell centroids are used. This results in some degree of error,
+  especially for large cells. The <code>new_points</code> parameter can be used to
+  specify the points used to represent the cells. Each
+  point in the matrix will be used as the point for the cell it falls in.
+  Note that if two points fall in the same cell, the first point is used.
+  This is most useful for specifying the points to be used for the start cell
+  as well as the end cell (if the <code>LcpFinder</code> is being used to find a
+  path to one specific point).</p>  
+<p>An <code>LcpFinder</code> saves state, so once the LCP tree is calculated,
+  individual LCPs can be retrieved without further computation. This makes it
+  efficient at calculating multiple LCPs from a single starting point.
+  However, in the case where only a single LCP is needed,
+  <code><a href='find_lcp.html'>find_lcp()</a></code> offers an interface for finding an LCP without
+  needing to use <code>lcp_finder()</code> to create the <code>LcpFinder</code> object
+  first.</p>  
+<p>See the vignette 'quadtree-lcp' for more details and examples (i.e. run
   <code><a href='../articles/quadtree-lcp.html'>vignette("quadtree-lcp", package = "quadtree")</a></code>)</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
