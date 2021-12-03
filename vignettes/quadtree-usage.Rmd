@@ -65,11 +65,11 @@ n_cells(qt, terminal_only = FALSE)
 
 ### Getting the extent of a quadtree
 
-`extent()` can be used to return the extent of the quadtree. It has one optional parameter `original` - if `FALSE` (the default), it returns the total extent covered by the quadtree. If `TRUE`, the function returns the extent of the original raster used to create the quadtree, before `NA` rows/columns were added to pad the dimensions.
+`extent()` can be used to return the extent of the quadtree. It has one optional parameter `original` - if `FALSE` (the default), it returns the total extent covered by the quadtree. If `TRUE`, the function returns the extent of the original raster used to create the quadtree, before `NA` rows/columns were added to pad the dimensions. You may need to preface `extent()` with `quadtree::` to avoid conflicts with the `raster` package.
 
 ```{r}
-extent(qt)
-extent(qt, original = TRUE)
+quadtree::extent(qt)
+quadtree::extent(qt, original = TRUE)
 ```
 
 ## Retrieving cell-level data
@@ -87,8 +87,8 @@ points(pts, pch = 16)
 ```
 
 ```{r}
-extract(qt, pts)
-extract(qt, pts, extents = TRUE)
+quadtree::extract(qt, pts)
+quadtree::extract(qt, pts, extents = TRUE)
 ```
 
 ### Retrieving neighbor relationships
