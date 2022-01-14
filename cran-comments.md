@@ -1,6 +1,7 @@
 ## Test environments
 
 * local OS X install, R 4.1.2
+* R-hub: Debian Linux, R-devel, GCC ASAN/UBSAN
 * R-hub: Fedora Linux, R-devel, clang, gfortran
 * R-hub: Ubuntu Linux 20.04.1 LTS, R-release, GCC
 * R-hub: Oracle Solaris 10, x86, 32 bit, R-release
@@ -9,7 +10,7 @@
 
 ## R CMD check results
 
-There were no ERRORs.
+The build fails on Debian Linux (R-hub). However, I believe this is unrelated to my package - the log shows that `Rcpp` fails to install, which subsequently causes both `terra` and `quadtree` to fail, since they both depend on `Rcpp`.
 
 win-builder devel and my local OS X install had the following WARNING:
 
