@@ -1,7 +1,7 @@
 #' @import methods Rcpp
 #' @importFrom graphics plot points lines matplot
 #' @importFrom stats reshape
-# @importFrom raster extract extent projection projection<-
+#' @importFrom raster extract extent
 
 #' @name quadtree-package
 #' @docType package

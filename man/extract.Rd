@@ -6,7 +6,7 @@
 \alias{extract.Quadtree}
 \title{Extract \code{Quadtree} values}
 \usage{
-\S4method{extract}{Quadtree}(x, y, extents = FALSE)
+\S4method{extract}{Quadtree,ANY}(x, y, extents = FALSE)
 }
 \arguments{
 \item{x}{a \code{\link{Quadtree}}}
