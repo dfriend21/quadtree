@@ -1,8 +1,8 @@
 Type: Package
 Package: quadtree
 Title: Region Quadtrees for Spatial Data
-Version: 0.1.7
-Date: 2021-09-10
+Version: 0.1.8
+Date: 2022-01-13
 Authors@R:
     c(person(given = "Derek",
              family = "Friend",
