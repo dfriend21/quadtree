@@ -79,6 +79,17 @@ Finds the least-cost path (LCP) from the start point (the point
 See the vignette 'quadtree-lcp' for more details and examples (i.e. run
   \code{vignette("quadtree-lcp", package = "quadtree")})
   
+  Using \code{find_lcp(<Quadtree>)} rather than \code{find_lcp(<LcpFinder>)}
+  is simply a matter of convenience - when a \code{\link{Quadtree}} is passed
+  to \code{find_lcp()}, it automatically creates an \code{\link{LcpFinder}}
+  and then uses \code{find_lcp(<LcpFinder>)} to get the path between the two
+  points. This is convenient if you only want a single LCP. However, if you
+  want to find multiple LCPs from a single start point, it is better to first
+  create the \code{\link{LcpFinder}} object using \code{\link{lcp_finder}()}
+  and then use \code{find_lcp(<LcpFinder>)} for finding LCPs. This is because
+  an \code{\link{LcpFinder}} object saves state, so subsequent calls to
+  \code{find_lcp(<LcpFinder>)} will run faster.
+  
   By default, if the end point falls in the same cell as the start point, the
   path will consist only of the point associated with the cell. When using
   \code{find_lcp} with a \code{\link{LcpFinder}}, setting
@@ -114,6 +125,9 @@ path <- find_lcp(lcpf, end_pt)
 plot(qt, crop = TRUE, na_col = NULL, border_col = "gray30", border_lwd = .4)
 points(rbind(start_pt, end_pt), pch = 16, col = "red")
 lines(path[, 1:2], col = "black")
+
+# note that the above path can also be found as follows:
+path <- find_lcp(qt, start_pt, end_pt)
 }
 \seealso{
 \code{\link{lcp_finder}()} creates the LCP finder object used as

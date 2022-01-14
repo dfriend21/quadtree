@@ -7,7 +7,7 @@
 #'   by \code{\link{find_lcp}} and \code{\link{find_lcps}} to find least-cost
 #'   paths (LCPs) using a \code{\link{Quadtree}} as a resistance surface.
 #' @param x a \code{\link{Quadtree}} to be used as a resistance surface
-#' @param y two-element numeric vector (x, y) - the x and y coordinates of the
+#' @param start_point two-element numeric vector (x, y) - the x and y coordinates of the
 #'   starting point
 #' @param xlim two-element numeric vector (xmin, xmax) - constrains the nodes
 #'   included in the network to those whose x limits fall in the range specified
@@ -23,26 +23,32 @@
 #'   \code{TRUE}, a cell is only included if its \strong{centroid} falls inside
 #'   the box.
 #' @details
+#'   See the vignette 'quadtree-lcp' for more details and examples (i.e. run
+#'   \code{vignette("quadtree-lcp", package = "quadtree")})
+#'   
 #'   To find a least-cost path, the cells are treated as points - by default,
 #'   the cell centroids are used. This results in some degree of error,
 #'   especially for large cells. The \code{new_points} parameter can be used to
-#'   specify the points used to represent the cells. Each
-#'   point in the matrix will be used as the point for the cell it falls in.
-#'   Note that if two points fall in the same cell, the first point is used.
-#'   This is most useful for specifying the points to be used for the start cell
-#'   as well as the end cell (if the \code{LcpFinder} is being used to find a
-#'   path to one specific point).
+#'   specify the points used to represent the cells - this is particularly
+#'   useful for specifying the points to be used for the start and end cells.
+#'   Each point in the matrix will be used as the point for the cell it falls in
+#'   (if two points fall in the same cell, the first point is used). Note that
+#'   this raises the possibility that a straight line between neighboring cells
+#'   may pass through other cells as well, which complicates the calculation of
+#'   the edge cost. To mitigate this, when a straight line between neighboring
+#'   cells passes through a different cell, the path is adjusted so that it
+#'   actually consists of two segments - the start point to the "corner point"
+#'   where the two cells meet, and then from that point to the end point. See
+#'   the "quadtree-lcp" vignette for a graphical example of this situation.
 #'   
 #'   An \code{LcpFinder} saves state, so once the LCP tree is calculated,
 #'   individual LCPs can be retrieved without further computation. This makes it
 #'   efficient at calculating multiple LCPs from a single starting point.
 #'   However, in the case where only a single LCP is needed,
-#'   \code{\link{find_lcp()}} offers an interface for finding an LCP without
+#'   \code{\link{find_lcp}()} offers an interface for finding an LCP without
 #'   needing to use \code{lcp_finder()} to create the \code{LcpFinder} object
 #'   first.
 #'   
-#'   See the vignette 'quadtree-lcp' for more details and examples (i.e. run
-#'   \code{vignette("quadtree-lcp", package = "quadtree")})
 #' @return a \code{\link{LcpFinder}}
 #' @seealso \code{\link{find_lcp}()} returns the LCP between the start point and
 #'   another point. \code{\link{find_lcps}()} finds all LCPs whose cost-distance
@@ -74,6 +80,8 @@
 #' plot(qt, crop = TRUE, na_col = NULL, border_lwd = .3)
 #' points(rbind(start_pt, end_pt), pch = 16, col = "red")
 #' lines(path[, 1:2], col = "black")
+#' 
+#' 
 #' @export
 setMethod("lcp_finder", signature(x = "Quadtree"),
   function(x, start_point, xlim = NULL, ylim = NULL, new_points = matrix(nrow = 0, ncol = 2), search_by_centroid = FALSE) {
@@ -173,6 +181,17 @@ setMethod("find_lcp", signature(x = "Quadtree"),
 #'   See the vignette 'quadtree-lcp' for more details and examples (i.e. run
 #'   \code{vignette("quadtree-lcp", package = "quadtree")})
 #'   
+#'   Using \code{find_lcp(<Quadtree>)} rather than \code{find_lcp(<LcpFinder>)}
+#'   is simply a matter of convenience - when a \code{\link{Quadtree}} is passed
+#'   to \code{find_lcp()}, it automatically creates an \code{\link{LcpFinder}}
+#'   and then uses \code{find_lcp(<LcpFinder>)} to get the path between the two
+#'   points. This is convenient if you only want a single LCP. However, if you
+#'   want to find multiple LCPs from a single start point, it is better to first
+#'   create the \code{\link{LcpFinder}} object using \code{\link{lcp_finder}()}
+#'   and then use \code{find_lcp(<LcpFinder>)} for finding LCPs. This is because
+#'   an \code{\link{LcpFinder}} object saves state, so subsequent calls to
+#'   \code{find_lcp(<LcpFinder>)} will run faster.
+#'   
 #'   By default, if the end point falls in the same cell as the start point, the
 #'   path will consist only of the point associated with the cell. When using
 #'   \code{find_lcp} with a \code{\link{LcpFinder}}, setting
@@ -226,6 +245,9 @@ setMethod("find_lcp", signature(x = "Quadtree"),
 #' plot(qt, crop = TRUE, na_col = NULL, border_col = "gray30", border_lwd = .4)
 #' points(rbind(start_pt, end_pt), pch = 16, col = "red")
 #' lines(path[, 1:2], col = "black")
+#' 
+#' # note that the above path can also be found as follows:
+#' path <- find_lcp(qt, start_pt, end_pt)
 #' @export
 setMethod("find_lcp", signature(x = "LcpFinder"),
   function(x, end_point, allow_same_cell_path = FALSE) {
