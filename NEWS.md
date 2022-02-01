@@ -1,3 +1,9 @@
+# quadtree 0.1.9
+
+1/31/2022 - submitted to CRAN
+
+* removed `write_quadtree_ptr()` - this was causing a memory leak. I did not intend for users to ever use this function (it's for my own use) so I simply removed it.
+
 # quadtree 0.1.8
 
 1/13/2022 - CRAN version

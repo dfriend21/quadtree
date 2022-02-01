@@ -316,5 +316,5 @@ QuadtreeWrapper QuadtreeWrapper::readQuadtree(std::string filePath){
 }
 
 void QuadtreeWrapper::writeQuadtreePtr(QuadtreeWrapper qw, std::string filePath){
-  writeQuadtree(qw.quadtree, filePath);
+  Quadtree::writeQuadtree(qw.quadtree, filePath);
 }
