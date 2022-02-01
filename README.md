@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![](https://www.r-pkg.org/badges/version/quadtree?color=green)](https://cran.r-project.org/package=quadtree)
-[![](https://img.shields.io/badge/devel%20version-0.1.8-blue.svg)](https://github.com/dfriend21/quadtree)
+[![](https://img.shields.io/badge/devel%20version-0.1.9-blue.svg)](https://github.com/dfriend21/quadtree)
 <!-- badges: end -->
 
 `quadtree` provides functionality for working with raster-like quadtrees
