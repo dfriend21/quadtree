@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
       </span>
     </div>
 
@@ -67,7 +67,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.1.8" id="quadtree-018">quadtree 0.1.8<a class="anchor" aria-label="anchor" href="#quadtree-018"></a></h2>
+<h2 class="page-header" data-toc-text="0.1.9" id="quadtree-019">quadtree 0.1.9<a class="anchor" aria-label="anchor" href="#quadtree-019"></a></h2>
+<p>1/31/2022 - submitted to CRAN</p>
+<ul><li>removed <code>write_quadtree_ptr()</code> - this was causing a memory leak. I did not intend for users to ever use this function (it’s for my own use) so I simply removed it.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.8" id="quadtree-018">quadtree 0.1.8<small>2022-01-19</small><a class="anchor" aria-label="anchor" href="#quadtree-018"></a></h2>
 <p>1/13/2022 - CRAN version</p>
 <ul><li>Updated documentation for <code><a href="../reference/find_lcp.html">find_lcp()</a></code> and <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code>.</li>
 <li>Switched to importing <code><a href="../reference/extract.html">extract()</a></code> and <code><a href="../reference/extent.html">extent()</a></code> from <code>raster</code> rather than setting the generics in <code>generics.R</code> - this is to reduce namespace conflicts with <code>raster</code>.</li>
@@ -105,7 +110,7 @@
 </ul></div>
 <div class="section level4">
 <h4 id="enhancements-and-modifications-0-1-5">enhancements and modifications<a class="anchor" aria-label="anchor" href="#enhancements-and-modifications-0-1-5"></a></h4>
-<ul><li>Added <code><a href="../reference/write_quadtree_ptr.html">write_quadtree_ptr()</a></code> for writing only the <code>Quadtree</code> pointer to file (<code><a href="../reference/read_quadtree.html">write_quadtree()</a></code> writes the <code>QuadtreeWrapper</code> object to file). This is for my own use - the average user will never need to use this.</li>
+<ul><li>Added <code>write_quadtree_ptr()</code> for writing only the <code>Quadtree</code> pointer to file (<code><a href="../reference/read_quadtree.html">write_quadtree()</a></code> writes the <code>QuadtreeWrapper</code> object to file). This is for my own use - the average user will never need to use this.</li>
 <li>Added additional attributes to <code>Quadtree::serialize()</code> (previously, some attributes were not being serialized).</li>
 <li>Added <code>NodeWrapper::toString()</code> and made it available to R - this simply prints a summary of a <code>NodeWrapper</code> object.</li>
 <li>Stopped importing the <code><a href="../reference/extent.html">extent()</a></code> and <code><a href="../reference/projection.html">projection()</a></code> generics from <code>raster</code>. Relying on the <code>extract</code> generic from <code>raster</code> had caused the code to break (see news for previous version). I decided to stop importing generics from raster to avoid any future issues like this. This has the disadvantage of masking <code><a href="../reference/extent.html">extent()</a></code> and <code><a href="../reference/projection.html">projection()</a></code> from <code>raster</code>. This means users will need to preface the functions with the package names when using both packages, but it’ll hopefully avoid issues caused by changes in <code>raster</code>.</li>
@@ -168,7 +173,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>
