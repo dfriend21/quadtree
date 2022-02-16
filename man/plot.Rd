@@ -10,7 +10,7 @@
   x,
   add = FALSE,
   col = NULL,
-  alpha = 1,
+  alpha = NULL,
   nb_line_col = NULL,
   border_col = "black",
   border_lwd = 0.4,
@@ -36,7 +36,8 @@ color ramp used in the plot. If no argument is provided,
 \code{terrain.colors(100, rev = TRUE)} is used.}
 
 \item{alpha}{numeric; transparency of the cell colors. Must be in the range
-0-1, where 0 is fully transparent and 1 (the default) is fully opaque.}
+0-1, where 0 is fully transparent and 1 is fully opaque. If \code{NULL}
+(the default) it sets \code{alpha} to 1.}
 
 \item{nb_line_col}{character; the color of the lines drawn between
 neighboring cells. If \code{NULL} (the default), these lines are not

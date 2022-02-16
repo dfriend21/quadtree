@@ -11,7 +11,8 @@
 #'   color ramp used in the plot. If no argument is provided,
 #'   \code{terrain.colors(100, rev = TRUE)} is used.
 #' @param alpha numeric; transparency of the cell colors. Must be in the range
-#'   0-1, where 0 is fully transparent and 1 (the default) is fully opaque.
+#'   0-1, where 0 is fully transparent and 1 is fully opaque. If \code{NULL}
+#'   (the default) it sets \code{alpha} to 1.
 #' @param nb_line_col character; the color of the lines drawn between
 #'   neighboring cells. If \code{NULL} (the default), these lines are not
 #'   plotted.
@@ -138,7 +139,7 @@
 #'      legend_args = list(lgd_ht_pct = .8, bar_wd_pct = .4))
 #' @export
 setMethod("plot", signature(x = "Quadtree", y = "missing"),
-  function(x, add = FALSE, col = NULL, alpha = 1, nb_line_col = NULL,
+  function(x, add = FALSE, col = NULL, alpha = NULL, nb_line_col = NULL,
            border_col = "black", border_lwd = .4, xlim = NULL, ylim = NULL,
            zlim = NULL, crop = FALSE, na_col = "white", adj_mar_auto = 6,
            legend = TRUE, legend_args = list(), ...) {
@@ -152,7 +153,7 @@ setMethod("plot", signature(x = "Quadtree", y = "missing"),
     if (is.null(col)) {
       col <- grDevices::terrain.colors(100, rev = TRUE)
     }
-    col_ramp <- grDevices::colorRamp(colors = col)
+    col_ramp <- grDevices::colorRamp(colors = col, alpha = TRUE)
 
     if (is.null(zlim)) {
       if (all(is.na(nodes$value))) {
@@ -169,15 +170,35 @@ setMethod("plot", signature(x = "Quadtree", y = "missing"),
       nodes$val_adj <- ifelse(is.na(nodes$value), NA, .5)
     }
     col_nums <- col_ramp(nodes$val_adj) # returns a matrix with RGB components
-
+    
+    # if alpha is set we'll adjust the existing alphas using the provided alpha
+    if(!is.null(alpha)) {
+      col_nums[,4] <- col_nums[,4] * alpha
+    }
+    
     # now we'll convert that matrix of RGB colors to hex colors
-    nodes$col <- apply(col_nums, MARGIN = 1, function(row_i) {
-      if (any(is.na(row_i))) {
-        return(NA)
-      }
-      return(grDevices::rgb(row_i[1], row_i[2], row_i[3], alpha * 255,
-                            maxColorValue = 255))
-    })
+    col_nums[is.na(nodes$val_adj),] <- 0 # rgb() fails if there are any NAs. So temporarily replace NA's with 0, and then we'll switch them back to NA after we've calculated the colors
+    cols <- grDevices::rgb(col_nums[,1], col_nums[,2], col_nums[,3], col_nums[,4],
+                           names = is.na(nodes$val_adj), maxColorValue = 255)
+    cols[names(cols) == "TRUE"] <- NA
+    nodes$col <- cols
+    
+    # nodes$col <- apply(col_nums, MARGIN = 1, function(row_i) {
+    #   if (any(is.na(row_i))) {
+    #     return(NA)
+    #   }
+    #   if(is.null(alpha)) { 
+    #     alpha <- row_i[4]
+    #   } else {
+    #     alpha <- row_i[4] + alpha * 255
+    #     alpha <- sapply(alpha, function(x){
+    #       if(x > 255) return(255)
+    #       return(x)
+    #     })
+    #   }
+    #   return(grDevices::rgb(row_i[1], row_i[2], row_i[3], alpha,
+    #                         maxColorValue = 255))
+    # })
 
     # now deal with NA cells and cells whose values fall outside of 'zlim'
     if (is.null(na_col)) { # if na_col is NULL, we won't plot NA cells
