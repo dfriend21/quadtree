@@ -1,8 +1,8 @@
 Type: Package
 Package: quadtree
 Title: Region Quadtrees for Spatial Data
-Version: 0.1.9
-Date: 2022-01-13
+Version: 0.1.10
+Date: 2022-12-03
 Authors@R:
     c(person(given = "Derek",
              family = "Friend",
@@ -56,7 +56,7 @@ VignetteBuilder:
 Config/testthat/edition: 3
 Encoding: UTF-8
 NeedsCompilation: yes
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.2
 Collate: 
     'CppLcpFinder-class.R'
     'CppNode-class.R'

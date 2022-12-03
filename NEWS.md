@@ -1,6 +1,13 @@
+# quadtree 0.1.10
+
+12/3/2022 - submitted to CRAN
+
+* changed `|` to `||` in `Quadtree.cpp` (this was causing a build warning)
+* fixed issue where `plot(<Quadtree>)` was throwing an error when `zlim` specified a range smaller than the range of the z values
+
 # quadtree 0.1.9
 
-1/31/2022 - submitted to CRAN
+1/31/2022 - CRAN version
 
 * removed `write_quadtree_ptr()` - this was causing a memory leak. I did not intend for users to ever use this function (it's for my own use) so I simply removed it.
 
