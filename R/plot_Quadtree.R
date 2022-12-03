@@ -177,7 +177,8 @@ setMethod("plot", signature(x = "Quadtree", y = "missing"),
     }
     
     # now we'll convert that matrix of RGB colors to hex colors
-    col_nums[is.na(nodes$val_adj),] <- 0 # rgb() fails if there are any NAs. So temporarily replace NA's with 0, and then we'll switch them back to NA after we've calculated the colors
+    # col_nums[is.na(nodes$val_adj),] <- 0 # rgb() fails if there are any NAs. So temporarily replace NA's with 0, and then we'll switch them back to NA after we've calculated the colors
+    col_nums[is.na(col_nums)] <- 0
     cols <- grDevices::rgb(col_nums[,1], col_nums[,2], col_nums[,3], col_nums[,4],
                            names = is.na(nodes$val_adj), maxColorValue = 255)
     cols[names(cols) == "TRUE"] <- NA
