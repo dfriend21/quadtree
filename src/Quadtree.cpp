@@ -295,7 +295,7 @@ void Quadtree::assignNeighbors(){
 // works exactly the same as 'getValue' except returns a pointer to the node
 // instead of the value of the node
 std::shared_ptr<Node> Quadtree::getNode(const Point pt, const std::shared_ptr<Node> node) const{
-    if( (pt.x < node->xMin) | (pt.x > node->xMax) | (pt.y < node->yMin) | (pt.y > node->yMax) | std::isnan(pt.x) | std::isnan(pt.y)){ // check to make sure the point falls within our extent
+    if( (pt.x < node->xMin) || (pt.x > node->xMax) || (pt.y < node->yMin) || (pt.y > node->yMax) || std::isnan(pt.x) || std::isnan(pt.y)){ // check to make sure the point falls within our extent
         return nullptr; // if not, return NULL
     }
     if(node->hasChildren){ // if it has children, then we need to keep going
