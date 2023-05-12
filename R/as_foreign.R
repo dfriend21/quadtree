@@ -3,9 +3,8 @@
 #' Convert to other R spatial objects
 #'
 #' @param x Quadtree object
-#' @param ... not used
 #'
-#' @return an object of class `sf` or `SpatVector`
+#' @return an object of class `sf` or `SpatVector`, or a Well-Known Text (WKT) `character` representation
 #' @export
 #'
 #' @rdname as-foreign
@@ -13,7 +12,7 @@ as_sf <- function(x) {
   if (!requireNamespace("sf")) {
     stop("package 'sf' is required to convert Quadtree to sf", call. = FALSE)
   }
-  sf::st_as_sf(as_character(x), crs = projection(x))
+  sf::st_as_sf(data.frame(geometry = sf::st_as_sfc(as_character(x))), crs = projection(x))
 }
 
 #' @export
@@ -28,17 +27,16 @@ as_vect <- function(x) {
 #' @export
 #' @rdname as-foreign
 as_character <- function(x) {
-  dt <- as_data_frame(x)
+  y <- as_data_frame(x)
   sprintf("POLYGON ((%s %s, %s %s, %s %s, %s %s, %s %s))",
-                      dt$xmin, dt$ymin, 
-                      dt$xmin, dt$ymax,
-                      dt$xmax, dt$ymax,
-                      dt$xmax, dt$ymin,
-                      dt$xmin, dt$ymin,
-              crs = projection(qt))
+                    y$xmin, y$ymin, 
+                    y$xmin, y$ymax,
+                    y$xmax, y$ymax,
+                    y$xmax, y$ymin,
+                    y$xmin, y$ymin)
 }
 
 # create as(x, 'foo') coercion methods
-setAs("Quadtree", "sf",  as_sf)
-setAs("Quadtree", "SpatVector",  as_vect)
-setAs("Quadtree", "character", as_character)
+setAs("Quadtree", "sf", function(from) as_sf(from))
+setAs("Quadtree", "SpatVector",  function(from) as_vect(from))
+setAs("Quadtree", "character", function(from) as_character(from))

@@ -14,11 +14,9 @@ as_character(x)
 }
 \arguments{
 \item{x}{Quadtree object}
-
-\item{...}{not used}
 }
 \value{
-an object of class `sf` or `SpatVector`
+an object of class `sf` or `SpatVector`, or a Well-Known Text (WKT) `character` representation
 }
 \description{
 Convert to other R spatial objects
