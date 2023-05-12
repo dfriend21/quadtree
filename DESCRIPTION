@@ -46,6 +46,8 @@ Imports:
     Rcpp (>= 1.0.5),
     stats
 Suggests: 
+    sf, 
+    terra,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
@@ -56,7 +58,7 @@ VignetteBuilder:
 Config/testthat/edition: 3
 Encoding: UTF-8
 NeedsCompilation: yes
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Collate: 
     'CppLcpFinder-class.R'
     'CppNode-class.R'
@@ -64,6 +66,7 @@ Collate:
     'classes.R'
     'generics.R'
     'as_data_frame.R'
+    'as_foreign.R'
     'as_raster.R'
     'as_vector.R'
     'copy.R'
