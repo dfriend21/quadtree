@@ -160,6 +160,7 @@ setMethod("quadtree", signature(x = "ANY"),
            proj4string = NULL, template_quadtree = NULL) {
     # validate inputs - this may be over the top, but many of these values get passed to C++ functionality, and if they're the wrong type the errors that are thrown are totally unhelpful - by type-checking them right away, I can provide easy-to-interpret error messages rather than messages that provide zero help
     # also, this is a complex function with a ton of options, and this function is basically the entryway into the entire package, so I want the errors to clearly point the user to the problem
+    if (inherits(x, 'SpatRaster')) x <- raster::raster(x)
     if (!inherits(x, c("matrix", "RasterLayer"))) stop(paste0('"x" must be a "matrix" or "RasterLayer" - an object of class "', paste(class(x), collapse = '" "'), '" was provided instead'))
     if (is.null(template_quadtree) && split_method != "custom" && ((!is.numeric(split_threshold) && !is.null(split_threshold)) || length(split_threshold) != 1)) stop(paste0("'split_threshold' must be a 'numeric' vector of length 1"))
     if (!is.function(split_fun) && !is.null(split_fun)) stop(paste0("'split_fun' must be a function"))
