@@ -21,18 +21,20 @@ test_that("as_raster() works", {
   qt <- quadtree(habitat, .1, split_method = "sd")
   rst1 <- expect_error(as_raster(qt), NA)
   rst2 <- expect_error(as_raster(qt, habitat), NA)
-
-  rst_template <- raster::raster(nrows = 189, ncols = 204,
-                                 xmn = 0, xmx = 30000, ymn = 10000, ymx = 45000)
+  rst_template <- terra::rast(nrows = 189, ncols = 204,
+                              xmin = 0, xmax = 30000, ymin = 10000, ymax = 45000)
   rst3 <- expect_error(as_raster(qt, rst_template), NA)
 
-  pts1 <- raster::rasterToPoints(rst1, spatial = FALSE)
-  pts2 <- raster::rasterToPoints(rst2, spatial = FALSE)
-  pts3 <- raster::rasterToPoints(rst3, spatial = FALSE)
+  pts1 <- terra::crds(rst1)
+  pts2 <- terra::crds(rst2)
+  pts3 <- terra::crds(rst3)
 
-  expect_equal(quadtree::extract(qt, pts1[, 1:2]), raster::extract(rst1, pts1[, 1:2]))
-  expect_equal(quadtree::extract(qt, pts2[, 1:2]), raster::extract(rst2, pts2[, 1:2]))
-  expect_equal(quadtree::extract(qt, pts3[, 1:2]), raster::extract(rst3, pts3[, 1:2]))
+  expect_equal(quadtree::extract(qt, pts1), 
+               terra::extract(rst1, pts1)[[1]])
+  expect_equal(quadtree::extract(qt, pts2), 
+               terra::extract(rst2, pts2)[[1]])
+  expect_equal(quadtree::extract(qt, pts3), 
+               terra::extract(rst3, pts3)[[1]])
 })
 
 test_that("as_vector() works", {
@@ -78,7 +80,7 @@ test_that("extent() runs without errors and produces expected output", {
   qt1 <- quadtree(habitat, .3, split_method = "sd")
   expect_error(extent(qt1, original = FALSE), NA)
   qt_ext <- expect_error(extent(qt1, original = TRUE), NA)
-  expect_equal(qt_ext, raster::extent(habitat))
+  expect_equal(qt_ext[1:4], terra::ext(habitat)[1:4])
 })
 
 test_that("extract() runs without errors and returns correct values", {
@@ -157,7 +159,7 @@ test_that("projection() runs without errors and returns correct value", {
   suppressWarnings({raster::crs(habitat) <- "+init=EPSG:27700"})
   qt1 <- quadtree(habitat, .5)
   qt_proj <- expect_error(quadtree::projection(qt1), NA)
-  expect_equal(qt_proj, raster::projection(habitat))
+  expect_equal(qt_proj, terra::crs(terra::rast(habitat)))
 
   expect_error(quadtree::projection(qt1) <- "stuff", NA)
   expect_equal(quadtree::projection(qt1), "stuff")
@@ -171,7 +173,8 @@ test_that("read_quadtree() and write_quadtree() work", {
   qt2 <- expect_error(read_quadtree(filepath), NA)
 
   expect_s4_class(qt2, "Quadtree")
-  expect_equal(extent(qt1, original = TRUE), extent(qt2, original = TRUE))
+  expect_equal(extent(qt1, original = TRUE)[1:4], 
+               extent(qt2, original = TRUE)[1:4])
   qt1_nb <- do.call(rbind, qt1@ptr$getNeighborList())
   qt2_nb <- do.call(rbind, qt2@ptr$getNeighborList())
   qt1_nb <- qt1_nb[order(qt1_nb[, "id0"], qt1_nb[, "id1"]), ]

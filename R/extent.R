@@ -35,9 +35,9 @@
 setMethod("extent", signature(x = "Quadtree"),
   function(x, original = FALSE) {
     if (original) {
-      return(raster::extent(x@ptr$originalExtent()))
+      return(terra::ext(x@ptr$originalExtent()))
     } else {
-      return(raster::extent(x@ptr$extent()))
+      return(terra::ext(x@ptr$extent()))
     }
   }
 )

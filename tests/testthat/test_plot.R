@@ -50,3 +50,5 @@ test_that("points(<LcpFinder>) and lines(<LcpFinder>) run without errors", {
   expect_error(lines(lcpf), NA)
   expect_error(points(lcpf, col = "red", pch = 16, cex = .5), NA)
 })
+
+unlink("Rplots.pdf")

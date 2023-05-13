@@ -6,7 +6,7 @@ test_that("we can create a quadtree from a matrix", {
 
 test_that("we can create a quadtree from a raster", {
   mat <- matrix(runif(16), 4)
-  rast <- raster::raster(mat)
+  rast <- terra::rast(mat)
   qt <- expect_error(quadtree(rast, .2), NA)
   expect_s4_class(qt, "Quadtree")
 })

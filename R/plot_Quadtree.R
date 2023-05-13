@@ -397,7 +397,8 @@ NULL
 #'
 #' old_par <- par(mar = c(5, 4, 4, 5))
 #' plot(qt, legend = FALSE)
-#' add_legend(raster::cellStats(habitat, "range"), rev(terrain.colors(100)))
+#' leg <- terra::minmax(terra::rast(habitat))[1:2]
+#' quadtree::add_legend(leg, rev(terrain.colors(100)))
 #' par(old_par)
 #' # this example simply illustrates how it COULD be used, but as stated in the
 #' # 'Details' section, it shouldn't be called separately from 'plot()' - if

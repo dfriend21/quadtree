@@ -44,12 +44,17 @@ setMethod("as_raster", signature(x = "Quadtree"),
   function(x, rast=NULL) {
     if (is.null(rast)) {
       res <- x@ptr$root()$smallestChildSideLength()
-      rast <- raster::raster(extent(x), resolution = res, crs = projection(x))
+      # NB: init with vals= to avoid warning with an empty raster
+      rast <- terra::rast(quadtree::extent(x), 
+                          resolution = res, 
+                          crs = terra::crs(x))
     } else {
-      rast <- raster::raster(rast)
+      if (inherits(rast, 'RasterLayer')) {
+        rast <- terra::rast(rast)
+      }
     }
-    pts <- raster::rasterToPoints(rast, spatial = FALSE)
-    vals <- extract(x, pts[, 1:2, drop = FALSE])
+    # NB: if rast is an empty (template) raster, warning
+    vals <- quadtree::extract(x, suppressWarnings(terra::crds(rast, na.rm = FALSE)))
     rast[] <- vals
     return(rast)
   }
