@@ -49,7 +49,7 @@ setMethod("as_raster", signature(x = "Quadtree"),
       rast <- raster::raster(rast)
     }
     pts <- raster::rasterToPoints(rast, spatial = FALSE)
-    vals <- extract(x, pts[, 1:2])
+    vals <- extract(x, pts[, 1:2, drop = FALSE])
     rast[] <- vals
     return(rast)
   }
