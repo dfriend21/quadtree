@@ -1,7 +1,7 @@
 Type: Package
 Package: quadtree
 Title: Region Quadtrees for Spatial Data
-Version: 0.1.10
+Version: 0.1.11
 Date: 2022-12-03
 Authors@R:
     c(person(given = "Derek",
@@ -9,6 +9,10 @@ Authors@R:
              role = c("aut", "cre", "cph"),
              email = "dafriend.R@gmail.com",
              comment = c(ORCID = "0000-0002-6909-8769")),
+      person(given = "Andrew",
+             family = "Brown",
+             role = "ctb",
+             email = "brown.andrewg@gmail.com"),
       person(given = "Randolph",
              family = "Voorhies",
              role = "cph",
