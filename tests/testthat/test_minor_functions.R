@@ -51,6 +51,15 @@ test_that("as_vector() works", {
   expect_equal(sort(as.numeric(mat)), sort(vec_term2))
 })
 
+test_that("foreign object conversion functions run without errors", {
+  data(habitat)
+  qt <- quadtree(habitat, .3, split_method = "sd")
+  
+  ch <- expect_error(as(qt, "character"), NA)
+  sf <- expect_error(as(qt, "sf"), NA)
+  v <- expect_error(as(qt, "SpatVector"), NA)
+})
+
 test_that("copy() runs without errors and produces expected output", {
   data(habitat)
   qt1 <- quadtree(habitat, .3, split_method = "sd")
