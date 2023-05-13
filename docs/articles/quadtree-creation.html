@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -88,9 +88,11 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Creating Quadtrees</h1>
-                        <h4 data-toc-skip class="author">Derek Friend</h4>
+                        <h4 data-toc-skip class="author">Derek
+Friend</h4>
             
-            <h4 data-toc-skip class="date">Last compiled on January 31, 2022</h4>
+            <h4 data-toc-skip class="date">Last compiled on May 13,
+2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/HEAD/vignettes/quadtree-creation.Rmd" class="external-link"><code>vignettes/quadtree-creation.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-creation.Rmd</code></div>
@@ -102,113 +104,207 @@
 <div class="section level2">
 <h2 id="vignette-content">Vignette content<a class="anchor" aria-label="anchor" href="#vignette-content"></a>
 </h2>
-<p>This vignette goes over the process of creating a quadtree and covers all of the various parameter settings that can be used to modify the way a quadtree is created. Note that all the examples use the following example raster:</p>
+<p>This vignette goes over the process of creating a quadtree and covers
+all of the various parameter settings that can be used to modify the way
+a quadtree is created. Note that all the examples use the following
+example raster:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster" class="external-link">raster</a></span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span>
-<span class="va">rast</span> <span class="op">&lt;-</span> <span class="va">habitat</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rast</span>, main <span class="op">=</span> <span class="st">"sample raster"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster" class="external-link">raster</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span>
+<span><span class="va">rast</span> <span class="op">&lt;-</span> <span class="va">habitat</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rast</span>, main <span class="op">=</span> <span class="st">"sample raster"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="overview-of-the-quadtree-data-structure">Overview of the quadtree data structure<a class="anchor" aria-label="anchor" href="#overview-of-the-quadtree-data-structure"></a>
 </h2>
-<p>Quadtrees are tree data structures where each node is allowed to have either zero or four children. This data structure can be used to represent two-dimensional space by interpreting each node as a rectangular cell. The root of the tree represents a single cell that encompasses the entire area. If a node has children, they represent the four cells created when the node is divided into quadrants. This creates a hierarchical data structure where any given point in space is contained within many different cells at different levels. In order to represent the value of some variable across space, each node has a value that represents the value of that variable in the region covered by the node. This means that any point may be associated with multiple values - this can be useful in some situations. However, it may also be desirable for each point to be associated with only a single value. The terminal nodes can be treated as the only value for any given point, and the values at the higher levels can essentially be ignored. This creates a space-exhausting surface like a raster where every point in space has a single value. Unlike a raster, however, the hierarchical nature of a quadtree easily facilitates variable-sized cells. When a quadtree is used in this fashion it is referred to as a <em>region quadtree</em>.</p>
-<p>This feature of quadtrees make them advantageous in certain situations. In some applications it may be critical for the data structure to have a fine resolution in certain areas, while other areas may be suitably represented by large cells. For example, quadtrees have been used for image compression - by allowing largely homogeneous areas of an image to be represented by large cells, the amount of data needed to represent the image can be greatly reduced while still preserving fine resolution in heterogeneous areas.</p>
-<p>The following figure shows a quadtree data structure (left), it’s spatial representation (middle), and a 3D plot showing how the data structure and the spatial representation correspond (right).</p>
+<p>Quadtrees are tree data structures where each node is allowed to have
+either zero or four children. This data structure can be used to
+represent two-dimensional space by interpreting each node as a
+rectangular cell. The root of the tree represents a single cell that
+encompasses the entire area. If a node has children, they represent the
+four cells created when the node is divided into quadrants. This creates
+a hierarchical data structure where any given point in space is
+contained within many different cells at different levels. In order to
+represent the value of some variable across space, each node has a value
+that represents the value of that variable in the region covered by the
+node. This means that any point may be associated with multiple values -
+this can be useful in some situations. However, it may also be desirable
+for each point to be associated with only a single value. The terminal
+nodes can be treated as the only value for any given point, and the
+values at the higher levels can essentially be ignored. This creates a
+space-exhausting surface like a raster where every point in space has a
+single value. Unlike a raster, however, the hierarchical nature of a
+quadtree easily facilitates variable-sized cells. When a quadtree is
+used in this fashion it is referred to as a <em>region
+quadtree</em>.</p>
+<p>This feature of quadtrees make them advantageous in certain
+situations. In some applications it may be critical for the data
+structure to have a fine resolution in certain areas, while other areas
+may be suitably represented by large cells. For example, quadtrees have
+been used for image compression - by allowing largely homogeneous areas
+of an image to be represented by large cells, the amount of data needed
+to represent the image can be greatly reduced while still preserving
+fine resolution in heterogeneous areas.</p>
+<p>The following figure shows a quadtree data structure (left), it’s
+spatial representation (middle), and a 3D plot showing how the data
+structure and the spatial representation correspond (right).</p>
 <p><img src="figures/quadtree-structure-illustration.png" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="overview-of-quadtree-creation">Overview of quadtree creation<a class="anchor" aria-label="anchor" href="#overview-of-quadtree-creation"></a>
 </h2>
-<p>In the <code>quadtree</code> package, a quadtree is created from a raster or a matrix by successively dividing the raster/matrix into smaller and smaller cells, with the decision on whether to divide a quadrant determined by a function that checks the cell values within each quadrant and returns <code>TRUE</code> if it should be split, and <code>FALSE</code> otherwise. Initially, all of the cells in the raster are considered. If the cell values meet the condition determined by the splitting function, the raster is divided into four quadrants - otherwise, the raster is not divided further and the value of this larger cell is calculated by applying a ‘combine function’ that aggregates the cell values into a single value (for example, mean or median). If a quadrant is split, the process is repeated for each of those ‘child’ quadrants, and then for their children, and so on and so forth, until either the split function returns <code>FALSE</code> or the smallest possible cell size (as determined by the input raster) has been reached.</p>
+<p>In the <code>quadtree</code> package, a quadtree is created from a
+raster or a matrix by successively dividing the raster/matrix into
+smaller and smaller cells, with the decision on whether to divide a
+quadrant determined by a function that checks the cell values within
+each quadrant and returns <code>TRUE</code> if it should be split, and
+<code>FALSE</code> otherwise. Initially, all of the cells in the raster
+are considered. If the cell values meet the condition determined by the
+splitting function, the raster is divided into four quadrants -
+otherwise, the raster is not divided further and the value of this
+larger cell is calculated by applying a ‘combine function’ that
+aggregates the cell values into a single value (for example, mean or
+median). If a quadrant is split, the process is repeated for each of
+those ‘child’ quadrants, and then for their children, and so on and so
+forth, until either the split function returns <code>FALSE</code> or the
+smallest possible cell size (as determined by the input raster) has been
+reached.</p>
 </div>
 <div class="section level2">
 <h2 id="pre-creation-dimension-adjustment">Pre-creation dimension adjustment<a class="anchor" aria-label="anchor" href="#pre-creation-dimension-adjustment"></a>
 </h2>
-<p>If a given quadrant has dimensions that are not divisible by two (for example, 5 x 5), then the process stops. Because of this, only rasters that have dimensions that are a power of two can be divided down to their smallest cell size. In addition, only square rasters can be divided down to their smallest cell size. To create quadtrees from rasters that have dimensions that are not a power of two and are not square, two options are provided. The choice of method is determined by the <code>adj_type</code> parameter.</p>
+<p>If a given quadrant has dimensions that are not divisible by two (for
+example, 5 x 5), then the process stops. Because of this, only rasters
+that have dimensions that are a power of two can be divided down to
+their smallest cell size. In addition, only square rasters can be
+divided down to their smallest cell size. To create quadtrees from
+rasters that have dimensions that are not a power of two and are not
+square, two options are provided. The choice of method is determined by
+the <code>adj_type</code> parameter.</p>
 <div class="section level3">
 <h3 id="the-expand-method">The <code>"expand"</code> method<a class="anchor" aria-label="anchor" href="#the-expand-method"></a>
 </h3>
-<p>In the <code>"expand"</code> method, <code>NA</code> cells are added to the raster in order to create an expanded raster whose dimensions are a power of two. The smallest number that is a power of two but greater than the larger dimension is used as the dimensions of the expanded raster. In the following example, the raster has dimensions of 178 x 161. To make it suitable for quadtree creation, <code>NA</code> rows and columns are added in order to create a raster with dimensions 256 x 256 (as 256 is the smallest power of two that is also greater than 178), and then the quadtree is created from that raster.</p>
+<p>In the <code>"expand"</code> method, <code>NA</code> cells are added
+to the raster in order to create an expanded raster whose dimensions are
+a power of two. The smallest number that is a power of two but greater
+than the larger dimension is used as the dimensions of the expanded
+raster. In the following example, the raster has dimensions of 178 x
+161. To make it suitable for quadtree creation, <code>NA</code> rows and
+columns are added in order to create a raster with dimensions 256 x 256
+(as 256 is the smallest power of two that is also greater than 178), and
+then the quadtree is created from that raster.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/dimensions.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">rast</span><span class="op">)</span> <span class="co"># not a power of 2</span>
-<span class="co">#&gt; [1] 178 161   1</span>
-<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, adj_type <span class="op">=</span> <span class="st">"expand"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, main <span class="op">=</span> <span class="st">"expand raster dimensions"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">rast</span><span class="op">)</span> <span class="co"># not a power of 2</span></span>
+<span><span class="co">#&gt; [1] 178 161   1</span></span>
+<span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, adj_type <span class="op">=</span> <span class="st">"expand"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, main <span class="op">=</span> <span class="st">"expand raster dimensions"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-4-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="the-resample-method">The <code>"resample"</code> method<a class="anchor" aria-label="anchor" href="#the-resample-method"></a>
 </h3>
-<p>In the <code>"resample"</code> method, the raster is resampled in order to create a square raster with dimensions that are a power of two. If the data does not have the same number of rows and columns, resampling the raster to have an equal number of rows and column will result in rectangular but non-square cells. This resampled raster is then used to create the quadtree.</p>
+<p>In the <code>"resample"</code> method, the raster is resampled in
+order to create a square raster with dimensions that are a power of two.
+If the data does not have the same number of rows and columns,
+resampling the raster to have an equal number of rows and column will
+result in rectangular but non-square cells. This resampled raster is
+then used to create the quadtree.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, adj_type <span class="op">=</span> <span class="st">"resample"</span>, resample_n_side <span class="op">=</span> <span class="fl">128</span>,
-               resample_pad_nas <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, main <span class="op">=</span> <span class="st">"resample (without NA padding)"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, adj_type <span class="op">=</span> <span class="st">"resample"</span>, resample_n_side <span class="op">=</span> <span class="fl">128</span>,</span>
+<span>               resample_pad_nas <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, main <span class="op">=</span> <span class="st">"resample (without NA padding)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
-<p>If square cells are desired, an additional step is added to make the raster square by setting <code>resample_pad_nas</code> to be <code>TRUE</code> (the default). This is done in a way similar to the method described above. The smaller dimension is padded with <code>NA</code> cells in order to equal the larger dimension. As stated previously, our sample raster has dimensions 178 x 161, so <code>NA</code> columns are added in order to create a raster with dimensions 178 x 178. Then, the raster is resampled to a user-specified dimension (determined by the <code>resample_n_side</code> parameter). For example, the user could set <code>resample_n_side</code> to be 128, which will resample the 178 x 178 raster to 128 x 128. This raster can then be used to create a quadtree.</p>
+<p>If square cells are desired, an additional step is added to make the
+raster square by setting <code>resample_pad_nas</code> to be
+<code>TRUE</code> (the default). This is done in a way similar to the
+method described above. The smaller dimension is padded with
+<code>NA</code> cells in order to equal the larger dimension. As stated
+previously, our sample raster has dimensions 178 x 161, so
+<code>NA</code> columns are added in order to create a raster with
+dimensions 178 x 178. Then, the raster is resampled to a user-specified
+dimension (determined by the <code>resample_n_side</code> parameter).
+For example, the user could set <code>resample_n_side</code> to be 128,
+which will resample the 178 x 178 raster to 128 x 128. This raster can
+then be used to create a quadtree.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, adj_type <span class="op">=</span> <span class="st">"resample"</span>, resample_n_side <span class="op">=</span> <span class="fl">128</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, main <span class="op">=</span> <span class="st">"resample (with NA padding)"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, adj_type <span class="op">=</span> <span class="st">"resample"</span>, resample_n_side <span class="op">=</span> <span class="fl">128</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, main <span class="op">=</span> <span class="st">"resample (with NA padding)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="no-adjustment">No adjustment<a class="anchor" aria-label="anchor" href="#no-adjustment"></a>
 </h3>
-<p>If <code>adj_type</code> is <code>"none"</code>, the provided matrix/raster is used ‘as is’, with no dimension adjustment. In this case, doing so results in a single cell quadtree, since 161 (the number of columns) is not divisible by two.</p>
+<p>If <code>adj_type</code> is <code>"none"</code>, the provided
+matrix/raster is used ‘as is’, with no dimension adjustment. In this
+case, doing so results in a single cell quadtree, since 161 (the number
+of columns) is not divisible by two.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, adj_type <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, main <span class="op">=</span> <span class="st">"adj_type = 'none'"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, adj_type <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, main <span class="op">=</span> <span class="st">"adj_type = 'none'"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="splitting-and-aggregating-functions">Splitting and aggregating functions<a class="anchor" aria-label="anchor" href="#splitting-and-aggregating-functions"></a>
 </h2>
-<p>The method used to determine whether or not to split a cell as well as the method used to aggregate cell values can be defined by the user. Simple methods are already provided, but custom functions can be defined.</p>
+<p>The method used to determine whether or not to split a cell as well
+as the method used to aggregate cell values can be defined by the user.
+Simple methods are already provided, but custom functions can be
+defined.</p>
 <div class="section level3">
 <h3 id="default-methods">Default methods<a class="anchor" aria-label="anchor" href="#default-methods"></a>
 </h3>
 <div class="section level4">
 <h4 id="splitting-functions">Splitting functions<a class="anchor" aria-label="anchor" href="#splitting-functions"></a>
 </h4>
-<p>Three methods are provided for splitting a quadrant. The <code>"range"</code> method calculates the difference between the minimum and maximum values within the quadrant, <code>"sd"</code> calculates the standard deviation of the values, and <code>"cv"</code> calculates the coefficient of variation. Regardless of which method is used, the resulting value is compared to the <code>split_threshold</code> parameter, and if it exceeds the threshold, the quadrant is split.</p>
+<p>Three methods are provided for splitting a quadrant. The
+<code>"range"</code> method calculates the difference between the
+minimum and maximum values within the quadrant, <code>"sd"</code>
+calculates the standard deviation of the values, and <code>"cv"</code>
+calculates the coefficient of variation. Regardless of which method is
+used, the resulting value is compared to the
+<code>split_threshold</code> parameter, and if it exceeds the threshold,
+the quadrant is split.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, split_method <span class="op">=</span> <span class="st">"range"</span><span class="op">)</span>
-<span class="va">qt_sd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, split_method <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span>
-<span class="va">qt_cv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, split_method <span class="op">=</span> <span class="st">"cv"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_range</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'range'"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_sd</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'sd'"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_cv</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'cv'"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, split_method <span class="op">=</span> <span class="st">"range"</span><span class="op">)</span></span>
+<span><span class="va">qt_sd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, split_method <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span></span>
+<span><span class="va">qt_cv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, split_method <span class="op">=</span> <span class="st">"cv"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_range</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,</span>
+<span>     axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'range'"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_sd</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,</span>
+<span>     axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'sd'"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_cv</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,</span>
+<span>     axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_method = 'cv'"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
 </div>
 <div class="section level4">
 <h4 id="combine-functions">Combine functions<a class="anchor" aria-label="anchor" href="#combine-functions"></a>
 </h4>
-<p>Four methods to aggregate cell values are provided - <code>"mean"</code>, <code>"median"</code>, <code>"min"</code>, and <code>"max"</code> - the names are self-explanatory. Note that in the following example the structures of the quadtrees are identical - the combine function has no influence on the decision to split a cell.</p>
+<p>Four methods to aggregate cell values are provided -
+<code>"mean"</code>, <code>"median"</code>, <code>"min"</code>, and
+<code>"max"</code> - the names are self-explanatory. Note that in the
+following example the structures of the quadtrees are identical - the
+combine function has no influence on the decision to split a cell.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, <span class="st">"sd"</span>, combine_method <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span>
-<span class="va">qt_median</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, <span class="st">"sd"</span>, combine_method <span class="op">=</span> <span class="st">"median"</span><span class="op">)</span>
-<span class="va">qt_min</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, <span class="st">"sd"</span>, combine_method <span class="op">=</span> <span class="st">"min"</span><span class="op">)</span>
-<span class="va">qt_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, <span class="st">"sd"</span>, combine_method <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_mean</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">TRUE</span>,
-     border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_median</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">TRUE</span>,
-     border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"median"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_min</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">TRUE</span>,
-     border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"min"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_max</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">TRUE</span>,
-     border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, <span class="st">"sd"</span>, combine_method <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
+<span><span class="va">qt_median</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, <span class="st">"sd"</span>, combine_method <span class="op">=</span> <span class="st">"median"</span><span class="op">)</span></span>
+<span><span class="va">qt_min</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, <span class="st">"sd"</span>, combine_method <span class="op">=</span> <span class="st">"min"</span><span class="op">)</span></span>
+<span><span class="va">qt_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, <span class="st">"sd"</span>, combine_method <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_mean</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_median</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"median"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_min</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"min"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_max</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-9-1.png" width="100%"></p>
 </div>
 </div>
@@ -218,41 +314,67 @@
 <div class="section level4">
 <h4 id="splitting-functions-1">Splitting functions<a class="anchor" aria-label="anchor" href="#splitting-functions-1"></a>
 </h4>
-<p>Custom functions can be written to apply more complex rules to splitting and combining. These functions must take two parameters: <code>vals</code> and <code>args</code>. <code>vals</code> is a numeric vector of the values of the cells within the current quadrant. <code>args</code> is a named list that contains the arguments needed by the custom function. Any parameters needed for the function should be accessed through <code>args</code>. Note that even if no extra parameters are needed, the custom function still needs to take an <code>args</code> parameter - in that case it just won’t be used by the function.</p>
-<p><code>split_fun</code> must return a boolean, where <code>TRUE</code> indicates that the quadrant should be split. An important note to make is that any custom function must be able to handle <code>NA</code> values. The function must always return either <code>TRUE</code> or <code>FALSE</code> - if <code>NA</code> is ever returned an error will occur.</p>
-<p>For example, a simple splitting function that splits a quadrant when any of the values are below a given limit could be defined as follows:</p>
+<p>Custom functions can be written to apply more complex rules to
+splitting and combining. These functions must take two parameters:
+<code>vals</code> and <code>args</code>. <code>vals</code> is a numeric
+vector of the values of the cells within the current quadrant.
+<code>args</code> is a named list that contains the arguments needed by
+the custom function. Any parameters needed for the function should be
+accessed through <code>args</code>. Note that even if no extra
+parameters are needed, the custom function still needs to take an
+<code>args</code> parameter - in that case it just won’t be used by the
+function.</p>
+<p><code>split_fun</code> must return a boolean, where <code>TRUE</code>
+indicates that the quadrant should be split. An important note to make
+is that any custom function must be able to handle <code>NA</code>
+values. The function must always return either <code>TRUE</code> or
+<code>FALSE</code> - if <code>NA</code> is ever returned an error will
+occur.</p>
+<p>For example, a simple splitting function that splits a quadrant when
+any of the values are below a given limit could be defined as
+follows:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">split_fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">vals</span>, <span class="va">args</span><span class="op">)</span> <span class="op">{</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">vals</span> <span class="op">&lt;</span> <span class="va">args</span><span class="op">$</span><span class="va">threshold</span><span class="op">)</span><span class="op">)</span>
-<span class="op">}</span></code></pre></div>
-<p>We can then use this with the <code><a href="../reference/quadtree.html">quadtree()</a></code> function to apply the splitting method. Note that because the function makes use of an element of <code>args</code> named <code>threshold</code>, the <code>split_args</code> parameter needs to contain an element called <code>threshold</code>:</p>
+<code class="sourceCode R"><span><span class="va">split_fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">vals</span>, <span class="va">args</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">vals</span> <span class="op">&lt;</span> <span class="va">args</span><span class="op">$</span><span class="va">threshold</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>We can then use this with the <code><a href="../reference/quadtree.html">quadtree()</a></code> function to
+apply the splitting method. Note that because the function makes use of
+an element of <code>args</code> named <code>threshold</code>, the
+<code>split_args</code> parameter needs to contain an element called
+<code>threshold</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, split_method <span class="op">=</span> <span class="st">"custom"</span>, split_fun <span class="op">=</span> <span class="va">split_fun</span>,
-                split_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     main <span class="op">=</span> <span class="st">"custom splitting function"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, split_method <span class="op">=</span> <span class="st">"custom"</span>, split_fun <span class="op">=</span> <span class="va">split_fun</span>,</span>
+<span>                split_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"custom splitting function"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-11-1.png" width="100%"></p>
 </div>
 <div class="section level4">
 <h4 id="combine-functions-1">Combine functions<a class="anchor" aria-label="anchor" href="#combine-functions-1"></a>
 </h4>
-<p>As with <code>split_fun</code>, <code>combine_fun</code> must take two arguments named <code>vals</code> and <code>args</code>. Custom combine functions must return a single numeric value, and unlike <code>split_fun</code>, <code>combine_fun</code> is allowed to return <code>NA</code> values. For example, the following function can be used to create a binary quadtree which only takes on the values 0 and 1, based on some cutoff threshold.</p>
+<p>As with <code>split_fun</code>, <code>combine_fun</code> must take
+two arguments named <code>vals</code> and <code>args</code>. Custom
+combine functions must return a single numeric value, and unlike
+<code>split_fun</code>, <code>combine_fun</code> is allowed to return
+<code>NA</code> values. For example, the following function can be used
+to create a binary quadtree which only takes on the values 0 and 1,
+based on some cutoff threshold.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cmb_fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">vals</span>, <span class="va">args</span><span class="op">)</span> <span class="op">{</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">vals</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span>
-  <span class="op">}</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">vals</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">args</span><span class="op">$</span><span class="va">threshold</span><span class="op">)</span> <span class="op">{</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-  <span class="op">}</span>
-<span class="op">}</span>
-
-<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, combine_method <span class="op">=</span> <span class="st">"custom"</span>, combine_fun <span class="op">=</span> <span class="va">cmb_fun</span>,
-               combine_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     main <span class="op">=</span> <span class="st">"custom combine function"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cmb_fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">vals</span>, <span class="va">args</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">vals</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">vals</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">args</span><span class="op">$</span><span class="va">threshold</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.1</span>, combine_method <span class="op">=</span> <span class="st">"custom"</span>, combine_fun <span class="op">=</span> <span class="va">cmb_fun</span>,</span>
+<span>               combine_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"custom combine function"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-12-1.png" width="100%"></p>
 </div>
 </div>
@@ -260,30 +382,42 @@
 <div class="section level2">
 <h2 id="creating-a-quadtree-using-a-template">Creating a quadtree using a template<a class="anchor" aria-label="anchor" href="#creating-a-quadtree-using-a-template"></a>
 </h2>
-<p>The <code><a href="../reference/quadtree.html">quadtree()</a></code> function also allows users to create a quadtree using another quadtree as a “template” (via the <code>template_quadtree</code> parameter). The structure of the new quadtree will be identical to that of the template quadtree, but the values of the cells will be derived from the raster used to create the new quadtree. This allows for a raster to be converted into a quadtree, with the structure of the quadtree being determined by a different raster. The rasters used to make the template quadtree and the new quadtree should have the exact same extent and dimensions - in addition the exact same expansion method (i.e. the method specified by <code>adj_type</code>) should be used to create both quadtrees.</p>
-<p>In the following example, a raster representing the presence/absence of roads is used to create a quadtree, and then that quadtree is used as a template to create a quadtree from a different raster.</p>
+<p>The <code><a href="../reference/quadtree.html">quadtree()</a></code> function also allows users to create a
+quadtree using another quadtree as a “template” (via the
+<code>template_quadtree</code> parameter). The structure of the new
+quadtree will be identical to that of the template quadtree, but the
+values of the cells will be derived from the raster used to create the
+new quadtree. This allows for a raster to be converted into a quadtree,
+with the structure of the quadtree being determined by a different
+raster. The rasters used to make the template quadtree and the new
+quadtree should have the exact same extent and dimensions - in addition
+the exact same expansion method (i.e. the method specified by
+<code>adj_type</code>) should be used to create both quadtrees.</p>
+<p>In the following example, a raster representing the presence/absence
+of roads is used to create a quadtree, and then that quadtree is used as
+a template to create a quadtree from a different raster.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat_roads</span><span class="op">)</span>
-<span class="va">template</span> <span class="op">&lt;-</span> <span class="va">habitat_roads</span>
-
-<span class="co"># use a custom function so that a quadrant is split if it contains any 1's</span>
-<span class="va">split_if_one</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">vals</span>, <span class="va">args</span><span class="op">)</span> <span class="op">{</span>
-  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">vals</span> <span class="op">==</span> <span class="fl">1</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span>
-<span class="op">}</span>
-<span class="va">qt_template</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">template</span>, split_method <span class="op">=</span> <span class="st">"custom"</span>,
-                        split_fun <span class="op">=</span> <span class="va">split_if_one</span><span class="op">)</span>
-
-<span class="co"># now use the template to create a quadtree from 'rast'</span>
-<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, template_quadtree <span class="op">=</span> <span class="va">qt_template</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">template</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, box <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>,
-     main <span class="op">=</span> <span class="st">"template raster"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_template</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span> ,axes <span class="op">=</span> <span class="cn">FALSE</span>,
-     legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"template quadtree"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>,
-     legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"quadtree created using template"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat_roads</span><span class="op">)</span></span>
+<span><span class="va">template</span> <span class="op">&lt;-</span> <span class="va">habitat_roads</span></span>
+<span></span>
+<span><span class="co"># use a custom function so that a quadrant is split if it contains any 1's</span></span>
+<span><span class="va">split_if_one</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">vals</span>, <span class="va">args</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">vals</span> <span class="op">==</span> <span class="fl">1</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">qt_template</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">template</span>, split_method <span class="op">=</span> <span class="st">"custom"</span>,</span>
+<span>                        split_fun <span class="op">=</span> <span class="va">split_if_one</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># now use the template to create a quadtree from 'rast'</span></span>
+<span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, template_quadtree <span class="op">=</span> <span class="va">qt_template</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">template</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, box <span class="op">=</span> <span class="cn">FALSE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"template raster"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_template</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span> ,axes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>     legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"template quadtree"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>     legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"quadtree created using template"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-13-1.png" width="100%"></p>
 </div>
 <div class="section level2">
@@ -293,30 +427,53 @@
 <h3 id="max_cell_length-and-min_cell_length">
 <code>max_cell_length</code> and <code>min_cell_length</code><a class="anchor" aria-label="anchor" href="#max_cell_length-and-min_cell_length"></a>
 </h3>
-<p>The <code>max_cell_length</code> and <code>min_cell_length</code> parameters let the user specify the range of allowable cell sizes. If <code>max_cell_length</code> is not <code>NULL</code>, then the maximum cell size in the resulting quadtree will be <code>max_cell_length</code>. This essentially forces any quadrants larger than <code>max_cell_length</code> to split. The one exception is that a quadrant that contains entirely <code>NA</code> values will not be split. Similarly, the <code>min_cell_length</code> parameter can be used to define a minimum side length for all cells, such that a quadrant cannot be split if its children would be smaller than <code>min_cell_length</code>.</p>
+<p>The <code>max_cell_length</code> and <code>min_cell_length</code>
+parameters let the user specify the range of allowable cell sizes. If
+<code>max_cell_length</code> is not <code>NULL</code>, then the maximum
+cell size in the resulting quadtree will be
+<code>max_cell_length</code>. This essentially forces any quadrants
+larger than <code>max_cell_length</code> to split. The one exception is
+that a quadrant that contains entirely <code>NA</code> values will not
+be split. Similarly, the <code>min_cell_length</code> parameter can be
+used to define a minimum side length for all cells, such that a quadrant
+cannot be split if its children would be smaller than
+<code>min_cell_length</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt_max_cell</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, max_cell_length <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
-<span class="va">qt_min_cell</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, min_cell_length <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_max_cell</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>,
-     main <span class="op">=</span> <span class="st">"max_cell_length = 1000"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_min_cell</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>,
-     main <span class="op">=</span> <span class="st">"min_cell_length = 1000"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt_max_cell</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, max_cell_length <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
+<span><span class="va">qt_min_cell</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, min_cell_length <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_max_cell</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"max_cell_length = 1000"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_min_cell</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"min_cell_length = 1000"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-14-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="split_if_any_na-and-split_if_all_na">
 <code>split_if_any_na</code> and <code>split_if_all_na</code><a class="anchor" aria-label="anchor" href="#split_if_any_na-and-split_if_all_na"></a>
 </h3>
-<p>The <code>split_if_any_na</code> and <code>split_if_all_na</code> parameters control how <code>NA</code> values are handled. If <code>split_if_any_na</code> is <code>TRUE</code> (the default), a quadrant will be split if any of the values are <code>NA</code>. This ensures that rasters with irregular shapes maintain their shape in the resulting quadtree representation. If <code>FALSE</code>, quadrants with <code>NA</code>s are not automatically split - note that this can produce unexpected results if the raster is irregularly shaped (see the example below). <code>split_if_all_na</code> controls what happens when a quadrant consists entirely of <code>NA</code> values. If <code>FALSE</code> (the default), these quadrants are not split. If <code>TRUE</code>, these quadrants are automatically split, which results in quadrants with all <code>NA</code> values being split to the smallest possible cell size.</p>
+<p>The <code>split_if_any_na</code> and <code>split_if_all_na</code>
+parameters control how <code>NA</code> values are handled. If
+<code>split_if_any_na</code> is <code>TRUE</code> (the default), a
+quadrant will be split if any of the values are <code>NA</code>. This
+ensures that rasters with irregular shapes maintain their shape in the
+resulting quadtree representation. If <code>FALSE</code>, quadrants with
+<code>NA</code>s are not automatically split - note that this can
+produce unexpected results if the raster is irregularly shaped (see the
+example below). <code>split_if_all_na</code> controls what happens when
+a quadrant consists entirely of <code>NA</code> values. If
+<code>FALSE</code> (the default), these quadrants are not split. If
+<code>TRUE</code>, these quadrants are automatically split, which
+results in quadrants with all <code>NA</code> values being split to the
+smallest possible cell size.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt_any</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, split_if_any_na <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">qt_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, split_if_all_na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_any</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_if_any_na = FALSE"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_all</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_if_all_na = TRUE"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt_any</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, split_if_any_na <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">qt_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span>, split_if_all_na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_any</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_if_any_na = FALSE"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt_all</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"split_if_all_na = TRUE"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-15-1.png" width="100%"></p>
 </div>
 </div>
@@ -339,7 +496,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

@@ -20,7 +20,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -78,27 +78,35 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S4 method for LcpFinder</span>
-<span class="fu">find_lcps</span><span class="op">(</span><span class="va">x</span>, limit <span class="op">=</span> <span class="cn">NULL</span>, return_summary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for LcpFinder</span></span>
+<span><span class="fu">find_lcps</span><span class="op">(</span><span class="va">x</span>, limit <span class="op">=</span> <span class="cn">NULL</span>, return_summary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>a <code><a href="LcpFinder-class.html">LcpFinder</a></code></p></dd>
+
+
 <dt>limit</dt>
 <dd><p>numeric; the maximum cost-distance for the LCPs. If <code>NULL</code>
 (the default), no limit is applied and all possible LCPs (within the
 <code>LcpFinder</code>'s search area) are found</p></dd>
+
+
 <dt>return_summary</dt>
 <dd><p>boolean; if <code>TRUE</code> (the default),
 <code><a href="summarize_lcps.html">summarize_lcps</a>()</code> is used to return a summary matrix of all
 paths found. If <code>FALSE</code>, no value is returned.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>If <code>return_summary</code> is <code>TRUE</code>,
-<code><a href="summarize_lcps.html">summarize_lcps</a>()</code> is used to return a matrix summarizing each
+    
+
+<p>If <code>return_summary</code> is <code>TRUE</code>,</p>
+<p></p>
+<p><code><a href="summarize_lcps.html">summarize_lcps</a>()</code> is used to return a matrix summarizing each
   LCP found. See the help page of that function for details on the return
   matrix. If <code>return_summary</code> is <code>FALSE</code>, no value is returned.</p>
     </div>
@@ -126,32 +134,32 @@ paths found. If <code>FALSE</code>, no value is returned.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">####### NOTE #######</span></span>
-<span class="r-in"><span class="co"># see the "quadtree-lcp" vignette  for more details and examples:</span></span>
-<span class="r-in"><span class="co"># vignette("quadtree-lcp", package = "quadtree")</span></span>
-<span class="r-in"><span class="co">####################</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, split_threshold <span class="op">=</span> <span class="fl">.1</span>, adj_type <span class="op">=</span> <span class="st">"expand"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">19000</span>, <span class="fl">25000</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># finds LCPs to all cells</span></span>
-<span class="r-in"><span class="va">lcpf1</span> <span class="op">&lt;-</span> <span class="fu"><a href="lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">paths1</span> <span class="op">&lt;-</span> <span class="fu">find_lcps</span><span class="op">(</span><span class="va">lcpf1</span>, limit <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># limit LCPs by cost-distance</span></span>
-<span class="r-in"><span class="va">lcpf2</span> <span class="op">&lt;-</span> <span class="fu"><a href="lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">paths2</span> <span class="op">&lt;-</span> <span class="fu">find_lcps</span><span class="op">(</span><span class="va">lcpf2</span>, limit <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Now plot the reachable cells</span></span>
-<span class="r-in"><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">lcpf1</span>, col <span class="op">=</span> <span class="st">"black"</span>, pch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">lcpf2</span>, col <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, bg <span class="op">=</span> <span class="st">"skyblue"</span>, col <span class="op">=</span> <span class="st">"black"</span>, pch <span class="op">=</span> <span class="fl">24</span>,</span>
-<span class="r-in">       cex <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">####### NOTE #######</span></span></span>
+<span class="r-in"><span><span class="co"># see the "quadtree-lcp" vignette  for more details and examples:</span></span></span>
+<span class="r-in"><span><span class="co"># vignette("quadtree-lcp", package = "quadtree")</span></span></span>
+<span class="r-in"><span><span class="co">####################</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, split_threshold <span class="op">=</span> <span class="fl">.1</span>, adj_type <span class="op">=</span> <span class="st">"expand"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">19000</span>, <span class="fl">25000</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># finds LCPs to all cells</span></span></span>
+<span class="r-in"><span><span class="va">lcpf1</span> <span class="op">&lt;-</span> <span class="fu"><a href="lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">paths1</span> <span class="op">&lt;-</span> <span class="fu">find_lcps</span><span class="op">(</span><span class="va">lcpf1</span>, limit <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># limit LCPs by cost-distance</span></span></span>
+<span class="r-in"><span><span class="va">lcpf2</span> <span class="op">&lt;-</span> <span class="fu"><a href="lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">paths2</span> <span class="op">&lt;-</span> <span class="fu">find_lcps</span><span class="op">(</span><span class="va">lcpf2</span>, limit <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Now plot the reachable cells</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">lcpf1</span>, col <span class="op">=</span> <span class="st">"black"</span>, pch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">lcpf2</span>, col <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, bg <span class="op">=</span> <span class="st">"skyblue"</span>, col <span class="op">=</span> <span class="st">"black"</span>, pch <span class="op">=</span> <span class="fl">24</span>,</span></span>
+<span class="r-in"><span>       cex <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="find_lcps-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -167,7 +175,7 @@ paths found. If <code>FALSE</code>, no value is returned.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

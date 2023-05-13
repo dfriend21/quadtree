@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -76,45 +76,60 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S4 method for Quadtree</span>
-<span class="fu">lcp_finder</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">start_point</span>,
-  xlim <span class="op">=</span> <span class="cn">NULL</span>,
-  ylim <span class="op">=</span> <span class="cn">NULL</span>,
-  new_points <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">0</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,
-  search_by_centroid <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for Quadtree</span></span>
+<span><span class="fu">lcp_finder</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">start_point</span>,</span>
+<span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  new_points <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">0</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  search_by_centroid <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>a <code><a href="Quadtree-class.html">Quadtree</a></code> to be used as a resistance surface</p></dd>
+
+
 <dt>start_point</dt>
 <dd><p>two-element numeric vector (x, y) - the x and y coordinates of the
 starting point</p></dd>
+
+
 <dt>xlim</dt>
 <dd><p>two-element numeric vector (xmin, xmax) - constrains the nodes
 included in the network to those whose x limits fall in the range specified
 in <code>xlim</code>. If <code>NULL</code> the x limits of <code>x</code> are used</p></dd>
+
+
 <dt>ylim</dt>
 <dd><p>same as <code>xlim</code>, but for y</p></dd>
+
+
 <dt>new_points</dt>
 <dd><p>a two-column matrix representing point coordinates. First
 column contains the x-coordinates, second column contains the
 y-coordinates. This matrix specifies point locations to use instead of the
 node centroids. See 'Details' for more.</p></dd>
+
+
 <dt>search_by_centroid</dt>
 <dd><p>boolean; determines which cells are considered to
 be "in" the box specified by <code>xlim</code> and <code>ylim</code>. If <code>FALSE</code>
 (the default) any cell that overlaps with the box is included. If
 <code>TRUE</code>, a cell is only included if its <strong>centroid</strong> falls inside
 the box.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a <code><a href="LcpFinder-class.html">LcpFinder</a></code></p>
+    
+
+<p>a <code><a href="LcpFinder-class.html">LcpFinder</a></code></p>
+
+
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -155,31 +170,31 @@ the box.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">####### NOTE #######</span></span>
-<span class="r-in"><span class="co"># see the "quadtree-lcp" vignette for more details and examples:</span></span>
-<span class="r-in"><span class="co"># vignette("quadtree-lcp", package = "quadtree")</span></span>
-<span class="r-in"><span class="co">####################</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, split_threshold <span class="op">=</span> <span class="fl">.1</span>, adj_type <span class="op">=</span> <span class="st">"expand"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># find the LCP between two points</span></span>
-<span class="r-in"><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6989</span>, <span class="fl">34007</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">end_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">33015</span>, <span class="fl">38162</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># create the LCP finder object and find the LCP</span></span>
-<span class="r-in"><span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu">lcp_finder</span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="find_lcp.html">find_lcp</a></span><span class="op">(</span><span class="va">lcpf</span>, <span class="va">end_pt</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># plot the LCP</span></span>
-<span class="r-in"><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">start_pt</span>, <span class="va">end_pt</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">path</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">####### NOTE #######</span></span></span>
+<span class="r-in"><span><span class="co"># see the "quadtree-lcp" vignette for more details and examples:</span></span></span>
+<span class="r-in"><span><span class="co"># vignette("quadtree-lcp", package = "quadtree")</span></span></span>
+<span class="r-in"><span><span class="co">####################</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, split_threshold <span class="op">=</span> <span class="fl">.1</span>, adj_type <span class="op">=</span> <span class="st">"expand"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># find the LCP between two points</span></span></span>
+<span class="r-in"><span><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6989</span>, <span class="fl">34007</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">end_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">33015</span>, <span class="fl">38162</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create the LCP finder object and find the LCP</span></span></span>
+<span class="r-in"><span><span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu">lcp_finder</span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="find_lcp.html">find_lcp</a></span><span class="op">(</span><span class="va">lcpf</span>, <span class="va">end_pt</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># plot the LCP</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">start_pt</span>, <span class="va">end_pt</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">path</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="lcp_finder-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -194,7 +209,7 @@ the box.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -88,9 +88,11 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using Quadtrees</h1>
-                        <h4 data-toc-skip class="author">Derek Friend</h4>
+                        <h4 data-toc-skip class="author">Derek
+Friend</h4>
             
-            <h4 data-toc-skip class="date">Last compiled on January 31, 2022</h4>
+            <h4 data-toc-skip class="date">Last compiled on May 13,
+2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/HEAD/vignettes/quadtree-usage.Rmd" class="external-link"><code>vignettes/quadtree-usage.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-usage.Rmd</code></div>
@@ -102,68 +104,85 @@
 <div class="section level2">
 <h2 id="vignette-content">Vignette content<a class="anchor" aria-label="anchor" href="#vignette-content"></a>
 </h2>
-<p>This vignette covers ways of interacting with a <code>Quadtree</code> object after it has been created - for example, extracting values and modifying values.</p>
+<p>This vignette covers ways of interacting with a <code>Quadtree</code>
+object after it has been created - for example, extracting values and
+modifying values.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster" class="external-link">raster</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span>
-<span class="va">rast</span> <span class="op">&lt;-</span> <span class="va">habitat</span>
-
-<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster" class="external-link">raster</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span>
+<span><span class="va">rast</span> <span class="op">&lt;-</span> <span class="va">habitat</span></span>
+<span></span>
+<span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="retrieving-basic-info-about-a-quadtree">Retrieving basic info about a quadtree<a class="anchor" aria-label="anchor" href="#retrieving-basic-info-about-a-quadtree"></a>
 </h2>
-<p>There are a number of functions for retrieving basic info about a <code>Quadtree</code>.</p>
+<p>There are a number of functions for retrieving basic info about a
+<code>Quadtree</code>.</p>
 <div class="section level3">
 <h3 id="getting-a-summary-of-a-quadtree">Getting a summary of a quadtree<a class="anchor" aria-label="anchor" href="#getting-a-summary-of-a-quadtree"></a>
 </h3>
-<p>A basic summary of a quadtree can be shown by just typing the variable name or using the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function:</p>
+<p>A basic summary of a quadtree can be shown by just typing the
+variable name or using the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt</span>
-<span class="co">#&gt; class         : Quadtree</span>
-<span class="co">#&gt; # of cells    : 4210</span>
-<span class="co">#&gt; min cell size : 250</span>
-<span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; crs           : NA</span>
-<span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt</span></span>
+<span><span class="co">#&gt; class         : Quadtree</span></span>
+<span><span class="co">#&gt; # of cells    : 4210</span></span>
+<span><span class="co">#&gt; min cell size : 250</span></span>
+<span><span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; crs           : NA</span></span>
+<span><span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="getting-the-projection-of-a-quadtree">Getting the projection of a quadtree<a class="anchor" aria-label="anchor" href="#getting-the-projection-of-a-quadtree"></a>
 </h3>
-<p><code><a href="../reference/projection.html">projection()</a></code> can be used to get and set the projection of the <code>Quadtree</code>. In this case there is no projection, so an empty string is returned.</p>
+<p><code><a href="../reference/projection.html">projection()</a></code> can be used to get and set the projection
+of the <code>Quadtree</code>. In this case there is no projection, so an
+empty string is returned.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/projection.html">projection</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
-<span class="co">#&gt; [1] ""</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/projection.html">projection</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] ""</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="getting-the-number-of-cells-in-a-quadtree">Getting the number of cells in a quadtree<a class="anchor" aria-label="anchor" href="#getting-the-number-of-cells-in-a-quadtree"></a>
 </h3>
-<p><code><a href="../reference/n_cells.html">n_cells()</a></code> returns the number of cells in the quadtree. It has one optional parameter, <code>terminal_only</code> - if <code>TRUE</code>, the number of cells of the quadtree that are terminal (i.e. have no children) is returned. If <code>FALSE</code>, the total number of nodes in the quadtree is returned.</p>
+<p><code><a href="../reference/n_cells.html">n_cells()</a></code> returns the number of cells in the quadtree.
+It has one optional parameter, <code>terminal_only</code> - if
+<code>TRUE</code>, the number of cells of the quadtree that are terminal
+(i.e. have no children) is returned. If <code>FALSE</code>, the total
+number of nodes in the quadtree is returned.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/n_cells.html">n_cells</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
-<span class="co">#&gt; [1] 4210</span>
-<span class="fu"><a href="../reference/n_cells.html">n_cells</a></span><span class="op">(</span><span class="va">qt</span>, terminal_only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; [1] 5613</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/n_cells.html">n_cells</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4210</span></span>
+<span><span class="fu"><a href="../reference/n_cells.html">n_cells</a></span><span class="op">(</span><span class="va">qt</span>, terminal_only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 5613</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="getting-the-extent-of-a-quadtree">Getting the extent of a quadtree<a class="anchor" aria-label="anchor" href="#getting-the-extent-of-a-quadtree"></a>
 </h3>
-<p><code><a href="../reference/extent.html">extent()</a></code> can be used to return the extent of the quadtree. It has one optional parameter <code>original</code> - if <code>FALSE</code> (the default), it returns the total extent covered by the quadtree. If <code>TRUE</code>, the function returns the extent of the original raster used to create the quadtree, before <code>NA</code> rows/columns were added to pad the dimensions. You may need to preface <code><a href="../reference/extent.html">extent()</a></code> with <code>quadtree::</code> to avoid conflicts with the <code>raster</code> package.</p>
+<p><code><a href="../reference/extent.html">extent()</a></code> can be used to return the extent of the
+quadtree. It has one optional parameter <code>original</code> - if
+<code>FALSE</code> (the default), it returns the total extent covered by
+the quadtree. If <code>TRUE</code>, the function returns the extent of
+the original raster used to create the quadtree, before <code>NA</code>
+rows/columns were added to pad the dimensions. You may need to preface
+<code><a href="../reference/extent.html">extent()</a></code> with <code>quadtree::</code> to avoid conflicts
+with the <code>raster</code> package.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extent.html">extent</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
-<span class="co">#&gt; class      : Extent </span>
-<span class="co">#&gt; xmin       : 0 </span>
-<span class="co">#&gt; xmax       : 64000 </span>
-<span class="co">#&gt; ymin       : 0 </span>
-<span class="co">#&gt; ymax       : 64000</span>
-<span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extent.html">extent</a></span><span class="op">(</span><span class="va">qt</span>, original <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; class      : Extent </span>
-<span class="co">#&gt; xmin       : 0 </span>
-<span class="co">#&gt; xmax       : 40250 </span>
-<span class="co">#&gt; ymin       : 0 </span>
-<span class="co">#&gt; ymax       : 44500</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extent.html">extent</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
+<span><span class="co">#&gt; class      : Extent </span></span>
+<span><span class="co">#&gt; xmin       : 0 </span></span>
+<span><span class="co">#&gt; xmax       : 64000 </span></span>
+<span><span class="co">#&gt; ymin       : 0 </span></span>
+<span><span class="co">#&gt; ymax       : 64000</span></span>
+<span><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extent.html">extent</a></span><span class="op">(</span><span class="va">qt</span>, original <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; class      : Extent </span></span>
+<span><span class="co">#&gt; xmin       : 0 </span></span>
+<span><span class="co">#&gt; xmax       : 40250 </span></span>
+<span><span class="co">#&gt; ymin       : 0 </span></span>
+<span><span class="co">#&gt; ymax       : 44500</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -172,192 +191,262 @@
 <div class="section level3">
 <h3 id="extracting-values">Extracting values<a class="anchor" aria-label="anchor" href="#extracting-values"></a>
 </h3>
-<p>Values can be ‘extracted’ at point locations using the <code><a href="../reference/extract.html">extract()</a></code> function. This function has one optional parameter - <code>extents</code>. If <code>extents</code> is <code>FALSE</code> (the default), then only the values at the point locations are returned. If <code>extents</code> is <code>TRUE</code>, then a matrix is returned that also returns the x and y limits of each cell in addition to the cell value.</p>
+<p>Values can be ‘extracted’ at point locations using the
+<code><a href="../reference/extract.html">extract()</a></code> function. This function has one optional
+parameter - <code>extents</code>. If <code>extents</code> is
+<code>FALSE</code> (the default), then only the values at the point
+locations are returned. If <code>extents</code> is <code>TRUE</code>,
+then a matrix is returned that also returns the x and y limits of each
+cell in addition to the cell value.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5609</span>, <span class="fl">3959</span>, <span class="fl">20161</span>, <span class="fl">27662</span>, <span class="fl">32763</span><span class="op">)</span>,
-             y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10835</span>, <span class="fl">29586</span>, <span class="fl">31836</span>, <span class="fl">10834</span>, <span class="fl">36337</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, na_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">pts</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5609</span>, <span class="fl">3959</span>, <span class="fl">20161</span>, <span class="fl">27662</span>, <span class="fl">32763</span><span class="op">)</span>,</span>
+<span>             y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10835</span>, <span class="fl">29586</span>, <span class="fl">31836</span>, <span class="fl">10834</span>, <span class="fl">36337</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, na_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">pts</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-usage_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">pts</span><span class="op">)</span>
-<span class="co">#&gt; [1]       NaN 0.1451094 0.8202500 0.9556426 0.6800000</span>
-<span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">pts</span>, extents <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt;        id  xmin  xmax  ymin  ymax     value</span>
-<span class="co">#&gt; [1,] 4339     0  8000  8000 16000       NaN</span>
-<span class="co">#&gt; [2,] 1826  2000  4000 28000 30000 0.1451094</span>
-<span class="co">#&gt; [3,] 3394 20000 21000 31000 32000 0.8202500</span>
-<span class="co">#&gt; [4,] 4569 24000 32000  8000 16000 0.9556426</span>
-<span class="co">#&gt; [5,] 1567 32500 33000 36000 36500 0.6800000</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">pts</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1]       NaN 0.1451094 0.8202500 0.9556426 0.6800000</span></span>
+<span><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">pts</span>, extents <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        id  xmin  xmax  ymin  ymax     value</span></span>
+<span><span class="co">#&gt; [1,] 4339     0  8000  8000 16000       NaN</span></span>
+<span><span class="co">#&gt; [2,] 1826  2000  4000 28000 30000 0.1451094</span></span>
+<span><span class="co">#&gt; [3,] 3394 20000 21000 31000 32000 0.8202500</span></span>
+<span><span class="co">#&gt; [4,] 4569 24000 32000  8000 16000 0.9556426</span></span>
+<span><span class="co">#&gt; [5,] 1567 32500 33000 36000 36500 0.6800000</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="retrieving-neighbor-relationships">Retrieving neighbor relationships<a class="anchor" aria-label="anchor" href="#retrieving-neighbor-relationships"></a>
 </h3>
-<p>In addition to extracting values from cells, it is possible to determine neighbor relationships between cells via the <code><a href="../reference/get_neighbors.html">get_neighbors()</a></code> function. Given a point, <code><a href="../reference/get_neighbors.html">get_neighbors()</a></code> returns the cells that neighbor the cell that the point falls in. Note that cells that are diagonal from each either (i.e. only touch at the corner) are considered to be neighbors.</p>
+<p>In addition to extracting values from cells, it is possible to
+determine neighbor relationships between cells via the
+<code><a href="../reference/get_neighbors.html">get_neighbors()</a></code> function. Given a point,
+<code><a href="../reference/get_neighbors.html">get_neighbors()</a></code> returns the cells that neighbor the cell
+that the point falls in. Note that cells that are diagonal from each
+either (i.e. only touch at the corner) are considered to be
+neighbors.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/get_neighbors.html">get_neighbors</a></span><span class="op">(</span><span class="va">qt</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">pts</span><span class="op">[</span><span class="fl">3</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;        id  xmin  xmax  ymin  ymax     value</span>
-<span class="co">#&gt; [1,]  975 19500 20000 32000 32500 0.8557500</span>
-<span class="co">#&gt; [2,] 1047 21000 22000 32000 33000 0.7893750</span>
-<span class="co">#&gt; [3,] 1046 20000 21000 32000 33000 0.8236875</span>
-<span class="co">#&gt; [4,] 3295 19000 20000 31000 32000 0.9098125</span>
-<span class="co">#&gt; [5,] 3301 19000 20000 30000 31000 0.9466250</span>
-<span class="co">#&gt; [6,] 3396 20000 21000 30000 31000 0.8688750</span>
-<span class="co">#&gt; [7,] 3395 21000 22000 31000 32000 0.8061875</span>
-<span class="co">#&gt; [8,] 3397 21000 22000 30000 31000 0.8125625</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_neighbors.html">get_neighbors</a></span><span class="op">(</span><span class="va">qt</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">pts</span><span class="op">[</span><span class="fl">3</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        id  xmin  xmax  ymin  ymax     value</span></span>
+<span><span class="co">#&gt; [1,]  975 19500 20000 32000 32500 0.8557500</span></span>
+<span><span class="co">#&gt; [2,] 1047 21000 22000 32000 33000 0.7893750</span></span>
+<span><span class="co">#&gt; [3,] 1046 20000 21000 32000 33000 0.8236875</span></span>
+<span><span class="co">#&gt; [4,] 3295 19000 20000 31000 32000 0.9098125</span></span>
+<span><span class="co">#&gt; [5,] 3301 19000 20000 30000 31000 0.9466250</span></span>
+<span><span class="co">#&gt; [6,] 3396 20000 21000 30000 31000 0.8688750</span></span>
+<span><span class="co">#&gt; [7,] 3395 21000 22000 31000 32000 0.8061875</span></span>
+<span><span class="co">#&gt; [8,] 3397 21000 22000 30000 31000 0.8125625</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="copying-a-quadtree">Copying a quadtree<a class="anchor" aria-label="anchor" href="#copying-a-quadtree"></a>
 </h2>
-<p>A key concept to understand is that <code>Quadtree</code> objects are <em>pointers</em> to C++ objects, and copying these objects simply by assigning them to a new variable makes a <em>shallow</em> copy rather than a <em>deep</em> copy. This is important to note because this differs from how R objects normally behave. For example, if I have a data frame named <code>df1</code>, I can make a copy of it by doing <code>df2 &lt;- df1</code>. This makes a <em>deep</em> copy of <code>df1</code> - if I were to modify <code>df2</code>, <code>df1</code> would remain unchanged. This is not the case with <code>Quadtree</code> objects. The R object that users interact with is a pointer to a C++ object. If I were to attempt to make copy of a quadtree <code>qt1</code> by doing <code>qt2 &lt;- qt1</code>, this simply copies the <em>pointer</em> to the C++ object, so <code>qt1</code> and <code>qt2</code> point to the same object. Thus, if <code>qt2</code> is modified (for example, by using a function like <code><a href="../reference/set_values.html">set_values()</a></code> or <code><a href="../reference/transform_values.html">transform_values()</a></code>), <code>qt1</code> will also be modified.</p>
-<p>The <code><a href="../reference/copy.html">copy()</a></code> function can be used to make a deep copy of a <code>Quadtree</code> object. This is useful if the user wishes to make changes to a quadtree without modifying the original.</p>
+<p>A key concept to understand is that <code>Quadtree</code> objects are
+<em>pointers</em> to C++ objects, and copying these objects simply by
+assigning them to a new variable makes a <em>shallow</em> copy rather
+than a <em>deep</em> copy. This is important to note because this
+differs from how R objects normally behave. For example, if I have a
+data frame named <code>df1</code>, I can make a copy of it by doing
+<code>df2 &lt;- df1</code>. This makes a <em>deep</em> copy of
+<code>df1</code> - if I were to modify <code>df2</code>,
+<code>df1</code> would remain unchanged. This is not the case with
+<code>Quadtree</code> objects. The R object that users interact with is
+a pointer to a C++ object. If I were to attempt to make copy of a
+quadtree <code>qt1</code> by doing <code>qt2 &lt;- qt1</code>, this
+simply copies the <em>pointer</em> to the C++ object, so
+<code>qt1</code> and <code>qt2</code> point to the same object. Thus, if
+<code>qt2</code> is modified (for example, by using a function like
+<code><a href="../reference/set_values.html">set_values()</a></code> or <code><a href="../reference/transform_values.html">transform_values()</a></code>),
+<code>qt1</code> will also be modified.</p>
+<p>The <code><a href="../reference/copy.html">copy()</a></code> function can be used to make a deep copy of a
+<code>Quadtree</code> object. This is useful if the user wishes to make
+changes to a quadtree without modifying the original.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt_copy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
-<span class="va">qt</span>
-<span class="co">#&gt; class         : Quadtree</span>
-<span class="co">#&gt; # of cells    : 4210</span>
-<span class="co">#&gt; min cell size : 250</span>
-<span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; crs           : NA</span>
-<span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span>
-<span class="va">qt_copy</span>
-<span class="co">#&gt; class         : Quadtree</span>
-<span class="co">#&gt; # of cells    : 4210</span>
-<span class="co">#&gt; min cell size : 250</span>
-<span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; crs           : NA</span>
-<span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></code></pre></div>
-<p>In the next section (“Modifying cell values”), this function is used in the examples to create copies of a quadtree before modifying it so that the original remains unchanged.</p>
+<code class="sourceCode R"><span><span class="va">qt_copy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
+<span><span class="va">qt</span></span>
+<span><span class="co">#&gt; class         : Quadtree</span></span>
+<span><span class="co">#&gt; # of cells    : 4210</span></span>
+<span><span class="co">#&gt; min cell size : 250</span></span>
+<span><span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; crs           : NA</span></span>
+<span><span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></span>
+<span><span class="va">qt_copy</span></span>
+<span><span class="co">#&gt; class         : Quadtree</span></span>
+<span><span class="co">#&gt; # of cells    : 4210</span></span>
+<span><span class="co">#&gt; min cell size : 250</span></span>
+<span><span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; crs           : NA</span></span>
+<span><span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></span></code></pre></div>
+<p>In the next section (“Modifying cell values”), this function is used
+in the examples to create copies of a quadtree before modifying it so
+that the original remains unchanged.</p>
 </div>
 <div class="section level2">
 <h2 id="modifying-cell-values">Modifying cell values<a class="anchor" aria-label="anchor" href="#modifying-cell-values"></a>
 </h2>
-<p>Two functions are provided for modifying cell values: <code><a href="../reference/set_values.html">set_values()</a></code> and <code><a href="../reference/transform_values.html">transform_values()</a></code>.</p>
+<p>Two functions are provided for modifying cell values:
+<code><a href="../reference/set_values.html">set_values()</a></code> and <code><a href="../reference/transform_values.html">transform_values()</a></code>.</p>
 <div class="section level3">
 <h3 id="setting-values-of-cells">Setting values of cells<a class="anchor" aria-label="anchor" href="#setting-values-of-cells"></a>
 </h3>
-<p><code><a href="../reference/set_values.html">set_values()</a></code> takes a matrix of points and associated values and changes the values of the cells the points fall in. Note that only the values of the <em>terminal cells</em> that the point falls in are changed.</p>
+<p><code><a href="../reference/set_values.html">set_values()</a></code> takes a matrix of points and associated
+values and changes the values of the cells the points fall in. Note that
+only the values of the <em>terminal cells</em> that the point falls in
+are changed.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
-<span class="fu"><a href="../reference/set_values.html">set_values</a></span><span class="op">(</span><span class="va">qt2</span>, <span class="va">pts</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pts</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt2</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/set_values.html">set_values</a></span><span class="op">(</span><span class="va">qt2</span>, <span class="va">pts</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pts</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt2</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-usage_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="transforming-all-cell-values">Transforming all cell values<a class="anchor" aria-label="anchor" href="#transforming-all-cell-values"></a>
 </h3>
-<p><code><a href="../reference/transform_values.html">transform_values()</a></code> uses a function to change all cell values. For example, we could use this function to cube all of the cell values:</p>
+<p><code><a href="../reference/transform_values.html">transform_values()</a></code> uses a function to change all cell
+values. For example, we could use this function to cube all of the cell
+values:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
-<span class="fu"><a href="../reference/transform_values.html">transform_values</a></span><span class="op">(</span><span class="va">qt3</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
-     legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"original quadtree"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt3</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
-     legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"values cubed"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qt3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/transform_values.html">transform_values</a></span><span class="op">(</span><span class="va">qt3</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>     legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"original quadtree"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt3</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>     legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"values cubed"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-usage_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="reading-and-writing-quadtrees">Reading and writing quadtrees<a class="anchor" aria-label="anchor" href="#reading-and-writing-quadtrees"></a>
 </h2>
-<p>One of the disadvantages of using C++ classes via Rcpp is that the objects are not preserved between sessions. For example, we could save a <code>Quadtree</code> to a <code>RData</code> file using <code><a href="https://rdrr.io/r/base/save.html" class="external-link">save()</a></code>, but when we loaded it back in we would get an error.</p>
+<p>One of the disadvantages of using C++ classes via Rcpp is that the
+objects are not preserved between sessions. For example, we could save a
+<code>Quadtree</code> to a <code>RData</code> file using
+<code><a href="https://rdrr.io/r/base/save.html" class="external-link">save()</a></code>, but when we loaded it back in we would get an
+error.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qt_temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
-<span class="va">filepath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">qt_temp</span>, file <span class="op">=</span> <span class="va">filepath</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span>
-<span class="va">qt_temp</span>
-<span class="co">#&gt; Error in (function (cond) : error in evaluating the argument 'x' in selecting a method for function 'extent': external pointer is not valid</span></code></pre></div>
-<p>The <code>quadtree</code> package provides read and write functionality via the <code>cereal</code> C++ library, which is used to serialize C++ objects. <code><a href="../reference/read_quadtree.html">read_quadtree()</a></code> and <code><a href="../reference/read_quadtree.html">write_quadtree()</a></code> can be used to read and write <code>Quadtree</code> objects.</p>
+<code class="sourceCode R"><span><span class="va">qt_temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
+<span><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">qt_temp</span>, file <span class="op">=</span> <span class="va">filepath</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span></span>
+<span><span class="va">qt_temp</span></span>
+<span><span class="co">#&gt; Error in (function (cond) : error in evaluating the argument 'x' in selecting a method for function 'extent': external pointer is not valid</span></span></code></pre></div>
+<p>The <code>quadtree</code> package provides read and write
+functionality via the <code>cereal</code> C++ library, which is used to
+serialize C++ objects. <code><a href="../reference/read_quadtree.html">read_quadtree()</a></code> and
+<code><a href="../reference/read_quadtree.html">write_quadtree()</a></code> can be used to read and write
+<code>Quadtree</code> objects.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="../reference/read_quadtree.html">write_quadtree</a></span><span class="op">(</span><span class="va">filepath</span>, <span class="va">qt</span><span class="op">)</span>
-<span class="va">qt_read</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_quadtree.html">read_quadtree</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span>
-<span class="va">qt_read</span>
-<span class="co">#&gt; class         : Quadtree</span>
-<span class="co">#&gt; # of cells    : 4210</span>
-<span class="co">#&gt; min cell size : 250</span>
-<span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; crs           : NA</span>
-<span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/read_quadtree.html">write_quadtree</a></span><span class="op">(</span><span class="va">filepath</span>, <span class="va">qt</span><span class="op">)</span></span>
+<span><span class="va">qt_read</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_quadtree.html">read_quadtree</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span></span>
+<span><span class="va">qt_read</span></span>
+<span><span class="co">#&gt; class         : Quadtree</span></span>
+<span><span class="co">#&gt; # of cells    : 4210</span></span>
+<span><span class="co">#&gt; min cell size : 250</span></span>
+<span><span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; crs           : NA</span></span>
+<span><span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="converting-quadtrees-to-other-data-types">Converting quadtrees to other data types<a class="anchor" aria-label="anchor" href="#converting-quadtrees-to-other-data-types"></a>
 </h2>
-<p>Functions are also provided for converting a <code>Quadtree</code> to different data types.</p>
+<p>Functions are also provided for converting a <code>Quadtree</code> to
+different data types.</p>
 <div class="section level3">
 <h3 id="get-all-cell-values-as-a-vector">Get all cell values as a vector<a class="anchor" aria-label="anchor" href="#get-all-cell-values-as-a-vector"></a>
 </h3>
-<p><code><a href="../reference/as_vector.html">as_vector()</a></code> returns the cell values as a numeric vector. It has one optional parameter - <code>terminal_only</code>. If <code>TRUE</code> (the default), only the values of the terminal cells are returned. If <code>FALSE</code>, the values of all cells (including those with children) are returned.</p>
+<p><code><a href="../reference/as_vector.html">as_vector()</a></code> returns the cell values as a numeric vector.
+It has one optional parameter - <code>terminal_only</code>. If
+<code>TRUE</code> (the default), only the values of the terminal cells
+are returned. If <code>FALSE</code>, the values of all cells (including
+those with children) are returned.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vec1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_vector.html">as_vector</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">vec1</span><span class="op">)</span>
-<span class="co">#&gt; [1] 4210</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">vec1</span><span class="op">)</span>
-<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
-<span class="co">#&gt;  0.1090  0.4850  0.6275  0.6363  0.8139  0.9740     832</span>
-
-<span class="va">vec2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_vector.html">as_vector</a></span><span class="op">(</span><span class="va">qt</span>, <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">vec2</span><span class="op">)</span>
-<span class="co">#&gt; [1] 5613</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">vec2</span><span class="op">)</span>
-<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
-<span class="co">#&gt;  0.1090  0.4917  0.6323  0.6446  0.8312  0.9740     832</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">vec1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_vector.html">as_vector</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">vec1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4210</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">vec1</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span></span>
+<span><span class="co">#&gt;  0.1090  0.4850  0.6275  0.6363  0.8139  0.9740     832</span></span>
+<span></span>
+<span><span class="va">vec2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_vector.html">as_vector</a></span><span class="op">(</span><span class="va">qt</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">vec2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 5613</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">vec2</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span></span>
+<span><span class="co">#&gt;  0.1090  0.4917  0.6323  0.6446  0.8312  0.9740     832</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="convert-to-a-data-frame">Convert to a data frame<a class="anchor" aria-label="anchor" href="#convert-to-a-data-frame"></a>
 </h3>
-<p><code><a href="../reference/as_data_frame.html">as_data_frame()</a></code> converts the quadtree to a data frame. In the resulting data frame, each row represents a single cell and has columns describing the cell ID, x and y limits, value, level (i.e. node depth), the size of its smallest child, the ID of its parent, and whether it has children. As with <code><a href="../reference/as_vector.html">as_vector()</a></code>, there is one optional parameter called <code>terminal_only</code> - when <code>TRUE</code> (the default) only the terminal cells are returned, and when <code>FALSE</code>, all cells are returned.</p>
+<p><code><a href="../reference/as_data_frame.html">as_data_frame()</a></code> converts the quadtree to a data frame.
+In the resulting data frame, each row represents a single cell and has
+columns describing the cell ID, x and y limits, value, level (i.e. node
+depth), the size of its smallest child, the ID of its parent, and
+whether it has children. As with <code><a href="../reference/as_vector.html">as_vector()</a></code>, there is one
+optional parameter called <code>terminal_only</code> - when
+<code>TRUE</code> (the default) only the terminal cells are returned,
+and when <code>FALSE</code>, all cells are returned.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_data_frame.html">as_data_frame</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/dimensions.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">df1</span><span class="op">)</span>
-<span class="co">#&gt; [1] 4210   10</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df1</span><span class="op">)</span>
-<span class="co">#&gt;    id hasChildren level  xmin  xmax  ymin  ymax value smallestChildLength</span>
-<span class="co">#&gt; 3   2           0     2     0 16000 48000 64000   NaN               16000</span>
-<span class="co">#&gt; 4   3           0     2 16000 32000 48000 64000   NaN               16000</span>
-<span class="co">#&gt; 7   6           0     4     0  4000 44000 48000   NaN                4000</span>
-<span class="co">#&gt; 9   8           0     5  4000  6000 46000 48000   NaN                2000</span>
-<span class="co">#&gt; 10  9           0     5  6000  8000 46000 48000   NaN                2000</span>
-<span class="co">#&gt; 11 10           0     5  4000  6000 44000 46000   NaN                2000</span>
-<span class="co">#&gt;    parentID</span>
-<span class="co">#&gt; 3         1</span>
-<span class="co">#&gt; 4         1</span>
-<span class="co">#&gt; 7         5</span>
-<span class="co">#&gt; 9         7</span>
-<span class="co">#&gt; 10        7</span>
-<span class="co">#&gt; 11        7</span>
-
-<span class="va">df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_data_frame.html">as_data_frame</a></span><span class="op">(</span><span class="va">qt</span>, <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/dimensions.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">df2</span><span class="op">)</span>
-<span class="co">#&gt; [1] 5613   10</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df2</span><span class="op">)</span>
-<span class="co">#&gt;   id hasChildren level  xmin  xmax  ymin  ymax     value smallestChildLength</span>
-<span class="co">#&gt; 1  0           1     0     0 64000     0 64000 0.7559473                 250</span>
-<span class="co">#&gt; 2  1           1     1     0 32000 32000 64000 0.7309282                 250</span>
-<span class="co">#&gt; 3  2           0     2     0 16000 48000 64000       NaN               16000</span>
-<span class="co">#&gt; 4  3           0     2 16000 32000 48000 64000       NaN               16000</span>
-<span class="co">#&gt; 5  4           1     2     0 16000 32000 48000 0.8131046                 250</span>
-<span class="co">#&gt; 6  5           1     3     0  8000 40000 48000 0.9623516                 250</span>
-<span class="co">#&gt;   parentID</span>
-<span class="co">#&gt; 1       -1</span>
-<span class="co">#&gt; 2        0</span>
-<span class="co">#&gt; 3        1</span>
-<span class="co">#&gt; 4        1</span>
-<span class="co">#&gt; 5        1</span>
-<span class="co">#&gt; 6        4</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_data_frame.html">as_data_frame</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">df1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4210   10</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df1</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    id hasChildren level  xmin  xmax  ymin  ymax value smallestChildLength</span></span>
+<span><span class="co">#&gt; 3   2           0     2     0 16000 48000 64000   NaN               16000</span></span>
+<span><span class="co">#&gt; 4   3           0     2 16000 32000 48000 64000   NaN               16000</span></span>
+<span><span class="co">#&gt; 7   6           0     4     0  4000 44000 48000   NaN                4000</span></span>
+<span><span class="co">#&gt; 9   8           0     5  4000  6000 46000 48000   NaN                2000</span></span>
+<span><span class="co">#&gt; 10  9           0     5  6000  8000 46000 48000   NaN                2000</span></span>
+<span><span class="co">#&gt; 11 10           0     5  4000  6000 44000 46000   NaN                2000</span></span>
+<span><span class="co">#&gt;    parentID</span></span>
+<span><span class="co">#&gt; 3         1</span></span>
+<span><span class="co">#&gt; 4         1</span></span>
+<span><span class="co">#&gt; 7         5</span></span>
+<span><span class="co">#&gt; 9         7</span></span>
+<span><span class="co">#&gt; 10        7</span></span>
+<span><span class="co">#&gt; 11        7</span></span>
+<span></span>
+<span><span class="va">df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_data_frame.html">as_data_frame</a></span><span class="op">(</span><span class="va">qt</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">df2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 5613   10</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df2</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   id hasChildren level  xmin  xmax  ymin  ymax     value smallestChildLength</span></span>
+<span><span class="co">#&gt; 1  0           1     0     0 64000     0 64000 0.7559473                 250</span></span>
+<span><span class="co">#&gt; 2  1           1     1     0 32000 32000 64000 0.7309282                 250</span></span>
+<span><span class="co">#&gt; 3  2           0     2     0 16000 48000 64000       NaN               16000</span></span>
+<span><span class="co">#&gt; 4  3           0     2 16000 32000 48000 64000       NaN               16000</span></span>
+<span><span class="co">#&gt; 5  4           1     2     0 16000 32000 48000 0.8131046                 250</span></span>
+<span><span class="co">#&gt; 6  5           1     3     0  8000 40000 48000 0.9623516                 250</span></span>
+<span><span class="co">#&gt;   parentID</span></span>
+<span><span class="co">#&gt; 1       -1</span></span>
+<span><span class="co">#&gt; 2        0</span></span>
+<span><span class="co">#&gt; 3        1</span></span>
+<span><span class="co">#&gt; 4        1</span></span>
+<span><span class="co">#&gt; 5        1</span></span>
+<span><span class="co">#&gt; 6        4</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="convert-to-a-raster">Convert to a raster<a class="anchor" aria-label="anchor" href="#convert-to-a-raster"></a>
 </h3>
-<p>A <code>Quadtree</code> can also be converted to a raster using the <code><a href="../reference/as_raster.html">as_raster()</a></code> function. This function has one optional parameter named <code>rast</code>, which is used as the template for the output raster. If <code>NULL</code> (the default), a raster is automatically created, where the quadtree extent is used as the raster extent and the smallest cell in the quadtree is used to determine the resolution of the raster. Note that the value of a raster cell is determined by the value of the quadtree cell located at the centroid of the raster cell - thus, if a raster cell overlaps several quadtree cells, whichever quadtree cell the centroid of the raster cell falls in will determine the raster cell’s value. If the default value for <code>rast</code> is used, the raster cells will never overlap with more than one quadtree cell.</p>
+<p>A <code>Quadtree</code> can also be converted to a raster using the
+<code><a href="../reference/as_raster.html">as_raster()</a></code> function. This function has one optional
+parameter named <code>rast</code>, which is used as the template for the
+output raster. If <code>NULL</code> (the default), a raster is
+automatically created, where the quadtree extent is used as the raster
+extent and the smallest cell in the quadtree is used to determine the
+resolution of the raster. Note that the value of a raster cell is
+determined by the value of the quadtree cell located at the centroid of
+the raster cell - thus, if a raster cell overlaps several quadtree
+cells, whichever quadtree cell the centroid of the raster cell falls in
+will determine the raster cell’s value. If the default value for
+<code>rast</code> is used, the raster cells will never overlap with more
+than one quadtree cell.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">rast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_raster.html">as_raster</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rast</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">rast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_raster.html">as_raster</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rast</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-usage_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
 </div>
 </div>
@@ -380,7 +469,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

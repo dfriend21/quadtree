@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11</span>
       </span>
     </div>
 
@@ -27,7 +27,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,27 +74,36 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S4 method for Quadtree,ANY</span>
-<span class="fu">extract</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, extents <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for Quadtree,ANY</span></span>
+<span><span class="fu">extract</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, extents <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>a <code><a href="Quadtree-class.html">Quadtree</a></code></p></dd>
+
+
 <dt>y</dt>
 <dd><p>a two-column matrix representing point coordinates. First column
 contains the x-coordinates, second column contains the y-coordinates</p></dd>
+
+
 <dt>extents</dt>
 <dd><p>boolean; if <code>FALSE</code> (the default), a vector containing
 cell values is returned. If <code>TRUE</code>, a matrix is returned providing
 each cell's extent in addition to its value</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>If <code>extents = FALSE</code>, returns a numeric vector corresponding to the
-values at the points represented by <code>pts</code>.
-If <code>extents = TRUE</code>, returns a six-column numeric matrix providing the
+    
+
+<p>If <code>extents = FALSE</code>, returns a numeric vector corresponding to the
+values at the points represented by <code>pts</code>.</p>
+
+
+<p>If <code>extents = TRUE</code>, returns a six-column numeric matrix providing the
 extent of each cell along with the cell's value and ID. The six columns are,
 in this order: <code>id</code>, <code>xmin</code>, <code>xmax</code>, <code>ymin</code>, <code>ymax</code>,
 <code>value</code>.</p>
@@ -102,29 +111,29 @@ in this order: <code>id</code>, <code>xmin</code>, <code>xmax</code>, <code>ymin
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># create quadtree</span></span>
-<span class="r-in"><span class="va">qt1</span> <span class="op">&lt;-</span> <span class="fu"><a href="quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, split_threshold <span class="op">=</span> <span class="fl">.1</span>, adj_type <span class="op">=</span> <span class="st">"expand"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">qt1</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create quadtree</span></span></span>
+<span class="r-in"><span><span class="va">qt1</span> <span class="op">&lt;-</span> <span class="fu"><a href="quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, split_threshold <span class="op">=</span> <span class="fl">.1</span>, adj_type <span class="op">=</span> <span class="st">"expand"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">qt1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="extract-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># create points at which we'll extract values</span></span>
-<span class="r-in"><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1000</span>, <span class="fl">40010</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">coords</span>,<span class="va">coords</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># extract the cell values</span></span>
-<span class="r-in"><span class="va">vals</span> <span class="op">&lt;-</span> <span class="fu">extract</span><span class="op">(</span><span class="va">qt1</span>, <span class="va">pts</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># plot the quadtree and the points</span></span>
-<span class="r-in"><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">qt1</span>, border_col <span class="op">=</span> <span class="st">"gray50"</span>, border_lwd <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">pts</span>, pch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">.6</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/text.html" class="external-link">text</a></span><span class="op">(</span><span class="va">pts</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">vals</span>, <span class="fl">2</span><span class="op">)</span>, pos <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create points at which we'll extract values</span></span></span>
+<span class="r-in"><span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1000</span>, <span class="fl">40010</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">coords</span>,<span class="va">coords</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># extract the cell values</span></span></span>
+<span class="r-in"><span><span class="va">vals</span> <span class="op">&lt;-</span> <span class="fu">extract</span><span class="op">(</span><span class="va">qt1</span>, <span class="va">pts</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># plot the quadtree and the points</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">qt1</span>, border_col <span class="op">=</span> <span class="st">"gray50"</span>, border_lwd <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">pts</span>, pch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">.6</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="va">pts</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">vals</span>, <span class="fl">2</span><span class="op">)</span>, pos <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="extract-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># we can also extract the cell extents in addition to the values</span></span>
-<span class="r-in"><span class="fu">extract</span><span class="op">(</span><span class="va">qt1</span>, <span class="va">pts</span>, extents <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># we can also extract the cell extents in addition to the values</span></span></span>
+<span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">qt1</span>, <span class="va">pts</span>, extents <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         id  xmin  xmax  ymin  ymax     value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]  NaN   NaN   NaN   NaN   NaN       NaN</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 6433     0  8000     0  8000       NaN</span>
@@ -150,7 +159,7 @@ in this order: <code>id</code>, <code>xmin</code>, <code>xmax</code>, <code>ymin
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

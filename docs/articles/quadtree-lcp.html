@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -88,9 +88,11 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Finding Least-Cost Paths on a Quadtree</h1>
-                        <h4 data-toc-skip class="author">Derek Friend</h4>
+                        <h4 data-toc-skip class="author">Derek
+Friend</h4>
             
-            <h4 data-toc-skip class="date">Last compiled on January 31, 2022</h4>
+            <h4 data-toc-skip class="date">Last compiled on May 13,
+2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/HEAD/vignettes/quadtree-lcp.Rmd" class="external-link"><code>vignettes/quadtree-lcp.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-lcp.Rmd</code></div>
@@ -102,22 +104,56 @@
 <div class="section level2">
 <h2 id="vignette-content">Vignette content<a class="anchor" aria-label="anchor" href="#vignette-content"></a>
 </h2>
-<p>This vignette goes over the process of finding least-cost paths (LCPs) using a quadtree as a resistance surface. Sample data provided with the <code>quadtree</code> package is used to construct the quadtree used as a resistance surface in the examples.</p>
+<p>This vignette goes over the process of finding least-cost paths
+(LCPs) using a quadtree as a resistance surface. Sample data provided
+with the <code>quadtree</code> package is used to construct the quadtree
+used as a resistance surface in the examples.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster" class="external-link">raster</a></span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span>
-<span class="va">rast</span> <span class="op">&lt;-</span> <span class="va">habitat</span>
-<span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.04</span>, split_method <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster" class="external-link">raster</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span>
+<span><span class="va">rast</span> <span class="op">&lt;-</span> <span class="va">habitat</span></span>
+<span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.04</span>, split_method <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="overview-of-least-cost-paths">Overview of least-cost paths<a class="anchor" aria-label="anchor" href="#overview-of-least-cost-paths"></a>
 </h2>
-<p>Surfaces like rasters are often used for calculating least-cost paths (LCPs). In this case, the underlying raster surface is assumed to represent the degree to which the landscape “resists” movement. The goal, then, is to find the path between two points such that the least amount of resistance is accumulated.</p>
-<p>The LCP is estimated by treating the surface (whether it be a raster or a quadtree) as a network and then using an algorithm for finding the shortest path on a network. Each cell centroid is considered to be a node, and two nodes are connected by an edge if they are adjacent to one another. Each edge has an assigned cost which is derived from the underlying surface. Edges will always travel through two cells. In the <code>quadtree</code> package, then, the cost is determined by first dividing the edge into two segments so that each segment falls in a single cell. The length of each segment is multiplied by the cost of the cell, and then these two values are added together to determine the total cost of the edge. Once the network has been constructed, we can use Dijkstra’s algorithm to find the least-cost path between two nodes.</p>
-<p>Dijkstra’s algorithm essentially builds a tree data structure, where the starting node is the root of the tree. It builds the tree structure over multiple iterations, and in each iteration it adds the node that is “closest” to the current tree - that is, it chooses the node which is easiest to get to from the current structure. The result is that even if only one LCP is desired, LCPs to other nodes are also calculated in the process. To find a path to a specific node, then, this tree is built, and once the destination node is reached, the path to that node is returned.</p>
-<p>It’s important to note that the variable cell sizes of a quadtree will result in least-cost paths being distorted to some degree, and this distortion will increase as cell size increases. It is important for the user to be aware of this distortion - depending on the application, this distortion may or may not cause a meaningful amount of error, and it is up to the user to determine whether the distortion caused by calculating LCPs on a quadtree will significantly affect the analysis being performed.</p>
+<p>Surfaces like rasters are often used for calculating least-cost paths
+(LCPs). In this case, the underlying raster surface is assumed to
+represent the degree to which the landscape “resists” movement. The
+goal, then, is to find the path between two points such that the least
+amount of resistance is accumulated.</p>
+<p>The LCP is estimated by treating the surface (whether it be a raster
+or a quadtree) as a network and then using an algorithm for finding the
+shortest path on a network. Each cell centroid is considered to be a
+node, and two nodes are connected by an edge if they are adjacent to one
+another. Each edge has an assigned cost which is derived from the
+underlying surface. Edges will always travel through two cells. In the
+<code>quadtree</code> package, then, the cost is determined by first
+dividing the edge into two segments so that each segment falls in a
+single cell. The length of each segment is multiplied by the cost of the
+cell, and then these two values are added together to determine the
+total cost of the edge. Once the network has been constructed, we can
+use Dijkstra’s algorithm to find the least-cost path between two
+nodes.</p>
+<p>Dijkstra’s algorithm essentially builds a tree data structure, where
+the starting node is the root of the tree. It builds the tree structure
+over multiple iterations, and in each iteration it adds the node that is
+“closest” to the current tree - that is, it chooses the node which is
+easiest to get to from the current structure. The result is that even if
+only one LCP is desired, LCPs to other nodes are also calculated in the
+process. To find a path to a specific node, then, this tree is built,
+and once the destination node is reached, the path to that node is
+returned.</p>
+<p>It’s important to note that the variable cell sizes of a quadtree
+will result in least-cost paths being distorted to some degree, and this
+distortion will increase as cell size increases. It is important for the
+user to be aware of this distortion - depending on the application, this
+distortion may or may not cause a meaningful amount of error, and it is
+up to the user to determine whether the distortion caused by calculating
+LCPs on a quadtree will significantly affect the analysis being
+performed.</p>
 </div>
 <div class="section level2">
 <h2 id="finding-lcps-on-a-quadtree">Finding LCPs on a quadtree<a class="anchor" aria-label="anchor" href="#finding-lcps-on-a-quadtree"></a>
@@ -125,167 +161,293 @@
 <div class="section level3">
 <h3 id="the-lcpfinder-class">The <code>LcpFinder</code> class<a class="anchor" aria-label="anchor" href="#the-lcpfinder-class"></a>
 </h3>
-<p>The <code>LcpFinder</code> class is a wrapper class for a C++ object that actually performs the calculations. The C++ object internally stores the results as a tree-like structure. Finding the LCP to a given point can be seen as a two-step process. First, construct the tree structure as described above. Second, starting from the destination node, travel up the tree, keeping track of the sequence of nodes passed through, until the root (the starting node) is reached. This sequence of nodes (in reverse, since we started from the destination node) is the LCP to that point.</p>
-<p>Once the tree has been constructed, LCPs can be found to any of the of the nodes in the tree without further computation. This allows for efficient computation of multiple LCPs. The LCP finder saves state - whenever an LCP is asked to be calculated, it first checks whether or not a path has been found to that node already - if so, it simply returns the path using the process described above. If not, it builds out the existing tree until the desired node has been reached.</p>
+<p>The <code>LcpFinder</code> class is a wrapper class for a C++ object
+that actually performs the calculations. The C++ object internally
+stores the results as a tree-like structure. Finding the LCP to a given
+point can be seen as a two-step process. First, construct the tree
+structure as described above. Second, starting from the destination
+node, travel up the tree, keeping track of the sequence of nodes passed
+through, until the root (the starting node) is reached. This sequence of
+nodes (in reverse, since we started from the destination node) is the
+LCP to that point.</p>
+<p>Once the tree has been constructed, LCPs can be found to any of the
+of the nodes in the tree without further computation. This allows for
+efficient computation of multiple LCPs. The LCP finder saves state -
+whenever an LCP is asked to be calculated, it first checks whether or
+not a path has been found to that node already - if so, it simply
+returns the path using the process described above. If not, it builds
+out the existing tree until the desired node has been reached.</p>
 </div>
 <div class="section level3">
-<h3 id="creating-a-lcpfinder-object-using-lcp_finder">Creating a <code>LcpFinder</code> object using <code>lcp_finder()</code><a class="anchor" aria-label="anchor" href="#creating-a-lcpfinder-object-using-lcp_finder"></a>
+<h3 id="creating-a-lcpfinder-object-using-lcp_finder">Creating a <code>LcpFinder</code> object using
+<code>lcp_finder()</code><a class="anchor" aria-label="anchor" href="#creating-a-lcpfinder-object-using-lcp_finder"></a>
 </h3>
-<p>A <code>LcpFinder</code> object can be constructed from a quadtree by using the <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code> function. It requires as input a <code>Quadtree</code> object and a two-element numeric vector representing the starting point.</p>
+<p>A <code>LcpFinder</code> object can be constructed from a quadtree by
+using the <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code> function. It requires as input a
+<code>Quadtree</code> object and a two-element numeric vector
+representing the starting point.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6989</span>, <span class="fl">34007</span><span class="op">)</span>
-<span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span>
-<span class="va">lcpf</span>
-<span class="co">#&gt; class            : LcpFinder</span>
-<span class="co">#&gt; start point      : (6989, 34007)</span>
-<span class="co">#&gt; search limits    : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; # of paths found : 0</span></code></pre></div>
-<p>There are also four optional parameters for the <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code> function: <code>xlim</code>, <code>ylim</code>, <code>search_by_centroids</code>, and <code>new_points</code>. If <code>xlim</code> and <code>ylim</code> are specified, the <code>LcpFinder</code> object restricts its search area to nodes that fall within the specified limits. This can be useful for at least two reasons. First, it is sometimes desirable to constrain an LCP to be within certain “reasonable” limits. For example, if two points are separated by a long barrier, this could be used to prevent the path from going all the way around the barrier (which may result in an unrealistically long path, depending on the application). Second, it can also be used to decrease computation time by decreasing the number of nodes in the network.</p>
-<p>The <code>search_by_centroid</code> parameter essentially defines what it means for a cell to be “in” the box defined by <code>xlim</code> and <code>ylim</code>. If <code>FALSE</code> (the default), any cell that overlaps with the box is included. If <code>TRUE</code>, a cell is only included if its <em>centroid</em> falls inside the box. This is a subtle but important distinction. If cells are included if they <em>overlap</em> with the box, it is likely that cells will be included whose centroid falls outside the box. Since, by default, all LCPs are found using the cell centroids, this means that LCPs could travel outside of the user-defined box. The difference between the two is illustrated later on in this vignette, when <code><a href="../reference/find_lcps.html">find_lcps()</a></code> is discussed.</p>
-<p>The <code>new_points</code> parameter can be used to specify which points to use to represent a cell when calculating the least-cost path. By default the cell centroids are used - this argument allows users to specify points to use instead of the centroids. Each point in <code>new_points</code> is taken to be the centroid of the cell that it falls in. This can be used to reduce the error caused by large cell sizes.</p>
-<p>However, allowing for the possibility of non-centroids to be used to represent a cell raises the possibility that a path between neighboring cells may pass through other nodes (when centroids are used, this will never happen). This complicates the calculation of the cost of the edge, since it may pass through other cells (for example, if any of the other cells it passes through are <code>NA</code>, the cost of that edge is undefined). To mitigate this, when a straight line between neighboring cells passes through a different cell, the path is adjusted so that it actually consists of two segments - the start point to the “corner point” where the two cells meet, and then from that point to the end point. For an example, see the following figure:</p>
+<code class="sourceCode R"><span><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6989</span>, <span class="fl">34007</span><span class="op">)</span></span>
+<span><span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span>
+<span><span class="va">lcpf</span></span>
+<span><span class="co">#&gt; class            : LcpFinder</span></span>
+<span><span class="co">#&gt; start point      : (6989, 34007)</span></span>
+<span><span class="co">#&gt; search limits    : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; # of paths found : 0</span></span></code></pre></div>
+<p>There are also four optional parameters for the
+<code><a href="../reference/lcp_finder.html">lcp_finder()</a></code> function: <code>xlim</code>,
+<code>ylim</code>, <code>search_by_centroids</code>, and
+<code>new_points</code>. If <code>xlim</code> and <code>ylim</code> are
+specified, the <code>LcpFinder</code> object restricts its search area
+to nodes that fall within the specified limits. This can be useful for
+at least two reasons. First, it is sometimes desirable to constrain an
+LCP to be within certain “reasonable” limits. For example, if two points
+are separated by a long barrier, this could be used to prevent the path
+from going all the way around the barrier (which may result in an
+unrealistically long path, depending on the application). Second, it can
+also be used to decrease computation time by decreasing the number of
+nodes in the network.</p>
+<p>The <code>search_by_centroid</code> parameter essentially defines
+what it means for a cell to be “in” the box defined by <code>xlim</code>
+and <code>ylim</code>. If <code>FALSE</code> (the default), any cell
+that overlaps with the box is included. If <code>TRUE</code>, a cell is
+only included if its <em>centroid</em> falls inside the box. This is a
+subtle but important distinction. If cells are included if they
+<em>overlap</em> with the box, it is likely that cells will be included
+whose centroid falls outside the box. Since, by default, all LCPs are
+found using the cell centroids, this means that LCPs could travel
+outside of the user-defined box. The difference between the two is
+illustrated later on in this vignette, when <code><a href="../reference/find_lcps.html">find_lcps()</a></code> is
+discussed.</p>
+<p>The <code>new_points</code> parameter can be used to specify which
+points to use to represent a cell when calculating the least-cost path.
+By default the cell centroids are used - this argument allows users to
+specify points to use instead of the centroids. Each point in
+<code>new_points</code> is taken to be the centroid of the cell that it
+falls in. This can be used to reduce the error caused by large cell
+sizes.</p>
+<p>However, allowing for the possibility of non-centroids to be used to
+represent a cell raises the possibility that a path between neighboring
+cells may pass through other nodes (when centroids are used, this will
+never happen). This complicates the calculation of the cost of the edge,
+since it may pass through other cells (for example, if any of the other
+cells it passes through are <code>NA</code>, the cost of that edge is
+undefined). To mitigate this, when a straight line between neighboring
+cells passes through a different cell, the path is adjusted so that it
+actually consists of two segments - the start point to the “corner
+point” where the two cells meet, and then from that point to the end
+point. For an example, see the following figure:</p>
 <p><img src="quadtree-lcp_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
-<p>Note that when a <code>LcpFinder</code> object is created, no paths have been found yet. Paths are found by using the <code><a href="../reference/find_lcp.html">find_lcp()</a></code> and <code><a href="../reference/find_lcps.html">find_lcps()</a></code> functions.</p>
+<p>Note that when a <code>LcpFinder</code> object is created, no paths
+have been found yet. Paths are found by using the
+<code><a href="../reference/find_lcp.html">find_lcp()</a></code> and <code><a href="../reference/find_lcps.html">find_lcps()</a></code> functions.</p>
 </div>
 <div class="section level3">
 <h3 id="finding-lcps-using-a-lcpfinder-object-">Finding LCPs using a <code>LcpFinder</code> object.<a class="anchor" aria-label="anchor" href="#finding-lcps-using-a-lcpfinder-object-"></a>
 </h3>
-<p>Two slightly different ways of calculating LCPs are provided that differ in their stop criteria - that is, the condition on which the tree stops being built. <code><a href="../reference/find_lcp.html">find_lcp()</a></code> is used to find a path to a specific point, while <code><a href="../reference/find_lcps.html">find_lcps()</a></code> is used to find all LCPs under a given cost-distance (or with no limit, in which case LCPs to all cells are found).</p>
+<p>Two slightly different ways of calculating LCPs are provided that
+differ in their stop criteria - that is, the condition on which the tree
+stops being built. <code><a href="../reference/find_lcp.html">find_lcp()</a></code> is used to find a path to a
+specific point, while <code><a href="../reference/find_lcps.html">find_lcps()</a></code> is used to find all LCPs
+under a given cost-distance (or with no limit, in which case LCPs to all
+cells are found).</p>
 <div class="section level4">
 <h4 id="using-find_lcp">Using <code>find_lcp</code><a class="anchor" aria-label="anchor" href="#using-find_lcp"></a>
 </h4>
 <p><strong><em><code>find_lcp(&lt;LcpFinder&gt;)</code></em></strong></p>
-<p><code><a href="../reference/find_lcp.html">find_lcp()</a></code> finds a path to a specific point using a pre-existing <code>LcpFinder</code>. First, it checks whether a LCP to that point has been calculated. If so, it returns the path. If not, it performs Dijkstra’s algorithm, and as soon as that node has been added to the tree, the algorithm stops and the LCP is returned.</p>
+<p><code><a href="../reference/find_lcp.html">find_lcp()</a></code> finds a path to a specific point using a
+pre-existing <code>LcpFinder</code>. First, it checks whether a LCP to
+that point has been calculated. If so, it returns the path. If not, it
+performs Dijkstra’s algorithm, and as soon as that node has been added
+to the tree, the algorithm stops and the LCP is returned.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6989</span>, <span class="fl">34007</span><span class="op">)</span>
-<span class="va">end_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">33015</span>, <span class="fl">38162</span><span class="op">)</span>
-
-<span class="co"># create the LCP finder object and find the LCP</span>
-<span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span>
-<span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcp.html">find_lcp</a></span><span class="op">(</span><span class="va">lcpf</span>, <span class="va">end_pt</span><span class="op">)</span>
-
-<span class="co"># plot the LCP</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">start_pt</span>, <span class="va">end_pt</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">path</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6989</span>, <span class="fl">34007</span><span class="op">)</span></span>
+<span><span class="va">end_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">33015</span>, <span class="fl">38162</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create the LCP finder object and find the LCP</span></span>
+<span><span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span>
+<span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcp.html">find_lcp</a></span><span class="op">(</span><span class="va">lcpf</span>, <span class="va">end_pt</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot the LCP</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">start_pt</span>, <span class="va">end_pt</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">path</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-lcp_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
-<p>As noted before, however, Dijkstra’s algorithm finds many other LCPs on the way to finding a specific LCP. For example, showing the summary of the <code>LcpFinder</code> object shows that many paths have been found.</p>
+<p>As noted before, however, Dijkstra’s algorithm finds many other LCPs
+on the way to finding a specific LCP. For example, showing the summary
+of the <code>LcpFinder</code> object shows that many paths have been
+found.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">lcpf</span>
-<span class="co">#&gt; class            : LcpFinder</span>
-<span class="co">#&gt; start point      : (6989, 34007)</span>
-<span class="co">#&gt; search limits    : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; # of paths found : 3880</span></code></pre></div>
-<p>The <code><a href="../reference/summarize_lcps.html">summarize_lcps()</a></code> function can be used to return a summary data frame with one row per LCP found. Each row gives information on the destination cell and the cost and distance of the LCP to reach that cell.</p>
+<code class="sourceCode R"><span><span class="va">lcpf</span></span>
+<span><span class="co">#&gt; class            : LcpFinder</span></span>
+<span><span class="co">#&gt; start point      : (6989, 34007)</span></span>
+<span><span class="co">#&gt; search limits    : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; # of paths found : 3880</span></span></code></pre></div>
+<p>The <code><a href="../reference/summarize_lcps.html">summarize_lcps()</a></code> function can be used to return a
+summary data frame with one row per LCP found. Each row gives
+information on the destination cell and the cost and distance of the LCP
+to reach that cell.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/summarize_lcps.html">summarize_lcps</a></span><span class="op">(</span><span class="va">lcpf</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;     id  xmin  xmax  ymin  ymax    value     area lcp_cost lcp_dist</span>
-<span class="co">#&gt; 1 5797 11750 12000 11250 11500 0.974000    62500 12972.13 26804.27</span>
-<span class="co">#&gt; 2 5793 11750 12000 11500 11750 0.973000    62500 12728.76 26554.27</span>
-<span class="co">#&gt; 3 5791 11750 12000 11750 12000 0.973000    62500 12485.51 26304.27</span>
-<span class="co">#&gt; 4 5824 12000 16000  8000 12000 0.964375 16000000 14330.39 28239.99</span>
-<span class="co">#&gt; 5 5744 11500 11750 12000 12250 0.973000    62500 12578.08 26399.26</span>
-<span class="co">#&gt; 6 5745 11750 12000 12000 12250 0.972000    62500 12334.95 26149.26</span></code></pre></div>
-<p>The cells to which paths have been found as well as the paths to reach those cells can be plotted using the <code><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points()</a></code> and <code><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines()</a></code> functions with the <code>LcpFinder</code> object.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/summarize_lcps.html">summarize_lcps</a></span><span class="op">(</span><span class="va">lcpf</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     id  xmin  xmax  ymin  ymax    value     area lcp_cost lcp_dist</span></span>
+<span><span class="co">#&gt; 1 5797 11750 12000 11250 11500 0.974000    62500 12972.13 26804.27</span></span>
+<span><span class="co">#&gt; 2 5793 11750 12000 11500 11750 0.973000    62500 12728.76 26554.27</span></span>
+<span><span class="co">#&gt; 3 5791 11750 12000 11750 12000 0.973000    62500 12485.51 26304.27</span></span>
+<span><span class="co">#&gt; 4 5824 12000 16000  8000 12000 0.964375 16000000 14330.39 28239.99</span></span>
+<span><span class="co">#&gt; 5 5744 11500 11750 12000 12250 0.973000    62500 12578.08 26399.26</span></span>
+<span><span class="co">#&gt; 6 5745 11750 12000 12000 12250 0.972000    62500 12334.95 26149.26</span></span></code></pre></div>
+<p>The cells to which paths have been found as well as the paths to
+reach those cells can be plotted using the <code><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points()</a></code> and
+<code><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines()</a></code> functions with the <code>LcpFinder</code>
+object.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>,<span class="fl">.5</span>,<span class="fl">2</span>,<span class="fl">.5</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     legend <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>,
-     main <span class="op">=</span> <span class="st">"cells to which LCPs have been found"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">lcpf</span>, pch<span class="op">=</span><span class="fl">16</span>, cex<span class="op">=</span><span class="fl">.3</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">start_pt</span>, <span class="va">end_pt</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     legend <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"LCPs calculated"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">lcpf</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">start_pt</span>, <span class="va">end_pt</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>,<span class="fl">.5</span>,<span class="fl">2</span>,<span class="fl">.5</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,</span>
+<span>     legend <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"cells to which LCPs have been found"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">lcpf</span>, pch<span class="op">=</span><span class="fl">16</span>, cex<span class="op">=</span><span class="fl">.3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">start_pt</span>, <span class="va">end_pt</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,</span>
+<span>     legend <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"LCPs calculated"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">lcpf</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">start_pt</span>, <span class="va">end_pt</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-lcp_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
 <p><strong><em><code>find_lcp(&lt;Quadtree&gt;)</code></em></strong></p>
-<p>To avoid having to create an <code>LcpFinder</code> before finding an LCP, <code><a href="../reference/find_lcp.html">find_lcp()</a></code> also accepts a <code>Quadtree</code>. When a <code>Quadtree</code> is passed to <code><a href="../reference/find_lcp.html">find_lcp()</a></code>, it automatically creates an <code>LcpFinder</code> and then uses <code>find_lcp(&lt;LcpFinder&gt;)</code> to get the path between the two points. This is convenient if you only want a single LCP since you don’t have to create an <code>LcpFinder</code> first. However, if you want to find multiple LCPs from a single start point, it is better to first create the <code>LcpFinder</code> object using <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code> and then use <code>find_lcp(&lt;LcpFinder&gt;)</code> for finding LCPs. This is because an <code>LcpFinder</code> object saves state, so subsequent calls to <code>find_lcp(&lt;LcpFinder&gt;)</code> will run faster.</p>
+<p>To avoid having to create an <code>LcpFinder</code> before finding an
+LCP, <code><a href="../reference/find_lcp.html">find_lcp()</a></code> also accepts a <code>Quadtree</code>. When
+a <code>Quadtree</code> is passed to <code><a href="../reference/find_lcp.html">find_lcp()</a></code>, it
+automatically creates an <code>LcpFinder</code> and then uses
+<code>find_lcp(&lt;LcpFinder&gt;)</code> to get the path between the two
+points. This is convenient if you only want a single LCP since you don’t
+have to create an <code>LcpFinder</code> first. However, if you want to
+find multiple LCPs from a single start point, it is better to first
+create the <code>LcpFinder</code> object using <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code>
+and then use <code>find_lcp(&lt;LcpFinder&gt;)</code> for finding LCPs.
+This is because an <code>LcpFinder</code> object saves state, so
+subsequent calls to <code>find_lcp(&lt;LcpFinder&gt;)</code> will run
+faster.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcp.html">find_lcp</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span>, <span class="va">end_pt</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span>
-<span class="co">#&gt;         x     y cost_tot  dist_tot cost_cell cell_id</span>
-<span class="co">#&gt; [1,] 6989 34007   0.0000    0.0000   0.47825     472</span>
-<span class="co">#&gt; [2,] 6875 33875  62.0657  174.4133   0.34900     508</span>
-<span class="co">#&gt; [3,] 6625 33875 170.5657  424.4133   0.51900     507</span>
-<span class="co">#&gt; [4,] 6250 33750 337.6394  819.6980   0.37450     505</span>
-<span class="co">#&gt; [5,] 5875 33375 525.5530 1350.0281   0.31400     490</span>
-<span class="co">#&gt; [6,] 5625 33125 627.7299 1703.5815   0.26400     491</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcp.html">find_lcp</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span>, <span class="va">end_pt</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         x     y cost_tot  dist_tot cost_cell cell_id</span></span>
+<span><span class="co">#&gt; [1,] 6989 34007   0.0000    0.0000   0.47825     472</span></span>
+<span><span class="co">#&gt; [2,] 6875 33875  62.0657  174.4133   0.34900     508</span></span>
+<span><span class="co">#&gt; [3,] 6625 33875 170.5657  424.4133   0.51900     507</span></span>
+<span><span class="co">#&gt; [4,] 6250 33750 337.6394  819.6980   0.37450     505</span></span>
+<span><span class="co">#&gt; [5,] 5875 33375 525.5530 1350.0281   0.31400     490</span></span>
+<span><span class="co">#&gt; [6,] 5625 33125 627.7299 1703.5815   0.26400     491</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="using-find_lcps">Using <code>find_lcps()</code><a class="anchor" aria-label="anchor" href="#using-find_lcps"></a>
 </h4>
-<p><code><a href="../reference/find_lcps.html">find_lcps()</a></code> can be used to find all possible LCPs. In addition, a maximum cost-distance can optionally be provided so that only LCPs with a cost-distance less than the specified value are found. If the <code>return_summary</code> parameter is <code>TRUE</code>, it returns the output of <code><a href="../reference/summarize_lcps.html">summarize_lcps()</a></code>, providing a summary of each path found. If it is <code>FALSE</code>, no value is returned.</p>
-<p>It should be noted that while <code><a href="../reference/find_lcps.html">find_lcps()</a></code> does not return individual LCPs, it still calculates the LCPs to each point, and <code><a href="../reference/find_lcp.html">find_lcp()</a></code> can be used to retrieve individual paths. As stated before, when <code><a href="../reference/find_lcp.html">find_lcp()</a></code> is run, the <code>LcpFinder</code> object first checks to see if the path has been calculated already - if so, it simply returns the path without having to perform further calculations. This means that after <code><a href="../reference/find_lcps.html">find_lcps()</a></code> has been run, individual LCPs can be extracted very efficiently using <code><a href="../reference/find_lcp.html">find_lcp()</a></code>.</p>
+<p><code><a href="../reference/find_lcps.html">find_lcps()</a></code> can be used to find all possible LCPs. In
+addition, a maximum cost-distance can optionally be provided so that
+only LCPs with a cost-distance less than the specified value are found.
+If the <code>return_summary</code> parameter is <code>TRUE</code>, it
+returns the output of <code><a href="../reference/summarize_lcps.html">summarize_lcps()</a></code>, providing a summary
+of each path found. If it is <code>FALSE</code>, no value is
+returned.</p>
+<p>It should be noted that while <code><a href="../reference/find_lcps.html">find_lcps()</a></code> does not
+return individual LCPs, it still calculates the LCPs to each point, and
+<code><a href="../reference/find_lcp.html">find_lcp()</a></code> can be used to retrieve individual paths. As
+stated before, when <code><a href="../reference/find_lcp.html">find_lcp()</a></code> is run, the
+<code>LcpFinder</code> object first checks to see if the path has been
+calculated already - if so, it simply returns the path without having to
+perform further calculations. This means that after
+<code><a href="../reference/find_lcps.html">find_lcps()</a></code> has been run, individual LCPs can be extracted
+very efficiently using <code><a href="../reference/find_lcp.html">find_lcp()</a></code>.</p>
 <p><strong><em>Finding all paths</em></strong></p>
-<p>The following example uses <code><a href="../reference/find_lcps.html">find_lcps()</a></code> to generate all LCPs from the starting point.</p>
+<p>The following example uses <code><a href="../reference/find_lcps.html">find_lcps()</a></code> to generate all
+LCPs from the starting point.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16715</span>, <span class="fl">25634</span><span class="op">)</span>
-<span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span>
-<span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     main <span class="op">=</span> <span class="st">"All LCPs from a given start point"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">lcpf</span>, lwd <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span>, bg <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16715</span>, <span class="fl">25634</span><span class="op">)</span></span>
+<span><span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span>
+<span><span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"All LCPs from a given start point"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">lcpf</span>, lwd <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span>, bg <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-lcp_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
-<p>An important point to make is that <code><a href="../reference/find_lcps.html">find_lcps()</a></code> with no restrictions will find all paths <em>within the previously specified search limit</em> (i.e. the <code>xlim</code> and <code>ylim</code> parameters of <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code>.) As discussed above, the <code>search_by_centroid</code> parameter also plays a role in determining which cells are included in the search area, as demonstrated in the following example.</p>
+<p>An important point to make is that <code><a href="../reference/find_lcps.html">find_lcps()</a></code> with no
+restrictions will find all paths <em>within the previously specified
+search limit</em> (i.e. the <code>xlim</code> and <code>ylim</code>
+parameters of <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code>.) As discussed above, the
+<code>search_by_centroid</code> parameter also plays a role in
+determining which cells are included in the search area, as demonstrated
+in the following example.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16715</span>, <span class="fl">25634</span><span class="op">)</span>
-
-<span class="va">dist</span> <span class="op">&lt;-</span> <span class="fl">6500</span>
-<span class="va">xlim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">dist</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dist</span><span class="op">)</span>
-<span class="va">ylim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">dist</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="va">dist</span><span class="op">)</span>
-
-<span class="va">lcpf1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span>, <span class="va">xlim</span>, <span class="va">ylim</span>, search_by_centroid <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">paths1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf1</span><span class="op">)</span> 
-
-<span class="va">lcpf2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span>, <span class="va">xlim</span>, <span class="va">ylim</span>, search_by_centroid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">paths2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf2</span><span class="op">)</span></code></pre></div>
-<p>When plotted, it can be seen that when <code>search_by_centroid</code> is <code>FALSE</code>, paths are included to cells whose centroid falls outside the specified box.</p>
+<code class="sourceCode R"><span><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16715</span>, <span class="fl">25634</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dist</span> <span class="op">&lt;-</span> <span class="fl">6500</span></span>
+<span><span class="va">xlim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">dist</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dist</span><span class="op">)</span></span>
+<span><span class="va">ylim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">dist</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="va">dist</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lcpf1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span>, <span class="va">xlim</span>, <span class="va">ylim</span>, search_by_centroid <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">paths1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf1</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="va">lcpf2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span>, <span class="va">xlim</span>, <span class="va">ylim</span>, search_by_centroid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">paths2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf2</span><span class="op">)</span></span></code></pre></div>
+<p>When plotted, it can be seen that when
+<code>search_by_centroid</code> is <code>FALSE</code>, paths are
+included to cells whose centroid falls outside the specified box.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, xlim <span class="op">=</span> <span class="va">xlim</span>,
-     ylim <span class="op">=</span> <span class="va">ylim</span>, main <span class="op">=</span> <span class="st">"search_by_centroid = FALSE"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/rect.html" class="external-link">rect</a></span><span class="op">(</span><span class="va">xlim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">ylim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">xlim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">ylim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, border <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">lcpf1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">lcpf1</span>, pch<span class="op">=</span><span class="fl">16</span>, cex<span class="op">=</span><span class="fl">.4</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span>, bg <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, xlim <span class="op">=</span> <span class="va">xlim</span>,
-     ylim <span class="op">=</span> <span class="va">ylim</span>, main <span class="op">=</span> <span class="st">"search_by_centroid = TRUE"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/rect.html" class="external-link">rect</a></span><span class="op">(</span><span class="va">xlim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">ylim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">xlim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">ylim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, border <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">lcpf2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">lcpf2</span>, pch<span class="op">=</span><span class="fl">16</span>, cex<span class="op">=</span><span class="fl">.4</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span>, bg <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, xlim <span class="op">=</span> <span class="va">xlim</span>,</span>
+<span>     ylim <span class="op">=</span> <span class="va">ylim</span>, main <span class="op">=</span> <span class="st">"search_by_centroid = FALSE"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/rect.html" class="external-link">rect</a></span><span class="op">(</span><span class="va">xlim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">ylim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">xlim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">ylim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, border <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">lcpf1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">lcpf1</span>, pch<span class="op">=</span><span class="fl">16</span>, cex<span class="op">=</span><span class="fl">.4</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span>, bg <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, xlim <span class="op">=</span> <span class="va">xlim</span>,</span>
+<span>     ylim <span class="op">=</span> <span class="va">ylim</span>, main <span class="op">=</span> <span class="st">"search_by_centroid = TRUE"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/rect.html" class="external-link">rect</a></span><span class="op">(</span><span class="va">xlim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">ylim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">xlim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">ylim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, border <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">lcpf2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">lcpf2</span>, pch<span class="op">=</span><span class="fl">16</span>, cex<span class="op">=</span><span class="fl">.4</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"black"</span>, bg <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-lcp_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
-<p><strong><em>Finding all paths under a given cost-distance threshold</em></strong></p>
-<p>As stated before, a value can be passed to the <code>limit</code> parameter, which will restrict the <code>LcpFinder</code> to only finding paths less than that value. In the following example, all LCPs with a total cost-distance less than 3000 are found.</p>
+<p><strong><em>Finding all paths under a given cost-distance
+threshold</em></strong></p>
+<p>As stated before, a value can be passed to the <code>limit</code>
+parameter, which will restrict the <code>LcpFinder</code> to only
+finding paths less than that value. In the following example, all LCPs
+with a total cost-distance less than 3000 are found.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span>
-<span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,
-     main <span class="op">=</span> <span class="st">"All LCPs with cost-distance less than 3000"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">lcpf</span>, lwd <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span>
+<span><span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, na_col <span class="op">=</span> <span class="cn">NULL</span>, border_col <span class="op">=</span> <span class="st">"gray30"</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"All LCPs with cost-distance less than 3000"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">lcpf</span>, lwd <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">start_pt</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">start_pt</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-lcp_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
-<p>A very important note to make is that once the LCP tree is calculated, it never gets smaller. The implication of this is that great care is needed if using <code><a href="../reference/find_lcps.html">find_lcps()</a></code> more than once on a single <code>LcpFinder</code> object.</p>
-<p>For example, in the following example, <code><a href="../reference/find_lcps.html">find_lcps()</a></code> is used to find all paths with a cost-distance of 3000 or less. It is then used again in an attempt to find all paths with a cost-distance of 1000 or less. However, this will result in incorrect results, since paths with a cost-distance greater than 1000 have already been calculated, and as mentioned before, the tree never gets smaller.</p>
+<p>A very important note to make is that once the LCP tree is
+calculated, it never gets smaller. The implication of this is that great
+care is needed if using <code><a href="../reference/find_lcps.html">find_lcps()</a></code> more than once on a
+single <code>LcpFinder</code> object.</p>
+<p>For example, in the following example, <code><a href="../reference/find_lcps.html">find_lcps()</a></code> is
+used to find all paths with a cost-distance of 3000 or less. It is then
+used again in an attempt to find all paths with a cost-distance of 1000
+or less. However, this will result in incorrect results, since paths
+with a cost-distance greater than 1000 have already been calculated, and
+as mentioned before, the tree never gets smaller.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16715</span>, <span class="fl">25634</span><span class="op">)</span>
-
-<span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span>
-<span class="va">paths1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">paths1</span><span class="op">)</span>
-<span class="co">#&gt; [1] 833</span>
-
-<span class="va">paths2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">paths2</span><span class="op">)</span> <span class="co"># same as for paths1!!!</span>
-<span class="co">#&gt; [1] 833</span></code></pre></div>
-<p>In order to find the LCPs with cost-distance less than 1000, we would need to create a new <code>LcpFinder</code> object using <code><a href="../reference/lcp_finder.html">lcp_finder()</a></code>.</p>
+<code class="sourceCode R"><span><span class="va">start_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16715</span>, <span class="fl">25634</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lcpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lcp_finder.html">lcp_finder</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">start_pt</span><span class="op">)</span></span>
+<span><span class="va">paths1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">paths1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 833</span></span>
+<span></span>
+<span><span class="va">paths2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_lcps.html">find_lcps</a></span><span class="op">(</span><span class="va">lcpf</span>, limit <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">paths2</span><span class="op">)</span> <span class="co"># same as for paths1!!!</span></span>
+<span><span class="co">#&gt; [1] 833</span></span></code></pre></div>
+<p>In order to find the LCPs with cost-distance less than 1000, we would
+need to create a new <code>LcpFinder</code> object using
+<code><a href="../reference/lcp_finder.html">lcp_finder()</a></code>.</p>
 </div>
 </div>
 </div>
@@ -308,7 +470,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

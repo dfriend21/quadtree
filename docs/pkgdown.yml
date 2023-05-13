@@ -1,10 +1,10 @@
-pandoc: 2.14.0.3
-pkgdown: 2.0.2
+pandoc: 2.19.2
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   quadtree-code: quadtree-code.html
   quadtree-creation: quadtree-creation.html
   quadtree-lcp: quadtree-lcp.html
   quadtree-usage: quadtree-usage.html
-last_built: 2022-02-01T00:04Z
+last_built: 2023-05-13T20:32Z
 

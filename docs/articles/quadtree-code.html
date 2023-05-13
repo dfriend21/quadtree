@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -88,9 +88,11 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Code Details</h1>
-                        <h4 data-toc-skip class="author">Derek Friend</h4>
+                        <h4 data-toc-skip class="author">Derek
+Friend</h4>
             
-            <h4 data-toc-skip class="date">Last compiled on January 31, 2022</h4>
+            <h4 data-toc-skip class="date">Last compiled on May 13,
+2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/HEAD/vignettes/quadtree-code.Rmd" class="external-link"><code>vignettes/quadtree-code.Rmd</code></a></small>
       <div class="hidden name"><code>quadtree-code.Rmd</code></div>
@@ -102,44 +104,88 @@
 <div class="section level2">
 <h2 id="vignette-content">Vignette content<a class="anchor" aria-label="anchor" href="#vignette-content"></a>
 </h2>
-<p>This vignette gives a brief overview of the code structure of the <code>quadtree</code> package.</p>
+<p>This vignette gives a brief overview of the code structure of the
+<code>quadtree</code> package.</p>
 </div>
 <div class="section level2">
 <h2 id="implementation-details">Implementation details<a class="anchor" aria-label="anchor" href="#implementation-details"></a>
 </h2>
-<p>The bulk of the code is written in C++ and interfaced with R via ‘Rcpp’.</p>
-<p>The overall design philosophy was to keep the core C++ code completely independent from the R code (i.e. no ‘Rcpp’-related code in the core C++ files.) This results in a three-tiered organization of the code - core C++ code, ‘Rcpp’ C++ code, and R code.</p>
+<p>The bulk of the code is written in C++ and interfaced with R via
+‘Rcpp’.</p>
+<p>The overall design philosophy was to keep the core C++ code
+completely independent from the R code (i.e. no ‘Rcpp’-related code in
+the core C++ files.) This results in a three-tiered organization of the
+code - core C++ code, ‘Rcpp’ C++ code, and R code.</p>
 <div class="section level3">
 <h3 id="core-c-code">Core C++ code<a class="anchor" aria-label="anchor" href="#core-c-code"></a>
 </h3>
-<p>This consists of the following files (only the .h files are listed to avoid redundancy, but each of these files has a corresponding .cpp file):</p>
+<p>This consists of the following files (only the .h files are listed to
+avoid redundancy, but each of these files has a corresponding .cpp
+file):</p>
 <ul>
-<li>Matrix.h - Defines the <code>Matrix</code> class implementing basic matrix functionality</li>
-<li>Node.h - Defines the <code>Node</code> class, which are the nodes of the quadtree</li>
+<li>Matrix.h - Defines the <code>Matrix</code> class implementing basic
+matrix functionality</li>
+<li>Node.h - Defines the <code>Node</code> class, which are the nodes of
+the quadtree</li>
 <li>Point.h - Defines a simple <code>Point</code> class</li>
-<li>PointUtilities.h - Defines a namespace containing functions for performing calculations with <code>Point</code> objects</li>
-<li>Quadtree.h - Defines the <code>Quadtree</code> class, which can be seen as a wrapper that provides a link to the interconnected nodes that make up the quadtree</li>
-<li>LcpFinder.h - Defines the <code>LcpFinder</code> class, which is used for finding least-cost paths using a quadtree as a cost surface</li>
+<li>PointUtilities.h - Defines a namespace containing functions for
+performing calculations with <code>Point</code> objects</li>
+<li>Quadtree.h - Defines the <code>Quadtree</code> class, which can be
+seen as a wrapper that provides a link to the interconnected nodes that
+make up the quadtree</li>
+<li>LcpFinder.h - Defines the <code>LcpFinder</code> class, which is
+used for finding least-cost paths using a quadtree as a cost
+surface</li>
 </ul>
-<p>As mentioned before, these files are completely independent of R and can be built and run independently of R.</p>
+<p>As mentioned before, these files are completely independent of R and
+can be built and run independently of R.</p>
 </div>
 <div class="section level3">
 <h3 id="rcpp-c-code">‘Rcpp’ C++ code<a class="anchor" aria-label="anchor" href="#rcpp-c-code"></a>
 </h3>
-<p>These files are called ‘wrappers’ - essentially they each contain an instance of the relevant object and provide additional ‘Rcpp’-related functions that can be accessed from R. These essentially provide the “bridge” that allows the functionality in the core C++ files to be accessed from R.</p>
+<p>These files are called ‘wrappers’ - essentially they each contain an
+instance of the relevant object and provide additional ‘Rcpp’-related
+functions that can be accessed from R. These essentially provide the
+“bridge” that allows the functionality in the core C++ files to be
+accessed from R.</p>
 <ul>
-<li>NodeWrapper.h - wrapper class for <code>Node</code>. This class is exposed to R as <code>CppNode</code>.</li>
-<li>QuadtreeWrapper.h - wrapper class for <code>Quadtree</code>. This class is exposed to R as <code>CppQuadtree</code>.</li>
-<li>LcpFinderWrapper.h - wrapper class for <code>LcpFinder</code>. This class is exposed to R as <code>CppLcpFinder</code>.</li>
-<li>R_Interface.h - defines a namespace that currently contains only a single function, which converts an ‘Rcpp’ matrix to the <code>Matrix</code> class I created. This function is separate from the other files because it is a general-purpose function and thus didn’t fit in any of the wrapper classes.</li>
-<li>load_modules.cpp - contains code that exposes the wrapper classes to R using ‘Rcpp’ modules.</li>
+<li>NodeWrapper.h - wrapper class for <code>Node</code>. This class is
+exposed to R as <code>CppNode</code>.</li>
+<li>QuadtreeWrapper.h - wrapper class for <code>Quadtree</code>. This
+class is exposed to R as <code>CppQuadtree</code>.</li>
+<li>LcpFinderWrapper.h - wrapper class for <code>LcpFinder</code>. This
+class is exposed to R as <code>CppLcpFinder</code>.</li>
+<li>R_Interface.h - defines a namespace that currently contains only a
+single function, which converts an ‘Rcpp’ matrix to the
+<code>Matrix</code> class I created. This function is separate from the
+other files because it is a general-purpose function and thus didn’t fit
+in any of the wrapper classes.</li>
+<li>load_modules.cpp - contains code that exposes the wrapper classes to
+R using ‘Rcpp’ modules.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="r-code">R code<a class="anchor" aria-label="anchor" href="#r-code"></a>
 </h3>
-<p>Almost all of the core functionality of the quadtree package is contained in the C++ code, and the R code serves primarily as an interface for working with the C++ quadtree data structure. A <code>Quadtree</code> S4 class is defined which consists only of one slot, which contains a <code>CppQuadtree</code> object. The methods for this class are often quite simple, merely consisting of calling one of the methods on the <code>CppQuadtree</code> object. Similarly, the <code>LcpFinder</code> class contains a <code>CppLcpFinder</code> object. Using this approach has a few benefits. First, wrapping the C++ class in an S4 class allows the quadtree functionality to be accessed in a way that is much more consistent with typical R syntax, which will hopefully be more intuitive to R users. Second, it allows for me to add R code to validate and make any necessary modifications to parameters before calling the C++ methods - this helps make the functions more robust. This also allows me to take advantage of existing R functionality (for example, resampling a raster from the ‘raster’ package).</p>
-<p>I won’t discuss each R file/function here - see the the function help files for details on each R function.</p>
+<p>Almost all of the core functionality of the quadtree package is
+contained in the C++ code, and the R code serves primarily as an
+interface for working with the C++ quadtree data structure. A
+<code>Quadtree</code> S4 class is defined which consists only of one
+slot, which contains a <code>CppQuadtree</code> object. The methods for
+this class are often quite simple, merely consisting of calling one of
+the methods on the <code>CppQuadtree</code> object. Similarly, the
+<code>LcpFinder</code> class contains a <code>CppLcpFinder</code>
+object. Using this approach has a few benefits. First, wrapping the C++
+class in an S4 class allows the quadtree functionality to be accessed in
+a way that is much more consistent with typical R syntax, which will
+hopefully be more intuitive to R users. Second, it allows for me to add
+R code to validate and make any necessary modifications to parameters
+before calling the C++ methods - this helps make the functions more
+robust. This also allows me to take advantage of existing R
+functionality (for example, resampling a raster from the ‘raster’
+package).</p>
+<p>I won’t discuss each R file/function here - see the the function help
+files for details on each R function.</p>
 </div>
 </div>
   </div>
@@ -161,7 +207,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
