@@ -29,7 +29,7 @@ Prints out information about the \code{\link{LcpFinder}}.
 }
 \examples{
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 qt <- quadtree(habitat, .1)
 

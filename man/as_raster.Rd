@@ -35,9 +35,8 @@ guaranteed to line up with the quadtree cells with no overlap, thus avoiding
 the issue.
 }
 \examples{
-library(raster)
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 # create a quadtree
 qt <- quadtree(habitat, split_threshold = .1, split_method = "sd")

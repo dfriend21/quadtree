@@ -17,7 +17,7 @@
 #' \code{write_quadtree()} - no return value
 #' @examples
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' qt <- quadtree(habitat, .1)
 #'
@@ -62,7 +62,7 @@ setMethod("write_quadtree", signature(x = "character", y = "Quadtree"),
 #' no return value
 #' @examples
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' qt <- quadtree(habitat, .1)
 #'

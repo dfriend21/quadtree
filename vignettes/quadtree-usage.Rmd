@@ -25,10 +25,10 @@ old_par <- par(no.readonly = TRUE)
 This vignette covers ways of interacting with a `Quadtree` object after it has been created - for example, extracting values and modifying values.
 
 ```{r message = FALSE}
-library(raster)
+library(terra)
 library(quadtree)
 
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 rast <- habitat
 
 qt <- quadtree(rast, .15)

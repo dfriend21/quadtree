@@ -32,7 +32,7 @@ unimportant - it can be anything (I've been using the extension '.qtree').
 }
 \examples{
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 qt <- quadtree(habitat, .1)
 

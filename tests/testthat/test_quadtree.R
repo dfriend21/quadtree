@@ -12,7 +12,7 @@ test_that("we can create a quadtree from a raster", {
 })
 
 test_that("quadtree creation with templates works", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   data(habitat_roads)
   qt1 <- expect_error(quadtree(habitat_roads, .1), NA)
   qt2 <- expect_error(quadtree(habitat, template_quadtree = qt1), NA)
@@ -28,18 +28,21 @@ test_that("quadtree creation with templates works", {
 })
 
 test_that("summary(<Quadtree>) runs without errors", {
+  # habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   data(habitat)
   qt <- quadtree(habitat, .1, split_method = "sd")
   expect_output(summary(qt))
 })
 
 test_that("'quadtree()' runs without errors for all parameter settings", {
-  # library(raster)
+  # library(terra)
 
   # retrieve the sample data
+  # habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
+  
   data(habitat)
   # make the raster smaller so the output files are smaller
-  rast <- raster::aggregate(habitat, 6)
+  rast <- terra::aggregate(habitat, 6)
 
   qts <- list()
   qts[[1]] <- expect_error(quadtree(rast, .3), NA)
@@ -89,7 +92,7 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
   qts[[20]] <- expect_error(quadtree(rast, .1, combine_method = "custom", combine_fun = cmb_fun2), NA)
   #----
   data(habitat_roads)
-  template <- raster::aggregate(habitat_roads, 6)
+  template <- terra::aggregate(habitat_roads, 6)
   split_if_road <- function(vals, args) {
     if (any(vals > 0, na.rm = TRUE)) return(TRUE)
     return(FALSE)

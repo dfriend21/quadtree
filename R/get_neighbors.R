@@ -22,7 +22,7 @@
 #' other are considered to be neighbors.
 #' @examples
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' # create a quadtree
 #' qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")

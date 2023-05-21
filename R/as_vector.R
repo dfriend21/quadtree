@@ -14,7 +14,7 @@
 #'   about each cell's size and extent.
 #' @examples
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' qt <- quadtree(habitat, .2)
 #' head(as_vector(qt), 20)

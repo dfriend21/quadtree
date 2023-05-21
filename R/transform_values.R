@@ -29,7 +29,7 @@
 #' to specified values (rather than transforming the existing values).
 #' @examples
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' # create a quadtree
 #' qt1 <- quadtree(habitat, split_threshold = .1)

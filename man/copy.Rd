@@ -31,7 +31,7 @@ This function creates a \emph{deep} copy of a \code{\link{Quadtree}}
 }
 \examples{
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 # create a quadtree, then create a shallow copy and a deep copy
 qt1 <- quadtree(habitat, split_threshold = .1)

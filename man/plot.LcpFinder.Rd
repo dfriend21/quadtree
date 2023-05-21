@@ -33,7 +33,7 @@ Plots a \code{\link{LcpFinder}} object.
 }
 \examples{
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 qt <- quadtree(habitat, .1)
 

@@ -172,7 +172,7 @@ The 'quadtree-creation' vignette contains detailed explanations and
 ####################
 
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 qt <- quadtree(habitat, .15)
 plot(qt)

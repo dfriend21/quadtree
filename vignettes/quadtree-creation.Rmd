@@ -28,9 +28,9 @@ This vignette goes over the process of creating a quadtree and covers all of the
 
 ```{r, message = FALSE, warning = FALSE}
 library(quadtree)
-library(raster)
+library(terra)
 
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 rast <- habitat
 plot(rast, main = "sample raster")
 ```

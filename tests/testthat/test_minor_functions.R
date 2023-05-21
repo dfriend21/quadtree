@@ -1,5 +1,5 @@
 test_that("as_data_frame() runs without errors and produces expected output", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- expect_error(quadtree(habitat, .4), NA)
 
   df_term <- expect_error(as_data_frame(qt, TRUE), NA)
@@ -17,7 +17,7 @@ test_that("as_data_frame() runs without errors and produces expected output", {
 })
 
 test_that("as_raster() works", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- quadtree(habitat, .1, split_method = "sd")
   rst1 <- expect_error(as_raster(qt), NA)
   rst2 <- expect_error(as_raster(qt, habitat), NA)
@@ -54,7 +54,7 @@ test_that("as_vector() works", {
 })
 
 test_that("foreign object conversion functions run without errors", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- quadtree(habitat, .3, split_method = "sd")
   
   ch <- expect_error(as(qt, "character"), NA)
@@ -63,7 +63,7 @@ test_that("foreign object conversion functions run without errors", {
 })
 
 test_that("copy() runs without errors and produces expected output", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt1 <- quadtree(habitat, .3, split_method = "sd")
   qt2 <- expect_error(copy(qt1), NA)
   expect_s4_class(qt2, "Quadtree")
@@ -75,8 +75,8 @@ test_that("copy() runs without errors and produces expected output", {
 })
 
 test_that("extent() runs without errors and produces expected output", {
-  #library(raster)
-  data(habitat)
+  # library(terra)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt1 <- quadtree(habitat, .3, split_method = "sd")
   expect_error(extent(qt1, original = FALSE), NA)
   qt_ext <- expect_error(extent(qt1, original = TRUE), NA)
@@ -84,14 +84,14 @@ test_that("extent() runs without errors and produces expected output", {
 })
 
 test_that("extract() runs without errors and returns correct values", {
-  # library(raster)
-  data(habitat)
+  # library(terra)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   # use 0 to make sure everything gets split as small as possible
   qt1 <- quadtree(habitat, 0)
 
-  ext <- raster::extent(habitat)
+  ext <- terra::ext(habitat)
   pts <- cbind(runif(1000, ext[1], ext[2]), runif(1000, ext[3], ext[4]))
-  rst_ext <- raster::extract(habitat, pts)
+  rst_ext <- terra::extract(habitat, pts)[[1]]
   qt_ext <- expect_error(extract(qt1, pts), NA)
   qt_ext[is.nan(qt_ext)] <- NA
   expect_equal(qt_ext, rst_ext)
@@ -128,7 +128,7 @@ test_that("get_neighbors() works", {
 })
 
 test_that("n_cells() works", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- quadtree(habitat, .15)
   nc1 <- expect_error(n_cells(qt, TRUE), NA)
   nc2 <- expect_error(n_cells(qt, FALSE), NA)
@@ -138,7 +138,7 @@ test_that("n_cells() works", {
 
 test_that("n_cells(), as_vector(), and as_data_frame() agree on the number of
           nodes", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- quadtree(habitat, .15)
 
   nc_term <- n_cells(qt, TRUE)
@@ -155,8 +155,8 @@ test_that("n_cells(), as_vector(), and as_data_frame() agree on the number of
 })
 
 test_that("projection() runs without errors and returns correct value", {
-  data(habitat)
-  suppressWarnings({raster::crs(habitat) <- "+init=EPSG:27700"})
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
+  terra::crs(habitat) <- "EPSG:27700"
   qt1 <- quadtree(habitat, .5)
   qt_proj <- expect_error(quadtree::projection(qt1), NA)
   expect_equal(qt_proj, terra::crs(terra::rast(habitat)))
@@ -166,7 +166,7 @@ test_that("projection() runs without errors and returns correct value", {
 })
 
 test_that("read_quadtree() and write_quadtree() work", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt1 <- quadtree(habitat, .3, "sd")
   filepath <- tempfile()
   expect_error(write_quadtree(filepath, qt1), NA)
@@ -197,7 +197,7 @@ test_that("read_quadtree() and write_quadtree() work", {
 })
 
 test_that("set_values() works", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- quadtree(habitat, .2)
   set.seed(10)
   ext <- extent(qt)
@@ -210,7 +210,7 @@ test_that("set_values() works", {
 })
 
 test_that("transform_values() works", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt1 <- quadtree(habitat, .1, split_method = "sd")
   qt2 <- copy(qt1)
 

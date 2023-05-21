@@ -19,7 +19,7 @@ test_that("find_lcp(<LcpFinder>) finds the correct path in a trivial example", {
 })
 
 test_that("lcp_finder() with search limits works as expected", {
-  data(habitat)
+  habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
   s_pt <- c(8488.439, 25842.65)
   e_pt1 <- c(14750.149, 27929.89)
@@ -67,7 +67,7 @@ test_that("lcp_finder() with search limits works as expected", {
 })
 
 test_that("find_lcp(<Quadtree>) works as expected", {
-  data(habitat)
+  habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
   
   s_pt <- c(2372, 29510)
   e_pt <- c(37654, 26400)
@@ -97,7 +97,7 @@ test_that("find_lcp(<Quadtree>) works as expected", {
 })
 
 test_that("lcp_finder(<LcpFinder>) treats same-cell paths appropriately", {
-  data(habitat)
+  habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
   
   pt <- c(2372, 29510)
   qt <- quadtree(habitat, .2)
@@ -112,7 +112,7 @@ test_that("lcp_finder(<LcpFinder>) treats same-cell paths appropriately", {
 })
 
 test_that("lcp_finder() with 'new_points' works as expected", {
-  data(habitat)
+  habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
   
   s_pt1 <- c(2309, 27669)
   s_pt2 <- c(2245, 26083)
@@ -135,7 +135,7 @@ test_that("lcp_finder() with 'new_points' works as expected", {
 })
 
 test_that("find_lcps() runs without errors", {
-  data(habitat)
+  habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
   start_point <- c(6989, 34007)
   end_point <- c(33015, 38162)
@@ -150,7 +150,7 @@ test_that("find_lcps() runs without errors", {
 })
 
 test_that("summarize_lcps() runs without errors and produces expected output", {
-  data(habitat)
+  habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- quadtree(habitat, .1, split_method = "sd")
   start_point <- c(19000, 27500)
   lcpf <- lcp_finder(qt, start_point)
@@ -160,7 +160,7 @@ test_that("summarize_lcps() runs without errors and produces expected output", {
 })
 
 test_that("summary(<LcpFinder>) runs without errors", {
-  data(habitat)
+  habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- quadtree(habitat, .1, split_method = "sd")
   start_point <- c(19000, 27500)
   lcpf <- lcp_finder(qt, start_point)
@@ -171,7 +171,7 @@ test_that("summary(<LcpFinder>) runs without errors", {
 test_that("find_lcps() finds the same paths as in previous runs", {
   # use summarize_lcps() to summarize all paths found by a 'LcpFinder', then
   # check the results against previous runs
-  data(habitat)
+  habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- quadtree(habitat, 0, split_method = "sd", min_cell_length = 1000)
   start_point <- c(3900, 27500)
   lcpf <- lcp_finder(qt, start_point)
@@ -185,8 +185,27 @@ test_that("find_lcp(<LcpFinder>) finds the same path as in previous runs", {
   # basically I'm just including this so I that I get alerted if the output
   # ever changes from what I'm getting right now - doesn't guarantee
   # its correctness, but is still useful to know
-
+  
+  ## previously used RasterLayer stored in .Rda
   data(habitat)
+  
+  ## no apparent issue with in mem conversion of RasterLayer -> SpatRaster
+  habitat <- terra::rast(habitat)
+  qt <- quadtree(habitat, .1)
+  start_point <- c(6989, 34007)
+  end_point <- c(33015, 38162)
+  
+  lcpf <- lcp_finder(qt, start_point)
+  lcp <- find_lcp(lcpf, end_point)
+  
+  lcp_old <- read.csv("lcps/qt_find_lcp_data-RasterLayer-data.csv")
+  expect_equal(lcp, as.matrix(lcp_old))
+  
+  ## But, now we are using GeoTIFF in inst/extdata
+  ##  -> floating point difference relative to old result (after writing TIFF)
+  ##     may be the cause of offset in cell_id column ranging from 4 to ...
+  ##     relative to old result important quantities seem to be nearly the same?
+  habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- quadtree(habitat, .1)
   start_point <- c(6989, 34007)
   end_point <- c(33015, 38162)

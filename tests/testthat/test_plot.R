@@ -1,7 +1,7 @@
 test_that("plot(<Quadtree>) output runs without errors and looks right for all parameter options", {
   # skip("these tests should be manually run and visually inspected")
-  # library(raster)
-  data(habitat)
+  # library(terra)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   rast <- habitat
   # create quadtree
   qt1 <- quadtree(rast, split_threshold = .1, adj_type = "expand")
@@ -35,7 +35,7 @@ test_that("plot(<Quadtree>) output runs without errors and looks right for all p
 })
 
 test_that("points(<LcpFinder>) and lines(<LcpFinder>) run without errors", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   
   s_pt <- c(8488.439, 25842.65)
   qt <- quadtree(habitat, .2)

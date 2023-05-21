@@ -33,7 +33,7 @@ Extracts the cell values and optionally the cell extents at the
 }
 \examples{
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 # create quadtree
 qt1 <- quadtree(habitat, split_threshold = .1, adj_type = "expand")

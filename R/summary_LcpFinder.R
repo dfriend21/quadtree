@@ -15,7 +15,7 @@
 #' @return no return value
 #' @examples
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' qt <- quadtree(habitat, .1)
 #'

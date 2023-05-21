@@ -9,7 +9,7 @@
 #' @return a string
 #' @examples
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' qt <- quadtree(habitat, .1)
 #' quadtree::projection(qt) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"

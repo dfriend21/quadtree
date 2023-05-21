@@ -26,7 +26,7 @@ as_wkt_list <- function(x) {
 #' @examplesIf all(sapply(c("sf"), function(x) !inherits(try(requireNamespace(x, quietly=TRUE), silent=TRUE), 'try-error')))
 #' @examples
 #' library(quadtree)
-#' habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #' 
 #' qt <- quadtree(habitat, .1)
 #' sf <- as(qt, "sf")

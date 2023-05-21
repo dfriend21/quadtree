@@ -29,9 +29,9 @@ This vignette goes over the process of finding least-cost paths (LCPs) using a q
 
 ```{r, message = FALSE, warning = FALSE}
 library(quadtree)
-library(raster)
+library(terra)
 
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 rast <- habitat
 qt <- quadtree(rast, .04, split_method = "sd")
 ```

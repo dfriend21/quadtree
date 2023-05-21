@@ -22,7 +22,7 @@ Returns the number of nodes/cells in the quadtree.
 }
 \examples{
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 qt <- quadtree(habitat, .1)
 n_cells(qt)

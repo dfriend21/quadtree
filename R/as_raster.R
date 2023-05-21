@@ -23,9 +23,8 @@
 #' the issue.
 #' @return a \code{\link[raster:RasterLayer-class]{RasterLayer}}
 #' @examples
-#' library(raster)
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' # create a quadtree
 #' qt <- quadtree(habitat, split_threshold = .1, split_method = "sd")
