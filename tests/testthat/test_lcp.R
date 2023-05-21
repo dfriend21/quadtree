@@ -203,9 +203,8 @@ test_that("find_lcp(<LcpFinder>) finds the same path as in previous runs", {
   
   ## But, now we are using GeoTIFF in inst/extdata
   ##  -> floating point difference relative to old result (after writing TIFF)
-  ##     may be the cause of offset in cell_id column ranging from 4 to ...
-  ##     relative to old result important quantities seem to be nearly the same?
   habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
+  
   qt <- quadtree(habitat, .1)
   start_point <- c(6989, 34007)
   end_point <- c(33015, 38162)
@@ -216,4 +215,9 @@ test_that("find_lcp(<LcpFinder>) finds the same path as in previous runs", {
   # write.csv(lcp,"lcps/qt_find_lcp_data.csv", row.names=FALSE)
   lcp_prev <- read.csv("lcps/qt_find_lcp_data.csv")
   expect_equal(lcp, as.matrix(lcp_prev))
+  
+  ## visually inspect path differences
+  # plot(terra::vect(lcp[,1:2]))
+  # plot(terra::vect(as.matrix(lcp_old[, 1:2])), add = TRUE, col = "blue")
+  # plot(terra::vect(as.matrix(lcp_prev[, 1:2])), add = TRUE, col = "red")
 })
