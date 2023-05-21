@@ -16,18 +16,20 @@ as_character(x)
 \item{x}{Quadtree object}
 }
 \value{
-an object of class \code{sf} or \code{SpatVector}, or a Well-Known Text (WKT)
-  \code{character} representation
+an object of class \code{sf} or \code{SpatVector}, or a Well-Known Text (WKT) \code{character} representation
 }
 \description{
 Convert to other R spatial objects
 }
 \examples{
+\dontshow{if (all(sapply(c("sf"), function(x) !inherits(try(requireNamespace(x, quietly=TRUE), silent=TRUE), 'try-error')))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
 library(quadtree)
-data(habitat)
+habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 qt <- quadtree(habitat, .1)
 sf <- as(qt, "sf")
-v <- as(qt, "SpatVector")
+sr <- as(qt, "SpatRaster")
+sv <- as(qt, "SpatVector")
 ch <- as(qt, "character")
 }
