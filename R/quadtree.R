@@ -3,13 +3,16 @@
 #' @name quadtree
 #' @aliases quadtree,ANY-method
 #' @title Create a \code{Quadtree} from a raster or matrix
-#' @description Creates a \code{\link{Quadtree}} from a
+#' @description Creates a \code{\link{Quadtree}} from a 
+#' \code{\link[terra:SpatRaster-class]{SpatRaster}},
 #' \code{\link[raster:RasterLayer-class]{RasterLayer}} or a matrix.
-#' @param x a \code{\link[raster:RasterLayer-class]{RasterLayer}} or a
+#' @param x a \code{\link[raster:RasterLayer-class]{RasterLayer}},
+#'   \code{\link[terra:SpatRaster-class]{SpatRaster}}, or
 #'   \code{matrix}. If \code{x} is a \code{matrix}, the \code{extent} and
 #'   \code{proj4string} parameters can be used to set the extent and projection
 #'   of the quadtree. If \code{x} is a
-#'   \code{\link[raster:RasterLayer-class]{RasterLayer}}, the extent and
+#'   \code{\link[raster:RasterLayer-class]{RasterLayer}} or
+#'   \code{\link[terra:SpatRaster-class]{SpatRaster}}, the extent and
 #'   projection are derived from the raster.
 #' @param split_threshold numeric; the threshold value used by the split method
 #'   (specified by \code{split_method}) to decide whether to split a quadrant.
@@ -193,8 +196,8 @@ setMethod("quadtree", signature(x = "ANY"),
     if (adj_type == "resample" && (!is.numeric(resample_n_side) || length(resample_n_side) != 1)) stop("'resample_n_side' must be an integer vector with length 1.")
     if (adj_type == "resample" && (!is.logical(resample_pad_nas) || length(resample_pad_nas) != 1)) stop("'resample_pad_nas' must be an logical vector with length 1.")
     if (!is.null(extent) && ((!inherits(extent, "Extent") && !is.numeric(extent)) || (is.numeric(extent) && length(extent) != 4))) stop("'extent' must either be an 'Extent' object or a numeric vector with 4 elements (xmin, xmax, ymin, ymax)")
-    if (!is.null(extent) && "RasterLayer" %in% (class(x))) warning("a value for 'extent' was provided, but it will be ignored since 'x' is a raster (the extent will be derived from the raster itself)")
-    if (!is.null(proj4string) && "RasterLayer" %in% (class(x))) warning("a value for 'proj4string' was provided, but it will be ignored since 'x' is a raster (the proj4string will be derived from the raster itself)")
+    if (!is.null(extent) && inherits(x, "SpatRaster")) warning("a value for 'extent' was provided, but it will be ignored since 'x' is a raster (the extent will be derived from the raster itself)")
+    if (!is.null(proj4string) && inherits(x, "SpatRaster")) warning("a value for 'proj4string' was provided, but it will be ignored since 'x' is a raster (the proj4string will be derived from the raster itself)")
     if (!is.null(template_quadtree) && !inherits(template_quadtree, "Quadtree")) stop("'template_quadtree' must be a 'Quadtree' object")
 
     if (is.null(max_cell_length)) max_cell_length <- -1 # if `max_cell_length` is not provided, set it to -1, which indicates no limit

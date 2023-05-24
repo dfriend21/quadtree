@@ -27,11 +27,13 @@
 )
 }
 \arguments{
-\item{x}{a \code{\link[raster:RasterLayer-class]{RasterLayer}} or a
+\item{x}{a \code{\link[raster:RasterLayer-class]{RasterLayer}},
+\code{\link[terra:SpatRaster-class]{SpatRaster}}, or
 \code{matrix}. If \code{x} is a \code{matrix}, the \code{extent} and
 \code{proj4string} parameters can be used to set the extent and projection
 of the quadtree. If \code{x} is a
-\code{\link[raster:RasterLayer-class]{RasterLayer}}, the extent and
+\code{\link[raster:RasterLayer-class]{RasterLayer}} or
+\code{\link[terra:SpatRaster-class]{SpatRaster}}, the extent and
 projection are derived from the raster.}
 
 \item{split_threshold}{numeric; the threshold value used by the split method
@@ -137,7 +139,8 @@ non-\code{NULL}, all \code{split_}* parameters are disregarded, as are
 a \code{\link{Quadtree}}
 }
 \description{
-Creates a \code{\link{Quadtree}} from a
+Creates a \code{\link{Quadtree}} from a 
+\code{\link[terra:SpatRaster-class]{SpatRaster}},
 \code{\link[raster:RasterLayer-class]{RasterLayer}} or a matrix.
 }
 \details{
