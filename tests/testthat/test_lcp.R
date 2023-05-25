@@ -185,24 +185,6 @@ test_that("find_lcp(<LcpFinder>) finds the same path as in previous runs", {
   # basically I'm just including this so I that I get alerted if the output
   # ever changes from what I'm getting right now - doesn't guarantee
   # its correctness, but is still useful to know
-  
-  ## previously used RasterLayer stored in .Rda
-  data(habitat)
-  
-  ## no apparent issue with in mem conversion of RasterLayer -> SpatRaster
-  habitat <- terra::rast(habitat)
-  qt <- quadtree(habitat, .1)
-  start_point <- c(6989, 34007)
-  end_point <- c(33015, 38162)
-  
-  lcpf <- lcp_finder(qt, start_point)
-  lcp <- find_lcp(lcpf, end_point)
-  
-  lcp_old <- read.csv("lcps/qt_find_lcp_data-RasterLayer-data.csv")
-  expect_equal(lcp, as.matrix(lcp_old))
-  
-  ## But, now we are using GeoTIFF in inst/extdata
-  ##  -> floating point difference relative to old result (after writing TIFF)
   habitat <- rast(system.file("extdata", "habitat.tif", package="quadtree"))
   
   qt <- quadtree(habitat, .1)
@@ -215,9 +197,4 @@ test_that("find_lcp(<LcpFinder>) finds the same path as in previous runs", {
   # write.csv(lcp,"lcps/qt_find_lcp_data.csv", row.names=FALSE)
   lcp_prev <- read.csv("lcps/qt_find_lcp_data.csv")
   expect_equal(lcp, as.matrix(lcp_prev))
-  
-  ## visually inspect path differences
-  # plot(terra::vect(lcp[,1:2]))
-  # plot(terra::vect(as.matrix(lcp_old[, 1:2])), add = TRUE, col = "blue")
-  # plot(terra::vect(as.matrix(lcp_prev[, 1:2])), add = TRUE, col = "red")
 })

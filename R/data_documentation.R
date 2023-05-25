@@ -3,18 +3,13 @@
 #' @docType data
 #' @title Sample raster data for the \code{quadtree} package
 #' @description
-#' \code{habitat} is a \code{\link[raster:RasterLayer-class]{RasterLayer}}
-#' containing habitat suitability values where each cell takes on a value
-#' between 0 and 1.
+#' \code{habitat.tif} is a raster containing habitat suitability values where each cell
+#' takes on a value between 0 and 1.
 #'
-#' \code{habitat_roads} is a \code{\link[raster:RasterLayer-class]{RasterLayer}}
-#' with the exact same footprint as \code{habitat}, but the values represent the
-#' presence/absence of roads in that cell. 1 indicates presence, while 0
-#' indicates absence.
-#' @usage
-#' data(habitat)
-#' data(habitat_roads)
-#' @format \code{\link[raster:RasterLayer-class]{RasterLayer}}
+#' \code{habitat_roads.tif} is a raster with the exact same footprint as 'habitat.tif',
+#' but the values represent the presence/absence of roads in that cell. 1 indicates
+#' presence, while 0 indicates absence.
+#' @format GeoTIFF
 #' @details
 #' These rasters are included for two reasons. First, they provide the datasets
 #' that are used for the code examples in the help files and the vignettes.
@@ -22,8 +17,8 @@
 #' when learning how to use the \code{quadtree} package.
 #' @examples
 #' library(quadtree)
-#' data(habitat)
-#' data(habitat_roads)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
+#' habitat_roads <- terra::rast(system.file("extdata", "habitat_roads.tif", package="quadtree"))
 #'
 #' old_par <- par(mfrow = c(1, 2))
 #' plot(habitat)

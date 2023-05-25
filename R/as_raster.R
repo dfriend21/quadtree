@@ -3,10 +3,11 @@
 #' @name as_raster
 #' @aliases as_raster,Quadtree-method
 #' @title Create a raster from a \code{Quadtree}
-#' @description Creates a \code{\link[raster:RasterLayer-class]{RasterLayer}}
+#' @description Creates a \code{\link[terra:SpatRaster-class]{SpatRaster}}
 #'   from a \code{\link{Quadtree}}.
 #' @param x a \code{\link{Quadtree}}
-#' @param rast a \code{\link[raster:RasterLayer-class]{RasterLayer}}; optional;
+#' @param rast a \code{\link[terra:SpatRaster-class]{SpatRaster}} or
+#'   \code{\link[raster:RasterLayer-class]{RasterLayer}}; optional;
 #'   this will be used as a template - the output raster will have the same
 #'   extent and dimensions as this raster. If \code{NULL} (the default), a
 #'   raster is automatically created, where the quadtree extent is used as the
@@ -21,7 +22,7 @@
 #' automatically determined from the quadtree in such a way that the cells are
 #' guaranteed to line up with the quadtree cells with no overlap, thus avoiding
 #' the issue.
-#' @return a \code{\link[raster:RasterLayer-class]{RasterLayer}}
+#' @return a \code{\link[raster:SpatRaster-class]{SpatRaster}}
 #' @examples
 #' library(quadtree)
 #' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
@@ -46,7 +47,7 @@ setMethod("as_raster", signature(x = "Quadtree"),
       # NB: init with vals= to avoid warning with an empty raster
       rast <- terra::rast(quadtree::extent(x), 
                           resolution = res, 
-                          crs = terra::crs(x))
+                          crs = projection(x))
     } else {
       if (inherits(rast, 'RasterLayer')) {
         rast <- terra::rast(rast)
