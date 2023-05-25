@@ -122,7 +122,7 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">habitat</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"habitat.tif"</span>, package<span class="op">=</span><span class="st">"quadtree"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, split_threshold <span class="op">=</span> <span class="fl">.1</span>, adj_type <span class="op">=</span> <span class="st">"expand"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -135,14 +135,14 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># retrieve ALL the paths that have been calculated</span></span></span>
 <span class="r-in"><span><span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu">summarize_lcps</span><span class="op">(</span><span class="va">lcpf</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">paths</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">paths</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     id  xmin  xmax  ymin  ymax value  area lcp_cost lcp_dist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 6352 14500 14750 15750 16000 0.966 62500 8481.750 13471.78</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 6353 14750 15000 15750 16000 0.863 62500 8468.178 13471.78</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 3986  3750  4000 18500 18750 0.780 62500 8223.767 18223.11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 3984  3750  4000 18750 19000 0.557 62500 8108.320 17889.65</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 3978  3750  4000 19000 19250 0.582 62500 8025.839 17734.64</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 3976  3750  4000 19250 19500 0.626 62500 7980.157 17643.15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 6364 14500 14750 15750 16000 0.966 62500 8481.750 13471.78</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 6365 14750 15000 15750 16000 0.863 62500 8468.179 13471.78</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 3994  3750  4000 18500 18750 0.780 62500 8223.767 18223.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 3992  3750  4000 18750 19000 0.557 62500 8108.320 17889.65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 3986  3750  4000 19000 19250 0.582 62500 8025.839 17734.64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 3984  3750  4000 19250 19500 0.626 62500 7980.157 17643.15</span>
 </code></pre></div>
     </div>
   </div>

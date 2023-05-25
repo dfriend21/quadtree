@@ -88,7 +88,7 @@ minimum and maximum values
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for Quadtree</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for Quadtree</span></span>
 <span><span class="fu">show</span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span></code></pre></div>
@@ -110,15 +110,50 @@ minimum and maximum values
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">habitat</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"habitat.tif"</span>, package<span class="op">=</span><span class="st">"quadtree"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, <span class="fl">.1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class         : Quadtree</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> # of cells    : 5902</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # of cells    : 5911</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> min cell size : 250</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> crs           : NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> crs           : PROJCRS["unknown",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     BASEGEOGCRS["unknown",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         DATUM["Unknown based on Airy 1830 ellipsoid",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ELLIPSOID["Airy 1830",6377563.396,299.3249646,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 LENGTHUNIT["metre",1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     ID["EPSG",9001]]]],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         PRIMEM["Greenwich",0,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ANGLEUNIT["degree",0.0174532925199433,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 ID["EPSG",9122]]]],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     CONVERSION["Transverse Mercator",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         METHOD["Transverse Mercator",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ID["EPSG",9807]],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         PARAMETER["Latitude of natural origin",49,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ANGLEUNIT["degree",0.0174532925199433],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ID["EPSG",8801]],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         PARAMETER["Longitude of natural origin",-2,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ANGLEUNIT["degree",0.0174532925199433],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ID["EPSG",8802]],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         PARAMETER["Scale factor at natural origin",0.9996012717,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             SCALEUNIT["unity",1],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ID["EPSG",8805]],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         PARAMETER["False easting",400000,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             LENGTHUNIT["metre",1],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ID["EPSG",8806]],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         PARAMETER["False northing",-100000,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             LENGTHUNIT["metre",1],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ID["EPSG",8807]]],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     CS[Cartesian,2],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         AXIS["easting",east,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ORDER[1],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             LENGTHUNIT["metre",1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 ID["EPSG",9001]]],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         AXIS["northing",north,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ORDER[2],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             LENGTHUNIT["metre",1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 ID["EPSG",9001]]]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> values        : 0.107, 0.974 (min, max)</span>
 </code></pre></div>
     </div>
