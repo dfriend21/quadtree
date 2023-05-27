@@ -38,7 +38,7 @@ Note that this function returns \strong{all} of the paths that have
 }
 \examples{
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 

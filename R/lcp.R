@@ -65,7 +65,7 @@
 #'
 #' library(quadtree)
 #'
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #' qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 #'
 #' # find the LCP between two points
@@ -227,7 +227,7 @@ setMethod("find_lcp", signature(x = "Quadtree"),
 #' ####################
 #'
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' # create a quadtree
 #' qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
@@ -302,7 +302,7 @@ setMethod("find_lcp", signature(x = "LcpFinder"),
 #' ####################
 #'
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 #'
@@ -366,7 +366,7 @@ setMethod("find_lcps", signature(x = "LcpFinder"),
 #'   calculates all LCPs whose cost-distance is less than some value.
 #' @examples
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 #'

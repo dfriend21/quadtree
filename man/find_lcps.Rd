@@ -50,7 +50,7 @@ Once the LCPs have been calculated, \code{\link{find_lcp}()} can be
 ####################
 
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 

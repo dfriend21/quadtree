@@ -91,7 +91,7 @@
                         <h4 data-toc-skip class="author">Derek
 Friend</h4>
             
-            <h4 data-toc-skip class="date">Last compiled on May 13,
+            <h4 data-toc-skip class="date">Last compiled on May 24,
 2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/HEAD/vignettes/quadtree-usage.Rmd" class="external-link"><code>vignettes/quadtree-usage.Rmd</code></a></small>
@@ -108,10 +108,10 @@ Friend</h4>
 object after it has been created - for example, extracting values and
 modifying values.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster" class="external-link">raster</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span>
+<span><span class="va">habitat</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"habitat.tif"</span>, package<span class="op">=</span><span class="st">"quadtree"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">rast</span> <span class="op">&lt;-</span> <span class="va">habitat</span></span>
 <span></span>
 <span><span class="va">qt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">rast</span>, <span class="fl">.15</span><span class="op">)</span></span></code></pre></div>
@@ -125,14 +125,49 @@ modifying values.</p>
 <h3 id="getting-a-summary-of-a-quadtree">Getting a summary of a quadtree<a class="anchor" aria-label="anchor" href="#getting-a-summary-of-a-quadtree"></a>
 </h3>
 <p>A basic summary of a quadtree can be shown by just typing the
-variable name or using the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function:</p>
+variable name or using the <code><a href="https://rdrr.io/pkg/terra/man/summary.html" class="external-link">summary()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qt</span></span>
 <span><span class="co">#&gt; class         : Quadtree</span></span>
-<span><span class="co">#&gt; # of cells    : 4210</span></span>
+<span><span class="co">#&gt; # of cells    : 4189</span></span>
 <span><span class="co">#&gt; min cell size : 250</span></span>
 <span><span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">#&gt; crs           : NA</span></span>
+<span><span class="co">#&gt; crs           : PROJCRS["unknown",</span></span>
+<span><span class="co">#&gt;     BASEGEOGCRS["unknown",</span></span>
+<span><span class="co">#&gt;         DATUM["Unknown based on Airy 1830 ellipsoid",</span></span>
+<span><span class="co">#&gt;             ELLIPSOID["Airy 1830",6377563.396,299.3249646,</span></span>
+<span><span class="co">#&gt;                 LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                     ID["EPSG",9001]]]],</span></span>
+<span><span class="co">#&gt;         PRIMEM["Greenwich",0,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9122]]]],</span></span>
+<span><span class="co">#&gt;     CONVERSION["Transverse Mercator",</span></span>
+<span><span class="co">#&gt;         METHOD["Transverse Mercator",</span></span>
+<span><span class="co">#&gt;             ID["EPSG",9807]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Latitude of natural origin",49,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8801]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Longitude of natural origin",-2,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8802]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Scale factor at natural origin",0.9996012717,</span></span>
+<span><span class="co">#&gt;             SCALEUNIT["unity",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8805]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["False easting",400000,</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8806]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["False northing",-100000,</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8807]]],</span></span>
+<span><span class="co">#&gt;     CS[Cartesian,2],</span></span>
+<span><span class="co">#&gt;         AXIS["easting",east,</span></span>
+<span><span class="co">#&gt;             ORDER[1],</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9001]]],</span></span>
+<span><span class="co">#&gt;         AXIS["northing",north,</span></span>
+<span><span class="co">#&gt;             ORDER[2],</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9001]]]]</span></span>
 <span><span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -143,7 +178,7 @@ of the <code>Quadtree</code>. In this case there is no projection, so an
 empty string is returned.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/projection.html">projection</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] ""</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "PROJCRS[\"unknown\",\n    BASEGEOGCRS[\"unknown\",\n        DATUM[\"Unknown based on Airy 1830 ellipsoid\",\n            ELLIPSOID[\"Airy 1830\",6377563.396,299.3249646,\n                LENGTHUNIT[\"metre\",1,\n                    ID[\"EPSG\",9001]]]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433,\n                ID[\"EPSG\",9122]]]],\n    CONVERSION[\"Transverse Mercator\",\n        METHOD[\"Transverse Mercator\",\n            ID[\"EPSG\",9807]],\n        PARAMETER[\"Latitude of natural origin\",49,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8801]],\n        PARAMETER[\"Longitude of natural origin\",-2,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8802]],\n        PARAMETER[\"Scale factor at natural origin\",0.9996012717,\n            SCALEUNIT[\"unity\",1],\n            ID[\"EPSG\",8805]],\n        PARAMETER[\"False easting\",400000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8806]],\n        PARAMETER[\"False northing\",-100000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8807]]],\n    CS[Cartesian,2],\n        AXIS[\"easting\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1,\n                ID[\"EPSG\",9001]]],\n        AXIS[\"northing\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1,\n                ID[\"EPSG\",9001]]]]"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="getting-the-number-of-cells-in-a-quadtree">Getting the number of cells in a quadtree<a class="anchor" aria-label="anchor" href="#getting-the-number-of-cells-in-a-quadtree"></a>
@@ -155,9 +190,9 @@ It has one optional parameter, <code>terminal_only</code> - if
 number of nodes in the quadtree is returned.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/n_cells.html">n_cells</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4210</span></span>
+<span><span class="co">#&gt; [1] 4189</span></span>
 <span><span class="fu"><a href="../reference/n_cells.html">n_cells</a></span><span class="op">(</span><span class="va">qt</span>, terminal_only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5613</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 5585</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="getting-the-extent-of-a-quadtree">Getting the extent of a quadtree<a class="anchor" aria-label="anchor" href="#getting-the-extent-of-a-quadtree"></a>
@@ -172,17 +207,9 @@ rows/columns were added to pad the dimensions. You may need to preface
 with the <code>raster</code> package.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extent.html">extent</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
-<span><span class="co">#&gt; class      : Extent </span></span>
-<span><span class="co">#&gt; xmin       : 0 </span></span>
-<span><span class="co">#&gt; xmax       : 64000 </span></span>
-<span><span class="co">#&gt; ymin       : 0 </span></span>
-<span><span class="co">#&gt; ymax       : 64000</span></span>
+<span><span class="co">#&gt; SpatExtent : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extent.html">extent</a></span><span class="op">(</span><span class="va">qt</span>, original <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; class      : Extent </span></span>
-<span><span class="co">#&gt; xmin       : 0 </span></span>
-<span><span class="co">#&gt; xmax       : 40250 </span></span>
-<span><span class="co">#&gt; ymin       : 0 </span></span>
-<span><span class="co">#&gt; ymax       : 44500</span></span></code></pre></div>
+<span><span class="co">#&gt; SpatExtent : 0, 40250, 0, 44500 (xmin, xmax, ymin, ymax)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -203,18 +230,18 @@ cell in addition to the cell value.</p>
 <span>             y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10835</span>, <span class="fl">29586</span>, <span class="fl">31836</span>, <span class="fl">10834</span>, <span class="fl">36337</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span>, na_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">pts</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/lines.html" class="external-link">points</a></span><span class="op">(</span><span class="va">pts</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-usage_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">pts</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1]       NaN 0.1451094 0.8202500 0.9556426 0.6800000</span></span>
 <span><span class="fu">quadtree</span><span class="fu">::</span><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">qt</span>, <span class="va">pts</span>, extents <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        id  xmin  xmax  ymin  ymax     value</span></span>
-<span><span class="co">#&gt; [1,] 4339     0  8000  8000 16000       NaN</span></span>
-<span><span class="co">#&gt; [2,] 1826  2000  4000 28000 30000 0.1451094</span></span>
-<span><span class="co">#&gt; [3,] 3394 20000 21000 31000 32000 0.8202500</span></span>
-<span><span class="co">#&gt; [4,] 4569 24000 32000  8000 16000 0.9556426</span></span>
-<span><span class="co">#&gt; [5,] 1567 32500 33000 36000 36500 0.6800000</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 4315     0  8000  8000 16000       NaN</span></span>
+<span><span class="co">#&gt; [2,] 1814  2000  4000 28000 30000 0.1451094</span></span>
+<span><span class="co">#&gt; [3,] 3378 20000 21000 31000 32000 0.8202500</span></span>
+<span><span class="co">#&gt; [4,] 4545 24000 32000  8000 16000 0.9556426</span></span>
+<span><span class="co">#&gt; [5,] 1555 32500 33000 36000 36500 0.6800000</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="retrieving-neighbor-relationships">Retrieving neighbor relationships<a class="anchor" aria-label="anchor" href="#retrieving-neighbor-relationships"></a>
@@ -229,14 +256,14 @@ neighbors.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_neighbors.html">get_neighbors</a></span><span class="op">(</span><span class="va">qt</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">pts</span><span class="op">[</span><span class="fl">3</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        id  xmin  xmax  ymin  ymax     value</span></span>
-<span><span class="co">#&gt; [1,]  975 19500 20000 32000 32500 0.8557500</span></span>
-<span><span class="co">#&gt; [2,] 1047 21000 22000 32000 33000 0.7893750</span></span>
-<span><span class="co">#&gt; [3,] 1046 20000 21000 32000 33000 0.8236875</span></span>
-<span><span class="co">#&gt; [4,] 3295 19000 20000 31000 32000 0.9098125</span></span>
-<span><span class="co">#&gt; [5,] 3301 19000 20000 30000 31000 0.9466250</span></span>
-<span><span class="co">#&gt; [6,] 3396 20000 21000 30000 31000 0.8688750</span></span>
-<span><span class="co">#&gt; [7,] 3395 21000 22000 31000 32000 0.8061875</span></span>
-<span><span class="co">#&gt; [8,] 3397 21000 22000 30000 31000 0.8125625</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,]  967 19500 20000 32000 32500 0.8557500</span></span>
+<span><span class="co">#&gt; [2,] 1038 20000 21000 32000 33000 0.8236875</span></span>
+<span><span class="co">#&gt; [3,] 1039 21000 22000 32000 33000 0.7893750</span></span>
+<span><span class="co">#&gt; [4,] 3279 19000 20000 31000 32000 0.9098125</span></span>
+<span><span class="co">#&gt; [5,] 3285 19000 20000 30000 31000 0.9466250</span></span>
+<span><span class="co">#&gt; [6,] 3380 20000 21000 30000 31000 0.8688750</span></span>
+<span><span class="co">#&gt; [7,] 3379 21000 22000 31000 32000 0.8061875</span></span>
+<span><span class="co">#&gt; [8,] 3381 21000 22000 30000 31000 0.8125625</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -266,17 +293,87 @@ changes to a quadtree without modifying the original.</p>
 <code class="sourceCode R"><span><span class="va">qt_copy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
 <span><span class="va">qt</span></span>
 <span><span class="co">#&gt; class         : Quadtree</span></span>
-<span><span class="co">#&gt; # of cells    : 4210</span></span>
+<span><span class="co">#&gt; # of cells    : 4189</span></span>
 <span><span class="co">#&gt; min cell size : 250</span></span>
 <span><span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">#&gt; crs           : NA</span></span>
+<span><span class="co">#&gt; crs           : PROJCRS["unknown",</span></span>
+<span><span class="co">#&gt;     BASEGEOGCRS["unknown",</span></span>
+<span><span class="co">#&gt;         DATUM["Unknown based on Airy 1830 ellipsoid",</span></span>
+<span><span class="co">#&gt;             ELLIPSOID["Airy 1830",6377563.396,299.3249646,</span></span>
+<span><span class="co">#&gt;                 LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                     ID["EPSG",9001]]]],</span></span>
+<span><span class="co">#&gt;         PRIMEM["Greenwich",0,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9122]]]],</span></span>
+<span><span class="co">#&gt;     CONVERSION["Transverse Mercator",</span></span>
+<span><span class="co">#&gt;         METHOD["Transverse Mercator",</span></span>
+<span><span class="co">#&gt;             ID["EPSG",9807]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Latitude of natural origin",49,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8801]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Longitude of natural origin",-2,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8802]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Scale factor at natural origin",0.9996012717,</span></span>
+<span><span class="co">#&gt;             SCALEUNIT["unity",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8805]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["False easting",400000,</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8806]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["False northing",-100000,</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8807]]],</span></span>
+<span><span class="co">#&gt;     CS[Cartesian,2],</span></span>
+<span><span class="co">#&gt;         AXIS["easting",east,</span></span>
+<span><span class="co">#&gt;             ORDER[1],</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9001]]],</span></span>
+<span><span class="co">#&gt;         AXIS["northing",north,</span></span>
+<span><span class="co">#&gt;             ORDER[2],</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9001]]]]</span></span>
 <span><span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></span>
 <span><span class="va">qt_copy</span></span>
 <span><span class="co">#&gt; class         : Quadtree</span></span>
-<span><span class="co">#&gt; # of cells    : 4210</span></span>
+<span><span class="co">#&gt; # of cells    : 4189</span></span>
 <span><span class="co">#&gt; min cell size : 250</span></span>
 <span><span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">#&gt; crs           : NA</span></span>
+<span><span class="co">#&gt; crs           : PROJCRS["unknown",</span></span>
+<span><span class="co">#&gt;     BASEGEOGCRS["unknown",</span></span>
+<span><span class="co">#&gt;         DATUM["Unknown based on Airy 1830 ellipsoid",</span></span>
+<span><span class="co">#&gt;             ELLIPSOID["Airy 1830",6377563.396,299.3249646,</span></span>
+<span><span class="co">#&gt;                 LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                     ID["EPSG",9001]]]],</span></span>
+<span><span class="co">#&gt;         PRIMEM["Greenwich",0,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9122]]]],</span></span>
+<span><span class="co">#&gt;     CONVERSION["Transverse Mercator",</span></span>
+<span><span class="co">#&gt;         METHOD["Transverse Mercator",</span></span>
+<span><span class="co">#&gt;             ID["EPSG",9807]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Latitude of natural origin",49,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8801]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Longitude of natural origin",-2,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8802]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Scale factor at natural origin",0.9996012717,</span></span>
+<span><span class="co">#&gt;             SCALEUNIT["unity",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8805]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["False easting",400000,</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8806]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["False northing",-100000,</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8807]]],</span></span>
+<span><span class="co">#&gt;     CS[Cartesian,2],</span></span>
+<span><span class="co">#&gt;         AXIS["easting",east,</span></span>
+<span><span class="co">#&gt;             ORDER[1],</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9001]]],</span></span>
+<span><span class="co">#&gt;         AXIS["northing",north,</span></span>
+<span><span class="co">#&gt;             ORDER[2],</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9001]]]]</span></span>
 <span><span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></span></code></pre></div>
 <p>In the next section (“Modifying cell values”), this function is used
 in the examples to create copies of a quadtree before modifying it so
@@ -296,7 +393,7 @@ only the values of the <em>terminal cells</em> that the point falls in
 are changed.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qt2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy.html">copy</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/set_values.html">set_values</a></span><span class="op">(</span><span class="va">qt2</span>, <span class="va">pts</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pts</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/set_values.html">set_values</a></span><span class="op">(</span><span class="va">qt2</span>, <span class="va">pts</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pts</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">qt2</span>, crop <span class="op">=</span> <span class="cn">TRUE</span>, border_lwd <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-usage_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 </div>
@@ -332,7 +429,7 @@ error.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">qt_temp</span>, file <span class="op">=</span> <span class="va">filepath</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span></span>
 <span><span class="va">qt_temp</span></span>
-<span><span class="co">#&gt; Error in (function (cond) : error in evaluating the argument 'x' in selecting a method for function 'extent': external pointer is not valid</span></span></code></pre></div>
+<span><span class="co">#&gt; Error in (function (cond) : error in evaluating the argument 'x' in selecting a method for function 'ext': external pointer is not valid</span></span></code></pre></div>
 <p>The <code>quadtree</code> package provides read and write
 functionality via the <code>cereal</code> C++ library, which is used to
 serialize C++ objects. <code><a href="../reference/read_quadtree.html">read_quadtree()</a></code> and
@@ -344,10 +441,45 @@ serialize C++ objects. <code><a href="../reference/read_quadtree.html">read_quad
 <span><span class="va">qt_read</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_quadtree.html">read_quadtree</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span></span>
 <span><span class="va">qt_read</span></span>
 <span><span class="co">#&gt; class         : Quadtree</span></span>
-<span><span class="co">#&gt; # of cells    : 4210</span></span>
+<span><span class="co">#&gt; # of cells    : 4189</span></span>
 <span><span class="co">#&gt; min cell size : 250</span></span>
 <span><span class="co">#&gt; extent        : 0, 64000, 0, 64000 (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">#&gt; crs           : NA</span></span>
+<span><span class="co">#&gt; crs           : PROJCRS["unknown",</span></span>
+<span><span class="co">#&gt;     BASEGEOGCRS["unknown",</span></span>
+<span><span class="co">#&gt;         DATUM["Unknown based on Airy 1830 ellipsoid",</span></span>
+<span><span class="co">#&gt;             ELLIPSOID["Airy 1830",6377563.396,299.3249646,</span></span>
+<span><span class="co">#&gt;                 LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                     ID["EPSG",9001]]]],</span></span>
+<span><span class="co">#&gt;         PRIMEM["Greenwich",0,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9122]]]],</span></span>
+<span><span class="co">#&gt;     CONVERSION["Transverse Mercator",</span></span>
+<span><span class="co">#&gt;         METHOD["Transverse Mercator",</span></span>
+<span><span class="co">#&gt;             ID["EPSG",9807]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Latitude of natural origin",49,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8801]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Longitude of natural origin",-2,</span></span>
+<span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8802]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["Scale factor at natural origin",0.9996012717,</span></span>
+<span><span class="co">#&gt;             SCALEUNIT["unity",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8805]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["False easting",400000,</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8806]],</span></span>
+<span><span class="co">#&gt;         PARAMETER["False northing",-100000,</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1],</span></span>
+<span><span class="co">#&gt;             ID["EPSG",8807]]],</span></span>
+<span><span class="co">#&gt;     CS[Cartesian,2],</span></span>
+<span><span class="co">#&gt;         AXIS["easting",east,</span></span>
+<span><span class="co">#&gt;             ORDER[1],</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9001]]],</span></span>
+<span><span class="co">#&gt;         AXIS["northing",north,</span></span>
+<span><span class="co">#&gt;             ORDER[2],</span></span>
+<span><span class="co">#&gt;             LENGTHUNIT["metre",1,</span></span>
+<span><span class="co">#&gt;                 ID["EPSG",9001]]]]</span></span>
 <span><span class="co">#&gt; values        : 0.109, 0.974 (min, max)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -366,17 +498,17 @@ those with children) are returned.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vec1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_vector.html">as_vector</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">vec1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4210</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">vec1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4189</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">vec1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span></span>
-<span><span class="co">#&gt;  0.1090  0.4850  0.6275  0.6363  0.8139  0.9740     832</span></span>
+<span><span class="co">#&gt;  0.1090  0.4843  0.6279  0.6364  0.8142  0.9740     832</span></span>
 <span></span>
 <span><span class="va">vec2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_vector.html">as_vector</a></span><span class="op">(</span><span class="va">qt</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">vec2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5613</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">vec2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 5585</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">vec2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span></span>
-<span><span class="co">#&gt;  0.1090  0.4917  0.6323  0.6446  0.8312  0.9740     832</span></span></code></pre></div>
+<span><span class="co">#&gt;  0.1090  0.4910  0.6330  0.6447  0.8320  0.9740     832</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="convert-to-a-data-frame">Convert to a data frame<a class="anchor" aria-label="anchor" href="#convert-to-a-data-frame"></a>
@@ -392,8 +524,8 @@ and when <code>FALSE</code>, all cells are returned.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_data_frame.html">as_data_frame</a></span><span class="op">(</span><span class="va">qt</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">df1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4210   10</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4189   10</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    id hasChildren level  xmin  xmax  ymin  ymax value smallestChildLength</span></span>
 <span><span class="co">#&gt; 3   2           0     2     0 16000 48000 64000   NaN               16000</span></span>
 <span><span class="co">#&gt; 4   3           0     2 16000 32000 48000 64000   NaN               16000</span></span>
@@ -411,8 +543,8 @@ and when <code>FALSE</code>, all cells are returned.</p>
 <span></span>
 <span><span class="va">df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_data_frame.html">as_data_frame</a></span><span class="op">(</span><span class="va">qt</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">df2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5613   10</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 5585   10</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   id hasChildren level  xmin  xmax  ymin  ymax     value smallestChildLength</span></span>
 <span><span class="co">#&gt; 1  0           1     0     0 64000     0 64000 0.7559473                 250</span></span>
 <span><span class="co">#&gt; 2  1           1     1     0 32000 32000 64000 0.7309282                 250</span></span>

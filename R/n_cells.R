@@ -11,7 +11,7 @@
 #' @return a numeric
 #' @examples
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' qt <- quadtree(habitat, .1)
 #' n_cells(qt)

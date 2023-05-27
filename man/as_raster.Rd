@@ -10,7 +10,8 @@
 \arguments{
 \item{x}{a \code{\link{Quadtree}}}
 
-\item{rast}{a \code{\link[raster:RasterLayer-class]{RasterLayer}}; optional;
+\item{rast}{a \code{\link[terra:SpatRaster-class]{SpatRaster}} or
+\code{\link[raster:RasterLayer-class]{RasterLayer}}; optional;
 this will be used as a template - the output raster will have the same
 extent and dimensions as this raster. If \code{NULL} (the default), a
 raster is automatically created, where the quadtree extent is used as the
@@ -18,10 +19,10 @@ raster extent, and the size of smallest cell in the quadtree is used as
 the resolution of the raster.}
 }
 \value{
-a \code{\link[raster:RasterLayer-class]{RasterLayer}}
+a \code{\link[raster:SpatRaster-class]{SpatRaster}}
 }
 \description{
-Creates a \code{\link[raster:RasterLayer-class]{RasterLayer}}
+Creates a \code{\link[terra:SpatRaster-class]{SpatRaster}}
   from a \code{\link{Quadtree}}.
 }
 \details{
@@ -35,9 +36,8 @@ guaranteed to line up with the quadtree cells with no overlap, thus avoiding
 the issue.
 }
 \examples{
-library(raster)
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 # create a quadtree
 qt <- quadtree(habitat, split_threshold = .1, split_method = "sd")

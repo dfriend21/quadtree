@@ -6,14 +6,15 @@ test_that("we can create a quadtree from a matrix", {
 
 test_that("we can create a quadtree from a raster", {
   mat <- matrix(runif(16), 4)
-  rast <- raster::raster(mat)
+  rast <- terra::rast(mat)
   qt <- expect_error(quadtree(rast, .2), NA)
   expect_s4_class(qt, "Quadtree")
 })
 
 test_that("quadtree creation with templates works", {
-  data(habitat)
-  data(habitat_roads)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
+  habitat_roads <- terra::rast(system.file("extdata", "habitat_roads.tif", package="quadtree"))
+
   qt1 <- expect_error(quadtree(habitat_roads, .1), NA)
   qt2 <- expect_error(quadtree(habitat, template_quadtree = qt1), NA)
 
@@ -28,18 +29,19 @@ test_that("quadtree creation with templates works", {
 })
 
 test_that("summary(<Quadtree>) runs without errors", {
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
   qt <- quadtree(habitat, .1, split_method = "sd")
   expect_output(summary(qt))
 })
 
 test_that("'quadtree()' runs without errors for all parameter settings", {
-  # library(raster)
+  # library(terra)
 
   # retrieve the sample data
-  data(habitat)
+  habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
+  
   # make the raster smaller so the output files are smaller
-  rast <- raster::aggregate(habitat, 6)
+  rast <- terra::aggregate(habitat, 6, na.rm = TRUE)
 
   qts <- list()
   qts[[1]] <- expect_error(quadtree(rast, .3), NA)
@@ -88,8 +90,9 @@ test_that("'quadtree()' runs without errors for all parameter settings", {
   }
   qts[[20]] <- expect_error(quadtree(rast, .1, combine_method = "custom", combine_fun = cmb_fun2), NA)
   #----
-  data(habitat_roads)
-  template <- raster::aggregate(habitat_roads, 6)
+  
+  habitat_roads <- terra::rast(system.file("extdata", "habitat_roads.tif", package="quadtree"))
+  template <- terra::aggregate(habitat_roads, 6, na.rm = TRUE)
   split_if_road <- function(vals, args) {
     if (any(vals > 0, na.rm = TRUE)) return(TRUE)
     return(FALSE)

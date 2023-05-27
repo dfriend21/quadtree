@@ -3,13 +3,16 @@
 #' @name quadtree
 #' @aliases quadtree,ANY-method
 #' @title Create a \code{Quadtree} from a raster or matrix
-#' @description Creates a \code{\link{Quadtree}} from a
+#' @description Creates a \code{\link{Quadtree}} from a 
+#' \code{\link[terra:SpatRaster-class]{SpatRaster}},
 #' \code{\link[raster:RasterLayer-class]{RasterLayer}} or a matrix.
-#' @param x a \code{\link[raster:RasterLayer-class]{RasterLayer}} or a
+#' @param x a \code{\link[raster:RasterLayer-class]{RasterLayer}},
+#'   \code{\link[terra:SpatRaster-class]{SpatRaster}}, or
 #'   \code{matrix}. If \code{x} is a \code{matrix}, the \code{extent} and
 #'   \code{proj4string} parameters can be used to set the extent and projection
 #'   of the quadtree. If \code{x} is a
-#'   \code{\link[raster:RasterLayer-class]{RasterLayer}}, the extent and
+#'   \code{\link[raster:RasterLayer-class]{RasterLayer}} or
+#'   \code{\link[terra:SpatRaster-class]{SpatRaster}}, the extent and
 #'   projection are derived from the raster.
 #' @param split_threshold numeric; the threshold value used by the split method
 #'   (specified by \code{split_method}) to decide whether to split a quadrant.
@@ -125,7 +128,7 @@
 #' ####################
 #'
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' qt <- quadtree(habitat, .15)
 #' plot(qt)
@@ -160,8 +163,8 @@ setMethod("quadtree", signature(x = "ANY"),
            proj4string = NULL, template_quadtree = NULL) {
     # validate inputs - this may be over the top, but many of these values get passed to C++ functionality, and if they're the wrong type the errors that are thrown are totally unhelpful - by type-checking them right away, I can provide easy-to-interpret error messages rather than messages that provide zero help
     # also, this is a complex function with a ton of options, and this function is basically the entryway into the entire package, so I want the errors to clearly point the user to the problem
-    if (inherits(x, 'SpatRaster')) x <- raster::raster(x)
-    if (!inherits(x, c("matrix", "RasterLayer"))) stop(paste0('"x" must be a "matrix" or "RasterLayer" - an object of class "', paste(class(x), collapse = '" "'), '" was provided instead'))
+    if (inherits(x, 'RasterLayer')) x <- terra::rast(x)
+    if (!inherits(x, c("matrix", "SpatRaster"))) stop(paste0('"x" must be a "matrix" or "SpatRaster" - an object of class "', paste(class(x), collapse = '" "'), '" was provided instead'))
     if (is.null(template_quadtree) && split_method != "custom" && ((!is.numeric(split_threshold) && !is.null(split_threshold)) || length(split_threshold) != 1)) stop(paste0("'split_threshold' must be a 'numeric' vector of length 1"))
     if (!is.function(split_fun) && !is.null(split_fun)) stop(paste0("'split_fun' must be a function"))
     if (!is.list(split_args) && !is.null(split_args)) stop(paste0("'split_args' must be a list"))
@@ -193,8 +196,8 @@ setMethod("quadtree", signature(x = "ANY"),
     if (adj_type == "resample" && (!is.numeric(resample_n_side) || length(resample_n_side) != 1)) stop("'resample_n_side' must be an integer vector with length 1.")
     if (adj_type == "resample" && (!is.logical(resample_pad_nas) || length(resample_pad_nas) != 1)) stop("'resample_pad_nas' must be an logical vector with length 1.")
     if (!is.null(extent) && ((!inherits(extent, "Extent") && !is.numeric(extent)) || (is.numeric(extent) && length(extent) != 4))) stop("'extent' must either be an 'Extent' object or a numeric vector with 4 elements (xmin, xmax, ymin, ymax)")
-    if (!is.null(extent) && "RasterLayer" %in% (class(x))) warning("a value for 'extent' was provided, but it will be ignored since 'x' is a raster (the extent will be derived from the raster itself)")
-    if (!is.null(proj4string) && "RasterLayer" %in% (class(x))) warning("a value for 'proj4string' was provided, but it will be ignored since 'x' is a raster (the proj4string will be derived from the raster itself)")
+    if (!is.null(extent) && inherits(x, "SpatRaster")) warning("a value for 'extent' was provided, but it will be ignored since 'x' is a raster (the extent will be derived from the raster itself)")
+    if (!is.null(proj4string) && inherits(x, "SpatRaster")) warning("a value for 'proj4string' was provided, but it will be ignored since 'x' is a raster (the proj4string will be derived from the raster itself)")
     if (!is.null(template_quadtree) && !inherits(template_quadtree, "Quadtree")) stop("'template_quadtree' must be a 'Quadtree' object")
 
     if (is.null(max_cell_length)) max_cell_length <- -1 # if `max_cell_length` is not provided, set it to -1, which indicates no limit
@@ -203,62 +206,64 @@ setMethod("quadtree", signature(x = "ANY"),
     if (is.matrix(x)) { # if x is a matrix, convert it to a raster
       if (is.null(extent)) {
         if (is.null(template_quadtree)) {
-          extent <- raster::extent(0, ncol(x), 0, nrow(x))
+          extent <- terra::ext(0, ncol(x), 0, nrow(x))
         } else {
-          extent <- extent(template_quadtree)
+          extent <- quadtree::extent(template_quadtree)
         }
       }
-      proj4string <- tryCatch(raster::crs(proj4string), error = function(cond) { # if the proj4string is invalid, use an empty string for 'proj4string'
+      proj4string <- tryCatch(terra::crs(proj4string), error = function(cond) { 
+        # if the proj4string is invalid, use an empty string for 'proj4string'
         message("warning in 'quadtree()': invalid 'proj4string' provided - no projection will be assigned")
-        return(raster::crs(""))
+        return(terra::crs(""))
       })
-      x <- raster::raster(x, extent[1], extent[2], extent[3], extent[4], crs = proj4string)
+      
+      x <- terra::rast(x, extent = terra::ext(extent), crs = proj4string)
     }
 
-    ext <- raster::extent(x)
+    ext <- terra::ext(x)
     dim <- c(ncol(x), nrow(x))
 
     # if adj_type is either "expand" or "resample", we'll adjust the dimensions of the raster
     if (adj_type == "expand") {
-      nx_log2 <- log2(raster::ncol(x)) # we'll use this to find the smallest number greater than 'ncol' that is also a power of 2
-      ny_log2 <- log2(raster::nrow(x)) # same as above, but for the number of rows
+      nx_log2 <- log2(terra::ncol(x)) # we'll use this to find the smallest number greater than 'ncol' that is also a power of 2
+      ny_log2 <- log2(terra::nrow(x)) # same as above, but for the number of rows
       if (((nx_log2 %% 1) != 0) ||
           (ny_log2 %% 1 != 0) ||
-          (raster::nrow(x) != raster::ncol(x))) {  # check if the dimensions are a power of 2 or if the dimensions aren't the same (i.e. it's not square)
+          (terra::nrow(x) != terra::ncol(x))) {  # check if the dimensions are a power of 2 or if the dimensions aren't the same (i.e. it's not square)
         # calculate the new extent
         new_n <- max(c(2^ceiling(nx_log2), 2^ceiling(ny_log2)))
-        new_ext <- raster::extent(x)
-        new_ext[2] <- new_ext[1] + raster::res(x)[1] * new_n
-        new_ext[4] <- new_ext[3] + raster::res(x)[2] * new_n
+        new_ext <- terra::ext(x)
+        new_ext[2] <- new_ext[1] + terra::res(x)[1] * new_n
+        new_ext[4] <- new_ext[3] + terra::res(x)[2] * new_n
 
         # expand the raster
-        x <- raster::extend(x, new_ext)
+        x <- terra::extend(x, new_ext)
       }
     } else if (adj_type == "resample") {
       if (is.null(resample_n_side)) stop("'adj_type' is 'resample', but 'resample_n_side' is not specified. Please provide a value for 'resample_n_side'.")
       if (log2(resample_n_side) %% 1 != 0) warning(paste0("'resample_n_side' was given as ", resample_n_side, ", which is not a power of 2. Are you sure these are the dimensions you want? This will result in the smallest possible resolution of the quadtree being larger than the resolution of the raster"))
 
-      new_ext <- raster::extent(x)
+      new_ext <- terra::ext(x)
       if (resample_pad_nas) {
         # first we need to make it square
-        new_n <- max(c(raster::nrow(x), raster::ncol(x))) #get the larger dimension
+        new_n <- max(c(terra::nrow(x), terra::ncol(x))) #get the larger dimension
         # now expand the extent
-        new_ext[2] <- new_ext[1] + raster::res(x)[1] * new_n
-        new_ext[4] <- new_ext[3] + raster::res(x)[2] * new_n
-        x <- raster::extend(x, new_ext)
+        new_ext[2] <- new_ext[1] + terra::res(x)[1] * new_n
+        new_ext[4] <- new_ext[3] + terra::res(x)[2] * new_n
+        x <- terra::extend(x, new_ext)
       }
       # now we can resample
-      rast_template <- raster::raster(new_ext, nrow = resample_n_side,
+      rast_template <- terra::rast(new_ext, nrow = resample_n_side,
                                       ncol = resample_n_side,
-                                      crs = raster::crs(x))
-      x <- raster::resample(x, rast_template, method = "ngb")
+                                      crs = terra::crs(x))
+      x <- terra::resample(x, rast_template, method = "near")
     }
 
     # create the quadtree object (but we haven't actually constructed the quadtree yet)
     qt <- methods::new("Quadtree")
     qt@ptr <- methods::new(CppQuadtree,
-                           raster::extent(x)[1:2],
-                           raster::extent(x)[3:4],
+                           terra::ext(x)[1:2],
+                           terra::ext(x)[3:4],
                            c(max_cell_length, max_cell_length),
                            c(min_cell_length, min_cell_length),
                            split_if_all_na,
@@ -274,7 +279,7 @@ setMethod("quadtree", signature(x = "ANY"),
       template_quadtree@ptr <- methods::new(CppQuadtree)
     }
     # construct the quadtree
-    qt@ptr$createTree(raster::as.matrix(x),
+    qt@ptr$createTree(terra::as.matrix(x, wide = TRUE),
                       split_method,
                       split_threshold,
                       combine_method,
@@ -284,7 +289,7 @@ setMethod("quadtree", signature(x = "ANY"),
                       combine_args,
                       template_quadtree@ptr)
     qt@ptr$setOriginalValues(ext[1], ext[2], ext[3], ext[4], dim[1], dim[2])
-    proj <- raster::projection(x)
+    proj <- terra::crs(x)
     if (!is.na(proj)) {
       qt@ptr$setProjection(proj)
     } else {

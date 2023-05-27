@@ -38,7 +38,7 @@ beforehand to make a copy of the quadtree (see 'Examples').
 }
 \examples{
 library(quadtree)
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 
 # create a quadtree
 qt1 <- quadtree(habitat, split_threshold = .1)

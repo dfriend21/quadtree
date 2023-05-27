@@ -91,7 +91,7 @@
                         <h4 data-toc-skip class="author">Derek
 Friend</h4>
             
-            <h4 data-toc-skip class="date">Last compiled on May 13,
+            <h4 data-toc-skip class="date">Last compiled on May 24,
 2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dfriend21/quadtree/blob/HEAD/vignettes/quadtree-creation.Rmd" class="external-link"><code>vignettes/quadtree-creation.Rmd</code></a></small>
@@ -110,9 +110,9 @@ a quadtree is created. Note that all the examples use the following
 example raster:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster" class="external-link">raster</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span>
+<span><span class="va">habitat</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"habitat.tif"</span>, package<span class="op">=</span><span class="st">"quadtree"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">rast</span> <span class="op">&lt;-</span> <span class="va">habitat</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rast</span>, main <span class="op">=</span> <span class="st">"sample raster"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="quadtree-creation_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
@@ -364,7 +364,7 @@ based on some cutoff threshold.</p>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">vals</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">vals</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">args</span><span class="op">$</span><span class="va">threshold</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">vals</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">args</span><span class="op">$</span><span class="va">threshold</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
@@ -397,7 +397,7 @@ the exact same expansion method (i.e. the method specified by
 of roads is used to create a quadtree, and then that quadtree is used as
 a template to create a quadtree from a different raster.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat_roads</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">habitat_roads</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"habitat_roads.tif"</span>, package<span class="op">=</span><span class="st">"quadtree"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">template</span> <span class="op">&lt;-</span> <span class="va">habitat_roads</span></span>
 <span></span>
 <span><span class="co"># use a custom function so that a quadrant is split if it contains any 1's</span></span>

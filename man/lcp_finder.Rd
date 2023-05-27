@@ -80,7 +80,7 @@ See the vignette 'quadtree-lcp' for more details and examples (i.e. run
 
 library(quadtree)
 
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
 
 # find the LCP between two points

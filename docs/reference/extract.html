@@ -112,7 +112,7 @@ in this order: <code>id</code>, <code>xmin</code>, <code>xmax</code>, <code>ymin
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dfriend21/quadtree/" class="external-link">quadtree</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">habitat</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">habitat</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"habitat.tif"</span>, package<span class="op">=</span><span class="st">"quadtree"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create quadtree</span></span></span>
 <span class="r-in"><span><span class="va">qt1</span> <span class="op">&lt;-</span> <span class="fu"><a href="quadtree.html">quadtree</a></span><span class="op">(</span><span class="va">habitat</span>, split_threshold <span class="op">=</span> <span class="fl">.1</span>, adj_type <span class="op">=</span> <span class="st">"expand"</span><span class="op">)</span></span></span>
@@ -128,23 +128,23 @@ in this order: <code>id</code>, <code>xmin</code>, <code>xmax</code>, <code>ymin
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot the quadtree and the points</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">qt1</span>, border_col <span class="op">=</span> <span class="st">"gray50"</span>, border_lwd <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">pts</span>, pch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">.6</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="va">pts</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">vals</span>, <span class="fl">2</span><span class="op">)</span>, pos <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/lines.html" class="external-link">points</a></span><span class="op">(</span><span class="va">pts</span>, pch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">.6</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/text.html" class="external-link">text</a></span><span class="op">(</span><span class="va">pts</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">vals</span>, <span class="fl">2</span><span class="op">)</span>, pos <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="extract-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we can also extract the cell extents in addition to the values</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">qt1</span>, <span class="va">pts</span>, extents <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         id  xmin  xmax  ymin  ymax     value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]  NaN   NaN   NaN   NaN   NaN       NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 6433     0  8000     0  8000       NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,] 6418  8000 10000  8000 10000       NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,] 6376 12000 13000 12000 13000 0.9696250</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,] 6054 16000 18000 16000 18000 0.9586250</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,] 6041 20000 22000 20000 22000 0.9388437</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,] 5754 26000 26500 26000 26500 0.7520000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,] 5606 30750 31000 30750 31000 0.5770000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,] 2303 35000 36000 35000 36000       NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10,] 2107 40000 48000 40000 48000       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 6445     0  8000     0  8000       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,] 6430  8000 10000  8000 10000       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,] 6388 12000 13000 12000 13000 0.9696250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,] 6066 16000 18000 16000 18000 0.9586250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,] 6053 20000 22000 20000 22000 0.9388437</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,] 5766 26000 26500 26000 26500 0.7520000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,] 5618 30750 31000 30750 31000 0.5770000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,] 2307 35000 36000 35000 36000       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,] 2111 40000 48000 40000 48000       NaN</span>
 </code></pre></div>
     </div>
   </div>

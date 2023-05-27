@@ -28,9 +28,9 @@ This vignette goes over the process of creating a quadtree and covers all of the
 
 ```{r, message = FALSE, warning = FALSE}
 library(quadtree)
-library(raster)
+library(terra)
 
-data(habitat)
+habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 rast <- habitat
 plot(rast, main = "sample raster")
 ```
@@ -190,7 +190,7 @@ The `quadtree()` function also allows users to create a quadtree using another q
 In the following example, a raster representing the presence/absence of roads is used to create a quadtree, and then that quadtree is used as a template to create a quadtree from a different raster.
 
 ```{r}
-data(habitat_roads)
+habitat_roads <- terra::rast(system.file("extdata", "habitat_roads.tif", package="quadtree"))
 template <- habitat_roads
 
 # use a custom function so that a quadrant is split if it contains any 1's

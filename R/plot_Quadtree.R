@@ -58,7 +58,7 @@
 #' @return no return value
 #' @examples
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #'
 #' # create quadtree
 #' qt <- quadtree(habitat, split_threshold = .1, adj_type = "expand")
@@ -391,13 +391,15 @@ NULL
 #'   thus should be avoided.
 #' @return no return value
 #' @examples
+#' library(terra)
 #' library(quadtree)
-#' data(habitat)
+#' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))
 #' qt <- quadtree(habitat, .2)
 #'
 #' old_par <- par(mar = c(5, 4, 4, 5))
 #' plot(qt, legend = FALSE)
-#' add_legend(raster::cellStats(habitat, "range"), rev(terrain.colors(100)))
+#' leg <- terra::minmax(habitat)[1:2]
+#' quadtree::add_legend(leg, rev(terrain.colors(100)))
 #' par(old_par)
 #' # this example simply illustrates how it COULD be used, but as stated in the
 #' # 'Details' section, it shouldn't be called separately from 'plot()' - if

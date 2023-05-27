@@ -1,7 +1,7 @@
 #' @import methods Rcpp
 #' @importFrom graphics plot points lines matplot
 #' @importFrom stats reshape
-#' @importFrom raster extract extent
+#' @importFrom terra rast extract ext crds nrow ncol as.matrix
 
 #' @name quadtree-package
 #' @docType package

@@ -46,12 +46,12 @@ Imports:
     graphics,
     grDevices,
     methods,
+    terra,
     raster,
     Rcpp (>= 1.0.5),
     stats
 Suggests: 
     sf, 
-    terra,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
