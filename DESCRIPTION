@@ -1,8 +1,8 @@
 Type: Package
 Package: quadtree
 Title: Region Quadtrees for Spatial Data
-Version: 0.1.11
-Date: 2022-12-03
+Version: 0.1.13
+Date: 2023-08-26
 Authors@R:
     c(person(given = "Derek",
              family = "Friend",
@@ -47,10 +47,10 @@ Imports:
     grDevices,
     methods,
     terra,
-    raster,
     Rcpp (>= 1.0.5),
     stats
 Suggests: 
+    raster,
     sf, 
     knitr,
     rmarkdown,
