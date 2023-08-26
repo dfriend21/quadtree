@@ -3,8 +3,8 @@
 #' @name projection
 #' @aliases projection,Quadtree-method projection<-
 #'   projection<-,Quadtree,ANY-method
-#' @title Retrieve the proj4string of a \code{Quadtree}
-#' @description Retrieves the proj4string of a \code{\link{Quadtree}}.
+#' @title Retrieve the projection of a \code{Quadtree}
+#' @description Retrieves the projection of a \code{\link{Quadtree}}.
 #' @param x a \code{\link{Quadtree}}
 #' @return a string
 #' @examples

@@ -31,8 +31,8 @@ NodeWrapper QuadtreeWrapper::root() const{
   return NodeWrapper(quadtree->root);
 }
 
-void QuadtreeWrapper::setProjection(std::string proj4string){
-  quadtree->proj4string = proj4string;
+void QuadtreeWrapper::setProjection(std::string projection){
+  quadtree->projection = projection;
 }
 
 void QuadtreeWrapper::setOriginalValues(double xmin, double xmax, double ymin, double ymax, double nX, double nY){
@@ -76,8 +76,8 @@ Rcpp::NumericVector QuadtreeWrapper::maxCellDims() const{
   return v;
 }
 
-std::string QuadtreeWrapper::projection() const{
-  return quadtree->proj4string;
+std::string QuadtreeWrapper::getProjection() const{
+  return quadtree->projection;
 }
 
 void QuadtreeWrapper::createTree(Rcpp::NumericMatrix &mat, std::string splitMethod, double splitThreshold, std::string combineMethod, Rcpp::Function splitFun, Rcpp::List splitArgs, Rcpp::Function combineFun, Rcpp::List combineArgs, QuadtreeWrapper templateQuadtree){
@@ -289,7 +289,7 @@ LcpFinderWrapper QuadtreeWrapper::getLcpFinder(Rcpp::NumericVector startPoint, R
 QuadtreeWrapper QuadtreeWrapper::copy() const{
   QuadtreeWrapper qtw = QuadtreeWrapper();
   
-  qtw.proj4String = proj4String;
+  qtw.projection = projection;
   qtw.originalXMin = originalXMin;
   qtw.originalXMax = originalXMax;
   qtw.originalYMin = originalYMin;

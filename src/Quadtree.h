@@ -33,11 +33,11 @@ public:
     bool splitAllNAs{false}; // should we split a quadrant if it contains all NAs?
     bool splitAnyNAs{true}; // should we split a quadrant if it contains any NAs?
 
-    std::string proj4string{""}; // the projection string of the quadtree
+    std::string projection{""}; // the projection string of the quadtree
 
     Quadtree(double xMin = 0, double xMax = 0, double yMin = 0, double yMax = 0, bool _splitAllNAs = false, bool _splitAnyNAs = true);
     Quadtree(double xMin, double xMax, double yMin, double yMax, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength, bool _splitAllNAs, bool _splitAnyNAs);
-    Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength, bool _splitAllNAs, bool _splitAnyNAs);
+    Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, std::string _projection, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength, bool _splitAllNAs, bool _splitAnyNAs);
 
     static bool splitRange(const Matrix &mat, double limit);
     static bool splitSD(const Matrix &mat, double limit);
@@ -76,7 +76,7 @@ public:
 
     template<class Archive>
     void serialize(Archive & archive){ // couldn't get serialization to work unless I defined 'serialize' in the header rather than in 'Quadtree.cpp'
-        archive(root, nNodes, matNX, matNY, maxXCellLength, maxYCellLength, minXCellLength, minYCellLength, splitAllNAs, splitAnyNAs, proj4string);
+        archive(root, nNodes, matNX, matNY, maxXCellLength, maxYCellLength, minXCellLength, minYCellLength, splitAllNAs, splitAnyNAs, projection);
     }
 
     static void writeQuadtree(std::shared_ptr<Quadtree> quadtree, std::string filePath);

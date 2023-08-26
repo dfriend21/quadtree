@@ -22,6 +22,7 @@
   resample_n_side = NULL,
   resample_pad_nas = TRUE,
   extent = NULL,
+  projection = "",
   proj4string = NULL,
   template_quadtree = NULL
 )
@@ -30,7 +31,7 @@
 \item{x}{a \code{\link[raster:RasterLayer-class]{RasterLayer}},
 \code{\link[terra:SpatRaster-class]{SpatRaster}}, or
 \code{matrix}. If \code{x} is a \code{matrix}, the \code{extent} and
-\code{proj4string} parameters can be used to set the extent and projection
+\code{projection} parameters can be used to set the extent and projection
 of the quadtree. If \code{x} is a
 \code{\link[raster:RasterLayer-class]{RasterLayer}} or
 \code{\link[terra:SpatRaster-class]{SpatRaster}}, the extent and
@@ -120,11 +121,13 @@ parameter is ignored if \code{x} is a raster since the extent is derived
 directly from the raster. If no value is provided and \code{x} is a matrix,
 the extent is assumed to be \code{c(0,ncol(x),0,nrow(x))}.}
 
-\item{proj4string}{character; proj4string describing the projection of the
+\item{projection}{character; string describing the projection of the
 data. Only used when \code{x} is a matrix - this parameter is ignored if
-\code{x} is a raster since the proj4string of the raster is automatically
-used. If no value is provided and \code{x} is a matrix, the proj4string of
+\code{x} is a raster since the proj4ection of the raster is automatically
+used. If no value is provided and \code{x} is a matrix, the projection of
 the quadtree is set to \code{NA}.}
+
+\item{proj4string}{deprecated. Use \code{projection} instead.}
 
 \item{template_quadtree}{\code{\link{Quadtree}}; if provided, the new
 quadtree will be created so that it has the exact same structure as the

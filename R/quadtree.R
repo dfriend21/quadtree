@@ -9,7 +9,7 @@
 #' @param x a \code{\link[raster:RasterLayer-class]{RasterLayer}},
 #'   \code{\link[terra:SpatRaster-class]{SpatRaster}}, or
 #'   \code{matrix}. If \code{x} is a \code{matrix}, the \code{extent} and
-#'   \code{proj4string} parameters can be used to set the extent and projection
+#'   \code{projection} parameters can be used to set the extent and projection
 #'   of the quadtree. If \code{x} is a
 #'   \code{\link[raster:RasterLayer-class]{RasterLayer}} or
 #'   \code{\link[terra:SpatRaster-class]{SpatRaster}}, the extent and
@@ -83,11 +83,12 @@
 #'   parameter is ignored if \code{x} is a raster since the extent is derived
 #'   directly from the raster. If no value is provided and \code{x} is a matrix,
 #'   the extent is assumed to be \code{c(0,ncol(x),0,nrow(x))}.
-#' @param proj4string character; proj4string describing the projection of the
+#' @param projection character; string describing the projection of the
 #'   data. Only used when \code{x} is a matrix - this parameter is ignored if
-#'   \code{x} is a raster since the proj4string of the raster is automatically
-#'   used. If no value is provided and \code{x} is a matrix, the proj4string of
-#'   the quadtree is set to \code{NA}.
+#'   \code{x} is a raster since the proj4ection of the raster is automatically
+#'   used. If no value is provided and \code{x} is a matrix, the projection of
+#'   the quadtree is set to \code{NA}. 
+#' @param proj4string deprecated. Use \code{projection} instead.
 #' @param template_quadtree \code{\link{Quadtree}}; if provided, the new
 #'   quadtree will be created so that it has the exact same structure as the
 #'   template quadtree. Thus, no split function is used because the decision
@@ -160,7 +161,7 @@ setMethod("quadtree", signature(x = "ANY"),
            combine_method = "mean", combine_fun = NULL, combine_args = list(),
            max_cell_length = NULL, min_cell_length = NULL, adj_type = "expand",
            resample_n_side = NULL, resample_pad_nas = TRUE, extent = NULL,
-           proj4string = NULL, template_quadtree = NULL) {
+           projection = "", proj4string = NULL, template_quadtree = NULL) {
     # validate inputs - this may be over the top, but many of these values get passed to C++ functionality, and if they're the wrong type the errors that are thrown are totally unhelpful - by type-checking them right away, I can provide easy-to-interpret error messages rather than messages that provide zero help
     # also, this is a complex function with a ton of options, and this function is basically the entryway into the entire package, so I want the errors to clearly point the user to the problem
     if (inherits(x, 'RasterLayer')) x <- terra::rast(x)
@@ -197,7 +198,7 @@ setMethod("quadtree", signature(x = "ANY"),
     if (adj_type == "resample" && (!is.logical(resample_pad_nas) || length(resample_pad_nas) != 1)) stop("'resample_pad_nas' must be an logical vector with length 1.")
     if (!is.null(extent) && ((!inherits(extent, "Extent") && !is.numeric(extent)) || (is.numeric(extent) && length(extent) != 4))) stop("'extent' must either be an 'Extent' object or a numeric vector with 4 elements (xmin, xmax, ymin, ymax)")
     if (!is.null(extent) && inherits(x, "SpatRaster")) warning("a value for 'extent' was provided, but it will be ignored since 'x' is a raster (the extent will be derived from the raster itself)")
-    if (!is.null(proj4string) && inherits(x, "SpatRaster")) warning("a value for 'proj4string' was provided, but it will be ignored since 'x' is a raster (the proj4string will be derived from the raster itself)")
+    if (projection != "" && inherits(x, "SpatRaster")) warning("a value for 'projection' was provided, but it will be ignored since 'x' is a raster (the projection will be derived from the raster itself)")
     if (!is.null(template_quadtree) && !inherits(template_quadtree, "Quadtree")) stop("'template_quadtree' must be a 'Quadtree' object")
 
     if (is.null(max_cell_length)) max_cell_length <- -1 # if `max_cell_length` is not provided, set it to -1, which indicates no limit
@@ -211,15 +212,20 @@ setMethod("quadtree", signature(x = "ANY"),
           extent <- quadtree::extent(template_quadtree)
         }
       }
-      proj4string <- tryCatch(terra::crs(proj4string), error = function(cond) { 
-        # if the proj4string is invalid, use an empty string for 'proj4string'
-        message("warning in 'quadtree()': invalid 'proj4string' provided - no projection will be assigned")
+      projection <- tryCatch(terra::crs(projection), error = function(cond) { 
+        # if the projection is invalid, use an empty string for 'projection'
+        message("warning in 'quadtree()': invalid projection provided - no projection will be assigned")
         return(terra::crs(""))
       })
       
-      x <- terra::rast(x, extent = terra::ext(extent), crs = proj4string)
+      x <- terra::rast(x, extent = terra::ext(extent), crs = projection)
     }
-
+    if (!is.null(proj4string)){
+      warning("'proj4string' is deprecated. Use 'projection' instead.")
+      if(projection == ""){
+        projection <- proj4string
+      }
+    }
     ext <- terra::ext(x)
     dim <- c(ncol(x), nrow(x))
 

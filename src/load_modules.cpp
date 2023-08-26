@@ -48,7 +48,7 @@ RCPP_MODULE(qt) {
     .method("originalRes", &QuadtreeWrapper::originalRes)
     .method("minCellDims", &QuadtreeWrapper::minCellDims)
     .method("maxCellDims", &QuadtreeWrapper::maxCellDims)
-    .method("projection", &QuadtreeWrapper::projection);
+    .method("projection", &QuadtreeWrapper::getProjection);
   
   class_<LcpFinderWrapper>("CppLcpFinder")
     .method("makeNetworkAll", &LcpFinderWrapper::makeNetworkAll)

@@ -18,7 +18,7 @@ class QuadtreeWrapper{
   public:
     std::shared_ptr<Quadtree> quadtree;
     
-    std::string proj4String;
+    std::string projection;
     
     double originalXMin;
     double originalXMax;
@@ -37,7 +37,7 @@ class QuadtreeWrapper{
     NodeWrapper root() const;
     
     void setOriginalValues(double xmin, double xmax, double ymin, double ymax, double nX, double nY);
-    void setProjection(std::string proj4string);
+    void setProjection(std::string projection);
     
     Rcpp::NumericVector extent() const;
     Rcpp::NumericVector originalExtent() const;
@@ -45,7 +45,7 @@ class QuadtreeWrapper{
     Rcpp::NumericVector originalRes() const;
     Rcpp::NumericVector minCellDims() const;
     Rcpp::NumericVector maxCellDims() const;
-    std::string projection() const;
+    std::string getProjection() const;
     std::vector<double> getValues(const std::vector<double> &x, const std::vector<double> &y) const;
     Rcpp::NumericMatrix getNeighbors(Rcpp::NumericVector pt) const;
     
@@ -75,7 +75,7 @@ class QuadtreeWrapper{
     
     template<class Archive>
     void serialize(Archive & archive){ //couldn't get serialization to work unless I defined 'serialize' in the header rather than in 'Quadtree.cpp'
-      archive(quadtree, proj4String, originalXMin, originalXMax,originalYMin,originalYMax,originalNX,originalNY);
+      archive(quadtree, projection, originalXMin, originalXMax,originalYMin,originalYMax,originalNX,originalNY);
     }
     
     

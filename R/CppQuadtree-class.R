@@ -257,7 +257,7 @@
 #'   \item \strong{Returns}: a string
 #' }
 #' @field projection \itemize{
-#'   \item \strong{Description}: Returns the proj4string of the quadtree.
+#'   \item \strong{Description}: Returns the projection of the quadtree.
 #'   \item \strong{Parameters}: none
 #'   \item \strong{Returns}: a string
 #' }
@@ -280,9 +280,9 @@
 #'   \item \strong{Returns}: void - no return value
 #' }
 #' @field setProjection \itemize{
-#'   \item \strong{Description}: Sets the the proj4string of the quadtree.
+#'   \item \strong{Description}: Sets the the projection of the quadtree.
 #'   \item \strong{Parameters}: \itemize{
-#'     \item \code{proj4string}: string
+#'     \item \code{projection}: string
 #'   }
 #'   \item \strong{Returns}: void - no return value
 #' }

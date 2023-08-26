@@ -19,11 +19,11 @@ Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, double _m
     minYCellLength = _minYCellLength;
 }
 
-Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, std::string _proj4string, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength, bool _splitAllNAs, bool _splitAnyNAs)
+Quadtree::Quadtree(double xMin, double xMax, double yMin, double yMax, int _matNX, int _matNY, std::string _projection, double _maxXCellLength, double _maxYCellLength, double _minXCellLength, double _minYCellLength, bool _splitAllNAs, bool _splitAnyNAs)
     : Quadtree{xMin, xMax, yMin, yMax, _maxXCellLength, _maxYCellLength, _minXCellLength, _minYCellLength, _splitAllNAs, _splitAnyNAs}{
     matNX = _matNX;
     matNY = _matNY;
-    proj4string = _proj4string;
+    projection = _projection;
 }
 
 // ------- split* -------
@@ -214,7 +214,7 @@ void Quadtree::makeTreeWithTemplate(const Matrix &mat, const std::shared_ptr<Qua
     maxXCellLength = templateQuadtree->maxXCellLength;
     maxYCellLength = templateQuadtree->maxYCellLength;
     nNodes = templateQuadtree->nNodes;
-    proj4string = templateQuadtree->proj4string;
+    projection = templateQuadtree->projection;
 
     makeTreeWithTemplate(mat, root, templateQuadtree->root, combineFun);
     assignNeighbors();
@@ -408,7 +408,7 @@ int Quadtree::copyNode(std::shared_ptr<Node> nodeCopy, const std::shared_ptr<Nod
 // ------- copy -------
 // uses 'copy' to create a deep copy of a Quadtree object
 std::shared_ptr<Quadtree> Quadtree::copy() const{
-    std::shared_ptr<Quadtree> qtCopy = std::make_shared<Quadtree>(root->xMin, root->xMax, root->yMin, root->yMax, matNX, matNY, proj4string, maxXCellLength, maxYCellLength, minXCellLength, minYCellLength, splitAllNAs, splitAnyNAs);
+    std::shared_ptr<Quadtree> qtCopy = std::make_shared<Quadtree>(root->xMin, root->xMax, root->yMin, root->yMax, matNX, matNY, projection, maxXCellLength, maxYCellLength, minXCellLength, minYCellLength, splitAllNAs, splitAnyNAs);
     
     qtCopy->nNodes = nNodes;
     copyNode(qtCopy->root, root);
@@ -467,7 +467,7 @@ std::string Quadtree::toString(const std::shared_ptr<Node> node, const std::stri
 // user-friendly wrapper function for 'toString()' where no arguments are needed - 
 // automatically calls 'toString()' on 'root'
 std::string Quadtree::toString() const{
-  std::string proj4string;
+  std::string projection;
     std::string str("");
     str = str + 
         "nNodes: " + std::to_string(nNodes) + "\n" +
