@@ -22,7 +22,7 @@
 #' automatically determined from the quadtree in such a way that the cells are
 #' guaranteed to line up with the quadtree cells with no overlap, thus avoiding
 #' the issue.
-#' @return a \code{\link[raster:SpatRaster-class]{SpatRaster}}
+#' @return a \code{\link[terra:SpatRaster-class]{SpatRaster}}
 #' @examples
 #' library(quadtree)
 #' habitat <- terra::rast(system.file("extdata", "habitat.tif", package="quadtree"))

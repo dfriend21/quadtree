@@ -19,7 +19,7 @@ raster extent, and the size of smallest cell in the quadtree is used as
 the resolution of the raster.}
 }
 \value{
-a \code{\link[raster:SpatRaster-class]{SpatRaster}}
+a \code{\link[terra:SpatRaster-class]{SpatRaster}}
 }
 \description{
 Creates a \code{\link[terra:SpatRaster-class]{SpatRaster}}
