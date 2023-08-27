@@ -1,6 +1,6 @@
 ## Test environments
 
-* local OS X install, R 4.2.2
+* local OS X install, R 4.3.1
 * R-hub: Debian Linux, R-devel, GCC ASAN/UBSAN
 * R-hub: Fedora Linux, R-devel, clang, gfortran
 * R-hub: Ubuntu Linux 20.04.1 LTS, R-release, GCC
@@ -9,9 +9,29 @@
 
 ## R CMD check results
 
-The local OS X install, Windows Server 2022, and win-builder (devel and release) had 0 errors, 0 warnings, and 0 notes.
+The local OS X install, had 0 errors, 0 warnings, and 0 notes.
 
-win-builder (oldrelease) had one note identifying the following words as potentially misspelled: Quadtrees, quadtree, quadtree's, and quadtrees. These words are not misspelled.
+The other platforms had the following note:
+
+```
+Maintainer: ‘Derek Friend <dafriend.R@gmail.com>’
+
+New submission
+
+Package was archived on CRAN
+
+Possibly misspelled words in DESCRIPTION:
+  quadtree (30:54, 35:18, 37:44)
+  quadtree's (34:37)
+  quadtrees (28:66, 29:26, 33:29, 33:66, 36:15, 36:50)
+  Quadtrees (3:15)
+
+CRAN repository db overrides:
+  X-CRAN-Comment: Archived on 2023-07-18 as issues were not corrected
+    in time.
+```
+
+The possible misspellings are correctly spelled.
 
 Fedora Linux, Ubuntu Linux and Debian Linux had the following note:
 
@@ -24,3 +44,13 @@ Fedora Linux, Ubuntu Linux and Debian Linux had the following note:
 ```
 
 It is my understanding that this is not a significant issue (for example, see Dirk Eddelbuettel's comment on this StackOverflow question: https://stackoverflow.com/questions/53819970/r-package-libs-directory-too-large-after-compilation-to-submit-on-cran)
+
+Windows Server had the following note:
+
+```
+checking for detritus in the temp directory ... NOTE
+Found the following files/directories:
+  'lastMiKTeXException'
+```
+
+The maintainer of the `rhub` package has said that this is a R-hub bug. See this Github issue: https://github.com/r-hub/rhub/issues/503
