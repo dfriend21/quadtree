@@ -19,7 +19,7 @@ RasterLayer or a matrix."><!-- mathjax --><script src="https://cdnjs.cloudflare.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">quadtree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.13</span>
       </span>
     </div>
 
@@ -94,6 +94,7 @@ RasterLayer or a matrix."><!-- mathjax --><script src="https://cdnjs.cloudflare.
 <span>  resample_n_side <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  resample_pad_nas <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  extent <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  projection <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  proj4string <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  template_quadtree <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -105,7 +106,7 @@ RasterLayer or a matrix."><!-- mathjax --><script src="https://cdnjs.cloudflare.
 <dd><p>a <code><a href="https://rdrr.io/pkg/raster/man/Raster-classes.html" class="external-link">RasterLayer</a></code>,
 <code><a href="https://rdrr.io/pkg/terra/man/SpatRaster-class.html" class="external-link">SpatRaster</a></code>, or
 <code>matrix</code>. If <code>x</code> is a <code>matrix</code>, the <code>extent</code> and
-<code>proj4string</code> parameters can be used to set the extent and projection
+<code>projection</code> parameters can be used to set the extent and projection
 of the quadtree. If <code>x</code> is a
 <code><a href="https://rdrr.io/pkg/raster/man/Raster-classes.html" class="external-link">RasterLayer</a></code> or
 <code><a href="https://rdrr.io/pkg/terra/man/SpatRaster-class.html" class="external-link">SpatRaster</a></code>, the extent and
@@ -226,12 +227,16 @@ directly from the raster. If no value is provided and <code>x</code> is a matrix
 the extent is assumed to be <code>c(0,ncol(x),0,nrow(x))</code>.</p></dd>
 
 
-<dt>proj4string</dt>
-<dd><p>character; proj4string describing the projection of the
+<dt>projection</dt>
+<dd><p>character; string describing the projection of the
 data. Only used when <code>x</code> is a matrix - this parameter is ignored if
-<code>x</code> is a raster since the proj4string of the raster is automatically
-used. If no value is provided and <code>x</code> is a matrix, the proj4string of
+<code>x</code> is a raster since the proj4ection of the raster is automatically
+used. If no value is provided and <code>x</code> is a matrix, the projection of
 the quadtree is set to <code>NA</code>.</p></dd>
+
+
+<dt>proj4string</dt>
+<dd><p>deprecated. Use <code>projection</code> instead.</p></dd>
 
 
 <dt>template_quadtree</dt>
@@ -329,7 +334,7 @@ non-<code>NULL</code>, all <code>split_</code>* parameters are disregarded, as a
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
