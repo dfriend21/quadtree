@@ -1,7 +1,7 @@
 Type: Package
 Package: quadtree
 Title: Region Quadtrees for Spatial Data
-Version: 0.1.13
+Version: 0.1.14
 Date: 2023-08-26
 Authors@R:
     c(person(given = "Derek",
@@ -46,8 +46,8 @@ Imports:
     graphics,
     grDevices,
     methods,
-    terra,
     Rcpp (>= 1.0.5),
+    terra,
     stats
 Suggests: 
     raster,
@@ -74,7 +74,6 @@ Collate:
     'as_raster.R'
     'as_vector.R'
     'copy.R'
-    'data_documentation.R'
     'extent.R'
     'extract.R'
     'get_neighbors.R'

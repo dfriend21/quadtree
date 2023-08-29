@@ -1,3 +1,7 @@
+## Resubmission
+
+This is a re-submission after a failed initial submission. On Debian Linux the build failed because data included in the 'data' folder contained objects from a package that was listed in 'Suggests' but not 'Includes'. I have removed that folder entirely since the data is available in a different form via 'inst/extdata'.
+
 ## Test environments
 
 * local OS X install, R 4.3.1
