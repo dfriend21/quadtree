@@ -1,4 +1,12 @@
+# quadtree 0.1.14
+
+8/29/2023 - CRAN version
+
+* removed 'data' folder
+
 # quadtree 0.1.13
+
+8/27/2023
 
 * changed `proj4string()` to `projection()` 
 * change C++ requirement from C++14 to C++17 (it was failing to build on Debian Linux with `CXX_STD = CXX14` in 'src/Makevars')
